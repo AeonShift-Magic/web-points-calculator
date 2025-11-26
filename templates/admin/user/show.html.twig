@@ -1,0 +1,243 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.users.show.label'|trans({'name': user.adminUserName|striptags})|raw }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.users.show.label'|trans({'name': user.adminUserName})|raw }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_user_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_user_edit', {'id': user.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/user/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <tbody>
+                <tr>
+                    <th class="w-1/4">{{ 'global.id.label'|trans }}</th>
+                    <td>{{ user.id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.username.label'|trans }}</th>
+                    <td>{{ user.username }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.discordusername.label'|trans }}</th>
+                    <td>{{ user.discordUsername }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.picture.label'|trans }}</th>
+                    <td class="text-center">
+                        {% if user.picture is not empty %}
+                            <div class="user-profile-picture-container medium-user-profile-container">
+                                <img class="inline-block" src="{{ asset(user_photos_http_path ~ user.picture)|imagine_filter('admin_micro_thumbnail') }}" alt="{{ 'front.globals.media_preview.title'|trans }}">
+                            </div>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.type.label'|trans }}</th>
+                    <td>{{ ('front.users.forms.edit.types.' ~ user.type)|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.roles.label'|trans }}</th>
+                    <td>
+                        {% if user.roles is defined and user.roles is not empty and user.roles is iterable %}
+                            <ul>
+                                {% for role in user.roles %}
+                                    <li>{{ ('global.roles.' ~ role)|trans }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'front.account.status.label'|trans }}</th>
+                    <td>{{ ('user.status.' ~ user.status.value|lower ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.forms.user.create.is_verified.label'|trans }}</th>
+                    <td>{{ user.verified ? 'global.1.label'|trans : 'global.0.label'|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.firstname.label'|trans }}</th>
+                    <td>{{ user.firstName }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.lastname.label'|trans }}</th>
+                    <td>{{ user.lastName }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.email.label'|trans }}</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'front.account.contactemail.label'|trans }}</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'front.account.phone.label'|trans }}</th>
+                    <td>{{ user.phone }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.address.label'|trans }}</th>
+                    <td>
+                        {% if user.defaultAddress is not empty %}
+                            <a href="{{ url('admin_address_show', {'id': user.defaultAddress.id}) }}" title="{{ 'admin.nav.address.show.title'|trans({'name': user.defaultAddress.name|striptags, 'user': user.name|striptags})|e('html_attr') }}">{{ user.defaultAddress|raw }}</a>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.website.label'|trans }}</th>
+                    <td>{{ user.website }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.facebook.label'|trans }}</th>
+                    <td>{{ user.facebookLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.instagram.label'|trans }}</th>
+                    <td>{{ user.instagramLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.twitter.label'|trans }}</th>
+                    <td>{{ user.twitterLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.youtube.label'|trans }}</th>
+                    <td>{{ user.youtubeLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.tiktok.label'|trans }}</th>
+                    <td>{{ user.tiktokLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.weibo.label'|trans }}</th>
+                    <td>{{ user.weiboLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.vkontakte.label'|trans }}</th>
+                    <td>{{ user.vkLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.discord.label'|trans }}</th>
+                    <td>{{ user.discordLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.reddit.label'|trans }}</th>
+                    <td>{{ user.redditLink }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.status.label'|trans }}</th>
+                    <td>{{ user.status.value }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.registeredat.label'|trans }}</th>
+                    <td>{{ user.registeredAt ? user.registeredAt|date('Y-m-d H:i') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.country.label'|trans }}</th>
+                    <td>{{ user.country|country_name }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.preferredlanguage.label'|trans }}</th>
+                    <td>{{ user.preferredLanguage|language_name }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.timezone.label'|trans }}</th>
+                    <td>{{ user.timezone|timezone_name }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'front.users.forms.edit.favorite_mtg_format.label'|trans }}</th>
+                    <td>{{ get_mtg_format_name_by_key(user.favoriteFormat) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'front.users.forms.edit.biofr.label'|trans }}</th>
+                    <td>{{ user.bioFr|raw }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'front.users.forms.edit.bioen.label'|trans }}</th>
+                    <td>{{ user.bioEn|raw }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.defaulttournamentname.label'|trans }}</th>
+                    <td>{{ user.defaultTournamentName|default('global.none.label'|trans) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.defaulttournamentbanner.label'|trans }}</th>
+                    <td>
+                        {% if user.defaultTournamentBanner is not empty %}
+                            <a href="{{ user_default_banners_http_path ~ user.defaultTournamentBanner }}" target="_blank" title="{{ 'front.globals.media_preview.title'|trans }}">
+                                <img src="{{ asset(user_default_banners_http_path ~ user.defaultTournamentBanner)|imagine_filter('banner') }}" alt="{{ 'front.globals.media_preview.title'|trans }}">
+                            </a>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'account.slug.label'|trans }}</th>
+                    <td>{{ user.slug }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.createdat.label'|trans }}</th>
+                    <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.updatedat.label'|trans }}</th>
+                    <td>{{ user.updatedAt ? user.updatedAt|date('Y-m-d H:i') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.forms.user.create.mtg_seasons.label'|trans }}</th>
+                    <td>
+                        {% if user.mtgSeasons is defined and user.mtgSeasons is not empty and user.mtgSeasons is iterable %}
+                            <ul>
+                                {% for mtgSeason in user.mtgSeasons %}
+                                    <li>
+                                        <a href="{{ url('admin_mtgseason_show', {'id': mtgSeason.id}) }}">{{ mtgSeason.nameForForm }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                </tr>
+                <tr>
+                    <th>{{ 'account.mtg_tournaments.label'|trans }}</th>
+                    <td>
+                        {% if user.MTGTournaments is defined and user.MTGTournaments is not empty and user.MTGTournaments is iterable %}
+                            <ul>
+                                {% for mtg_tournament in user.MTGTournaments %}
+                                    <li>
+                                        <a href="{{ url('admin_mtgtournament_show', {'id': mtg_tournament.id}) }}">{{ mtg_tournament.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_user_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_user_edit', {'id': user.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/user/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

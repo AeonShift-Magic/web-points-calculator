@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="{{ app.locale }}">
+    {% apply spaceless %}
+        <head>
+            <meta charset="UTF-8">
+            <title>{% block title %}Welcome!{% endblock %} | {{ website_title }}</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link
+                href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Saira:ital,wght@0,100..900;1,100..900&display=swap"
+                rel="stylesheet">
+            <link rel="shortcut icon" href="{{ asset('metadata/favicon.ico') }}">
+            <link rel="icon" type="image/png" href="{{ asset('metadata/favicon-96x96.png') }}" sizes="96x96">
+            <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('metadata/apple-touch-icon.png') }}">
+            <link rel="manifest" href="{{ asset('metadata/site.webmanifest') }}">
+            <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+            {% block javascripts %}
+                {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% endblock %}
+            {% block custom_stylesheets %}{% endblock %}
+            {% block custom_js %}{% endblock %}
+            {% block seohead %}{% endblock %}
+            {% block link_canonical %}
+                {% if app.request.attributes.get('_route') is defined and app.request.attributes.get('_route') is not empty %}
+                    <link rel="canonical"
+                          href="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
+                {% endif %}
+            {% endblock %}
+            {% block og_meta -%}
+                {% if app.request.attributes.get('_route') is defined and app.request.attributes.get('_route') is not empty %}
+                    <meta property="og:url"
+                          content="{{ url(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) }}">
+                {% endif %}
+                <meta property="og:site_name" content="{{ globals_website_name|escape }}">
+                <meta property="og:type" content="website">
+                <meta property="og:image:type" content="image/jpeg">
+                <meta name="twitter:card" content="summary_large_image">
+                <meta name="twitter:creator" content="@innersonics">
+            {%- endblock %}
+            {% block og_specific %}
+                <meta property="og:title" content="{{ website_title|default(globals_website_name)|escape }}">
+                <meta property="og:description" content="{{ globals_website_description }}">
+                <meta property="og:image" content="{{ absolute_url(asset('images/logo2025.jpg')) }}">
+                <meta property="og:image:width" content="888">
+                <meta property="og:image:height" content="672">
+                <meta name="twitter:title" content="{{ website_title|default(globals_website_name)|escape }}">
+                <meta property="twitter:description" content="{{ globals_website_description }}">
+                <meta property="twitter:image" content="{{ absolute_url(asset('images/logo2025.jpg')) }}">
+            {% endblock %}
+            {% block schema_org -%}
+                <script type="application/ld+json">
+                    {
+                        "@context": "https://www.schema.org",
+                        "@type": "Service",
+                        "name": "{{ globals_website_name }}",
+                        "description": "{{ globals_website_subtitle }}",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressCountry": "World"
+                    }
+                }
+                </script>
+            {%- endblock %}
+        </head>
+        <body {% block body_attributes %}{% endblock %}>
+            <a tabindex="0" id="skipcontent" href="#maincontent"
+               title="{{ 'global.skipcontent.label'|trans }}">{{ 'global.skipcontent.label'|trans }}</a>
+            <main id="swup">
+
+                {% block menu %}{% endblock %}
+
+                {% block messages %}
+                    {% if app.flashes is defined and app.session.flashbag.peekAll()|length > 0 and app.request.xmlHttpRequest is same as(false) and app.request.headers.get('x-turbo-request-id') is empty %}
+                        <div class="spaceless-row">
+                            <div class="main-column">
+                                <div class="messages">
+                                    {% for label, messages in app.flashes %}
+                                        {% for message in messages %}
+                                            <div class="flash-message flash-{{ label }}">
+                                                {{ message|raw }}
+                                            </div>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="main-row spacer-row"></div>
+                    {% endif %}
+                {% endblock %}
+
+                <div id="maincontent">
+                    {% block main_layout %}
+                        <div class="main-row theme1 unique-row">
+                            <div class="main-column main-content">
+                                {% block main_content %}
+                                    {% block body %}{% endblock %}
+                                {% endblock %}
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+
+                <div class="main-row spacer-row"></div>
+
+                {% block footer %}
+                    <div class="spaceless-row theme2 border-t border-gray-800 border-solid">
+                        <div class="main-column no-shadow">
+                            <footer class="flex flex-col items-center justify-center w-full">
+                                <div class="menu footer w-full">
+                                    {{ front_menu('footer') }}
+                                </div>
+                                <div class="footer-text text-sm w-full lg:w-2/3">
+                                    {{ include('_custom_block.html.twig', {'block_key': 'footer.' ~  app.locale|default('en')}) }}
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                {% endblock %}
+
+            </main>
+        </body>
+    {% endapply %}
+</html>

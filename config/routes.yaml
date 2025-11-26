@@ -1,0 +1,16 @@
+locale_redirect:
+    path: /
+    controller: \App\Controller\Front\PointsController::index
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+    prefix: /{_locale}
+    defaults:
+        _locale: '%app.default_locale%'
+    requirements:
+        _locale: '%app.supported_locales_route_requirement%'
+front_logout:
+    path: /logout
+    methods: GET

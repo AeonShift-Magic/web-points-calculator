@@ -1,0 +1,27 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.pages.edit.title'|trans({'%page%': page.title}) }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.pages.edit.title'|trans({'%page%': page.title}) }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray inline-block" href="{{ url('admin_page_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-gray" href="{{ url('admin_page_show', {'id': page.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/page/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    {{ include('admin/page/_form.html.twig', {'button_label': 'global.savebutton.label'|trans}) }}
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray inline-block" href="{{ url('admin_page_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-gray" href="{{ url('admin_page_show', {'id': page.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/page/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

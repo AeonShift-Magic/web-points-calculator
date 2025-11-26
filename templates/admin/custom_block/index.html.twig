@@ -1,0 +1,66 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.customblocks.index.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.customblocks.index.label'|trans }}</h1>
+
+    <h3 class="text-center w-full">
+        {{ 'global.total.label'|trans({'%elements%': custom_blocks.totalItemCount})|raw }}
+        {% if custom_blocks.totalItemCount / custom_blocks.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': custom_blocks.currentPageNumber, 'total': (custom_blocks.totalItemCount / custom_blocks.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+    </h3>
+
+    <a class="btn btn-green" href="{{ url('admin_custom_block_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+
+    {% if custom_blocks is defined and custom_blocks is iterable %}
+        <div class="navigation">
+            {{ knp_pagination_render(custom_blocks) }}
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table center header-highlight-table">
+                <thead>
+                    <tr>
+                        <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                        <th>{{ 'admin.forms.customblock.create.blockkey.label'|trans }}</th>
+                        <th>{{ 'admin.forms.customblock.create.contents.label'|trans }}</th>
+                        <th>{{ 'admin.forms.customblock.create.weight.label'|trans }}</th>
+                        <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for custom_block in custom_blocks %}
+                        <tr>
+                            <td>{{ custom_block.id }}</td>
+                            <td>
+                                {{ ('customblock.' ~ custom_block.blockKey ~ '.name')|trans }}
+                                <br>
+                                <em>({{ custom_block.blockKey }})</em>
+                            </td>
+                            <td>{{ custom_block.contents|slice(0, 200) }}[...]</td>
+                            <td>{{ custom_block.weight }}</td>
+                            <td>
+                                <a class="btn btn-gray w-full" href="{{ url('admin_custom_block_show', {'id': custom_block.id}) }}"
+                                   title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}
+                                </a>
+                                <a class="btn btn-green w-full" href="{{ url('admin_custom_block_edit', {'id': custom_block.id}) }}"
+                                   title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">{{ 'global.noelements.label'|trans }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="navigation">
+            {{ knp_pagination_render(custom_blocks) }}
+        </div>
+    {% endif %}
+
+    <a class="btn btn-green" href="{{ url('admin_custom_block_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+{% endblock %}

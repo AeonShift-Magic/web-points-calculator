@@ -1,0 +1,18 @@
+parameters:
+    excludePaths:
+        - src/Repository/ResetPasswordRequestRepository.php
+    level: 10
+    paths:
+        - config
+        - src
+    ignoreErrors:
+        # - '#Property .* is never written, only read\.#'
+        # - '#Property .* only read, never written\.#'
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
+    checkUninitializedProperties: true
+    checkBenevolentUnionTypes: true
+    reportPossiblyNonexistentGeneralArrayOffset: true
+    reportPossiblyNonexistentConstantArrayOffset: true

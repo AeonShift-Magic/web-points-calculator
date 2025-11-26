@@ -1,0 +1,30 @@
+twig:
+    file_name_pattern: '*.twig'
+    form_themes:
+        - 'form/dcc_tailwind_2_layout.html.twig'
+    globals:
+        supported_locales: '%app.supported_locales%'
+        escaped_default_share_text: '%escaped_default_share_text%'
+        globals_website_title_suffix: '%globals_website_title_suffix%'
+        globals_website_url: '%globals_website_url%'
+        globals_website_name: '%globals_website_name%'
+        globals_website_subtitle: '%globals_website_subtitle%'
+        globals_website_description: '%globals_website_description%'
+        globals_facebook_app_id: '%globals_facebook_app_id%'
+        article_pictures_http_path: '%article_pictures_http_path%'
+        article_pictures_photos_directory: '%article_pictures_photos_directory%'
+        primesquad_http_path: '%primesquad_http_path%'
+        primesquad_photos_directory: '%primesquad_photos_directory%'
+        season_banners_http_path: '%season_banners_http_path%'
+        tournament_banners_http_path: '%tournament_banners_http_path%'
+        tournament_banners_directory: '%tournament_banners_directory%'
+        user_photos_http_path: '%user_photos_http_path%'
+        user_pictures_directory: '%user_pictures_directory%'
+        user_default_banners_http_path: '%user_default_banners_http_path%'
+        user_default_banners_directory: '%user_default_banners_directory%'
+        website_title: 'Duel Commander Points Calculator'
+    paths:
+        'assets/images': images
+when@test:
+    twig:
+        strict_variables: true

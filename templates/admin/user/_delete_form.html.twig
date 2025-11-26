@@ -1,0 +1,6 @@
+<form method="post" action="{{ url('admin_user_delete', {'id': user.id}) }}" onsubmit="return confirm('{{ 'global.delete.confirmprompt'|trans }}');">
+    <div class="w-full text-center">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+        <button data-turbo="false" class="btn btn-red " title="{{ 'global.deletebutton.title'|trans }}">{{ 'global.deletebutton.label'|trans }}</button>
+    </div>
+</form>

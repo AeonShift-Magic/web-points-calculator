@@ -1,0 +1,21 @@
+<nav>
+    <ul class="menu-{{ zone|default('header') }}">
+        <li class="first home-link">
+            <a href="{{ url('front_home') }}" title="{{ 'front.nav.home.title'|trans }}">{{ 'front.nav.home.label'|trans }}</a>
+        </li>
+        {% if global_pages is defined %}
+            {% for global_page in global_pages %}
+                <li>
+                    <a href="{{ url('front_static_page', {id: global_page.id, slug: global_page.slug}) }}" title="{{ global_page.title|e('html_attr') }}">{{ global_page.title }}</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+        {% if app.user is defined and is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <li>
+                <a href="{{ url('front_user_account') }}" title="{{ 'front.nav.account.title'|trans }}">
+                    <span class="whoiam">👤 {{ app.user.username }}</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

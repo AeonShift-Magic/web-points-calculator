@@ -1,0 +1,21 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}Hello!{% endblock %}
+
+{% block top_spacer %}{% endblock %}
+
+{% block body %}
+    <div class="main-row theme1 transluent-row">
+        <div class="main-column main-content most-opquage-column">
+            <h1>{{ 'admin.nav.home.label'|trans }}</h1>
+        </div>
+    </div>
+
+    <div class="main-row spacer-row"></div>
+
+    <h2 class="text-center w-full mb-8">{{ 'admin.home.goto.text'|trans }}</h2>
+
+    <div class="admin-home-nav">
+        {% include 'admin/_admin_nav.html.twig' with {'extended_view': true} %}
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'front/front_layout.html.twig' %}
+
+{% block title %}{{ 'front.nav.resetpassword.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'front.nav.resetpassword.title'|trans }}</h1>
+
+    <div class="form-container mt-4">
+        {{ form_start(resetForm) }}
+        {{ form_row(resetForm.plainPassword) }}
+        <button data-turbo="false" class="btn btn-gold">{{ 'front.nav.resetpassword.label'|trans }}</button>
+        {{ form_end(resetForm) }}
+    </div>
+{% endblock %}

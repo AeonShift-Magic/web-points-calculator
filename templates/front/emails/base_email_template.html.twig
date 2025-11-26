@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MTGPrime</title>
+    </head>
+    <style>
+        @media screen and (max-width: 600px) {
+            .content-table {
+                text-align: center;
+            }
+        }
+
+        * {
+            word-break: break-word;
+        }
+
+        td {
+            padding: 0.5em 1.5em;
+        }
+
+        a, .ii a[href], a span {
+            color: rgb(133, 104, 47);
+            text-decoration: underline;
+        }
+
+        p a {
+            color: rgb(133, 104, 47) !important;
+        }
+
+        span {
+            color: rgb(133, 104, 47) !important;
+        }
+
+        p, li, strong, em, div {
+            font-size: 13px;
+        }
+
+        hr {
+            border: 0 solid transparent;
+            border-top: 1px solid rgb(200, 200, 220);
+            background-color: transparent;
+            max-width: 90%;
+        }
+
+        u + #body a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+    </style>
+    <body style="width:100%; background-color: rgba(242, 242, 242, 0.8); color: rgba(65, 65, 65, 1); font-family: Tahoma, Georgia, sans-serif; display: flex; flex-direction: column; height: 100%;" class="body" id="body">
+        <table style="width:100%;">
+            <tr style="width:100%;">
+                <td style="width:100%; display: flex; flex-direction: column; height: 100%;">
+                    <table style="max-width:900px; border: 1px solid rgba(255, 90, 0, 1); border-radius: 6px; margin: 1em auto; box-shadow: 6px 10px 5px -8px rgba(0,0,0,0.3);" class="content-table">
+                        <tr>
+                            <td style="text-align:center; background-color: rgba(190, 190, 190, 1);" class="header">
+                                <img style="display:inline-block; margin-top:10px;" src="{{ email.image('@images/logo-large.png') }}" alt="MTGPrime Logo" height="250px" width="300px">
+                                <h1 style="color: rgb(15,15,15); margin: 0.4em 0; padding: 0 0.5em; letter-spacing: 0.2em;">{{ globals_website_name }}</h1>
+                                <h2 style="color: rgb(15,15,15); margin: 0.4em 0; padding: 0 0.5em; letter-spacing: 0.2em;">{{ 'home.intro.text1'|trans|raw|upper }}</h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align:center;">
+                                {% block body %}
+                                {% endblock %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: rgba(90, 90, 90, 1); color: rgba(220, 220, 255, 1); font-size: 0.6em; text-align: center; padding: 1em;" class="footer">
+                                {{ include('_custom_block.html.twig', {'block_key': 'footer.' ~  app.locale|default('en')}) }}
+                                <br>
+                                <em>{{ 'global.email.responsibility'|trans }}</em>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

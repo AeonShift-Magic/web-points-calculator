@@ -1,0 +1,7 @@
+{% if custom_blocks is defined and custom_blocks is iterable %}
+    {% for custom_block_by_weight in custom_blocks %}
+        {% if custom_block_by_weight.contents is defined %}
+            {{ custom_block_by_weight.contents|raw }}
+        {% endif %}
+    {% endfor %}
+{% endif %}

@@ -1,0 +1,48 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.customblocks.show.label'|trans({'weight': custom_block.weight, 'blockkey': ('customblock.' ~ custom_block.blockKey ~ '.name')|trans}) }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.customblocks.show.label'|trans({'weight': custom_block.weight, 'blockkey': ('customblock.' ~ custom_block.blockKey ~ '.name')|trans}) }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_custom_block_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_custom_block_edit', {'id': custom_block.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/custom_block/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <tbody>
+                <tr>
+                    <th class="w-1/4">{{ 'global.id.label'|trans }}</th>
+                    <td>{{ custom_block.id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.forms.customblock.create.blockkey.label'|trans }}</th>
+                    <td>{{ custom_block.blockKey }} / {{ ('customblock.' ~ custom_block.blockKey ~ '.name')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.forms.customblock.create.contents.label'|trans }}</th>
+                    <td class="text-left">{{ custom_block.contents|raw }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.forms.customblock.create.weight.label'|trans }}</th>
+                    <td>{{ custom_block.weight }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_custom_block_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_custom_block_edit', {'id': custom_block.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/custom_block/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

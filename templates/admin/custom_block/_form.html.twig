@@ -1,0 +1,8 @@
+<fieldset class="w-full mb-4">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="text-right">
+        <button data-turbo="false" class="btn btn-green" title="{{ 'global.savebutton.title'|trans }}">{{ button_label|default('global.savebutton.label'|trans) }}</button>
+    </div>
+    {{ form_end(form) }}
+</fieldset>

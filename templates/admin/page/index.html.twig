@@ -1,0 +1,59 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.pages.index.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.pages.index.label'|trans }}</h1>
+
+    <h3 class="text-center w-full">
+        {{ 'global.total.label'|trans({'%elements%': pages.totalItemCount})|raw }}
+        {% if pages.totalItemCount / pages.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': pages.currentPageNumber, 'total': (pages.totalItemCount / pages.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+    </h3>
+
+    <a class="btn btn-green" href="{{ url('admin_page_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+
+    <div class="navigation"></div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <thead>
+                <tr>
+                    <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                    <th>{{ 'admin.forms.page.create.title.label'|trans }}</th>
+                    <th>{{ 'admin.forms.page.create.contents.label'|trans }}</th>
+                    <th>{{ 'admin.forms.page.create.zone.label'|trans }}</th>
+                    <th>{{ 'admin.forms.page.create.language.label'|trans }}</th>
+                    <th>{{ 'admin.forms.page.create.weight.label'|trans }}</th>
+                    <th>{{ 'admin.forms.page.create.slug.label'|trans }}</th>
+                    <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in pages %}
+                    <tr>
+                        <td>{{ page.id }}</td>
+                        <td>{{ page.title }}</td>
+                        <td>{{ page.contents|slice(0, 200) }}[...]</td>
+                        <td>{{ page.zone }}</td>
+                        <td>{{ page.language }}</td>
+                        <td>{{ page.weight }}</td>
+                        <td>{{ page.slug }}</td>
+                        <td>
+                            <a class="btn btn-gray w-full" href="{{ url('admin_page_show', {'id': page.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            <a class="btn btn-gray w-full" href="{{ url('front_static_page', {'id': page.id, 'slug': page.slug}) }}" title="{{ 'global.showbuttonfront.label'|trans }}" target="_blank">{{ 'global.showbuttonfront.label'|trans }}</a>
+                            <a class="btn btn-green w-full" href="{{ url('admin_page_edit', {'id': page.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">{{ 'global.noelements.label'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="navigation"></div>
+
+    <a class="btn btn-gray" href="{{ url('admin_page_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+{% endblock %}

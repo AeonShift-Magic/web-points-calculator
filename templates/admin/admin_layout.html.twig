@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body_attributes %}class="admin-layout"{% endblock %}
+
+{% block menu %}
+    <div class="spaceless-row top-menu admin-menu">
+        <div class="main-column header menu">
+            {{ include('admin/_admin_nav.html.twig') }}
+        </div>
+    </div>
+
+    {% block top_spacer %}
+        <div class="main-row spacer-row"></div>
+    {% endblock %}
+{% endblock %}
+
+{% block main_content %}
+    {% block body %}{% endblock %}
+{% endblock %}

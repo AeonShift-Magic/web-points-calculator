@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block menu %}
+    <div class="spaceless-row top-menu">
+        <div class="mobile-menu-activator block lg:hidden">
+            <a id="mobile-menu-toggle" class="px-4 py-1 inline-block cursor-pointer text-2xl w-full">≡</a>
+        </div>
+        <div class="main-column header menu" id="header-menu">
+            {{ front_menu('header') }}
+        </div>
+    </div>
+
+    {% block top_spacer %}
+        <div class="main-row spacer-row"></div>
+    {% endblock %}
+{% endblock %}
+
+{% block main_content %}
+    {% block body %}{% endblock %}
+{% endblock %}

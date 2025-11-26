@@ -1,0 +1,7 @@
+{% if zone is defined %}
+    {% if zone is same as('header') %}
+        {{ include('front/_front_nav_header.html.twig') }}
+    {% elseif zone is same as('footer') %}
+        {{ include('front/_front_nav_footer.html.twig') }}
+    {% endif %}
+{% endif %}

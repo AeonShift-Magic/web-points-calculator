@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<psalm
+        errorLevel="8"
+        resolveFromConfigFile="true"
+        showInfo="false"
+>
+    <projectFiles>
+        <directory name="src"/>
+        <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
+    </projectFiles>
+    <issueHandlers>
+        <PossiblyUnusedMethod errorLevel="suppress"/>
+        <PossiblyUnusedParam errorLevel="suppress"/>
+        <UnusedClass errorLevel="suppress"/>
+        <UnusedParam errorLevel="suppress"/>
+    </issueHandlers>
+    <plugins>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
+    </plugins>
+</psalm>

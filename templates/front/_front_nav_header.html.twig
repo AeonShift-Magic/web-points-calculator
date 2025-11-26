@@ -1,0 +1,72 @@
+<nav class="w-full">
+    <ul class="menu-{{ zone|default('header') }} justify-evenly items-stretch">
+        <li class="first home-link">
+            <a tabindex="0" href="{{ url('front_home') }}" title="{{ 'front.nav.home.title'|trans }}">{{ 'front.nav.home.label'|trans }}</a>
+        </li>
+        {% if global_pages is defined %}
+            {% for global_page in global_pages %}
+                <li>
+                    <a tabindex="0" href="{{ url('front_static_page', {id: global_page.id, slug: global_page.slug}) }}" title="{{ global_page.title|e('html_attr') }}">{{ global_page.title }}</a>
+                </li>
+            {% endfor %}
+        {% endif %}
+        <li id="locales">
+            {% if supported_locales is defined and supported_locales is iterable %}
+                <a tabindex="0" title="{{ 'language.' ~ app.request.locale }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{  ux_icon('flag:' ~ app.request.locale|replace({'en': 'gb'}) ~ '-4x3') }} {{ app.request.locale|locale_name(app.request.locale)|u.title }}</a>
+                <ul class="" aria-labelledby="locales">
+                    {% for supported_locale in supported_locales %}
+                        <li>
+                            <a tabindex="0" href="{{ url(app.request.get('_route', 'index'), app.request.get('_route_params', [])|merge({_locale: supported_locale})) }}">
+                                {{ ux_icon('flag:' ~ supported_locale|replace({'en': 'gb'}) ~ '-4x3') }} {{ supported_locale|locale_name(supported_locale)|u.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+        {% if app.user is defined and is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <li>
+                <a tabindex="0" href="{{ url('front_user_account') }}" title="{{ 'front.nav.account.title'|trans }}">
+                    {% if app.user.picture is not empty %}
+                        <span class="user-profile-picture-container micro-user-profile-container">
+                            <img src="{{ asset(user_photos_http_path ~ app.user.picture)|imagine_filter('nano_thumbnail') }}" alt="{{ 'front.globals.media_preview.title'|trans }}">
+                        </span>
+                    {% else %}
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <g>
+                                <circle cx="12" cy="9" r="3" stroke-width="1.5" stroke="currentColor" fill="currentColor"/>
+                                <circle cx="12" cy="12" r="10" stroke-width="1.5" stroke="currentColor" fill="transparanet"/>
+                                <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="currentColor" fill="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </g>
+                        </svg>
+                    {% endif %}
+                    <span class="whoiam">
+                        {{ app.user.username }}
+                    </span>
+                </a>
+                <ul>
+                    <li>
+                        <a tabindex="0" href="{{ url('front_user_account') }}" title="{{ 'front.nav.account.title'|trans }}">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <g>
+                                    <circle cx="12" cy="12" r="10" stroke-width="1.5" stroke="currentColor" fill="#555555"/>
+                                    <circle cx="12" cy="9" r="3" stroke-width="1.5" stroke="currentColor" fill="currentColor"/>
+                                    <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="currentColor" fill="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </g>
+                            </svg>
+                            {{ 'front.nav.account.label'|trans }}
+                        </a>
+                    </li>
+                    <li>
+                        <a tabindex="0" href="{{ url('front_logout') }}" data-turbo="false" title="{{ 'front.nav.logout.title'|trans }}">{{ 'front.nav.logout.label'|trans }}</a>
+                    </li>
+                </ul>
+            </li>
+        {% else %}
+            <li>
+                <a tabindex="0" href="{{ url('front_login') }}" title="{{ 'front.nav.login.title'|trans }}">{{ 'front.nav.login.label'|trans }}</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>

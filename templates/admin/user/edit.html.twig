@@ -1,0 +1,27 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.users.edit.title'|trans({'%user%': user.adminUserName|striptags})|raw }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.users.edit.title'|trans({'%user%': user.adminUserName})|raw }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray inline-block" href="{{ url('admin_user_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-gray" href="{{ url('admin_user_show', {'id': user.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/user/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    {{ include('admin/user/_form.html.twig', {'button_label': 'global.savebutton.label'|trans}) }}
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray inline-block" href="{{ url('admin_user_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-gray" href="{{ url('admin_user_show', {'id': user.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/user/_delete_form.html.twig') }}
+        </div>
+    </div>
+{% endblock %}

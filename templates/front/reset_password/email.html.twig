@@ -1,0 +1,15 @@
+{% extends 'front/emails/base_email_template.html.twig' %}
+
+{% block body %}
+    <h2>{{ 'email.resetpassword.title'|trans|raw }}</h2>
+    <hr>
+    <div>
+        {{ 'email.resetpassword.text1'|trans|raw }}
+        <br>
+        <a href="{{ url('front_reset_password', {token: resetToken.token}) }}">{{ url('front_reset_password', {token: resetToken.token}) }}</a>
+        <br>
+        {{ 'email.resetpassword.text2'|trans({'expires': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')})|raw }}
+    </div>
+{% endblock %}
+
+

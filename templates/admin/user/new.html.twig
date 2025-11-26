@@ -1,0 +1,15 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.users.new.title'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.users.new.title'|trans }}</h1>
+
+    <a class="btn btn-gray" href="{{ url('admin_user_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+
+    <div class="my-2"></div>
+
+    {{ include('admin/user/_form.html.twig') }}
+
+    <a class="btn btn-gray" href="{{ url('admin_user_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+{% endblock %}
