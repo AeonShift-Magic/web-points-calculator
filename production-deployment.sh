@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # #############################################################################################
-# # This Shell script (bash) is written to deploy DC Calculator project on [PRODUCTION]       #
+# # This Shell script (bash) is written to deploy AS Calculator project on [PRODUCTION]       #
 # # It does the following, in that order:                                                     #
 # # - git fetch --all                                                                         #
 # # - git rev-parse refs/remotes/origin/master^(commit)                                       #

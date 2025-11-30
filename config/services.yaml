@@ -1,30 +1,35 @@
-# This file is the entry point to configure your own services.
-# Files in the packages/ subdirectory configure your dependencies.
-
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     app.default_locale: 'en'
-    app.table_prefix: 'dcc_'
+    app.table_prefix: 'as_'
     app.supported_locales: ['en', 'fr']
     app.supported_locales_route_requirement: 'en|fr'
     # ----
-    escaped_default_share_text: 'Duel Commander Points Calculator - %globals_website_subtitle%'
-    globals_website_subtitle: 'Automatic calculation of your Duel Commander deck points and validation'
-    globals_website_title_suffix: ' | Duel Commander Points Calculator'
+    escaped_default_share_text: 'Aeonshift Points Calculator - %globals_website_subtitle%'
+    globals_website_subtitle: 'Automatic calculation of your Aeonshift deck points and validation'
+    globals_website_title_suffix: ' | Aeonshift Points Calculator'
     globals_website_url: 'https://points.mtgdc.info'
-    globals_website_name: 'Duel Commander Points Calculator'
-    globals_website_description: 'Automatic calculation of your Duel Commander deck points and validation'
+    globals_website_name: 'Aeonshift Points Calculator'
+    globals_website_description: 'Automatic calculation of your Aeonshift deck points and validation'
     globals_facebook_app_id: '160828815182734'
+    # ----
+    user_photos_http_path: '/uploads/users/pictures/'
+    user_pictures_directory: '%kernel.project_dir%/public%user_photos_http_path%'
+    # ----
+    scryfall.bulk_api_url: 'https://api.scryfall.com/bulk-data'
+    scryfall.cards_source_dir: 'cardsources/scryfall/defaultcards'
+    scryfall.bulk_data_type: 'default_cards'
 
 services:
-    # default configuration for services in *this* file
     _defaults:
-        autowire: true      # Automatically injects dependencies in your services.
-        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        autowire: true
+        autoconfigure: true
+        bind:
+            $projectDir: '%kernel.project_dir%'
+            $scryfallBulkApiUrl: '%scryfall.bulk_api_url%'
+            $cardsSourceDir: '%scryfall.cards_source_dir%'
+            $bulkDataType: '%scryfall.bulk_data_type%'
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+
     App\:
         resource: '../src/'
         exclude:
@@ -32,8 +37,6 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
     doctrine.table.prefix:
         arguments:
             $prefix: '%app.table_prefix%'

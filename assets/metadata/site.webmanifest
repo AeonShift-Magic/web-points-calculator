@@ -1,6 +1,6 @@
 {
-  "name": "Duel Commander Points Calculator",
-  "short_name": "DC Points",
+  "name": "Aeonshift",
+  "short_name": "Aeonshift",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -16,6 +16,6 @@
     }
   ],
   "theme_color": "#ffffff",
-  "background_color": "#353535",
+  "background_color": "#ffffff",
   "display": "standalone"
 }

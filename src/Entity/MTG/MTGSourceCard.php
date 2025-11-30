@@ -12,7 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MTGSourceCardRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class MTGSourceCard extends AbstractMTGCard
+#[ORM\Index(name: 'idx_oracle_id', columns: ['oracle_id'])]
+class MTGSourceCard extends MTGAbstractCard
 {
     /**
      * @var list<string>
@@ -24,6 +25,10 @@ class MTGSourceCard extends AbstractMTGCard
     #[Assert\NotNull]
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private DateTimeImmutable $firstPrintedAt;
+
+    #[Assert\NotNull]
+    #[ORM\Column(length: 25)]
+    private string $firstPrintedSetCode = '';
 
     #[Assert\NotNull]
     #[ORM\Column(type: Types::INTEGER)]
@@ -61,10 +66,6 @@ class MTGSourceCard extends AbstractMTGCard
     #[ORM\Column]
     private bool $isWhite = false;
 
-    #[Assert\NotNull]
-    #[ORM\Column(type: 'float')]
-    private float $manaValue = 0.0;
-
     public function __construct()
     {
         parent::__construct();
@@ -84,14 +85,14 @@ class MTGSourceCard extends AbstractMTGCard
         return $this->firstPrintedAt;
     }
 
+    public function getFirstPrintedSetCode(): string
+    {
+        return $this->firstPrintedSetCode;
+    }
+
     public function getFirstPrintedYear(): int
     {
         return $this->firstPrintedYear;
-    }
-
-    public function getManaValue(): float
-    {
-        return $this->manaValue;
     }
 
     public function isBlack(): bool
@@ -147,6 +148,13 @@ class MTGSourceCard extends AbstractMTGCard
     public function setFirstPrintedAt(DateTimeImmutable $firstPrintedAt): static
     {
         $this->firstPrintedAt = $firstPrintedAt;
+
+        return $this;
+    }
+
+    public function setFirstPrintedSetCode(string $firstPrintedSetCode): self
+    {
+        $this->firstPrintedSetCode = $firstPrintedSetCode;
 
         return $this;
     }
@@ -210,13 +218,6 @@ class MTGSourceCard extends AbstractMTGCard
     public function setIsWhite(bool $isWhite): static
     {
         $this->isWhite = $isWhite;
-
-        return $this;
-    }
-
-    public function setManaValue(float $manaValue): static
-    {
-        $this->manaValue = $manaValue;
 
         return $this;
     }

@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MTGPointsListCardRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class MTGPointsListCard extends AbstractMTGCard
+class MTGPointsListCard extends MTGAbstractCard
 {
     #[Assert\NotNull]
     #[ORM\JoinColumn(nullable: false)]

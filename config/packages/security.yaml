@@ -15,10 +15,9 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\DCCAuthenticator
+            custom_authenticator: App\Security\Authenticator
             logout:
                 path: /logout
-                # where to redirect after logout
                 target: front_index
             remember_me:
                 secret: '%kernel.secret%'

@@ -20,7 +20,7 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class DCCAuthenticator extends AbstractLoginFormAuthenticator
+final class Authenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 

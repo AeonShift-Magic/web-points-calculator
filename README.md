@@ -1,8 +1,8 @@
 ![logo-duel-commander-transparent.png](logo-duel-commander-transparent.png)
 
-# Duel Commander Points calculator
+# Aeonshift Points calculator
 
-## PHP + JavaScript points calculator for Duel Commander
+## PHP + JavaScript points calculator for Aeonshift
 
 This project uses vanilla JavaScript and Symfony/PHP.
 
@@ -65,8 +65,8 @@ To have stuff displayed on the frontend, you need to:
 Steps 1 and 2 need to be done each time you want to update the card database.
 They can be automated. Using a cron job is a good idea, calling the console commands:
 ```bash
- php bin/console dcc:importfile:scryfalldefault # to download the Scryfall file
- php bin/console dcc:updatedb:scryfalldefault # to update from the Scryfall file if present
+ php bin/console as:importfile:scryfalldefault # to download the Scryfall file
+ php bin/console as:updatedb:scryfalldefault # to update from the Scryfall file if present
 ```
 
 (remember doing this too often will have your server banned if abusive, make sure it is done reasonably).
@@ -74,4 +74,4 @@ They can be automated. Using a cron job is a good idea, calling the console comm
 This software is distributed under the MIT License.
 Feel free to use it as much as you can, and to contribute to it, PRs are welcome!
 
-Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for Duel Commander, 2025.
+Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for Aeonshift, 2025.

@@ -15,7 +15,7 @@ $finder = (new PhpCsFixer\Finder())
     ->notPath('public/index.php');
 
 // Set up the config to anaylze/fix everything. Ready for CI.
-return (new PhpCsFixer\Config('DC Calculator CS-Fixing'))
+return (new PhpCsFixer\Config('AS Calculator CS-Fixing'))
     ->setRules(
         [
             'align_multiline_comment'                          => ['comment_type' => 'all_multiline'],

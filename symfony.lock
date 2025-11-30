@@ -250,6 +250,18 @@
             "./config/packages/messenger.yaml"
         ]
     },
+    "symfony/monolog-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.7",
+            "ref": "1b9efb10c54cb51c713a9391c9300ff8bceda459"
+        },
+        "files": [
+            "./config/packages/monolog.yaml"
+        ]
+    },
     "symfony/property-info": {
         "version": "7.3",
         "recipe": {
@@ -337,18 +349,6 @@
             "version": "7.0",
             "ref": "0df5844274d871b37fc3816c57a768ffc60a43a5"
         }
-    },
-    "symfony/ux-icons": {
-        "version": "2.31",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.17",
-            "ref": "803a3bbd5893f9584969ab8670290cdfb6a0a5b5"
-        },
-        "files": [
-            "./assets/icons/symfony.svg"
-        ]
     },
     "symfony/ux-live-component": {
         "version": "2.31",

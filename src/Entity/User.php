@@ -88,7 +88,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
     public function __toString(): string
     {
-        return $this->getName();
+        return $this->getUsername();
     }
 
     /**
