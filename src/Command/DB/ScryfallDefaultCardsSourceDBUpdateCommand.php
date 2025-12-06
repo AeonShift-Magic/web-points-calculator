@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace App\Command\DB;
 
 use App\Entity\SourceActivityHistoryInterface;
+use App\Model\DBUpdate\DataTransformerModel\MTG\V1\ScryfallDefaultCardsSourceDataTransformerModel;
 use Exception;
-use App\Model\DBUpdate\DataTransformerModel\MTG\ScryfallDefaultCardsSourceDataTransformerModel;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -37,11 +37,27 @@ class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
             InputOption::VALUE_NONE,
             'Display what would be done without actually importing data'
         );
+
+        $this->addOption(
+            'source',
+            null,
+            InputOption::VALUE_OPTIONAL,
+            'Specify the source that initiated the import (cli or cron)',
+            'cli'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $source = $input->getOption('source');
+
+        // Validate the source option
+        if (! in_array($source, ['cli', 'cron'], true)) {
+            $io->error('Invalid source option. Must be "cli" or "cron".');
+
+            return Command::FAILURE;
+        }
 
         if ($input->getOption('dry-run')) {
             $io->warning('DRY RUN MODE - No data will be imported');
@@ -74,7 +90,9 @@ class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
                     $progressBar->setMessage((string)$updatedCount, 'updated');
                     $progressBar->setMessage((string)$skippedCount, 'skipped');
                 },
-                SourceActivityHistoryInterface::SOURCE_CLI
+                $source === 'cron'
+                    ? SourceActivityHistoryInterface::SOURCE_CRON
+                    : SourceActivityHistoryInterface::SOURCE_CLI
             );
 
             if ($progressBar !== null) {

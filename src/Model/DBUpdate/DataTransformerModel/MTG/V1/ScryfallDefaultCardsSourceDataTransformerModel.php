@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\DBUpdate\DataTransformerModel\MTG;
+namespace App\Model\DBUpdate\DataTransformerModel\MTG\V1;
 
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\Source\Factory\SourceActivityHistoryFactory;
@@ -25,6 +25,7 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use RuntimeException;
+use Stringable;
 use Throwable;
 
 /**
@@ -33,10 +34,13 @@ use Throwable;
  */
 class ScryfallDefaultCardsSourceDataTransformerModel
 {
+    /** @var int How many items/cards to check before securing a DB upsert */
     private const int BATCH_SIZE = 100;
 
-    private const string CHANNEL = 'scryfall/defaultcards/dbupdate';
+    /** @var string Channel string for DB logging */
+    private const string CHANNEL = 'scryfall/defaultcards/dbupdate/v1';
 
+    /** @var string License identifier for MTG Scryfall source */
     private const string LICENSE = 'MTG';
 
     /**
@@ -44,7 +48,7 @@ class ScryfallDefaultCardsSourceDataTransformerModel
      */
     private array $existingCardsCache = [];
 
-    private Logger $fileLogger;
+    private ?Logger $fileLogger = null;
 
     private SourceActivityHistoryInterface $sourceActivityHistory;
 
@@ -57,13 +61,14 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         private readonly SourceActivityHistoryFactory $sourceActivityHistoryFactory,
     )
     {
-        $this->sourceActivityHistory = $this->sourceActivityHistoryFactory->create(static::LICENSE);
+        $this->sourceActivityHistory = $this->sourceActivityHistoryFactory->create(self::LICENSE);
     }
 
     /**
      * Parse and import cards from the Scryfall Default Cards JSON file.
      *
      * @param callable|null $progressCallback Callback function: function(int $processedCount, int $insertedCount, int $updatedCount, int $skippedCount): void
+     * @param string $startedFrom Source identifier for where the import was started from (e.g., 'cli', 'web'), @see AbstractSourceActivityHistory
      *
      * @throws Exception|RuntimeException
      *
@@ -79,23 +84,24 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         $startTime = new DateTimeImmutable();
         $jsonFilePath = $this->getLatestScryfallSourceJsonFile();
 
-        // Initialize file logger at the same directory that the JSON file is located in, erase existing log files
+        // Initialize file fileLogger at the same directory that the JSON file is located in, erase existing log files
         $logFileName = $this->initializeLogger($jsonFilePath);
-        $this->fileLogger->info(sprintf('Starting import from: %s, setting up database trace as well', $jsonFilePath));
+        $this->getLogger()->info(sprintf('Starting import from: %s, setting up database trace as well', $jsonFilePath));
 
         // Initialize the table entry for this source activity history
         $this->initializeDatabaseSourceActivityHistory($startTime, $startedFrom, $logFileName);
 
-        /** @var array<int, array<string, mixed> $batchSliceOfCards an array containing the current BATCH_SIZE cards to be processed */
+        /** @var array<int, array<string, mixed>> $batchSliceOfCards an array containing the current BATCH_SIZE cards to be processed */
         $batchSliceOfCards = [];
 
         try {
             // Load all existing cards into memory cache for fast lookups
-            $this->fileLogger->info('Loading existing cards into memory cache...');
+            $this->getLogger()->info('Loading existing cards into memory cache...');
             $this->loadExistingCardsCache();
-            $this->fileLogger->info(sprintf('Loaded %d existing cards into cache', count($this->existingCardsCache)));
+            $this->getLogger()->info(sprintf('Loaded %d existing cards into cache', count($this->existingCardsCache)));
 
             // Use JsonMachine to stream the JSON file
+            /** @var iterable<array<string, mixed>> $cards */
             $cards = Items::fromFile($jsonFilePath, ['decoder' => new ExtJsonDecoder(true)]);
 
             foreach ($cards as $card) {
@@ -126,11 +132,11 @@ class ScryfallDefaultCardsSourceDataTransformerModel
                     }
                 } catch (Throwable $e) {
                     ++$errorCount;
-                    $this->fileLogger->error(
+                    $this->getLogger()->error(
                         sprintf(
                             'Error processing card: %s (Card: %s)',
                             $e->getMessage(),
-                            $card['name'] ?? 'unknown'
+                            isset($card['name']) && is_string($card['name']) ? $card['name'] : ''
                         )
                     );
                 }
@@ -153,7 +159,7 @@ class ScryfallDefaultCardsSourceDataTransformerModel
             $this->sourceActivityHistory->setEndedAt(new DateTime());
             $this->entityManager->persist($this->sourceActivityHistory);
             $this->entityManager->flush();
-            $this->fileLogger->info(
+            $this->getLogger()->info(
                 sprintf(
                     'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d',
                     $processedCardsCount,
@@ -171,7 +177,7 @@ class ScryfallDefaultCardsSourceDataTransformerModel
             $this->sourceActivityHistory->setEndedAt(new DateTime());
             $this->entityManager->persist($this->sourceActivityHistory);
             $this->entityManager->flush();
-            $this->fileLogger->error(sprintf('Import failed: %s', $e->getMessage()));
+            $this->getLogger()->error(sprintf('Import failed: %s', $e->getMessage()));
 
             throw new RuntimeException('Failed to import cards: ' . $e->getMessage(), 0, $e);
         }
@@ -188,22 +194,24 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     /**
      * Calculate legality flags based on card properties.
      *
+     * @param array<string, mixed> $card A JSON card source converted into a PHP array
+     * @param DateTimeImmutable $currentDate The exact date at which the model was instanciated
+     *
      * @return array{isLegalDuel: bool, isLegalMulti: bool, isLegal2HG: bool}
      */
     private function calculateASCardVariantsLegality(array $card, DateTimeImmutable $currentDate): array
     {
-        $legalities = $card['legalities'] ?? [];
-        $borderColor = $card['border_color'] ?? '';
-        $games = $card['games'] ?? [];
-        $typeLine = $card['type_line'] ?? '';
-        $oracleText = $card['oracle_text'] ?? '';
-        $releasedAt = $card['released_at'] ?? '';
-        $securityStamp = $card['security_stamp'] ?? '';
-        $nameEN = $card['name'] ?? '';
+        $legalities = isset($card['legalities']) && is_array($card['legalities']) ? $card['legalities'] : [];
+        $borderColor = isset($card['border_color']) && is_string($card['border_color']) ? $card['border_color'] : '';
+        $games = isset($card['games']) && is_array($card['games']) ? $card['games'] : [];
+        $typeLine = isset($card['type_line']) && is_string($card['type_line']) ? $card['type_line'] : '';
+        $oracleText = isset($card['oracle_text']) && is_string($card['oracle_text']) ? $card['oracle_text'] : '';
+        $releasedAt = isset($card['released_at']) && is_string($card['released_at']) ? $card['released_at'] : '';
+        $securityStamp = isset($card['security_stamp']) && is_string($card['security_stamp']) ? $card['security_stamp'] : '';
+        $nameEN = isset($card['name']) && is_string($card['name']) ? $card['name'] : '';
 
         // Default: legal if vintage is legal or restricted
-        $isLegal = isset($legalities['vintage']) &&
-            in_array($legalities['vintage'], ['legal', 'restricted'], true);
+        $isLegal = isset($legalities['vintage']) && in_array($legalities['vintage'], ['legal', 'restricted'], true);
 
         // Special case: Shahrazad is always legal
         if ($nameEN === 'Shahrazad') {
@@ -279,9 +287,11 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     }
 
     /**
-     * Calculate color identity flags.
+     * Calculate color identity flags, based on a simplified color identity array.
      *
-     * @return array{isBlack: bool, isBlue: bool, isColorless: bool, isGreen: bool, isRed: bool, isWhite: bool}
+     * @param string[] $colorIdentity A simplified color identity array of strings (e.g., ['R', 'G'])
+     *
+     * @return array{isBlack: bool, isBlue: bool, isColorless: bool, isGreen: bool, isRed: bool, isWhite: bool} an array of color identity flags
      */
     private function calculateCardColorIdentityFlags(array $colorIdentity): array
     {
@@ -296,9 +306,17 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     }
 
     /**
-     * Calculate special legality flags based on command zone eligibility.
+     * Calculate special legality flags based on command zone eligibility boolean flags.
+     * Respectively set to true if the card is legal in the given format AND is command zone eligible.
      *
-     * @return array{isLegal2HGSpecial: bool, isLegalDuelSpecial: bool, isLegalMultiSpecial: bool}
+     * @param bool $isLegal2HG
+     * @param bool $isLegalDuel
+     * @param bool $isLegalMulti
+     * @param bool $isCommandZoneEligible
+     *
+     * @return array{isLegal2HGSpecial: bool, isLegalDuelSpecial: bool, isLegalMultiSpecial: bool} An array of legality flags
+     *
+     * @see ScryfallDefaultCardsSourceDataTransformerModel::canCardBeACommander()
      */
     private function calculateCardSpecialLegality(
         bool $isLegal2HG,
@@ -315,13 +333,18 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     }
 
     /**
-     * Calculate if a card is command zone eligible.
+     * Calculate if a card is command zone eligible,
+     * based on a JSON card source converted into a PHP array.
+     *
+     * @param array<string, mixed> $sourceCard A JSON source card converted into a PHP array
+     *
+     * @return bool True if the card can be a commander, false otherwise
      */
-    private function canCardBeACommander(array $card): bool
+    private function canCardBeACommander(array $sourceCard): bool
     {
-        $typeLine = $card['type_line'] ?? '';
-        $oracleText = $card['oracle_text'] ?? '';
-        $name = $card['name'] ?? '';
+        $typeLine = isset($sourceCard['type_line']) && is_string($sourceCard['type_line']) ? $sourceCard['type_line'] : '';
+        $oracleText = isset($sourceCard['oracle_text']) && is_string($sourceCard['oracle_text']) ? $sourceCard['oracle_text'] : '';
+        $name = $sourceCard['name'] ?? '';
 
         // Special case: Grist, the Hunger Tide
         if ($name === 'Grist, the Hunger Tide') {
@@ -345,18 +368,24 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     }
 
     /**
-     * Calculate if a card is eligible for multiple command zones.
+     * Calculate if a card is eligible for multiple command zones,
+     * based on a JSON card source converted into a PHP array.
+     *
+     * @param array<string, mixed> $sourceCard A source card converted into a PHP array
+     * @param bool $isCommandZoneEligible
+     *
+     * @return bool True if the card can trigger multiple commanders, false otherwise
      */
-    private function doesCardTriggerMultipleCommanders(array $card, bool $isCommandZoneEligible): bool
+    private function doesCardTriggerMultipleCommanders(array $sourceCard, bool $isCommandZoneEligible): bool
     {
         if (! $isCommandZoneEligible) {
             return false;
         }
 
-        $oracleText = $card['oracle_text'] ?? '';
-        $typeLine = $card['type_line'] ?? '';
-
+        $oracleText = isset($sourceCard['oracle_text']) && is_string($sourceCard['oracle_text']) ? $sourceCard['oracle_text'] : '';
+        $typeLine = isset($sourceCard['type_line']) && is_string($sourceCard['type_line']) ? $sourceCard['type_line'] : '';
         $partnerKeywords = ['Partner', 'Friends forever', 'Choose a Background'];
+
         if (array_any($partnerKeywords, static fn ($keyword) => mb_stripos($oracleText, $keyword) !== false)) {
             return true;
         }
@@ -369,11 +398,11 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     /**
      * Format a value for logging purposes.
      *
-     * @param mixed $value
+     * @param mixed $value the value to format, any given PHP type
      *
      * @throws JsonException
      *
-     * @return string
+     * @return string the formatted value for logging as a string
      */
     private function formatValueForLog(mixed $value): string
     {
@@ -398,33 +427,46 @@ class ScryfallDefaultCardsSourceDataTransformerModel
             return number_format($value, 2);
         }
 
-        if (is_string($value)) {
+        if (is_string($value) || $value instanceof Stringable || (is_object($value) && method_exists($value, '__toString'))) {
             // Truncate very long strings (like JSON)
-            if (mb_strlen($value) > 100) {
-                return mb_substr($value, 0, 97) . '...';
+            if (mb_strlen((string)$value) > 100) {
+                return mb_substr((string)$value, 0, 97) . '...';
             }
 
-            return $value;
+            return (string)$value;
         }
 
         if (is_array($value)) {
             return json_encode($value, JSON_THROW_ON_ERROR);
         }
 
-        return (string)$value;
+        return '[non stringable value]';
     }
 
     /**
-     * Calculate multi-commander zone type.
+     * Calculate multi-commander zone type, based on a JSON card source converted into a PHP array.
+     *
+     * Checks for specific keywords in oracle text and type line:
+     * - "Doctor's companion" -> 'doctors_companion'
+     * - "Choose a Background" -> 'choose_a_background'
+     * - "Friends forever" -> 'friends_forever'
+     * - "Partner" -> 'partner'
+     * - Type line containing "Time Lord Doctor" -> 'doctors_companion'
+     * - Type line containing "Background" -> 'choose_a_background'.
+     *
+     * @param array<string, mixed> $sourceCard a JSON card source converted into a PHP array
+     * @param bool $isCommandZoneEligible
+     *
+     * @return string the multi-command zone type identifier, or empty string if none match by default
      */
-    private function getCardMultipleCommandZoneType(array $card, bool $isCommandZoneEligible): string
+    private function getCardMultipleCommandZoneType(array $sourceCard, bool $isCommandZoneEligible): string
     {
         if (! $isCommandZoneEligible) {
             return '';
         }
 
-        $oracleText = $card['oracle_text'] ?? '';
-        $typeLine = $card['type_line'] ?? '';
+        $oracleText = isset($sourceCard['oracle_text']) && is_string($sourceCard['oracle_text']) ? $sourceCard['oracle_text'] : '';
+        $typeLine = isset($sourceCard['type_line']) && is_string($sourceCard['type_line']) ? $sourceCard['type_line'] : '';
 
         // Check oracle text first (more specific)
         if (mb_stripos($oracleText, "Doctor's companion") !== false) {
@@ -456,9 +498,133 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     }
 
     /**
+     * Prepare data for update operation: determine which fields need to be updated.
+     *
+     * @param array<string, mixed> $currentSourceCard the new card data to compare against, from source JSON
+     * @param array<string, mixed> $existingDBCard the existing card data from the database to compare against
+     * @param DateTimeImmutable $currentDate the exact date at which the model was instanciated
+     *
+     * @throws DateMalformedStringException|JsonException
+     *
+     * @return array<string, mixed> an array of fields keys to update, with their new values
+     */
+    private function getFieldsToUpdate(array $currentSourceCard, array $existingDBCard, DateTimeImmutable $currentDate): array
+    {
+        $updateData = [];
+
+        // Check if we should update first printed date (only if new card is earlier or card is legal nowhere)
+        if (
+            ! isset(
+                $currentSourceCard['first_printed_at'],
+                $existingDBCard['first_printed_at'],
+                $currentSourceCard['is_legal_duel'],
+                $currentSourceCard['is_legal_multi'],
+                $currentSourceCard['is_legal_2hg']
+            )
+            || ! is_string($currentSourceCard['first_printed_at'])
+            || ! is_string($existingDBCard['first_printed_at'])
+        ) {
+            // Missing date fields - cannot compare, skip updating first printed info
+            return $updateData;
+        }
+
+        $cardIsLegalNowhere = ! $currentSourceCard['is_legal_duel'] &&
+            ! $currentSourceCard['is_legal_multi'] &&
+            ! $currentSourceCard['is_legal_2hg'];
+
+        if (! $cardIsLegalNowhere) {
+            $newDate = new DateTimeImmutable($currentSourceCard['first_printed_at']);
+            $existingDate = new DateTimeImmutable($existingDBCard['first_printed_at']);
+
+            if ($newDate < $existingDate) {
+                // Found an earlier printing - update all printing-related fields
+                $updateData['first_printed_at'] = $currentSourceCard['first_printed_at'];
+                $updateData['first_printed_set_code'] = $currentSourceCard['first_printed_set_code'] ?? '';
+                $updateData['first_printed_year'] = $currentSourceCard['first_printed_year'] ?? 0;
+                $updateData['scryfall_id'] = $currentSourceCard['scryfall_id'] ?? '';
+                $updateData['scryfall_uri'] = $currentSourceCard['scryfall_uri'] ?? '';
+            }
+        }
+
+        // Update legalities if new card is legal and existing is not
+        $possibleLegalityFields = [
+            'is_legal_duel'          => 'is_legal_duel',
+            'is_legal_multi'         => 'is_legal_multi',
+            'is_legal_2hg'           => 'is_legal_2hg',
+            'is_legal_duel_special'  => 'is_legal_duel_special',
+            'is_legal_multi_special' => 'is_legal_multi_special',
+            'is_legal_2hg_special'   => 'is_legal_2hg_special',
+        ];
+
+        foreach ($possibleLegalityFields as $possibleLegalityFieldKey => $possibleLegalityFieldName) {
+            if (isset($currentSourceCard[$possibleLegalityFieldKey], $existingDBCard[$possibleLegalityFieldKey], $existingDBCard[$possibleLegalityFieldName]) && ! $existingDBCard[$possibleLegalityFieldName]) {
+                $updateData[$possibleLegalityFieldName] = $currentSourceCard[$possibleLegalityFieldKey];
+            }
+        }
+
+        // Check if these fields actually changed before updating
+        // NOTE: scryfall_id and scryfall_uri are NOT included here because they're printing-specific
+        // and should only be updated when first_printed_at is updated
+        $fieldsToCheck = [
+            'name_en',
+            'mana_value',
+            'color_identity',
+            'is_command_zone_eligible',
+            'is_multiple_command_zone_eligible',
+            'multi_cz_type',
+            'is_black',
+            'is_blue',
+            'is_colorless',
+            'is_green',
+            'is_red',
+            'is_white',
+        ];
+
+        foreach ($fieldsToCheck as $field) {
+            // Convert existing card value to match new data format for comparison
+            $existingValue = $existingDBCard[$field] ?? null;
+            $newValue = $currentSourceCard[$field] ?? null;
+
+            // Special handling for different data types
+            if ($field === 'mana_value' && is_numeric($existingValue)) {
+                $existingValue = (float)$existingValue;
+            } elseif ($field === 'color_identity') {
+                // Normalize JSON comparison - decode existing and compare arrays
+                $existingArray = is_string($existingValue) ? json_decode($existingValue, true, 512, JSON_THROW_ON_ERROR) : [];
+                $newArray = is_string($newValue) ? json_decode($newValue, true, 512, JSON_THROW_ON_ERROR) : [];
+
+                // Compare as arrays, not as JSON strings
+                if ($existingArray === $newArray) {
+                    continue; // Skip this field - no actual change
+                }
+            } elseif (in_array($field, [
+                'is_command_zone_eligible', 'is_multiple_command_zone_eligible', 'is_black', 'is_blue', 'is_colorless', 'is_green',
+                'is_red', 'is_white',
+            ], true)) {
+                $existingValue = (int)(bool)$existingValue;
+            }
+
+            // Only add to update if value has changed
+            if ($existingValue !== $newValue) {
+                $updateData[$field] = $newValue;
+            }
+        }
+
+        // Only add updated_at timestamp if there are actual changes
+        if (count($updateData) > 0) {
+            $updateData['updated_at'] = $currentDate->format('Y-m-d H:i:s');
+        }
+
+        return $updateData;
+    }
+
+    /**
      * Find the JSON file in the cards source directory.
+     * Returns the path to the JSON file.
      *
      * @throws RuntimeException
+     *
+     * @return string the path to the latest downloaded JSON file
      */
     private function getLatestScryfallSourceJsonFile(): string
     {
@@ -479,6 +645,18 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         }
 
         return $files[0];
+    }
+
+    /**
+     * @return Logger
+     */
+    private function getLogger(): Logger
+    {
+        if ($this->fileLogger === null) {
+            throw new RuntimeException('Logger not initialized');
+        }
+
+        return $this->fileLogger;
     }
 
     /**
@@ -503,13 +681,13 @@ class ScryfallDefaultCardsSourceDataTransformerModel
      * Finally, if the card field "legalities" contains either "banned" "restricted" or "legal" in standard, it is classified as "standard".
      * Special case: if the card field "released_at" is in the future, the card is always classified as "unranked".
      *
-     * @param array<string, mixed> $card the Scryfall card data
+     * @param array<string, mixed> $sourceCard the Scryfall card data
      * @param DateTimeImmutable $currentDate the current date for comparison
      */
-    private function getMaximumTimelineLegalityForSourceCard(array $card, DateTimeImmutable $currentDate): string
+    private function getMaximumTimelineLegalityForSourceCard(array $sourceCard, DateTimeImmutable $currentDate): string
     {
         // Special case: if released_at is in the future, return "unranked"
-        $releasedAt = $card['released_at'] ?? '';
+        $releasedAt = isset($sourceCard['released_at']) && is_string($sourceCard['released_at']) ? $sourceCard['released_at'] : '';
         if (! empty($releasedAt)) {
             try {
                 $releaseDate = new DateTimeImmutable($releasedAt);
@@ -522,18 +700,18 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         }
 
         // Check for "funny" classification (silver border or acorn stamp)
-        $borderColor = $card['border_color'] ?? '';
-        $securityStamp = $card['security_stamp'] ?? '';
+        $borderColor = $sourceCard['border_color'] ?? '';
+        $securityStamp = $sourceCard['security_stamp'] ?? '';
 
         if ($borderColor === 'silver' || $securityStamp === 'acorn') {
             return 'funny';
         }
 
-        $legalities = $card['legalities'] ?? [];
-        $games = $card['games'] ?? [];
-        $typeLine = $card['type_line'] ?? '';
-        $oracleText = $card['oracle_text'] ?? '';
-        $nameEN = $card['name'] ?? '';
+        $legalities = isset($sourceCard['legalities']) && is_array($sourceCard['legalities']) ? $sourceCard['legalities'] : [];
+        $games = isset($sourceCard['games']) && is_array($sourceCard['games']) ? $sourceCard['games'] : [];
+        $typeLine = isset($sourceCard['type_line']) && is_string($sourceCard['type_line']) ? $sourceCard['type_line'] : '';
+        $oracleText = isset($sourceCard['oracle_text']) && is_string($sourceCard['oracle_text']) ? $sourceCard['oracle_text'] : '';
+        $nameEN = isset($sourceCard['name']) && is_string($sourceCard['name']) ? $sourceCard['name'] : '';
 
         // Check if card qualifies for "eternal" through legal/restricted in vintage
         if (isset($legalities['vintage']) && in_array($legalities['vintage'], ['legal', 'restricted'], true)) {
@@ -623,9 +801,9 @@ class ScryfallDefaultCardsSourceDataTransformerModel
      * and creates an entry in the database table for the matching SourceActivityHistoryInterface
      * to track this import session and prepares the line.
      *
-     * @param DateTimeImmutable $currentDate
-     * @param string $startedFrom
-     * @param string $logFilePath
+     * @param DateTimeImmutable $currentDate the exact date at which the model was instanciated
+     * @param string $startedFrom Source identifier for where the import was started from (e.g., 'cli', 'web'), @see AbstractSourceActivityHistory
+     * @param string $logFilePath The log file name generated for this import session
      *
      * @return void
      */
@@ -642,10 +820,16 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     }
 
     /**
-     * Initialize file logger for this import session.
+     * Initialize file fileLogger for this import session.
+     * Creates the log file in the same directory as the JSON file and deletes any existing log files there.
+     *
+     * @param string $jsonFilePath the path to the JSON file being imported, @see services.yaml
+     *
+     * @return string The log file name generated for this import session
      */
     private function initializeLogger(string $jsonFilePath): string
     {
+        /** @var array{dirname: string, basename: string, extension: string, filename: string} $pathInfo */
         $pathInfo = pathinfo($jsonFilePath);
         $directory = $pathInfo['dirname'];
 
@@ -663,13 +847,15 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         $logFilePath = $directory . DIRECTORY_SEPARATOR . $logFileName;
 
         $this->fileLogger = new Logger('scryfall_datatransformer');
-        $this->fileLogger->pushHandler(new StreamHandler($logFilePath, Level::Debug));
+        $this->getLogger()->pushHandler(new StreamHandler($logFilePath, Level::Debug));
 
         return $logFileName;
     }
 
     /**
      * Load all existing cards into memory cache.
+     * This allows for fast lookups during the import process.
+     * This will work as long as the source file contains a manageable number of cards compared to available running memory.
      *
      * @throws Exception
      */
@@ -680,7 +866,7 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         $result = $this->connection->executeQuery('SELECT * FROM ' . $this->tablePrefix . 'mtgsource_card');
 
         while ($row = $result->fetchAssociative()) {
-            if (isset($row['oracle_id'])) {
+            if (isset($row['oracle_id']) && is_string($row['oracle_id'])) {
                 $this->existingCardsCache[$row['oracle_id']] = $row;
             }
         }
@@ -689,15 +875,16 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     /**
      * Transform a Scryfall card to database format.
      *
-     * @param array<string, mixed> $card
+     * @param array<string, mixed> $card A JSON card source converted into a PHP array
+     * @param DateTimeImmutable $currentDate The exact date at which the model was instanciated
      *
      * @throws JsonException
      *
-     * @return array<string, mixed>|null
+     * @return array<string, mixed>|null An array of transformed card data, or null if the card should be skipped
      */
     private function mapScryfallSourceCardDataToArray(array $card, DateTimeImmutable $currentDate): ?array
     {
-        // Skip cards without oracle_id
+        // Skip cards without oracle_id, as the reference identifier cannot be trusted otherwise
         if (! isset($card['oracle_id']) || ! is_string($card['oracle_id'])) {
             return null;
         }
@@ -706,7 +893,7 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         $oracleId = $card['oracle_id'];
         $scryfallId = $card['id'] ?? null;
         $name = $card['name'] ?? '';
-        $manaValue = (float)($card['cmc'] ?? 0.0);
+        $manaValue = (float)(isset($card['cmc']) && is_numeric($card['cmc']) ? $card['cmc'] : 0.0);
         $colorIdentity = $card['color_identity'] ?? [];
         $scryfallUri = $card['scryfall_uri'] ?? '';
         $set = $card['set'] ?? '';
@@ -715,6 +902,13 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         // Ensure color identity is an array
         if (! is_array($colorIdentity)) {
             $colorIdentity = [];
+        }
+
+        foreach ($colorIdentity as $identity) {
+            if (! is_string($identity)) {
+                // Invalid color identity entry, skip the card
+                return null;
+            }
         }
 
         // Calculate legalities
@@ -735,14 +929,14 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         $multiCZType = $this->getCardMultipleCommandZoneType($card, $isCommandZoneEligible);
 
         // Calculate color flags
-        $colorFlags = $this->calculateCardColorIdentityFlags($colorIdentity);
+        $colorFlags = $this->calculateCardColorIdentityFlags($colorIdentity); // @phpstan-ignore-line
 
         // Parse release date
         $firstPrintedAt = null;
         $firstPrintedYear = 0;
 
         try {
-            if (! empty($releasedAt)) {
+            if (is_string($releasedAt) && $releasedAt !== '') {
                 $date = new DateTimeImmutable($releasedAt);
                 $firstPrintedAt = $date->format('Y-m-d');
                 $firstPrintedYear = (int)$date->format('Y');
@@ -788,115 +982,11 @@ class ScryfallDefaultCardsSourceDataTransformerModel
     }
 
     /**
-     * Prepare data for update operation.
+     * Process a batch of BATCH_SIZE cards found in source JSON (upsert).
+     * Determining whether to insert, update or skip each card.
      *
-     * @param array<string, mixed> $newData
-     * @param array<string, mixed> $existingCard
-     *
-     * @throws DateMalformedStringException|JsonException
-     *
-     * @return array<string, mixed>
-     */
-    private function getFieldsToUpdate(array $newData, array $existingCard, DateTimeImmutable $currentDate): array
-    {
-        $updateData = [];
-
-        // Check if we should update first printed date (only if new card is earlier or card is legal nowhere)
-        $cardIsLegalNowhere = ! $newData['is_legal_duel'] &&
-            ! $newData['is_legal_multi'] &&
-            ! $newData['is_legal_2hg'];
-
-        if (! $cardIsLegalNowhere) {
-            $newDate = new DateTimeImmutable($newData['first_printed_at']);
-            $existingDate = new DateTimeImmutable($existingCard['first_printed_at']);
-
-            if ($newDate < $existingDate) {
-                // Found an earlier printing - update all printing-related fields
-                $updateData['first_printed_at'] = $newData['first_printed_at'];
-                $updateData['first_printed_set_code'] = $newData['first_printed_set_code'];
-                $updateData['first_printed_year'] = $newData['first_printed_year'];
-                $updateData['scryfall_id'] = $newData['scryfall_id'];
-                $updateData['scryfall_uri'] = $newData['scryfall_uri'];
-            }
-        }
-
-        // Update legalities if new card is legal and existing is not
-        $legalityFields = [
-            'is_legal_duel'          => 'is_legal_duel',
-            'is_legal_multi'         => 'is_legal_multi',
-            'is_legal_2hg'           => 'is_legal_2hg',
-            'is_legal_duel_special'  => 'is_legal_duel_special',
-            'is_legal_multi_special' => 'is_legal_multi_special',
-            'is_legal_2hg_special'   => 'is_legal_2hg_special',
-        ];
-
-        foreach ($legalityFields as $field => $dbField) {
-            if ($newData[$field] && ! $existingCard[$dbField]) {
-                $updateData[$dbField] = $newData[$field];
-            }
-        }
-
-        // Check if these fields actually changed before updating
-        // NOTE: scryfall_id and scryfall_uri are NOT included here because they're printing-specific
-        // and should only be updated when first_printed_at is updated
-        $fieldsToCheck = [
-            'name_en',
-            'mana_value',
-            'color_identity',
-            'is_command_zone_eligible',
-            'is_multiple_command_zone_eligible',
-            'multi_cz_type',
-            'is_black',
-            'is_blue',
-            'is_colorless',
-            'is_green',
-            'is_red',
-            'is_white',
-        ];
-
-        foreach ($fieldsToCheck as $field) {
-            // Convert existing card value to match new data format for comparison
-            $existingValue = $existingCard[$field] ?? null;
-            $newValue = $newData[$field];
-
-            // Special handling for different data types
-            if ($field === 'mana_value') {
-                $existingValue = (float)$existingValue;
-            } elseif ($field === 'color_identity') {
-                // Normalize JSON comparison - decode existing and compare arrays
-                $existingArray = json_decode($existingValue, true, 512, JSON_THROW_ON_ERROR);
-                $newArray = json_decode($newValue, true, 512, JSON_THROW_ON_ERROR);
-
-                // Compare as arrays, not as JSON strings
-                if ($existingArray === $newArray) {
-                    continue; // Skip this field - no actual change
-                }
-            } elseif (in_array($field, [
-                'is_command_zone_eligible', 'is_multiple_command_zone_eligible', 'is_black', 'is_blue', 'is_colorless', 'is_green',
-                'is_red', 'is_white',
-            ], true)) {
-                $existingValue = (int)(bool)$existingValue;
-            }
-
-            // Only add to update if value has changed
-            if ($existingValue !== $newValue) {
-                $updateData[$field] = $newValue;
-            }
-        }
-
-        // Only add updated_at timestamp if there are actual changes
-        if (count($updateData) > 0) {
-            $updateData['updated_at'] = $currentDate->format('Y-m-d H:i:s');
-        }
-
-        return $updateData;
-    }
-
-    /**
-     * Process a batch of cards (insert or update).
-     *
-     * @param array<int, array<string, mixed>> $batchSliceOfCards an array containing the current BATCH_SIZE cards to be processed
-     * @param DateTimeImmutable $batchStartedAtDate the date at which the batch processing started
+     * @param array<int, array<string, mixed>> $batchSliceOfCards An array containing the current BATCH_SIZE cards to be processed
+     * @param DateTimeImmutable $batchStartedAtDate The date at which the batch processing started
      *
      * @throws DateMalformedStringException|Exception|JsonException
      *
@@ -908,38 +998,94 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         $updatedCount = 0;
         $skippedCount = 0;
 
-        foreach ($batchSliceOfCards as $cardData) {
-            $oracleId = $cardData['oracle_id'];
-            $cardName = $cardData['name_en'];
+        // @var array<string, mixed> $cardData
+        foreach ($batchSliceOfCards as $currentSourceCard) {
+
+            if (empty($currentSourceCard['oracle_id'])) {
+                $this->getLogger()->warning(
+                    '[SKIP] Card with missing oracle_id - skipping',
+                    [
+                        'card_data' => $currentSourceCard,
+                    ]
+                );
+                ++$skippedCount;
+
+                continue;
+            }
+
+            if (empty($currentSourceCard['name_en'])) {
+                $this->getLogger()->warning(
+                    '[SKIP] Card with missing name_en - skipping',
+                    [
+                        'card_data' => $currentSourceCard,
+                    ]
+                );
+                ++$skippedCount;
+
+                continue;
+            }
+
+            if (empty($currentSourceCard['scryfall_id'])) {
+                $this->getLogger()->warning(
+                    '[SKIP] Card with missing scryfall_id - skipping',
+                    [
+                        'card_data' => $currentSourceCard,
+                    ]
+                );
+                ++$skippedCount;
+
+                continue;
+            }
+
+            if (empty($currentSourceCard['first_printed_set_code'])) {
+                $this->getLogger()->warning(
+                    '[SKIP] Card with missing first_printed_set_code - skipping',
+                    [
+                        'card_data' => $currentSourceCard,
+                    ]
+                );
+                ++$skippedCount;
+
+                continue;
+            }
+
+            /** @var string $oracleId */
+            $oracleId = $currentSourceCard['oracle_id'];
+            /** @var string $cardName */
+            $cardName = $currentSourceCard['name_en'];
+            /** @var string $scryfallId */
+            $scryfallId = $currentSourceCard['scryfall_id'];
+            /** @var string $firstPrintedSetCode */
+            $firstPrintedSetCode = $currentSourceCard['first_printed_set_code'];
 
             // Check cache instead of querying database
             if (! isset($this->existingCardsCache[$oracleId])) {
                 // Insert new card with timestamps
-                $cardData['created_at'] = $batchStartedAtDate->format('Y-m-d H:i:s');
-                $cardData['updated_at'] = $batchStartedAtDate->format('Y-m-d H:i:s');
+                $currentSourceCard['created_at'] = $batchStartedAtDate->format('Y-m-d H:i:s');
+                $currentSourceCard['updated_at'] = $batchStartedAtDate->format('Y-m-d H:i:s');
 
-                $this->connection->insert($this->tablePrefix . 'mtgsource_card', $cardData);
+                $this->connection->insert($this->tablePrefix . 'mtgsource_card', $currentSourceCard);
 
                 // Add to cache for future lookups
-                $this->existingCardsCache[$oracleId] = $cardData;
+                $this->existingCardsCache[$oracleId] = $currentSourceCard;
 
-                $this->fileLogger->info(
+                $this->getLogger()->info(
                     sprintf(
                         '[INSERT] Card "%s" (oracle_id: %s) inserted into database',
                         $cardName,
                         $oracleId
                     ),
                     [
-                        'scryfall_id' => $cardData['scryfall_id'],
-                        'set'         => $cardData['first_printed_set_code'],
+                        'scryfall_id' => $scryfallId,
+                        'set'         => $firstPrintedSetCode,
                     ]
                 );
 
                 ++$insertedCount;
             } else {
                 // Update existing card
-                $existingCard = $this->existingCardsCache[$oracleId];
-                $fieldsToUpdate = $this->getFieldsToUpdate($cardData, $existingCard, $batchStartedAtDate);
+                $existingDBCard = $this->existingCardsCache[$oracleId];
+                $fieldsToUpdate = $this->getFieldsToUpdate($currentSourceCard, $existingDBCard, $batchStartedAtDate);
 
                 if (count($fieldsToUpdate) > 0) {
                     // Build list of changed fields for logging
@@ -949,7 +1095,7 @@ class ScryfallDefaultCardsSourceDataTransformerModel
                             continue; // Don't log timestamp changes
                         }
 
-                        $oldValue = $existingCard[$field] ?? null;
+                        $oldValue = $existingDBCard[$field] ?? null;
 
                         // Format values for logging
                         $oldValueFormatted = $this->formatValueForLog($oldValue);
@@ -970,9 +1116,9 @@ class ScryfallDefaultCardsSourceDataTransformerModel
                     );
 
                     // Update cache with new data
-                    $this->existingCardsCache[$oracleId] = array_merge($existingCard, $fieldsToUpdate);
+                    $this->existingCardsCache[$oracleId] = array_merge($existingDBCard, $fieldsToUpdate);
 
-                    $this->fileLogger->info(
+                    $this->getLogger()->info(
                         sprintf(
                             '[UPDATE] Card "%s" (oracle_id: %s) updated. Changes: %s',
                             $cardName,
@@ -987,7 +1133,7 @@ class ScryfallDefaultCardsSourceDataTransformerModel
                     ++$updatedCount;
                 } else {
                     // No updates needed - card skipped
-                    $this->fileLogger->debug(
+                    $this->getLogger()->debug(
                         sprintf(
                             '[SKIP] Card "%s" (oracle_id: %s) - no changes detected',
                             $cardName,

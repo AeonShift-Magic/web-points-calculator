@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\Source\DownloadModel\MTG;
+namespace App\Model\Source\DownloadModel\MTG\V1;
 
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\Source\Factory\SourceActivityHistoryFactory;
@@ -16,7 +16,6 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
 use const PHP_URL_PATH;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -27,18 +26,26 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ScryfallDefaultCardsSourceDownloadModel
 {
-    private const string CHANNEL = 'scryfall/defaultcards/download';
+    /** @var string Channel string for DB logging */
+    private const string CHANNEL = 'scryfall/defaultcards/download/v1';
 
+    /** @var int The permissions on the created directories for downloaded source, if needed */
     private const int DIR_PERMISSIONS = 0775;
 
+    /** @var int Timeout duration, in seconds, to consider the download to have failed */
     private const int DOWNLOAD_TIMEOUT = 1800;
 
+    /** @var int The permissions on the downloaded files */
     private const int FILE_PERMISSIONS = 0664;
 
+    /** @var string License identifier for MTG Scryfall source */
     private const string LICENSE = 'MTG';
 
-    private ?LoggerInterface $logger = null;
+    private ?Logger $fileLogger = null;
 
+    /**
+     * @var SourceActivityHistoryInterface The matching Activity History entry in DB
+     */
     private SourceActivityHistoryInterface $sourceActivityHistory;
 
     public function __construct(
@@ -57,7 +64,7 @@ class ScryfallDefaultCardsSourceDownloadModel
     /**
      * Downloads the default cards file from Scryfall.
      *
-     * @param array<string, mixed> $defaultCardsEntry
+     * @param array<string, mixed> $defaultCardsEntry The default cards entry from bulk data
      * @param callable|null $progressCallback Callback function: function(int $downloadedBytes): void
      *
      * @throws RuntimeException
@@ -80,7 +87,7 @@ class ScryfallDefaultCardsSourceDownloadModel
             $downloadUri = $defaultCardsEntry['download_uri'];
             $destinationPath = $this->buildDestinationPath($cardsSourcePath, $downloadUri);
 
-            // Initialize logger with the destination file name
+            // Initialize fileLogger with the destination file name
             $logFileName = $this->initializeLogger($destinationPath);
 
             // Initialize the table entry for this source activity history
@@ -195,9 +202,11 @@ class ScryfallDefaultCardsSourceDownloadModel
     }
 
     /**
-     * @param array<string, mixed> $bulkData
+     * Looks for the default cards entry in the bulk data JSON response transformed into a PHP array.
      *
-     * @return array<string, mixed>|null
+     * @param array<string, mixed> $bulkData The bulk data response as an array
+     *
+     * @return array<string, mixed>|null The default cards entry, or null if not found
      */
     public function findDefaultCardsEntry(array $bulkData): ?array
     {
@@ -205,7 +214,21 @@ class ScryfallDefaultCardsSourceDownloadModel
             return null;
         }
 
-        return array_find($bulkData['data'], fn (array $entry) => isset($entry['type']) && $entry['type'] === $this->bulkDataType);
+        /** @var array<string, mixed>|null $entry */
+        $entry = array_find(
+            $bulkData['data'],
+            /**
+             * @param mixed $entry
+             * @param null $key
+             *
+             * @return bool
+             */
+            fn (mixed $entry, $key = null) => is_array($entry)
+                && isset($entry['type'])
+                && $entry['type'] === $this->bulkDataType
+        );
+
+        return is_array($entry) ? $entry : null;
     }
 
     /**
@@ -215,13 +238,21 @@ class ScryfallDefaultCardsSourceDownloadModel
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      *
-     * @return array<string, mixed>
+     * @return array<string, mixed> The bulk data information as an associative array
      */
     public function getBulkDataInfo(): array
     {
         return $this->httpClient->request('GET', $this->scryfallBulkApiUrl)->toArray(); // @phpstan-ignore-line
     }
 
+    /**
+     * Builds the full destination path for the downloaded file based on the download URI.
+     *
+     * @param string $cardsSourcePath The base path for cards source downloads
+     * @param string $downloadUri The download URI of the JSON file, its filename will be extracted
+     *
+     * @return string The full destination path
+     */
     private function buildDestinationPath(string $cardsSourcePath, string $downloadUri): string
     {
         $parsedUrl = parse_url($downloadUri, PHP_URL_PATH);
@@ -239,6 +270,13 @@ class ScryfallDefaultCardsSourceDownloadModel
         return $cardsSourcePath . DIRECTORY_SEPARATOR . $filename;
     }
 
+    /**
+     * Deletes all files from previous downloads in the cards source directory.
+     *
+     * @param string $cardsSourcePath The path to the cards source directory
+     *
+     * @return void
+     */
     private function cleanCardsSourceDirectory(string $cardsSourcePath): void
     {
         $files = glob($cardsSourcePath . DIRECTORY_SEPARATOR . '*');
@@ -255,14 +293,17 @@ class ScryfallDefaultCardsSourceDownloadModel
             ++$deletedCount;
         }
 
-        if ($deletedCount > 0 && $this->getLogger() !== null) {
+        if ($deletedCount > 0) {
             $this->getLogger()->info('Deleted {count} old file(s) from directory', ['count' => $deletedCount]);
         }
     }
 
     /**
-     * @param resource $fileHandle
-     * @param string $destinationPath
+     * Deletes the partially downloaded file and closes the file handle if failing.
+     * We used fopen/fclose for better raw performance.
+     *
+     * @param resource $fileHandle A PHP resource handle to the opened file to close
+     * @param string $destinationPath The path to the partially downloaded file to delete
      *
      * @return void
      */
@@ -274,10 +315,17 @@ class ScryfallDefaultCardsSourceDownloadModel
 
         if (file_exists($destinationPath)) {
             @unlink($destinationPath);
-            $this->getLogger()?->warning('Cleaned up partial download file');
+            $this->getLogger()->warning('Cleaned up partial download file');
         }
     }
 
+    /**
+     * Creates the cards source download directory if it does not exist, based on service parameters.
+     *
+     * @return string The path to the cards source directory, created if needed
+     *
+     * @see services.yaml
+     */
     private function ensureCardsSourceDirectory(): string
     {
         $cardsSourcePath = $this->projectDir . DIRECTORY_SEPARATOR . $this->cardsSourceDir;
@@ -290,15 +338,15 @@ class ScryfallDefaultCardsSourceDownloadModel
     }
 
     /**
-     * @return LoggerInterface
+     * @return Logger
      */
-    private function getLogger(): LoggerInterface
+    private function getLogger(): Logger
     {
-        if ($this->logger === null) {
+        if ($this->fileLogger === null) {
             throw new RuntimeException('Logger not initialized');
         }
 
-        return $this->logger;
+        return $this->fileLogger;
     }
 
     /**
@@ -308,16 +356,16 @@ class ScryfallDefaultCardsSourceDownloadModel
      * and creates an entry in the database table for the matching SourceActivityHistoryInterface
      * to track this import session and prepares the line.
      *
-     * @param DateTimeImmutable $currentDate
-     * @param string $startedFrom
-     * @param string $logFileName
+     * @param DateTimeImmutable $currentDate The exact date at which the model was instanciated
+     * @param string $startedFrom Source identifier for where the import was started from (e.g., 'cli', 'web'), @see AbstractSourceActivityHistory
+     * @param string $logFileName The log file name generated for this import session
      *
      * @return void
      */
     private function initializeDatabaseSourceActivityHistory(DateTimeImmutable $currentDate, string $startedFrom, string $logFileName): void
     {
         $this->sourceActivityHistory
-            ->setChannel(static::CHANNEL)
+            ->setChannel(self::CHANNEL)
             ->setStartedAt(DateTime::createFromImmutable($currentDate))
             ->setStartedFrom($startedFrom)
             ->setLogFilePath($logFileName);
@@ -326,6 +374,14 @@ class ScryfallDefaultCardsSourceDownloadModel
         $this->entityManager->flush();
     }
 
+    /**
+     * Initialize file fileLogger for this import session.
+     * Creates the log file in the same directory as the JSON file and deletes any existing log files there.
+     *
+     * @param string $destinationPath
+     *
+     * @return string
+     */
     private function initializeLogger(string $destinationPath): string
     {
         /** @var array{dirname: string, basename: string, extension: string, filename: string} $pathInfo */
@@ -345,18 +401,25 @@ class ScryfallDefaultCardsSourceDownloadModel
         $logFileName = $pathInfo['filename'] . '.download.log';
         $logFilePath = $directory . DIRECTORY_SEPARATOR . $logFileName;
 
-        $this->logger = new Logger('scryfall_download');
-        $this->logger->pushHandler(new StreamHandler($logFilePath, Level::Debug));
+        $this->fileLogger = new Logger('scryfall_download');
+        $this->getLogger()->pushHandler(new StreamHandler($logFilePath, Level::Debug));
 
         return $logFileName;
     }
 
+    /**
+     * Main entrypoint for this model: performs the download with progress tracking.
+     *
+     * @param string $downloadUri
+     * @param string $destinationPath
+     * @param callable|null $progressCallback
+     *
+     * @throws TransportExceptionInterface
+     *
+     * @return void
+     */
     private function performDownload(string $downloadUri, string $destinationPath, ?callable $progressCallback): void
     {
-        if ($this->getLogger() === null) {
-            throw new RuntimeException('Logger initialization failed');
-        }
-
         $fileHandle = fopen($destinationPath, 'wb');
 
         if ($fileHandle === false) {
@@ -398,6 +461,13 @@ class ScryfallDefaultCardsSourceDownloadModel
         fclose($fileHandle);
     }
 
+    /**
+     * Simply updates the file permissions on the downloaded file to restrict further manipulations.
+     *
+     * @param string $filePath
+     *
+     * @return void
+     */
     private function setFilePermissions(string $filePath): void
     {
         if (! chmod($filePath, self::FILE_PERMISSIONS)) {
@@ -406,6 +476,8 @@ class ScryfallDefaultCardsSourceDownloadModel
     }
 
     /**
+     * Checks that the bulk data JSON file contains an expected default cards entry.
+     *
      * @param array<string, mixed> $entry
      *
      * @return void

@@ -5,16 +5,20 @@ declare(strict_types = 1);
 namespace App\Command\Source;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\Source\DownloadModel\MTG\ScryfallDefaultCardsSourceDownloadModel;
+use App\Model\Source\DownloadModel\MTG\V1\ScryfallDefaultCardsSourceDownloadModel;
 use Exception;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
+/**
+ * Starts a download of the Scryfall default cards bulk data file from the CLI.
+ */
 #[AsCommand(
     name: 'aeonshift:sourcedownload:scryfalldefaultcards',
     description: 'Download Scryfall default cards bulk data',
@@ -29,9 +33,29 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        $this
+            ->addOption(
+                'source',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Specify the source that initiated the download (cli or cron)',
+                'cli'
+            );
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $source = $input->getOption('source');
+
+        // Validate the source option
+        if (! in_array($source, ['cli', 'cron'], true)) {
+            $io->error('Invalid source option. Must be "cli" or "cron".');
+
+            return Command::FAILURE;
+        }
 
         try {
             $io->section('Fetching Scryfall bulk data information...');
@@ -49,17 +73,17 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
             $io->table(
                 ['Property', 'Value'],
                 [
-                    ['Name', $defaultCardsEntry['name']],
-                    ['Updated At', $defaultCardsEntry['updated_at']],
-                    ['Size', number_format($defaultCardsEntry['size']) . ' bytes'],
-                    ['Download URI', $defaultCardsEntry['download_uri']],
+                    ['Name', $defaultCardsEntry['name'] ?? ''],
+                    ['Updated At', $defaultCardsEntry['updated_at'] ?? ''],
+                    ['Size', number_format(isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size']) ? (int)$defaultCardsEntry['size'] : 0) . ' bytes'],
+                    ['Download URI', $defaultCardsEntry['download_uri'] ?? ''],
                 ]
             );
 
             $io->section('Downloading default cards data...');
             $io->note('This may take several minutes due to the large file size...');
 
-            $progressBar = $io->createProgressBar($defaultCardsEntry['size']);
+            $progressBar = $io->createProgressBar(isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size']) ? (int)$defaultCardsEntry['size'] : 0);
             $progressBar->start();
 
             $downloadedPath = $this->scryfallDownloader->downloadDefaultCards(
@@ -67,14 +91,16 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
                 static function (int $downloadedBytes) use ($progressBar): void {
                     $progressBar->setProgress($downloadedBytes);
                 },
-                SourceActivityHistoryInterface::SOURCE_CLI
+                $source === 'cron'
+                    ? SourceActivityHistoryInterface::SOURCE_CRON
+                    : SourceActivityHistoryInterface::SOURCE_CLI
             );
 
             $progressBar->finish();
             $io->newLine(2);
 
             $io->success('File downloaded successfully to: ' . $downloadedPath);
-            $io->info('File size: ' . number_format(filesize($downloadedPath)) . ' bytes');
+            $io->info('File size: ' . number_format(filesize($downloadedPath) ?: 0) . ' bytes');
 
             return Command::SUCCESS;
         } catch (TransportExceptionInterface $e) {
