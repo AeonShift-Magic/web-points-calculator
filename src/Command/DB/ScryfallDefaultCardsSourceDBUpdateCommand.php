@@ -4,8 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Command\DB;
 
-use App\Model\Parser\ScryfallDefaultCardsSourceDataTransformerModel;
+use App\Entity\SourceActivityHistoryInterface;
 use Exception;
+use App\Model\DBUpdate\DataTransformerModel\MTG\ScryfallDefaultCardsSourceDataTransformerModel;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -15,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'as:updatedb:scryfalldefaultcards',
+    name: 'aeonshift:updatedb:scryfalldefaultcards',
     description: 'Parse and import latest Scryfall default cards download into database',
     aliases: ['as:udb:sdc']
 )]
@@ -23,7 +24,8 @@ class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
 {
     public function __construct(
         private readonly ScryfallDefaultCardsSourceDataTransformerModel $scryfallDefaultCardsSourceDataTransformerModel,
-    ) {
+    )
+    {
         parent::__construct();
     }
 
@@ -71,7 +73,8 @@ class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
                     $progressBar->setMessage((string)$insertedCount, 'inserted');
                     $progressBar->setMessage((string)$updatedCount, 'updated');
                     $progressBar->setMessage((string)$skippedCount, 'skipped');
-                }
+                },
+                SourceActivityHistoryInterface::SOURCE_CLI
             );
 
             if ($progressBar !== null) {

@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MTGPointsListCard extends MTGAbstractCard
 {
     #[Assert\NotNull]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[ORM\ManyToOne(targetEntity: MTGPointsList::class)]
     private ?MTGPointsList $list = null;
 

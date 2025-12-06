@@ -16,6 +16,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 class MTGSourceCard extends MTGAbstractCard
 {
     /**
+     * Timeline legalities precedence values.
+     * Used at fast speed integer comparisons.
+     *
+     * @var array<string, int>
+     */
+    public const array TIMELINE_PRECEDENCES = [
+        'printed'  => 10,
+        'funny'    => 20,
+        'eternal'  => 30,
+        'modern'   => 40,
+        'pioneer'  => 50,
+        'standard' => 60,
+        'unranked' => 100,
+    ];
+
+    /**
      * @var list<string>
      */
     #[Assert\NotNull]
@@ -66,6 +82,12 @@ class MTGSourceCard extends MTGAbstractCard
     #[ORM\Column]
     private bool $isWhite = false;
 
+    #[Assert\Choice(choices: ['printed', 'funny', 'eternal', 'modern', 'pioneer', 'standard', 'unranked'])]
+    #[Assert\Length(max: 20)]
+    #[Assert\NotBlank]
+    #[ORM\Column(length: 20)]
+    private string $maximumTimelineLegality = 'printed';
+
     public function __construct()
     {
         parent::__construct();
@@ -93,6 +115,11 @@ class MTGSourceCard extends MTGAbstractCard
     public function getFirstPrintedYear(): int
     {
         return $this->firstPrintedYear;
+    }
+
+    public function getMaximumTimelineLegality(): string
+    {
+        return $this->maximumTimelineLegality;
     }
 
     public function isBlack(): bool
@@ -218,6 +245,13 @@ class MTGSourceCard extends MTGAbstractCard
     public function setIsWhite(bool $isWhite): static
     {
         $this->isWhite = $isWhite;
+
+        return $this;
+    }
+
+    public function setMaximumTimelineLegality(string $maximumTimelineLegality): self
+    {
+        $this->maximumTimelineLegality = $maximumTimelineLegality;
 
         return $this;
     }

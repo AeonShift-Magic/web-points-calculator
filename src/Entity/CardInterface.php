@@ -6,7 +6,9 @@ namespace App\Entity;
 
 interface CardInterface
 {
-    public function getId(): ?int;
+    public int|null $id {
+        get;
+    }
 
     public function getNameEN(): string;
 

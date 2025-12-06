@@ -28,6 +28,7 @@ services:
             $scryfallBulkApiUrl: '%scryfall.bulk_api_url%'
             $cardsSourceDir: '%scryfall.cards_source_dir%'
             $bulkDataType: '%scryfall.bulk_data_type%'
+            $tablePrefix: '%app.table_prefix%'
 
 
     App\:

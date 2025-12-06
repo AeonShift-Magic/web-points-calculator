@@ -6,6 +6,7 @@ namespace App\Validator\Constraints;
 
 use App\Entity\UpdateInterface;
 use Attribute;
+use InvalidArgumentException;
 use Override;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -25,6 +26,10 @@ final class DateRangeValidator extends ConstraintValidator
         // Ensure the object has getStartingAt and getEndingAt methods
         if (! $value instanceof UpdateInterface) {
             return;
+        }
+
+        if(! $constraint instanceof DateRange) {
+            throw new InvalidArgumentException(sprintf('Expected instance of %s, got %s', DateRange::class, get_debug_type($constraint)));
         }
 
         $start = $value->getStartingAt();

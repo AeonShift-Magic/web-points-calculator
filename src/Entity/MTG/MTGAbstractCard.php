@@ -26,7 +26,11 @@ abstract class MTGAbstractCard implements MTGCardInterface
     #[ORM\Column]
     #[ORM\GeneratedValue]
     #[ORM\Id]
-    private ?int $id = null;
+    public ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
 
     #[Assert\NotNull]
     #[ORM\Column(name: 'is_legal_2hg')]
@@ -105,11 +109,6 @@ abstract class MTGAbstractCard implements MTGCardInterface
     public function __construct()
     {
         $this->__traitConstruct();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getManaValue(): float

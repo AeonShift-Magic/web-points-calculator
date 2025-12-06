@@ -27,7 +27,11 @@ class MTGPointsList
     #[ORM\Column]
     #[ORM\GeneratedValue]
     #[ORM\Id]
-    private ?int $id = null;
+    private ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
 
     #[Assert\NotNull]
     #[ORM\Column]
@@ -43,7 +47,7 @@ class MTGPointsList
     private DateTime $uploadedAt;
 
     #[Assert\NotNull]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
 
@@ -56,11 +60,6 @@ class MTGPointsList
     public function getFilename(): string
     {
         return $this->filename;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getNbCards(): int

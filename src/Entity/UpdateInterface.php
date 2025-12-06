@@ -12,7 +12,9 @@ interface UpdateInterface
 
     public function getEndingAt(): ?DateTime;
 
-    public function getId(): ?int;
+    public int|null $id {
+        get;
+    }
 
     public function getStartingAt(): ?DateTime;
 

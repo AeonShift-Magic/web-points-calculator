@@ -4,7 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Command\Source;
 
-use App\Model\Source\ScryfallDefaultCardsSourceDownloadModel;
+use App\Entity\SourceActivityHistoryInterface;
+use App\Model\Source\DownloadModel\MTG\ScryfallDefaultCardsSourceDownloadModel;
 use Exception;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -12,11 +13,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[AsCommand(
-    name: 'as:sourcedownload:scryfalldefaultcards',
+    name: 'aeonshift:sourcedownload:scryfalldefaultcards',
     description: 'Download Scryfall default cards bulk data',
     aliases: ['as:sd:sdc']
 )]
@@ -66,7 +66,8 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
                 $defaultCardsEntry,
                 static function (int $downloadedBytes) use ($progressBar): void {
                     $progressBar->setProgress($downloadedBytes);
-                }
+                },
+                SourceActivityHistoryInterface::SOURCE_CLI
             );
 
             $progressBar->finish();
@@ -88,9 +89,6 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
             $io->error('Unexpected error: ' . $e->getMessage());
 
             return Command::FAILURE;
-        } catch (DecodingExceptionInterface) {
         }
-
-        return Command::SUCCESS;
     }
 }

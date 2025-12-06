@@ -1,10 +1,14 @@
-![logo-duel-commander-transparent.png](logo-duel-commander-transparent.png)
+![readme-files/logo-duel-commander-transparent.png](readme-files/Aeonshift-Logo-Transparent.png)
 
-# Aeonshift Points calculator
+# AEONSHIFT POINTS CALCULATOR 💯
 
 ## PHP + JavaScript points calculator for Aeonshift
 
-This project uses vanilla JavaScript and Symfony/PHP.
+This project uses vanilla JavaScript and Symfony/PHP, and should mostly 
+work on MySQL/MariaDB DB servers (though PostGresSQL should work too).
+
+This codebase is ready-to-use for Magic The Gathering™ cards, using Scryfall as source.  
+The code is pluggable to be used with other sources of data, or licenses.
 
 ### Setting up locally
 
@@ -12,7 +16,7 @@ Just do
 ```bash
 composer install
 ``` 
-...to install dependencies.
+...to install dependencies. This should trigger some recipes' commands you'll need to accept.
 
 Then you should set up your `.env.local` file based on the `.env` template.
 
@@ -27,6 +31,7 @@ Then install assets using:
 php bin/console assets:install
 php bin/console importmap:install
 
+# To prepare assets, you'll need TailwindCSS, hence the executable
 php bin/console tailwind:build # production, static assets
 # or
 php bin/console tailwind:build --watch --poll # development, dynamic assets, live reload from file changes
@@ -36,7 +41,10 @@ Then you can run a local PHP server with:
 ```bash
 symfony server:start -d
 ```
-...or use Docker and build this inside a container.
+...or use Docker and build this inside containers:
+- Apache 2 / NginX
+- PHP 8.4+
+- MySQL 8.0+ / MariaDB 10.6+
 
 You can access the application at `http://localhost:8000` (or another port if 8000 is already used).
 
@@ -44,7 +52,8 @@ You can access the application at `http://localhost:8000` (or another port if 80
 
 This application has a backend in PHP/Symfony, and a frontend in vanilla JavaScript.
 Admins should connect to the backend to do some maintenance tasks:
-- Get the file from Scryfall (the app is only provided with a Scryfall file parser, you'll need to create yours if you use another source of data for cards).
+- Get the file from Scryfall (the app is only provided with a Scryfall file parser, 
+you'll need to create yours if you use another source of data for cards).
 - Import the Scryfall data from the downloaded local file into the database for cards.
 - Create a release when new rules are published, using a points calculator model in case it would change.
 
@@ -55,6 +64,14 @@ This script is intended to be used on a platform that doesn't provide Node runti
 
 Don't forget to also set up your local `.env.local` file on the production server.
 
+This codebase doesn't use Doctrine Migrations.
+Yet, the first time you set this up on a new machine, you can run:
+
+```bash
+php bin/console doctrine:database:create
+php bin/console doctrine:schema:update --force
+```
+
 ### Usage
 
 To have stuff displayed on the frontend, you need to:
@@ -64,12 +81,17 @@ To have stuff displayed on the frontend, you need to:
 
 Steps 1 and 2 need to be done each time you want to update the card database.
 They can be automated. Using a cron job is a good idea, calling the console commands:
+
+#### Using [Scryfall "Default Cards" bulk JSON file](https://scryfall.com/docs/api/bulk-data) as source:
+
+This will limit the use with cards in English only (base reference for judging Magic The Gathering™ cards).
+
 ```bash
- php bin/console as:importfile:scryfalldefault # to download the Scryfall file
- php bin/console as:updatedb:scryfalldefault # to update from the Scryfall file if present
+php bin/console aeonshift:updatedb:scryfalldefaultcards # to download the Scryfall file
+php bin/console aeonshift:sourcedownload:scryfalldefaultcards # to update from the Scryfall file if present
 ```
 
-(remember doing this too often will have your server banned if abusive, make sure it is done reasonably).
+*(remember doing this too often will have your server banned if abusive, make sure it is done reasonably)*
 
 This software is distributed under the MIT License.
 Feel free to use it as much as you can, and to contribute to it, PRs are welcome!
