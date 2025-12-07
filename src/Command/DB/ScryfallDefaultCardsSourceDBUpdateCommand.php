@@ -7,6 +7,7 @@ namespace App\Command\DB;
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\DBUpdate\DataTransformerModel\MTG\V1\ScryfallDefaultCardsSourceDataTransformerModel;
 use Exception;
+use Override;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -20,7 +21,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     description: 'Parse and import latest Scryfall default cards download into database',
     aliases: ['as:udb:sdc']
 )]
-class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
+final class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
 {
     public function __construct(
         private readonly ScryfallDefaultCardsSourceDataTransformerModel $scryfallDefaultCardsSourceDataTransformerModel,
@@ -29,6 +30,7 @@ class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this->addOption(
@@ -47,6 +49,7 @@ class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
         );
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

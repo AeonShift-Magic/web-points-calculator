@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 // PHP-CS-Fixer Rules. Please try to keep that this way. :)
 
 // Create a Finder with appropriate dirs
-$finder = (new PhpCsFixer\Finder())
+$finder = new PhpCsFixer\Finder()
     ->in(__DIR__)
     ->exclude('var')
     ->exclude('node_modules')
@@ -15,7 +15,7 @@ $finder = (new PhpCsFixer\Finder())
     ->notPath('public/index.php');
 
 // Set up the config to anaylze/fix everything. Ready for CI.
-return (new PhpCsFixer\Config('AS Calculator CS-Fixing'))
+return new PhpCsFixer\Config('AS Calculator CS-Fixing')
     ->setRules(
         [
             'align_multiline_comment'                          => ['comment_type' => 'all_multiline'],
@@ -153,7 +153,7 @@ return (new PhpCsFixer\Config('AS Calculator CS-Fixing'))
                     'method_private_abstract_static',
                     'method_private_abstract',
                     'method_private_static',
-                    'method_private'
+                    'method_private',
                 ],
                 'sort_algorithm' => 'alpha',
                 'case_sensitive' => true,

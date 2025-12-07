@@ -15,6 +15,33 @@
         <PossiblyUnusedParam errorLevel="suppress"/>
         <UnusedClass errorLevel="suppress"/>
         <UnusedParam errorLevel="suppress"/>
+        <!-- Doctrine entities are often not final and have false-positively-reported unused properties -->
+        <ClassMustBeFinal>
+            <errorLevel type="suppress">
+                <directory name="src/Entity" />
+                <directory name="src/Repository" />
+            </errorLevel>
+        </ClassMustBeFinal>
+        <PossiblyUnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src/Entity" />
+            </errorLevel>
+        </PossiblyUnusedProperty>
+        <UnusedProperty>
+            <errorLevel type="suppress">
+                <directory name="src/Entity" />
+            </errorLevel>
+        </UnusedProperty>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <directory name="src/Entity" />
+            </errorLevel>
+        </PropertyNotSetInConstructor>
+        <PossiblyUnusedReturnValue>
+            <errorLevel type="suppress">
+                <file name="src/Entity/SourceActivityHistoryInterface.php" />
+            </errorLevel>
+        </PossiblyUnusedReturnValue>
     </issueHandlers>
     <plugins>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/>

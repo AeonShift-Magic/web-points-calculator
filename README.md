@@ -10,6 +10,8 @@ work on MySQL/MariaDB DB servers (though PostGresSQL should work too).
 This codebase is ready-to-use for Magic The Gathering™ cards, using Scryfall as source.  
 The code is pluggable to be used with other sources of data, or licenses.
 
+**Note: this project requires PHP 8.4+, Composer, and Symfony basic knowledge to be set up.**
+
 ### Setting up locally
 
 Just do 

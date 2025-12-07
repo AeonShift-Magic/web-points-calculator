@@ -7,6 +7,7 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
@@ -64,11 +65,13 @@ class AbstractUpdate implements UpdateInterface
         $this->endingAt = new DateTime();
     }
 
+    #[Override]
     public function getDescriptionEN(): string
     {
         return $this->descriptionEN;
     }
 
+    #[Override]
     public function getEndingAt(): DateTime
     {
         return $this->endingAt;
@@ -79,6 +82,7 @@ class AbstractUpdate implements UpdateInterface
         return $this->rulesModel;
     }
 
+    #[Override]
     public function getStartingAt(): DateTime
     {
         return $this->startingAt;
@@ -89,6 +93,7 @@ class AbstractUpdate implements UpdateInterface
         return $this->titleEN;
     }
 
+    #[Override]
     public function getUser(): ?User
     {
         return $this->user;
@@ -106,6 +111,7 @@ class AbstractUpdate implements UpdateInterface
         return $this;
     }
 
+    #[Override]
     public function setEndingAt(DateTime $endingAt): static
     {
         $this->endingAt = $endingAt;
@@ -127,6 +133,7 @@ class AbstractUpdate implements UpdateInterface
         return $this;
     }
 
+    #[Override]
     public function setStartingAt(DateTime $startingAt): static
     {
         $this->startingAt = $startingAt;
@@ -141,6 +148,7 @@ class AbstractUpdate implements UpdateInterface
         return $this;
     }
 
+    #[Override]
     public function setUser(?User $user): static
     {
         $this->user = $user;

@@ -17,15 +17,23 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
 {
     use ResetPasswordRequestTrait;
 
-    #[ORM\Column]
-    #[ORM\GeneratedValue]
-    #[ORM\Id]
-    private ?int $id = null;
-
     #[Assert\NotNull]
     #[ORM\JoinColumn(nullable: false)]
     #[ORM\ManyToOne(inversedBy: 'resetPasswordRequests')]
-    private User $user;
+    public User $user {
+        get {
+            return $this->user;
+        }
+    }
+
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
+    private ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
 
     public function __construct(User $user, DateTimeInterface $expiresAt, string $selector, string $hashedToken)
     {
@@ -33,14 +41,16 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
         $this->initialize($expiresAt, $selector, $hashedToken);
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     #[Override]
-    public function getUser(): object
+    public function getUser(): User
     {
         return $this->user;
+    }
+
+    public function setUser(User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
     }
 }

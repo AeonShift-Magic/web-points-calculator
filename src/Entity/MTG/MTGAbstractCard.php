@@ -6,6 +6,7 @@ namespace App\Entity\MTG;
 
 use App\Entity\HistoryTrackableEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -116,11 +117,13 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this->manaValue;
     }
 
+    #[Override]
     public function getMultiCZType(): string
     {
         return $this->multiCZType;
     }
 
+    #[Override]
     public function getNameEN(): string
     {
         return $this->nameEN;
@@ -131,11 +134,13 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this->oracleId;
     }
 
+    #[Override]
     public function getPoints2HG(): float
     {
         return $this->points2HG;
     }
 
+    #[Override]
     public function getPoints2HGSpecial(): float
     {
         return $this->points2HGSpecial;
@@ -146,21 +151,25 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this->points2HG;
     }
 
+    #[Override]
     public function getPointsDuel(): float
     {
         return $this->pointsDuel;
     }
 
+    #[Override]
     public function getPointsDuelSpecial(): float
     {
         return $this->pointsDuelSpecial;
     }
 
+    #[Override]
     public function getPointsMulti(): float
     {
         return $this->pointsMulti;
     }
 
+    #[Override]
     public function getPointsMultiSpecial(): float
     {
         return $this->pointsMultiSpecial;
@@ -176,36 +185,43 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this->scryfallURI;
     }
 
+    #[Override]
     public function isLegal2HG(): bool
     {
         return $this->isLegal2HG;
     }
 
+    #[Override]
     public function isLegal2HGSpecial(): bool
     {
         return $this->isLegal2HGSpecial;
     }
 
+    #[Override]
     public function isLegalDuel(): bool
     {
         return $this->isLegalDuel;
     }
 
+    #[Override]
     public function isLegalDuelSpecial(): bool
     {
         return $this->isLegalDuelSpecial;
     }
 
+    #[Override]
     public function isLegalMulti(): bool
     {
         return $this->isLegalMulti;
     }
 
+    #[Override]
     public function isLegalMultiSpecial(): bool
     {
         return $this->isLegalMultiSpecial;
     }
 
+    #[Override]
     public function setIsLegal2HG(bool $isLegal2HG): static
     {
         $this->isLegal2HG = $isLegal2HG;
@@ -213,6 +229,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setIsLegal2HGSpecial(bool $isLegal2HGSpecial): static
     {
         $this->isLegal2HGSpecial = $isLegal2HGSpecial;
@@ -220,6 +237,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setIsLegalDuel(bool $isLegalDuel): static
     {
         $this->isLegalDuel = $isLegalDuel;
@@ -227,6 +245,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setIsLegalDuelSpecial(bool $isLegalDuelSpecial): static
     {
         $this->isLegalDuelSpecial = $isLegalDuelSpecial;
@@ -234,6 +253,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setIsLegalMulti(bool $isLegalMulti): static
     {
         $this->isLegalMulti = $isLegalMulti;
@@ -241,6 +261,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setIsLegalMultiSpecial(bool $isLegalMultiSpecial): static
     {
         $this->isLegalMultiSpecial = $isLegalMultiSpecial;
@@ -255,6 +276,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setMultiCZType(string $multiCZType): static
     {
         $this->multiCZType = $multiCZType;
@@ -262,6 +284,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setNameEN(string $nameEN): static
     {
         $this->nameEN = $nameEN;
@@ -276,6 +299,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setPoints2HG(float $points2HG): static
     {
         $this->points2HG = $points2HG;
@@ -283,6 +307,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setPoints2HGSpecial(float $points2HGSpecial): static
     {
         $this->points2HGSpecial = $points2HGSpecial;
@@ -290,6 +315,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setPointsDuel(float $pointsDuel): static
     {
         $this->pointsDuel = $pointsDuel;
@@ -297,6 +323,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setPointsDuelSpecial(float $pointsDuelSpecial): static
     {
         $this->pointsDuelSpecial = $pointsDuelSpecial;
@@ -304,6 +331,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setPointsMulti(float $pointsMulti): static
     {
         $this->pointsMulti = $pointsMulti;
@@ -311,6 +339,7 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
+    #[Override]
     public function setPointsMultiSpecial(float $pointsMultiSpecial): static
     {
         $this->pointsMultiSpecial = $pointsMultiSpecial;

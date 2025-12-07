@@ -33,15 +33,19 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         'user.roles.admin.label'                       => 'ROLE_ADMIN',
     ];
 
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
+    public ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
+
     #[Assert\Email]
     #[Assert\NotNull]
     #[ORM\Column(length: 255)]
     private string $email = '';
-
-    #[ORM\Column]
-    #[ORM\GeneratedValue]
-    #[ORM\Id]
-    private ?int $id = null;
 
     #[Assert\NotNull]
     #[ORM\Column]
@@ -62,10 +66,17 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      * @var Collection<int, ResetPasswordRequest>
      */
     #[ORM\OneToMany(targetEntity: ResetPasswordRequest::class, mappedBy: 'user')]
-    private Collection $resetPasswordRequests;
+    private Collection $resetPasswordRequests {
+        get {
+            return $this->resetPasswordRequests;
+        }
+        set(Collection $value) {
+            $this->resetPasswordRequests = $value;
+        }
+    }
 
     /**
-     * @var list<string> The user roles
+     * @var array<int, string> The user roles
      */
     #[Assert\All([
         new Assert\NotBlank(),
@@ -104,11 +115,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->email;
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -119,15 +125,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     }
 
     /**
-     * @return Collection<int, ResetPasswordRequest>
-     */
-    public function getResetPasswordRequests(): Collection
-    {
-        return $this->resetPasswordRequests;
-    }
-
-    /**
-     * @return array<null, string>
+     * @return array<int, string>
      *
      * @see UserInterface
      */
@@ -149,14 +147,14 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * A visual identifier that represents this user.
      *
-     * @return string
+     * @return non-empty-string
      *
      * @see UserInterface
      */
     #[Override]
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return ! empty($this->username) ? $this->username : ' ';
     }
 
     public function getUsername(): string
@@ -203,17 +201,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     }
 
     /**
-     * @param Collection<int, ResetPasswordRequest> $resetPasswordRequests
+     * @param array<int,string>|string $roles
      *
-     * @return void
-     */
-    public function setResetPasswordRequests(Collection $resetPasswordRequests): void
-    {
-        $this->resetPasswordRequests = $resetPasswordRequests;
-    }
-
-    /**
-     * @param list<string> $roles
+     * @return static
      */
     public function setRoles(array|string $roles): static
     {

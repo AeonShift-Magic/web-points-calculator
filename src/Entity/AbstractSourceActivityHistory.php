@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
@@ -64,11 +65,13 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         $this->uniqueId = uniqid($channel, true);
     }
 
+    #[Override]
     public function getChannel(): string
     {
         return $this->channel;
     }
 
+    #[Override]
     public function getEndedAt(): ?DateTime
     {
         return $this->endedAt;
@@ -79,21 +82,25 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this->errorSummary;
     }
 
+    #[Override]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    #[Override]
     public function getLogFilePath(): string
     {
         return $this->logFilePath;
     }
 
+    #[Override]
     public function getStartedAt(): ?DateTime
     {
         return $this->startedAt;
     }
 
+    #[Override]
     public function getStartedFrom(): string
     {
         return $this->startedFrom;
@@ -104,11 +111,13 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this->successSummary;
     }
 
+    #[Override]
     public function getUniqueId(): string
     {
         return $this->uniqueId;
     }
 
+    #[Override]
     public function setChannel(string $channel): self
     {
         $this->channel = $channel;
@@ -116,6 +125,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setEndedAt(?DateTime $endedAt): self
     {
         $this->endedAt = $endedAt;
@@ -130,6 +140,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setId(?int $id): self
     {
         $this->id = $id;
@@ -137,6 +148,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setLogFilePath(string $logFilePath): self
     {
         $this->logFilePath = $logFilePath;
@@ -144,6 +156,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setStartedAt(?DateTime $startedAt): self
     {
         $this->startedAt = $startedAt;
@@ -151,6 +164,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setStartedFrom(string $startedFrom): self
     {
         $this->startedFrom = $startedFrom;
@@ -165,6 +179,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setUniqueId(string $uniqueId): self
     {
         $this->uniqueId = $uniqueId;

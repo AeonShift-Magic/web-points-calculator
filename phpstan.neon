@@ -1,13 +1,12 @@
 parameters:
     excludePaths:
         - src/Repository/ResetPasswordRequestRepository.php
+        - config/reference.php
     level: 10
     paths:
         - config
         - src
     ignoreErrors:
-        # - '#Property .* is never written, only read\.#'
-        # - '#Property .* only read, never written\.#'
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     doctrine:

@@ -7,6 +7,7 @@ namespace App\Command\Source;
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\Source\DownloadModel\MTG\V1\ScryfallDefaultCardsSourceDownloadModel;
 use Exception;
+use Override;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -24,7 +25,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
     description: 'Download Scryfall default cards bulk data',
     aliases: ['as:sd:sdc']
 )]
-class ScryfallDefaultCardsSourceDownloadCommand extends Command
+final class ScryfallDefaultCardsSourceDownloadCommand extends Command
 {
     public function __construct(
         private readonly ScryfallDefaultCardsSourceDownloadModel $scryfallDownloader,
@@ -33,6 +34,7 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
         parent::__construct();
     }
 
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -45,6 +47,7 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
             );
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -100,7 +103,7 @@ class ScryfallDefaultCardsSourceDownloadCommand extends Command
             $io->newLine(2);
 
             $io->success('File downloaded successfully to: ' . $downloadedPath);
-            $io->info('File size: ' . number_format(filesize($downloadedPath) ?: 0) . ' bytes');
+            $io->info('File size: ' . number_format((int)filesize($downloadedPath) ?: 0) . ' bytes');
 
             return Command::SUCCESS;
         } catch (TransportExceptionInterface $e) {

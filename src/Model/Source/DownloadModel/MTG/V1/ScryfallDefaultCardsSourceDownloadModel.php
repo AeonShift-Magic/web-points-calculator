@@ -24,7 +24,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class ScryfallDefaultCardsSourceDownloadModel
+final class ScryfallDefaultCardsSourceDownloadModel
 {
     /** @var string Channel string for DB logging */
     private const string CHANNEL = 'scryfall/defaultcards/download/v1';
@@ -55,10 +55,10 @@ class ScryfallDefaultCardsSourceDownloadModel
         private readonly string $scryfallBulkApiUrl,
         private readonly string $cardsSourceDir,
         private readonly string $bulkDataType,
-        private readonly SourceActivityHistoryFactory $sourceActivityHistoryFactory,
+        SourceActivityHistoryFactory $sourceActivityHistoryFactory,
     )
     {
-        $this->sourceActivityHistory = $this->sourceActivityHistoryFactory->create(self::LICENSE);
+        $this->sourceActivityHistory = $sourceActivityHistoryFactory->create(self::LICENSE);
     }
 
     /**
@@ -115,7 +115,7 @@ class ScryfallDefaultCardsSourceDownloadModel
                 $destinationPath,
                 function (int $downloadedBytes) use ($progressCallback, $defaultCardsEntry, &$lastLoggedBytes, $logInterval): void {
                     if ($downloadedBytes - $lastLoggedBytes >= $logInterval) {
-                        $percentage = ($downloadedBytes / ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100)) * 100;
+                        $percentage = (int)($downloadedBytes / ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100)) * 100;
                         $this->getLogger()->info('Download progress: {downloaded} / {total} bytes ({percentage}%)', [
                             'downloaded' => $downloadedBytes,
                             'total'      => ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100),
@@ -133,7 +133,7 @@ class ScryfallDefaultCardsSourceDownloadModel
             $this->setFilePermissions($destinationPath);
             $this->getLogger()->info('File permissions set');
 
-            $finalSize = filesize($destinationPath);
+            $finalSize = (int)filesize($destinationPath);
             $endTime = new DateTimeImmutable();
             $duration = $endTime->getTimestamp() - $startTime->getTimestamp();
 
@@ -219,11 +219,11 @@ class ScryfallDefaultCardsSourceDownloadModel
             $bulkData['data'],
             /**
              * @param mixed $entry
-             * @param null $key
+             * @param int|string $key
              *
              * @return bool
              */
-            fn (mixed $entry, $key = null) => is_array($entry)
+            fn (mixed $entry, int|string $key) => is_array($entry)
                 && isset($entry['type'])
                 && $entry['type'] === $this->bulkDataType
         );
@@ -309,9 +309,7 @@ class ScryfallDefaultCardsSourceDownloadModel
      */
     private function cleanupFailedDownload($fileHandle, string $destinationPath): void
     {
-        if (is_resource($fileHandle)) {
-            fclose($fileHandle);
-        }
+        fclose($fileHandle);
 
         if (file_exists($destinationPath)) {
             @unlink($destinationPath);

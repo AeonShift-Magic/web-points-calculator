@@ -11,14 +11,14 @@ use InvalidArgumentException;
 /**
  * Returns the appropriate SourceActivityHistory instance based on the provided license.
  */
-class SourceActivityHistoryFactory
+final class SourceActivityHistoryFactory
 {
     public function create(string $license): SourceActivityHistoryInterface
     {
         // Insert future licenses here
         return match ($license) {
             'MTG'   => new MTGCardSourceActivityHistory(),
-            default => throw new InvalidArgumentException("Unsupported license: {$license}"),
+            default => throw new InvalidArgumentException("Unsupported license: $license"),
         };
     }
 }

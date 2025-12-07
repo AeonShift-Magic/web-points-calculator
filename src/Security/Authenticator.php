@@ -55,7 +55,7 @@ final class Authenticator extends AbstractLoginFormAuthenticator
             $request->getSession()->getFlashBag()->add('success', $this->translator->trans('user.login.success', ['username' => $token->getUser()?->getUserIdentifier()]));
         }
 
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+        if (($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) !== null) {
             return new RedirectResponse($targetPath);
         }
 

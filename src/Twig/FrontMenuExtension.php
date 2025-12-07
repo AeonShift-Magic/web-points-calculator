@@ -4,10 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Twig;
 
-use App\Entity\Events\MTG\MTGSeason;
 use App\Entity\Page;
-use App\Model\EventStatusEnum;
-use App\Model\Seasons\PrimeSeasonMenuManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use Psr\Cache\InvalidArgumentException;

@@ -44,7 +44,11 @@ class CustomBlock
     #[ORM\Column]
     #[ORM\GeneratedValue]
     #[ORM\Id]
-    private ?int $id = null;
+    private ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
 
     #[Assert\Range(min: -1000, max: 1000)]
     #[ORM\Column]
@@ -71,11 +75,6 @@ class CustomBlock
     public function getContents(): string
     {
         return $this->contents;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getWeight(): int

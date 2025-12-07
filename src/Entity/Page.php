@@ -30,7 +30,11 @@ class Page
     #[ORM\Column]
     #[ORM\GeneratedValue]
     #[ORM\Id]
-    private ?int $id = null;
+    private ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
 
     #[Assert\Language]
     #[Assert\Length(max: 20)]
@@ -76,7 +80,7 @@ class Page
     public function generateSlug(): static
     {
         if(empty($this->slug)) {
-            $this->slug = (new AsciiSlugger())->slug($this->title)->slice(0, 254)->lower()->toString();
+            $this->slug = new AsciiSlugger()->slug($this->title)->slice(0, 254)->lower()->toString();
         }
 
         return $this;
@@ -85,11 +89,6 @@ class Page
     public function getContents(): string
     {
         return $this->contents;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getLanguage(): string

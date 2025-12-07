@@ -17,7 +17,7 @@
                 <ul class="" aria-labelledby="locales">
                     {% for supported_locale in supported_locales %}
                         <li>
-                            <a tabindex="0" href="{{ url(app.request.get('_route', 'index'), app.request.get('_route_params', [])|merge({_locale: supported_locale})) }}">
+                            <a tabindex="0" href="{{ url(app.request.attributes.get('_route', 'index'), app.request.attributes.get('_route_params', [])|merge({_locale: supported_locale})) }}">
                                 {{ ux_icon('flag:' ~ supported_locale|replace({'en': 'gb'}) ~ '-4x3') }} {{ supported_locale|locale_name(supported_locale)|u.title }}
                             </a>
                         </li>

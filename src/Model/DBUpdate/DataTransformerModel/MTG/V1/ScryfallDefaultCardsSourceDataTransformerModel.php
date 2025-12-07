@@ -32,7 +32,7 @@ use Throwable;
  * This model transforms Scryfall JSON data from their "Default Cards" set (all versions only in English,
  * or native name if none exist in English) into the format used by the MTG Source importer.
  */
-class ScryfallDefaultCardsSourceDataTransformerModel
+final class ScryfallDefaultCardsSourceDataTransformerModel
 {
     /** @var int How many items/cards to check before securing a DB upsert */
     private const int BATCH_SIZE = 100;
@@ -58,10 +58,10 @@ class ScryfallDefaultCardsSourceDataTransformerModel
         private readonly string $projectDir,
         private readonly string $cardsSourceDir,
         private readonly string $tablePrefix,
-        private readonly SourceActivityHistoryFactory $sourceActivityHistoryFactory,
+        SourceActivityHistoryFactory $sourceActivityHistoryFactory,
     )
     {
-        $this->sourceActivityHistory = $this->sourceActivityHistoryFactory->create(self::LICENSE);
+        $this->sourceActivityHistory = $sourceActivityHistoryFactory->create(self::LICENSE);
     }
 
     /**
