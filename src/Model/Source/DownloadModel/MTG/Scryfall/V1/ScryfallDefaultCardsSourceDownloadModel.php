@@ -2,32 +2,40 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\Source\DownloadModel\MTG\V1;
+namespace App\Model\Source\DownloadModel\MTG\Scryfall\V1;
 
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\Source\Factory\SourceActivityHistoryFactory;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
-use const DIRECTORY_SEPARATOR;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use const PHP_URL_PATH;
 use RuntimeException;
+use Symfony\Component\Lock\Exception\LockAcquiringException;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use const DIRECTORY_SEPARATOR;
+use const PHP_URL_PATH;
 
+/**
+ * Model to download the default cards JSON file from Scryfall bulk data API.
+ *
+ * Uses a Lock to prevent concurrent execution.
+ * Uses native arrays instead of DTOs.
+ */
 final class ScryfallDefaultCardsSourceDownloadModel
 {
     /** @var string Channel string for DB logging */
-    private const string CHANNEL = 'scryfall/defaultcards/download/v1';
+    private const string CHANNEL = 'scryfall/defaultcards/download/' . self::VERSION;
 
     /** @var int The permissions on the created directories for downloaded source, if needed */
     private const int DIR_PERMISSIONS = 0775;
@@ -40,6 +48,15 @@ final class ScryfallDefaultCardsSourceDownloadModel
 
     /** @var string License identifier for MTG Scryfall source */
     private const string LICENSE = 'MTG';
+
+    /** @var string Lock key for preventing concurrent execution */
+    private const string LOCK_KEY = 'scryfall_default_cards_processing';
+
+    /** @var int Lock TTL in seconds (15 minutes) */
+    private const int LOCK_TTL = 900;
+
+    /** @var int The overall version of this model, for history */
+    private const int VERSION = 1;
 
     private ?Logger $fileLogger = null;
 
@@ -56,6 +73,7 @@ final class ScryfallDefaultCardsSourceDownloadModel
         private readonly string $cardsSourceDir,
         private readonly string $bulkDataType,
         SourceActivityHistoryFactory $sourceActivityHistoryFactory,
+        private readonly LockFactory $lockFactory,
     )
     {
         $this->sourceActivityHistory = $sourceActivityHistoryFactory->create(self::LICENSE);
@@ -74,102 +92,114 @@ final class ScryfallDefaultCardsSourceDownloadModel
      */
     public function downloadDefaultCards(array $defaultCardsEntry, ?callable $progressCallback = null, string $startedFrom = 'cli'): string
     {
-        $startTime = new DateTimeImmutable();
+        // Acquire lock to prevent concurrent execution
+        $lock = $this->lockFactory->createLock(self::LOCK_KEY, self::LOCK_TTL);
+
+        if (! $lock->acquire()) {
+            throw new LockAcquiringException('Another Scryfall default cards process is already running. Please wait for it to complete or try again later.');
+        }
 
         try {
-            $cardsSourcePath = $this->ensureCardsSourceDirectory();
-            $this->cleanCardsSourceDirectory($cardsSourcePath);
+            $startTime = new DateTimeImmutable();
 
-            if (! isset($defaultCardsEntry['download_uri']) || ! is_string($defaultCardsEntry['download_uri'])) {
-                throw new RuntimeException('The default cards entry is missing the download_uri field.');
-            }
+            try {
+                $cardsSourcePath = $this->ensureCardsSourceDirectory();
+                $this->cleanCardsSourceDirectory($cardsSourcePath);
 
-            $downloadUri = $defaultCardsEntry['download_uri'];
-            $destinationPath = $this->buildDestinationPath($cardsSourcePath, $downloadUri);
-
-            // Initialize fileLogger with the destination file name
-            $logFileName = $this->initializeLogger($destinationPath);
-
-            // Initialize the table entry for this source activity history
-            $this->initializeDatabaseSourceActivityHistory($startTime, $startedFrom, $logFileName);
-
-            $this->validateDefaultCardsEntry($defaultCardsEntry);
-
-            $this->getLogger()->info('=== SCRYFALL DEFAULT CARDS DOWNLOAD STARTED ===');
-            $this->getLogger()->info('Start time: {time}', ['time' => $startTime->format('Y-m-d H:i:s')]);
-            $this->getLogger()->info('Entry validation passed');
-            $this->getLogger()->info('Entry details', [
-                'name'          => $defaultCardsEntry['name'] ?? 'N/A',
-                'updated_at'    => $defaultCardsEntry['updated_at'] ?? 'N/A',
-                'expected_size' => $defaultCardsEntry['size'] ?? 0,
-                'download_uri'  => $defaultCardsEntry['download_uri'],
-            ]);
-            $this->getLogger()->info('Cards source directory: {path}', ['path' => $cardsSourcePath]);
-            $this->getLogger()->info('Destination path: {path}', ['path' => $destinationPath]);
-
-            $lastLoggedBytes = 0;
-            $logInterval = (isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] / 20 : 1; // Log every 5%
-
-            $this->performDownload(
-                $downloadUri,
-                $destinationPath,
-                function (int $downloadedBytes) use ($progressCallback, $defaultCardsEntry, &$lastLoggedBytes, $logInterval): void {
-                    if ($downloadedBytes - $lastLoggedBytes >= $logInterval) {
-                        $percentage = (int)($downloadedBytes / ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100)) * 100;
-                        $this->getLogger()->info('Download progress: {downloaded} / {total} bytes ({percentage}%)', [
-                            'downloaded' => $downloadedBytes,
-                            'total'      => ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100),
-                            'percentage' => round($percentage, 1),
-                        ]);
-                        $lastLoggedBytes = $downloadedBytes;
-                    }
-
-                    if ($progressCallback !== null) {
-                        $progressCallback($downloadedBytes);
-                    }
+                if (! isset($defaultCardsEntry['download_uri']) || ! is_string($defaultCardsEntry['download_uri'])) {
+                    throw new RuntimeException('The default cards entry is missing the download_uri field.');
                 }
-            );
 
-            $this->setFilePermissions($destinationPath);
-            $this->getLogger()->info('File permissions set');
+                $downloadUri = $defaultCardsEntry['download_uri'];
+                $destinationPath = $this->buildDestinationPath($cardsSourcePath, $downloadUri);
 
-            $finalSize = (int)filesize($destinationPath);
-            $endTime = new DateTimeImmutable();
-            $duration = $endTime->getTimestamp() - $startTime->getTimestamp();
+                // Initialize fileLogger with the destination file name
+                $logFileName = $this->initializeLogger($destinationPath);
 
-            // Finalize source activity history in both logs and DB
-            $this->sourceActivityHistory->setEndedAt(new DateTime());
-            $this->entityManager->persist($this->sourceActivityHistory);
-            $this->entityManager->flush();
+                // Initialize the table entry for this source activity history
+                $this->initializeDatabaseSourceActivityHistory($startTime, $startedFrom, $logFileName);
 
-            $this->getLogger()->info('=== DOWNLOAD COMPLETED SUCCESSFULLY ===');
-            $this->getLogger()->info('Download summary', [
-                'downloaded_file'                => $destinationPath,
-                'final_size'                     => $finalSize,
-                'end_time'                       => $endTime->format('Y-m-d H:i:s'),
-                'duration_seconds'               => $duration,
-                'duration_minutes'               => round($duration / 60, 2),
-                'average_speed_bytes_per_second' => $finalSize / max($duration, 1),
-            ]);
+                $this->validateDefaultCardsEntry($defaultCardsEntry);
 
-            return $destinationPath;
+                $this->getLogger()->info('=== SCRYFALL DEFAULT CARDS DOWNLOAD STARTED ===');
+                $this->getLogger()->info('Start time: {time}', ['time' => $startTime->format('Y-m-d H:i:s')]);
+                $this->getLogger()->info('Entry validation passed');
+                $this->getLogger()->info('Entry details', [
+                    'name'          => $defaultCardsEntry['name'] ?? 'N/A',
+                    'updated_at'    => $defaultCardsEntry['updated_at'] ?? 'N/A',
+                    'expected_size' => $defaultCardsEntry['size'] ?? 0,
+                    'download_uri'  => $defaultCardsEntry['download_uri'],
+                ]);
+                $this->getLogger()->info('Cards source directory: {path}', ['path' => $cardsSourcePath]);
+                $this->getLogger()->info('Destination path: {path}', ['path' => $destinationPath]);
 
-        } catch (Exception $e) {
-            if ($this->getLogger() !== null) {
+                $lastLoggedBytes = 0;
+                $logInterval = (isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] / 20 : 1; // Log every 5%
+
+                $this->performDownload(
+                    $downloadUri,
+                    $destinationPath,
+                    function (int $downloadedBytes) use ($progressCallback, $defaultCardsEntry, &$lastLoggedBytes, $logInterval): void {
+                        if ($downloadedBytes - $lastLoggedBytes >= $logInterval) {
+                            $percentage = (int)($downloadedBytes / ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100)) * 100;
+                            $this->getLogger()->info('Download progress: {downloaded} / {total} bytes ({percentage}%)', [
+                                'downloaded' => $downloadedBytes,
+                                'total'      => ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100),
+                                'percentage' => round($percentage, 1),
+                            ]);
+                            $lastLoggedBytes = $downloadedBytes;
+                        }
+
+                        if ($progressCallback !== null) {
+                            $progressCallback($downloadedBytes);
+                        }
+                    }
+                );
+
+                $this->setFilePermissions($destinationPath);
+                $this->getLogger()->info('File permissions set');
+
+                $finalSize = (int)filesize($destinationPath);
+                $endTime = new DateTimeImmutable();
+                $duration = $endTime->getTimestamp() - $startTime->getTimestamp();
+
                 // Finalize source activity history in both logs and DB
                 $this->sourceActivityHistory->setEndedAt(new DateTime());
                 $this->entityManager->persist($this->sourceActivityHistory);
                 $this->entityManager->flush();
 
-                $this->getLogger()->error('=== ERROR OCCURRED ===');
-                $this->getLogger()->error('Exception: {class}', ['class' => get_class($e)]);
-                $this->getLogger()->error('Message: {message}', ['message' => $e->getMessage()]);
-                $this->getLogger()->error('Code: {code}', ['code' => $e->getCode()]);
-                $this->getLogger()->error('File: {file}:{line}', ['file' => $e->getFile(), 'line' => $e->getLine()]);
-                $this->getLogger()->debug('Stack trace', ['trace' => $e->getTraceAsString()]);
-            }
+                $this->getLogger()->info('=== DOWNLOAD COMPLETED SUCCESSFULLY ===');
+                $this->getLogger()->info('Download summary', [
+                    'downloaded_file'                => $destinationPath,
+                    'final_size'                     => $finalSize,
+                    'end_time'                       => $endTime->format('Y-m-d H:i:s'),
+                    'duration_seconds'               => $duration,
+                    'duration_minutes'               => round($duration / 60, 2),
+                    'average_speed_bytes_per_second' => $finalSize / max($duration, 1),
+                ]);
 
-            throw $e;
+                return $destinationPath;
+
+            } catch (Exception $e) {
+                if ($this->getLogger() !== null) {
+                    // Finalize source activity history in both logs and DB
+                    $this->sourceActivityHistory->setEndedAt(new DateTime());
+                    $this->entityManager->persist($this->sourceActivityHistory);
+                    $this->entityManager->flush();
+
+                    $this->getLogger()->error('=== ERROR OCCURRED ===');
+                    $this->getLogger()->error('Exception: {class}', ['class' => get_class($e)]);
+                    $this->getLogger()->error('Message: {message}', ['message' => $e->getMessage()]);
+                    $this->getLogger()->error('Code: {code}', ['code' => $e->getCode()]);
+                    $this->getLogger()->error('File: {file}:{line}', ['file' => $e->getFile(), 'line' => $e->getLine()]);
+                    $this->getLogger()->debug('Stack trace', ['trace' => $e->getTraceAsString()]);
+                }
+
+                throw $e;
+            }
+        } finally {
+            // Release the lock
+            $lock->release();
         }
     }
 
@@ -400,7 +430,7 @@ final class ScryfallDefaultCardsSourceDownloadModel
         $logFilePath = $directory . DIRECTORY_SEPARATOR . $logFileName;
 
         $this->fileLogger = new Logger('scryfall_download');
-        $this->getLogger()->pushHandler(new StreamHandler($logFilePath, Level::Debug));
+        $this->fileLogger->pushHandler(new StreamHandler($logFilePath, Level::Debug));
 
         return $logFileName;
     }

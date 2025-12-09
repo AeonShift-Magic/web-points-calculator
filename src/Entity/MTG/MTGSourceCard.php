@@ -22,13 +22,13 @@ class MTGSourceCard extends MTGAbstractCard
      * @var array<string, int>
      */
     public const array TIMELINE_PRECEDENCES = [
+        'unranked' => -1,
         'printed'  => 10,
         'funny'    => 20,
         'eternal'  => 30,
         'modern'   => 40,
         'pioneer'  => 50,
         'standard' => 60,
-        'unranked' => 100,
     ];
 
     /**

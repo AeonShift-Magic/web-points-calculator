@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Command\DB;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\DBUpdate\DataTransformerModel\MTG\V1\ScryfallDefaultCardsSourceDataTransformerModel;
+use App\Model\DBUpdate\DataTransformerModel\MTG\Scryfall\V1\ScryfallDefaultCardsSourceDataTransformerModel;
 use Exception;
 use Override;
 use RuntimeException;
@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Lock\Exception\LockAcquiringException;
 
 #[AsCommand(
     name: 'aeonshift:updatedb:scryfalldefaultcards',
@@ -23,6 +24,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 final class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
 {
+    /** @var int Error code for lock unavailable */
+    private const int ERROR_LOCK_UNAVAILABLE = 2;
+
     public function __construct(
         private readonly ScryfallDefaultCardsSourceDataTransformerModel $scryfallDefaultCardsSourceDataTransformerModel,
     )
@@ -132,6 +136,11 @@ final class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
 
             return Command::SUCCESS;
 
+        } catch (LockAcquiringException $e) {
+            $io->error('Lock unavailable: ' . $e->getMessage());
+            $io->note('The lock expires automatically after 15 minutes. Please wait for the current process to complete or try again later.');
+
+            return self::ERROR_LOCK_UNAVAILABLE;
         } catch (RuntimeException $e) {
             $io->error('Import failed: ' . $e->getMessage());
 

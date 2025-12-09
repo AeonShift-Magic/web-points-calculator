@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Command\Source;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\Source\DownloadModel\MTG\V1\ScryfallDefaultCardsSourceDownloadModel;
+use App\Model\Source\DownloadModel\MTG\Scryfall\V1\ScryfallDefaultCardsSourceDownloadModel;
 use Exception;
 use Override;
 use RuntimeException;
@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Lock\Exception\LockAcquiringException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 /**
@@ -27,6 +28,9 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 )]
 final class ScryfallDefaultCardsSourceDownloadCommand extends Command
 {
+    /** @var int Error code for lock unavailable */
+    private const int ERROR_LOCK_UNAVAILABLE = 2;
+
     public function __construct(
         private readonly ScryfallDefaultCardsSourceDownloadModel $scryfallDownloader,
     )
@@ -106,12 +110,24 @@ final class ScryfallDefaultCardsSourceDownloadCommand extends Command
             $io->info('File size: ' . number_format((int)filesize($downloadedPath) ?: 0) . ' bytes');
 
             return Command::SUCCESS;
-        } catch (TransportExceptionInterface $e) {
-            $io->error('HTTP Transport error: ' . $e->getMessage());
+        } catch (LockAcquiringException $e) {
+            $io->error('Lock unavailable: ' . $e->getMessage());
+            $io->note('The lock expires automatically after 15 minutes. Please wait for the current process to complete or try again later.');
+
+            return self::ERROR_LOCK_UNAVAILABLE;
+        } catch (RuntimeException $e) {
+            if (str_contains($e->getMessage(), 'Another Scryfall default cards process is already running')) {
+                $io->error('Lock unavailable: ' . $e->getMessage());
+                $io->note('The lock expires automatically after 15 minutes. Please wait for the current process to complete or try again later.');
+
+                return self::ERROR_LOCK_UNAVAILABLE;
+            }
+
+            $io->error('Error: ' . $e->getMessage());
 
             return Command::FAILURE;
-        } catch (RuntimeException $e) {
-            $io->error('Error: ' . $e->getMessage());
+        } catch (TransportExceptionInterface $e) {
+            $io->error('HTTP Transport error: ' . $e->getMessage());
 
             return Command::FAILURE;
         } catch (Exception $e) {

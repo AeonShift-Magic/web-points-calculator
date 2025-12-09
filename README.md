@@ -4,10 +4,10 @@
 
 ## PHP + JavaScript points calculator for Aeonshift
 
-This project uses vanilla JavaScript and Symfony/PHP, and should mostly 
+This project uses vanilla JavaScript and [Symfony](https://symfony.com/)/PHP, and should mostly 
 work on MySQL/MariaDB DB servers (though PostGresSQL should work too).
 
-This codebase is ready-to-use for Magic The Gathering™ cards, using Scryfall as source.  
+This codebase is ready-to-use for Magic The Gathering™ cards, using [Scryfall API](https://scryfall.com/docs/api/cards) as source.  
 The code is pluggable to be used with other sources of data, or licenses.
 
 **Note: this project requires PHP 8.4+, Composer, and Symfony basic knowledge to be set up.**
@@ -93,9 +93,10 @@ php bin/console aeonshift:updatedb:scryfalldefaultcards # to download the Scryfa
 php bin/console aeonshift:sourcedownload:scryfalldefaultcards # to update from the Scryfall file if present
 ```
 
-*(remember doing this too often will have your server banned if abusive, make sure it is done reasonably)*
+*(remember doing this too often will have your server banned if abusive, make sure it is done reasonably)*  
+*(note: the commands are only in plain English for now, no localization available)*
 
 This software is distributed under the MIT License.
 Feel free to use it as much as you can, and to contribute to it, PRs are welcome!
 
-Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for Aeonshift, 2025.
+Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for AeonShift, 2025.
