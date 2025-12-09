@@ -41,10 +41,10 @@ jobs:
 
             # ---- Warm up Symfony caches ----
             -   name: Warm Symfony cache for env Dev
-                run: php bin/console cache:warmup --env=dev
+                run: php bin/console cache:warmup --env=dev -vvv --no-optional-warmers
 
             -   name: Warm Symfony cache for env Github
-                run: php bin/console cache:warmup --env=github
+                run: php bin/console cache:warmup --env=github -vvv --no-optional-warmers
 
             # ---- PHPStan ----
             -   name: Run PHPStan Check Using Embedded Configuration

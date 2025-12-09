@@ -37,4 +37,5 @@
 phpstan.neon
 ###< phpstan/phpstan ###
 
+### Local card sources, temporary directory structure ###
 /cardsources
