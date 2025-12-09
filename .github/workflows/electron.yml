@@ -1,7 +1,7 @@
 ##############################################################
 ######################## AeonShift CI ########################
 ##############################################################
-name: AeonShift Github CI - Electron Build
+name: AeonShift Github CI - Electron Build App
 
 # We don't create releases nor uses Git tags in this project,
 # so we just use 'latest' as a static tag for the release action.
@@ -21,7 +21,7 @@ jobs:
     ####################### ELECTRON BUILD #######################
     ##############################################################
     electron_build:
-        name: Build AeonShift Electron App
+        name: AeonShift Github CI - Electron Build App
         runs-on: ubuntu-latest
 
         steps:
@@ -39,8 +39,16 @@ jobs:
                 with:
                     php-version: '8.4'
 
+            # -- Install Composer dependencies ----
             -   name: Install Composer deps
                 run: composer install --no-interaction
+
+            # ---- Warm up Symfony caches ----
+            -   name: Warm Symfony cache for env Dev
+                run: php bin/console cache:warmup --env=dev
+
+            -   name: Warm Symfony cache for env Github
+                run: php bin/console cache:warmup --env=github
 
             # ---- Render Twig template to an output directory ----
             -   name: Render Twig output

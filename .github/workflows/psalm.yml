@@ -21,7 +21,7 @@ jobs:
     #################### PHP Static Analysis #####################
     ##############################################################
     php_quality:
-        name: PHP Quality
+        name: AeonShift Github CI - Psalm Validation
         runs-on: ubuntu-latest
 
         steps:
@@ -35,8 +35,16 @@ jobs:
                     extensions: mbstring, intl, pdo_mysql
                     coverage: none
 
+            # -- Install Composer dependencies ----
             -   name: Install Composer dependencies
                 run: composer install --no-interaction --prefer-dist --no-scripts
+
+            # ---- Warm up Symfony caches ----
+            -   name: Warm Symfony cache for env Dev
+                run: php bin/console cache:warmup --env=dev
+
+            -   name: Warm Symfony cache for env Github
+                run: php bin/console cache:warmup --env=github
 
             # ---- Psalm ----
             -   name: Run Psalm Using Embedded Configuration
