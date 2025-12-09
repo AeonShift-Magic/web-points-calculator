@@ -48,4 +48,4 @@ jobs:
 
             # ---- PHPStan ----
             -   name: Run PHPStan Check Using Embedded Configuration
-                run: vendor/bin/phpstan analyse --memory-limit=1G -n -vvv
+                run: vendor/bin/phpstan analyse --memory-limit=1G -n -vvv --no-progress

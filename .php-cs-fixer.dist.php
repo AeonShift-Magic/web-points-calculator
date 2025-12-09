@@ -12,7 +12,9 @@ $finder = new PhpCsFixer\Finder()
     ->exclude('public/bundles')
     ->exclude('public/build')
     ->notPath('bin/console')
-    ->notPath('public/index.php');
+    ->notPath('public/index.php')
+    ->notPath('config/secrets')
+    ->notPath('config/reference');
 
 // Set up the config to anaylze/fix everything. Ready for CI.
 return new PhpCsFixer\Config('AS Calculator CS-Fixing')
