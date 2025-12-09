@@ -1,0 +1,40 @@
+##############################################################
+######################## AeonShift CI ########################
+##############################################################
+name: AeonShift Github CI - PHP-CS-Fixer Check
+
+# We don't create releases nor uses Git tags in this project,
+# so we just use 'latest' as a static tag for the release action.
+# This way, the latest build is always available under the 'latest' release.
+# As the application is always "perpetual" as a versioned state.
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    ##############################################################
+    #################### PHP Static Analysis #####################
+    ##############################################################
+    php_quality:
+        name: PHP Quality
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+
+            # ---- PHP Setup ----
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.4'
+                    extensions: mbstring, intl, pdo_mysql
+                    coverage: none
+
+            -   name: Install Composer dependencies
+                run: composer install --no-interaction --prefer-dist
+
+            # ---- PHP-CS-Fixer ----
+            -   name: Run PHP-CS-Fixer Using Embedded Configuration
+                run: vendor/bin/php-cs-fixer check -n -vvv

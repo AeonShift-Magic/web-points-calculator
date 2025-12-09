@@ -8,13 +8,13 @@ use DateTime;
 
 interface UpdateInterface
 {
-    public function getDescriptionEN(): ?string;
-
-    public function getEndingAt(): ?DateTime;
-
     public int|null $id {
         get;
     }
+
+    public function getDescriptionEN(): ?string;
+
+    public function getEndingAt(): ?DateTime;
 
     public function getStartingAt(): ?DateTime;
 

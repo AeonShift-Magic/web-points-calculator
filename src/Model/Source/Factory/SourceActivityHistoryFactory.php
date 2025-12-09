@@ -18,7 +18,7 @@ final class SourceActivityHistoryFactory
         // Insert future licenses here
         return match ($license) {
             'MTG'   => new MTGCardSourceActivityHistory(),
-            default => throw new InvalidArgumentException("Unsupported license: $license"),
+            default => throw new InvalidArgumentException("Unsupported license: {$license}"),
         };
     }
 }

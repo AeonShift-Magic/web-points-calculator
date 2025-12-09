@@ -26,6 +26,8 @@ interface SourceActivityHistoryInterface
 
     public function getStartedFrom(): string;
 
+    public function getUniqueId(): string;
+
     public function setChannel(string $channel): self;
 
     public function setEndedAt(?DateTime $endedAt): self;
@@ -39,6 +41,4 @@ interface SourceActivityHistoryInterface
     public function setStartedFrom(string $startedFrom): self;
 
     public function setUniqueId(string $uniqueId): self;
-
-    public function getUniqueId(): string;
 }

@@ -1,0 +1,80 @@
+##############################################################
+######################## AeonShift CI ########################
+##############################################################
+name: AeonShift Github CI - Electron Build
+
+# We don't create releases nor uses Git tags in this project,
+# so we just use 'latest' as a static tag for the release action.
+# This way, the latest build is always available under the 'latest' release.
+# As the application is always "perpetual" as a versioned state.
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+jobs:
+    ##############################################################
+    ####################### ELECTRON BUILD #######################
+    ##############################################################
+    electron_build:
+        name: Build AeonShift Electron App
+        runs-on: ubuntu-latest
+
+        steps:
+            -   uses: actions/checkout@v4
+
+            # ---- Node Setup ----
+            -   name: Setup Node
+                uses: actions/setup-node@v4
+                with:
+                    node-version: 20
+
+            # ---- Build Symfony assets & Twig output ----
+            -   name: Install PHP / Composer
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: '8.4'
+
+            -   name: Install Composer deps
+                run: composer install --no-interaction
+
+            # ---- Render Twig template to an output directory ----
+            -   name: Render Twig output
+                run: php bin/console aeonshift:render-electron
+
+            # ---- Install JS dependencies (importmap must be dumped beforehand) ----
+            -   name: Install JS deps for Importmap
+                run: |
+                    npm install -g esbuild
+                    php bin/console importmap:dump
+
+            # ---- Build Electron deps ----
+            -   name: Install Electron dependencies
+                working-directory: electron
+                run: npm install
+
+            # ---- Copy generated web files (Twig + importmap) into electron/app/ ----
+            -   name: Copy Symfony built output
+                run: cp -r var/electron-build/* electron/app/
+
+            # ---- Build binary packages ----
+            -   name: Build Electron app
+                working-directory: electron
+                run: npx electron-builder --linux --win --mac
+
+            # ---- Upload artifacts to GitHub Release ----
+            -   name: Create/Update Release and Upload Assets
+                uses: softprops/action-gh-release@v2
+                with:
+                    tag_name: latest
+                    name: "Latest AeonShift Points Calculator Build"
+                    files: |
+                        electron/dist/*.AppImage
+                        electron/dist/*.deb
+                        electron/dist/*.rpm
+                        electron/dist/*.exe
+                        electron/dist/*.dmg
+                        electron/dist/*.zip
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

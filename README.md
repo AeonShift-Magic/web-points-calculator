@@ -1,8 +1,19 @@
 ![readme-files/logo-duel-commander-transparent.png](readme-files/Aeonshift-Logo-Transparent.png)
 
+![PHPStan](https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/phpstan.yml/badge.svg) 
+![Psalm](https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/psalm.yml/badge.svg) 
+![PHP-CS-Fixer](https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/phpcsfixer.yml/badge.svg) 
+
 # AEONSHIFT POINTS CALCULATOR 💯
 
 ## PHP + JavaScript points calculator for Aeonshift
+
+This codebase does several things:
+- set up a dynamic website with full management of Aeonshift points calculator rules and releases,
+- import Magic The Gathering™ cards from Scryfall bulk data files into a local database,
+- provide dynamic a frontend interface to calculate Aeonshift points for decks of cards.
+- provide a static export of the points calculator for offline use, as a standalone web page.
+- provide an executable standalone version with ElectronJS for Windows 7-11, MacOS 10.15+, and Linux.
 
 This project uses vanilla JavaScript and [Symfony](https://symfony.com/)/PHP, and should mostly 
 work on MySQL/MariaDB DB servers (though PostGresSQL should work too).

@@ -26,6 +26,8 @@ interface MTGCardInterface extends CardInterface
 
     public function isLegalMultiSpecial(): bool;
 
+    public function setIsLegal2HG(bool $isLegal2HG): static;
+
     public function setIsLegal2HGSpecial(bool $isLegal2HGSpecial): static;
 
     public function setIsLegalDuel(bool $isLegalDuel): static;
@@ -35,8 +37,6 @@ interface MTGCardInterface extends CardInterface
     public function setIsLegalMulti(bool $isLegalMulti): static;
 
     public function setIsLegalMultiSpecial(bool $isLegalMultiSpecial): static;
-
-    public function setIsLegal2HG(bool $isLegal2HG): static;
 
     public function setMultiCZType(string $multiCZType): static;
 
