@@ -13,6 +13,9 @@ on:
             - main
     pull_request:
 
+env:
+    APP_ENV: github
+
 jobs:
     ##############################################################
     #################### PHP Static Analysis #####################
@@ -33,8 +36,8 @@ jobs:
                     coverage: none
 
             -   name: Install Composer dependencies
-                run: composer install --no-interaction --prefer-dist
+                run: composer install --no-interaction --prefer-dist --no-scripts
 
             # ---- PHP-CS-Fixer ----
             -   name: Run PHP-CS-Fixer Using Embedded Configuration
-                run: vendor/bin/php-cs-fixer check -n -vvv
+                run: vendor/bin/php-cs-fixer check -n -vvv --env=github
