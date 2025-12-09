@@ -48,4 +48,4 @@ jobs:
 
             # ---- PHP-CS-Fixer ----
             -   name: Run PHP-CS-Fixer Using Embedded Configuration
-                run: vendor/bin/php-cs-fixer check -n -vvv --env=github
+                run: vendor/bin/php-cs-fixer check -n -vvv
