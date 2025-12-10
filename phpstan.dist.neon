@@ -1,8 +1,17 @@
 parameters:
-    level: 6
+    excludePaths:
+        - src/Repository/ResetPasswordRequestRepository.php
+        - config/reference.php
+    level: 10
     paths:
-        - bin/
-        - config/
-        - public/
-        - src/
-        - tests/
+        - config
+        - src
+    ignoreErrors:
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
+    checkUninitializedProperties: true
+    checkBenevolentUnionTypes: true
+    reportPossiblyNonexistentGeneralArrayOffset: true
+    reportPossiblyNonexistentConstantArrayOffset: true

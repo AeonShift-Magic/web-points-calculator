@@ -43,4 +43,4 @@ jobs:
 
             # ---- PHPUnit ----
             -   name: Run PHPUnit Using Embedded Configuration
-                run: vendor/bin/phpunit --colors=always
+                run:  vendor/bin/phpunit --colors=always --configuration=phpunit.dist.xml tests

@@ -4,7 +4,7 @@
     <thead>
         <tr>
             <th>
-                Continuous Integration Task
+                Repository Continuous Integration Health Task
             </th>
             <th>
                 Task Status
@@ -14,10 +14,18 @@
     <tbody>
         <tr>
             <td>
+                PHP-CS-Fixer Code Style
+            </td>
+            <td>
+                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/phpcsfixer.yml/badge.svg" alt="PHP-CS-Fixer Badge">
+            </td>
+        </tr>
+        <tr>
+            <td>
                 PHPStan Static Analysis
             </td>
            <td>
-                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan">
+                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/phpstan.yml/badge.svg" alt="PHPStan Badge">
            </td> 
         </tr>
         <tr>
@@ -25,15 +33,23 @@
                 Psalm Static Analysis
             </td>
             <td>
-                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/psalm.yml/badge.svg" alt="Psalm">
+                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/psalm.yml/badge.svg" alt="Psalm Badge">
             </td>
         </tr>
         <tr>
             <td>
-                PHP-CS-Fixer Code Style
+                PHPUnit Tests
             </td>
             <td>
-                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/phpcsfixer.yml/badge.svg" alt="PHP-CS-Fixer">
+                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/phpunit.yml/badge.svg" alt="PHP Unit Tests Badge">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Composer Security Scan
+            </td>
+            <td>
+                <img src="https://github.com/AeonShift-Magic/web-points-calculator/actions/workflows/composer-security.yml/badge.svg" alt="Composer Security Badge">
             </td>
         </tr>
         <tr>
