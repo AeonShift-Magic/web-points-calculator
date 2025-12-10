@@ -63,9 +63,6 @@
     </tbody>
 </table>
 
-
-
-
 # AEONSHIFT POINTS CALCULATOR 💯
 
 ## PHP + JavaScript points calculator for Aeonshift
@@ -90,7 +87,7 @@ The code is pluggable to be used with other sources of data, or licenses.
 
 Just do
 
-```bash
+```shell
 composer install
 ``` 
 
@@ -100,14 +97,14 @@ Then you should set up your `.env.local` file based on the `.env` template.
 
 And create the database with:
 
-```bash
+```shell
 php bin/console doctrine:database:create
 php bin/console doctrine:schema:update --force
 ```
 
 Then install assets using:
 
-```bash
+```shell
 php bin/console assets:install
 php bin/console importmap:install
 
@@ -119,7 +116,7 @@ php bin/console tailwind:build --watch --poll # development, dynamic assets, liv
 
 Then you can run a local PHP server with:
 
-```bash
+```shell
 symfony server:start -d
 ```
 
@@ -151,7 +148,7 @@ Don't forget to also set up your local `.env.local` file on the production serve
 This codebase doesn't use Doctrine Migrations.
 Yet, the first time you set this up on a new machine, you can run:
 
-```bash
+```shell
 php bin/console doctrine:database:create
 php bin/console doctrine:schema:update --force
 ```
@@ -171,7 +168,7 @@ They can be automated. Using a cron job is a good idea, calling the console comm
 
 This will limit the use with cards in English only (base reference for judging Magic The Gathering™ cards).
 
-```bash
+```shell
 php bin/console aeonshift:updatedb:scryfalldefaultcards # to download the Scryfall file
 php bin/console aeonshift:sourcedownload:scryfalldefaultcards # to update from the Scryfall file if present
 ```
