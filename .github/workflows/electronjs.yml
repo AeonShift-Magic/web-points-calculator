@@ -27,7 +27,9 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            -   uses: actions/checkout@v4
+            # ---- Checkout Repository ----
+            -   name: Checkout repository
+                uses: actions/checkout@v4
 
             # ---- Node Setup ----
             -   name: Setup Node
