@@ -2,11 +2,6 @@
 ######################## AeonShift CI ########################
 ##############################################################
 name: AeonShift Github CI - PHP-CS-Fixer Check
-description: |
-    This workflow runs PHP-CS-Fixer to ensure code style consistency.
-branding:
-    icon: 'align-justify'
-    color: 'white'
 
 on:
     push:

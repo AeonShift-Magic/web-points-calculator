@@ -2,12 +2,6 @@
 ######################## AeonShift CI ########################
 ##############################################################
 name: AeonShift Github CI - PHPStan Validation
-description: |
-    This workflow runs PHPStan (maximum level) to perform static analysis
-    on the PHP codebase to ensure code quality and catch potential issues.
-branding:
-    icon: 'cpu'
-    color: 'white'
 
 on:
     push:
