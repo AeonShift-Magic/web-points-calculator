@@ -1,13 +1,8 @@
 #!/bin/bash
 
-# #############################################################################################
-# # This Shell script (bash) is written to deploy XXXXXXXXXXXXXXX project on [PRODUCTION]     #
-# # It does the following, in that order:                                                     #
-# # - git fetch --all                                                                         #
-# # - git rev-parse refs/remotes/origin/master^(commit)                                       #
-# # - git checkout -f master                                                                  #
-# # - php bin/console doctrine:schema:update --force                                          #
-# #############################################################################################
+###################################################################################################
+# This Shell script (bash) is written to deploy AeonShift project on [PRODUCTION]                 #
+###################################################################################################
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m##################### Deployment Step 1: Git repository refresh #####################"
@@ -25,36 +20,36 @@ echo -e "\e[0m"
 
 wget -O composer.phar https://getcomposer.org/composer-stable.phar
 
-/usr/local/php8.3/bin/php composer.phar update --no-scripts
+php composer.phar update --no-scripts
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m####################### Deployment Step 3: Clearing the cache #######################"
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-/usr/local/php8.3/bin/php bin/console cache:clear --no-warmup --env=prod
+php bin/console cache:clear --no-warmup --env=prod
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m####################### Deployment Step 4: Doctrine ORM Sync ########################"
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-/usr/local/php8.3/bin/php bin/console doctrine:schema:update --force --env=prod
+php bin/console doctrine:schema:update --force --env=prod
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m##################### Deployment Step 5: PHP Caches clearing ########################"
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-/usr/local/php8.3/bin/php -r "if(function_exists('opcache_reset')){opcache_reset();}"
-/usr/local/php8.3/bin/php -r "if(function_exists('clearstatcache')){clearstatcache();}"
+php -r "if(function_exists('opcache_reset')){opcache_reset();}"
+php -r "if(function_exists('clearstatcache')){clearstatcache();}"
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m################### Deployment Step 6: Autoloader optimization ######################"
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-/usr/local/php8.3/bin/php composer.phar dump-autoload --no-dev --classmap-authoritative
+php composer.phar dump-autoload --no-dev --classmap-authoritative
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m################################ Deployment complete ################################"

@@ -1,13 +1,8 @@
 #!/bin/bash
 
-# #############################################################################################
-# # This Shell script (bash) is written to deploy Aeonshit project on [PRODUCTION]            #
-# # It does the following, in that order:                                                     #
-# # - git fetch --all                                                                         #
-# # - git rev-parse refs/remotes/origin/master^(commit)                                       #
-# # - git checkout -f master                                                                  #
-# # - php bin/console doctrine:schema:update --force                                          #
-# #############################################################################################
+###################################################################################################
+# This Shell script (bash) is written to deploy Aeonshit project on [PRODUCTION]                  #
+###################################################################################################
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m##################### Deployment Step 1: Git repository refresh #####################"

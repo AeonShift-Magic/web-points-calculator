@@ -138,9 +138,39 @@ Admins should connect to the backend to do some maintenance tasks:
 - Import the Scryfall data from the downloaded local file into the database for cards.
 - Create a release when new rules are published, using a points calculator model in case it would change.
 
+### Code Quality
+
+Locally, you can run:
+
+```shell
+./vendor/bin/php-cs-fixer fix --diff --dry-run
+./vendor/bin/phpstan analyse src tests
+./vendor/bin/psalm
+./vendor/bin/phpunit
+```
+
+Or, on windows, you can use the shortcut batch files (named for one-letter quick access):
+
+```shell
+.\csfixer.bat
+.\psalm.bat
+.\stan.bat
+.\unit.bat
+```
+
+And try building the ElectronJS app with:
+
+```shell
+.\electronjs.bat
+```
+
+**If any of these commands fail, please fix the issues before pushing code.**  
+Check your Github Actions CI results for more details.
+
 ### Deployment
 
 Feel free to edit and reuse the `production-deployment.sh` script to deploy your own instance of this application.
+The provided script works for servers with SSH access.
 This script is intended to be used on a platform that doesn't provide Node runtime.
 
 Don't forget to also set up your local `.env.local` file on the production server.
@@ -162,7 +192,7 @@ To have stuff displayed on the frontend, you need to:
 3. Create a release for the points calculator, choosing a model.
 
 Steps 1 and 2 need to be done each time you want to update the card database.
-They can be automated. Using a cron job is a good idea, calling the console commands:
+They can be automated. Using a cron job is a good idea, calling the console commands below:
 
 #### Using [Scryfall "Default Cards" bulk JSON file](https://scryfall.com/docs/api/bulk-data) as source:
 
@@ -178,5 +208,7 @@ php bin/console aeonshift:sourcedownload:scryfalldefaultcards # to update from t
 
 This software is distributed under the MIT License.
 Feel free to use it as much as you can, and to contribute to it, PRs are welcome!
+
+<hr>
 
 Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for AeonShift, 2025.

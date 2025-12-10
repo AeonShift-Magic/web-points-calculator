@@ -1,7 +1,0 @@
-workers:
-    # Remove the temp file
-    delete:
-        cmd: ['cmd.exe', '/C', 'del /F /S /Q C:\Users\YFX\.symfony5\var']
-    # Enable Tailwind everytime we start the Symfony server
-    tailwind:
-        cmd: ['symfony', 'console', 'tailwind:build', '--watch', '--poll']

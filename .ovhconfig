@@ -1,5 +1,10 @@
+; ############################################################################################################################################
+; # OVH Configuration File                                                                                                                   #
+; # This file is used in case you host this codebase on OVH servers                                                                          #
+; # For more information, visit https://help.ovhcloud.com/csm/en-web-hosting-change-php-version?id=kb_article_view&sysparm_article=KB0053014 #
+; ############################################################################################################################################
 app.engine=php
-app.engine.version=8.3
+app.engine.version=8.4
 
 http.firewall=security
 environment=production
