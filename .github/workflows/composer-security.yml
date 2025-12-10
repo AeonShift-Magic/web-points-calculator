@@ -1,0 +1,27 @@
+##############################################################
+######################## AeonShift CI ########################
+##############################################################
+name: AeonShift Github CI - Composer Security & Quality Checks
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+env:
+    APP_ENV: github
+
+jobs:
+    ##############################################################
+    ################## Composer Security Check ###################
+    ##############################################################
+    composer_security:
+        name: AeonShift Github CI - Composer Security & Quality Checks
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: The PHP Security Checker
+                uses: symfonycorp/security-checker-action@v5

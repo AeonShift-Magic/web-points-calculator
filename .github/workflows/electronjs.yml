@@ -2,6 +2,13 @@
 ######################## AeonShift CI ########################
 ##############################################################
 name: AeonShift Github CI - Electron Build App
+description: |
+    This workflow builds the ElectronJS desktop application
+    for AeonShift Points Calculator and uploads the binaries
+    to a GitHub Release under the 'latest' tag.
+branding:
+    icon: 'package'
+    color: 'white'
 
 # We don't create releases nor uses Git tags in this project,
 # so we just use 'latest' as a static tag for the release action.
@@ -12,13 +19,15 @@ on:
         branches:
             - main
     pull_request:
+        branches:
+            - main
 
 env:
     APP_ENV: github
 
 jobs:
     ##############################################################
-    ####################### ELECTRON BUILD #######################
+    #################### ElectronJS App Build ####################
     ##############################################################
     electron_build:
         name: AeonShift Github CI - Electron Build App

@@ -2,23 +2,26 @@
 ######################## AeonShift CI ########################
 ##############################################################
 name: AeonShift Github CI - PHP-CS-Fixer Check
+description: |
+    This workflow runs PHP-CS-Fixer to ensure code style consistency.
+branding:
+    icon: 'align-justify'
+    color: 'white'
 
-# We don't create releases nor uses Git tags in this project,
-# so we just use 'latest' as a static tag for the release action.
-# This way, the latest build is always available under the 'latest' release.
-# As the application is always "perpetual" as a versioned state.
 on:
     push:
         branches:
             - main
     pull_request:
+        branches:
+            - main
 
 env:
     APP_ENV: github
 
 jobs:
     ##############################################################
-    #################### PHP Static Analysis #####################
+    ##################### PHP-CS-Fixer Check #####################
     ##############################################################
     php_quality:
         name: AeonShift Github CI - PHP-CS-Fixer Check

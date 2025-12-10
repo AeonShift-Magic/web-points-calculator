@@ -41,6 +41,13 @@ final class ScryfallDefaultCardsSourceDownloadCommand extends Command
     #[Override]
     protected function configure(): void
     {
+        $this->addOption(
+            'dry-run',
+            null,
+            InputOption::VALUE_NONE,
+            'Display what would be done without actually downloading data'
+        );
+
         $this
             ->addOption(
                 'source',
@@ -62,6 +69,12 @@ final class ScryfallDefaultCardsSourceDownloadCommand extends Command
             $io->error('Invalid source option. Must be "cli" or "cron".');
 
             return Command::FAILURE;
+        }
+
+        if ($input->getOption('dry-run')) {
+            $io->warning('DRY RUN MODE - No data will be imported');
+
+            return Command::SUCCESS;
         }
 
         try {

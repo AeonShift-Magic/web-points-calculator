@@ -2,23 +2,27 @@
 ######################## AeonShift CI ########################
 ##############################################################
 name: AeonShift Github CI - PHPStan Validation
+description: |
+    This workflow runs PHPStan (maximum level) to perform static analysis
+    on the PHP codebase to ensure code quality and catch potential issues.
+branding:
+    icon: 'cpu'
+    color: 'white'
 
-# We don't create releases nor uses Git tags in this project,
-# so we just use 'latest' as a static tag for the release action.
-# This way, the latest build is always available under the 'latest' release.
-# As the application is always "perpetual" as a versioned state.
 on:
     push:
         branches:
             - main
     pull_request:
+        branches:
+            - main
 
 env:
     APP_ENV: github
 
 jobs:
     ##############################################################
-    #################### PHP Static Analysis #####################
+    ################## PHPStan Static Analysis ###################
     ##############################################################
     php_quality:
         name: AeonShift Github CI - PHPStan Validation

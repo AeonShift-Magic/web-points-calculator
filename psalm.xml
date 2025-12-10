@@ -7,17 +7,20 @@
     <projectFiles>
         <directory name="src"/>
         <ignoreFiles>
-            <directory name="vendor"/>
+            <!-- Don't scan the vendor dir, this is normally totally ignored ;) -->
+            <directory name="vendor" />
+            <!-- Don't scan the tests dir: Psalm gets lost with PHPUnit, this is normally totally ignored -->
+            <directory name="tests" />
             <!-- PHP 8.4 is not yet fully supported by Psalm -->
             <file name="src/Entity/CardInterface.php" />
             <file name="src/Entity/UpdateInterface.php" />
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
-        <PossiblyUnusedMethod errorLevel="suppress"/>
-        <PossiblyUnusedParam errorLevel="suppress"/>
-        <UnusedClass errorLevel="suppress"/>
-        <UnusedParam errorLevel="suppress"/>
+        <PossiblyUnusedMethod errorLevel="suppress" />
+        <PossiblyUnusedParam errorLevel="suppress" />
+        <UnusedClass errorLevel="suppress" />
+        <UnusedParam errorLevel="suppress" />
         <!-- Doctrine entities are often not final and have false-positively-reported unused properties -->
         <ClassMustBeFinal>
             <errorLevel type="suppress">
@@ -47,6 +50,6 @@
         </PossiblyUnusedReturnValue>
     </issueHandlers>
     <plugins>
-        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin" />
     </plugins>
 </psalm>
