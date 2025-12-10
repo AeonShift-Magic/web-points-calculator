@@ -1,4 +1,4 @@
-![readme-files/logo-duel-commander-transparent.png](readme-files/Aeonshift-Logo-Transparent.png)
+![readme-files/aeonshift-logo-transparent.png](readme-files/aeonshift-logo-transparent.png)
 
 <table style="border: 0 solid transparent">
     <thead>
