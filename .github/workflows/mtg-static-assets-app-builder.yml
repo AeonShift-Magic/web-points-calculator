@@ -74,7 +74,7 @@ jobs:
                 uses: softprops/action-gh-release@v2
                 with:
                     tag_name: latest
-                    name: "Latest AeonShift Points Calculator Static Build"
+                    name: "Latest AeonShift Points Calculator Executables"
                     files: |
                         public/static-calculators/mtg/aeonshift-mtg-calculator.html
                 env:
