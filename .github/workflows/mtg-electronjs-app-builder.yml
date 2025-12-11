@@ -107,7 +107,7 @@ jobs:
             - name: Prepare file list
               run: |
                   echo "Collected artifacts:"
-                  find artifacts -maxdepth 5 -type f
+                  find artifacts -type f \( -iname "*.exe" -o -iname "*.nupkg" -o -iname "*.zip" -o -iname "*.dmg" -o -iname "*.deb" -o -iname "*.rpm" \) -print
 
             - name: Replace GitHub Release with all platform builds
               uses: softprops/action-gh-release@v2
@@ -115,6 +115,9 @@ jobs:
               with:
                   tag_name: latest
                   name: Latest Version of AeonShift Calculator App
-                  files: artifacts/**/*
+                  # Only include the executable files
+                  files: $(
+                      find artifacts -type f \( -iname "*.exe" -o -iname "*.nupkg" -o -iname "*.zip" -o -iname "*.dmg" -o -iname "*.deb" -o -iname "*.rpm" \)
+                  )
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
