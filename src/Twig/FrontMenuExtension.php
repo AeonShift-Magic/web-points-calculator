@@ -37,17 +37,10 @@ final class FrontMenuExtension extends AbstractExtension
         $locale = $this->requestStack->getCurrentRequest()?->getLocale() ?? 'en';
 
         /** @var array<Page> $globalPages */
-        $globalPages = $this->pool->get(key: 'prime_header_menu_global_pages_' . $zone . '_' . $locale, callback: function (ItemInterface $item) use ($zone): array {
+        $globalPages = $this->pool->get(key: 'as_header_menu_global_pages_' . $zone . '_' . $locale, callback: function (ItemInterface $item) use ($zone): array {
             $item->expiresAfter(3600);
 
             return $this->entityManager->getRepository(Page::class)->findBy(['zone' => $zone, 'language' => $this->requestStack->getCurrentRequest()?->getLocale()], ['weight' => 'DESC']);
-        });
-
-        /** @var array<Page> $mtgPrimeExperiencePages */
-        $mtgPrimeExperiencePages = $this->pool->get(key: 'prime_header_menu_mtg_experience_pages', callback: function (ItemInterface $item): array {
-            $item->expiresAfter(3600);
-
-            return $this->entityManager->getRepository(Page::class)->findBy(['zone' => 'mtgprimeexperience', 'language' => $this->requestStack->getCurrentRequest()?->getLocale()], ['weight' => 'DESC']);
         });
 
         try {
@@ -57,7 +50,6 @@ final class FrontMenuExtension extends AbstractExtension
                 [
                     'locale'                     => $this->requestStack->getCurrentRequest()?->getLocale(),
                     'global_pages'               => $globalPages,
-                    'mtg_prime_experience_pages' => $mtgPrimeExperiencePages,
                     'zone'                       => $zone,
                 ]
             );

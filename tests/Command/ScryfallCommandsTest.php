@@ -11,8 +11,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
- * @covers \App\Command\DB\ScryfallDefaultCardsSourceDBUpdateCommand
- * @covers \App\Command\Source\ScryfallDefaultCardsSourceDownloadCommand
+ * @covers \App\Command\MTG\DB\MTGScryfallDefaultCardsSourceDBUpdateCommand
+ * @covers \App\Command\MTG\Source\MTGScryfallDefaultCardsSourceDownloadCommand
  *
  * @internal
  *
@@ -28,7 +28,7 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsDBUpdateCommandDryRun(): void
     {
-        $command = $this->application->find('aeonshift:updatedb:scryfalldefaultcards');
+        $command = $this->application->find('aeonshift:mtg:updatedb:scryfalldefaultcards');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
@@ -47,7 +47,7 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsDownloadCommandDryRun(): void
     {
-        $command = $this->application->find('aeonshift:sourcedownload:scryfalldefaultcards');
+        $command = $this->application->find('aeonshift:mtg:sourcedownload:scryfalldefaultcards');
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([
@@ -65,7 +65,7 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsSourceDBUpdateCommandInvalidSource(): void
     {
-        $command = $this->application->find('aeonshift:updatedb:scryfalldefaultcards');
+        $command = $this->application->find('aeonshift:mtg:updatedb:scryfalldefaultcards');
         $commandTester = new CommandTester($command);
 
         $invalidSources = ['web', 'api', 'invalid', 'test', ''];
@@ -88,7 +88,7 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsSourceDBUpdateCommandValidSources(): void
     {
-        $command = $this->application->find('aeonshift:updatedb:scryfalldefaultcards');
+        $command = $this->application->find('aeonshift:mtg:updatedb:scryfalldefaultcards');
         $commandTester = new CommandTester($command);
 
         $validSources = ['cli', 'cron'];
@@ -109,7 +109,7 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsSourceDownloadCommandInvalidSource(): void
     {
-        $command = $this->application->find('aeonshift:sourcedownload:scryfalldefaultcards');
+        $command = $this->application->find('aeonshift:mtg:sourcedownload:scryfalldefaultcards');
         $commandTester = new CommandTester($command);
 
         $invalidSources = ['web', 'api', 'invalid', 'test', ''];
@@ -132,7 +132,7 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsSourceDownloadCommandValidSources(): void
     {
-        $command = $this->application->find('aeonshift:sourcedownload:scryfalldefaultcards');
+        $command = $this->application->find('aeonshift:mtg:sourcedownload:scryfalldefaultcards');
         $commandTester = new CommandTester($command);
 
         $validSources = ['cli', 'cron'];

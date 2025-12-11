@@ -32,7 +32,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * Uses a Lock to prevent concurrent execution.
  * Uses native arrays instead of DTOs.
  */
-final class ScryfallDefaultCardsSourceDownloadModel
+final class MTGScryfallDefaultCardsSourceDownloadModel
 {
     /** @var string Channel string for DB logging */
     private const string CHANNEL = 'scryfall/defaultcards/download/' . self::VERSION;
@@ -46,7 +46,7 @@ final class ScryfallDefaultCardsSourceDownloadModel
     /** @var int The permissions on the downloaded files */
     private const int FILE_PERMISSIONS = 0664;
 
-    /** @var string License identifier for MTG Scryfall source */
+    /** @var string License identifier for MTG sources */
     private const string LICENSE = 'MTG';
 
     /** @var string Lock key for preventing concurrent execution */

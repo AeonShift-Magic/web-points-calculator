@@ -1,4 +1,6 @@
 {
+    "name": "aeonshift/web-points-calculator",
+    "description": "AeonShift Points Calculator",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",

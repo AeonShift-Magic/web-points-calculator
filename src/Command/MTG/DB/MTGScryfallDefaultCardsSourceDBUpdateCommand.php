@@ -2,10 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace App\Command\DB;
+namespace App\Command\MTG\DB;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\DBUpdate\DataTransformerModel\MTG\Scryfall\V1\ScryfallDefaultCardsSourceDataTransformerModel;
+use App\Model\DBUpdate\DataTransformerModel\MTG\Scryfall\V1\MTGScryfallDefaultCardsSourceDataTransformerModel;
 use Exception;
 use Override;
 use RuntimeException;
@@ -17,18 +17,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Lock\Exception\LockAcquiringException;
 
+/**
+ * Starts a parsing and database update based on the Scryfall default cards bulk data file imported.
+ */
 #[AsCommand(
-    name: 'aeonshift:updatedb:scryfalldefaultcards',
+    name: 'aeonshift:mtg:updatedb:scryfalldefaultcards',
     description: 'Parse and import latest Scryfall default cards download into database',
-    aliases: ['as:udb:sdc']
+    aliases: ['as:mtg:udb:sdc']
 )]
-final class ScryfallDefaultCardsSourceDBUpdateCommand extends Command
+final class MTGScryfallDefaultCardsSourceDBUpdateCommand extends Command
 {
     /** @var int Error code for lock unavailable */
     private const int ERROR_LOCK_UNAVAILABLE = 2;
 
     public function __construct(
-        private readonly ScryfallDefaultCardsSourceDataTransformerModel $scryfallDefaultCardsSourceDataTransformerModel,
+        private readonly MTGScryfallDefaultCardsSourceDataTransformerModel $scryfallDefaultCardsSourceDataTransformerModel,
     )
     {
         parent::__construct();

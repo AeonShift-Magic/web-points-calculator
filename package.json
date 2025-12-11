@@ -1,0 +1,49 @@
+{
+    "name": "aeon-shift-web-points-calculator",
+    "version": "1.0.0",
+    "description": "AeonShift Points Calculator ElectronJS Builder",
+    "keywords": [
+        "TCG",
+        "MTG",
+        "calculator",
+        "points"
+    ],
+    "homepage": "https://github.com/AeonShift-Magic/web-points-calculator#readme",
+    "bugs": {
+        "url": "https://github.com/AeonShift-Magic/web-points-calculator/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AeonShift-Magic/web-points-calculator.git"
+    },
+    "license": "MIT",
+    "author": "William Pinaud (DocFX)",
+    "type": "commonjs",
+    "main": "aeonshift-mtg-web-calculator-app-builder.js",
+    "directories": {
+        "test": "tests"
+    },
+    "scripts": {
+        "mtg-electron-test": "echo \"Error: no test specified\" && exit 1",
+        "mtg-electron-build": "electron .",
+        "mtg-electron-start": "electron-forge start",
+        "mtg-electron-package": "electron-forge package",
+        "mtg-electron-make": "electron-forge make",
+        "dist": "electron-forge make"
+    },
+    "devDependencies": {
+        "@electron-forge/cli": "^7.10.2",
+        "@electron-forge/maker-deb": "^7.10.2",
+        "@electron-forge/maker-dmg": "^7.10.2",
+        "@electron-forge/maker-rpm": "^7.10.2",
+        "@electron-forge/maker-squirrel": "^7.10.2",
+        "@electron-forge/maker-zip": "^7.10.2",
+        "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
+        "@electron-forge/plugin-fuses": "^7.10.2",
+        "@electron/fuses": "^1.8.0",
+        "electron": "^39.2.6"
+    },
+    "dependencies": {
+        "electron-squirrel-startup": "^1.0.1"
+    }
+}

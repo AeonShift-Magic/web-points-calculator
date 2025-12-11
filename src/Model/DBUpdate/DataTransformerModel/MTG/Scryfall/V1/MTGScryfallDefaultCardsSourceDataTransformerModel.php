@@ -38,7 +38,7 @@ use Throwable;
  * Uses a Lock to prevent concurrent execution.
  * Uses native arrays instead of DTOs.
  */
-final class ScryfallDefaultCardsSourceDataTransformerModel
+final class MTGScryfallDefaultCardsSourceDataTransformerModel
 {
     /** @var int How many items/cards to check before securing a DB upsert */
     private const int BATCH_SIZE = 100;
@@ -46,7 +46,7 @@ final class ScryfallDefaultCardsSourceDataTransformerModel
     /** @var string Channel string for DB logging */
     private const string CHANNEL = 'scryfall/defaultcards/dbupdate/' . self::VERSION;
 
-    /** @var string License identifier for MTG Scryfall source */
+    /** @var string License identifier for MTG sources */
     private const string LICENSE = 'MTG';
 
     /** @var string Lock key for preventing concurrent execution */
@@ -460,7 +460,7 @@ final class ScryfallDefaultCardsSourceDataTransformerModel
      *
      * @return array{isLegal2HGSpecial: bool, isLegalDuelSpecial: bool, isLegalMultiSpecial: bool} An array of legality flags
      *
-     * @see ScryfallDefaultCardsSourceDataTransformerModel::canCardBeACommander()
+     * @see MTGScryfallDefaultCardsSourceDataTransformerModel::canCardBeACommander()
      */
     private function getCardSpecialLegalityFromFlags(
         bool $isLegal2HG,

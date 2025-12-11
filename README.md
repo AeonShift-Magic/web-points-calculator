@@ -1,5 +1,7 @@
 ![readme-files/aeonshift-logo-transparent.png](readme-files/aeonshift-logo-transparent.png)
 
+# AEONSHIFT POINTS CALCULATOR 💯
+
 <table style="border: 0 solid transparent">
     <thead>
         <tr>
@@ -63,8 +65,6 @@
     </tbody>
 </table>
 
-# AEONSHIFT POINTS CALCULATOR 💯
-
 ## PHP + JavaScript points calculator for Aeonshift
 
 This codebase does several things:
@@ -81,9 +81,11 @@ work on MySQL/MariaDB DB servers (though PostGresSQL should work too).
 This codebase is ready-to-use for Magic The Gathering™ cards, using [Scryfall API](https://scryfall.com/docs/api/cards) as source.  
 The code is pluggable to be used with other sources of data, or licenses.
 
-**Note: this project requires PHP 8.4+, Composer, and Symfony basic knowledge to be set up.**
+**Note: this project requires PHP 8.4+, Composer, Node 24, and Symfony basic knowledge to be set up.**
 
-### Setting up locally
+<hr>
+
+### 💻 Setting up locally
 
 Just do
 
@@ -138,7 +140,7 @@ Admins should connect to the backend to do some maintenance tasks:
 - Import the Scryfall data from the downloaded local file into the database for cards.
 - Create a release when new rules are published, using a points calculator model in case it would change.
 
-### Code Quality
+### 🔍 Code Quality
 
 Locally, you can run:
 
@@ -149,16 +151,25 @@ Locally, you can run:
 ./vendor/bin/phpunit
 ```
 
-Or, on windows, you can use the shortcut batch files (named for one-letter quick access):
+Or, on Windows, you can use the shortcut batch files (named for one-letter quick access):
 
 ```shell
-.\csfixer.bat
-.\psalm.bat
-.\stan.bat
-.\unit.bat
+.\csfixer.bat # PHP-CS-Fixer code quality check, make sure your IDE doesn't auto-format code differently
+.\psalm.bat # Psalm static analysis, max level, must return no error
+.\stan.bat # PHPStan static analysis, max level, must return no error
+.\unit.bat # PHPUnit tests, must return all tests passed correctly
+
+# Or, all at once to do a final pre-flight check before pushing:
+.\allchecks.bat
 ```
 
-And try building the ElectronJS app with:
+**PHPStorm/IntelliJ Users:** the attached and versioned `phpstorm-settings.zip` folder contains pre-configured settings
+in sync with the code quality tools used in this project.
+You can import these settings in your IDE to have the same code style, inspections, and quality tools setup.
+Just create a new IDE settings profile, and import the zip file contents into it: 
+`File > Manage IDE Settings > Import Settings...`.
+
+You can build the ElectronJS app with:
 
 ```shell
 .\electronjs.bat
@@ -167,7 +178,7 @@ And try building the ElectronJS app with:
 **If any of these commands fail, please fix the issues before pushing code.**  
 Check your Github Actions CI results for more details.
 
-### Deployment
+### 📡 Deployment
 
 Feel free to edit and reuse the `production-deployment.sh` script to deploy your own instance of this application.
 The provided script works for servers with SSH access.
@@ -199,16 +210,16 @@ They can be automated. Using a cron job is a good idea, calling the console comm
 This will limit the use with cards in English only (base reference for judging Magic The Gathering™ cards).
 
 ```shell
-php bin/console aeonshift:updatedb:scryfalldefaultcards # to download the Scryfall file
-php bin/console aeonshift:sourcedownload:scryfalldefaultcards # to update from the Scryfall file if present
+php bin/console aeonshift:mtg:updatedb:scryfalldefaultcards # to download the Scryfall file
+php bin/console aeonshift:mtg:sourcedownload:scryfalldefaultcards # to update from the Scryfall file if present
 ```
 
 *(remember doing this too often will have your server banned if abusive, make sure it is done reasonably)*  
 *(note: the commands are only in plain English for now, no localization available)*
 
 This software is distributed under the MIT License.
-Feel free to use it as much as you can, and to contribute to it, PRs are welcome!
 
 <hr>
 
-Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for AeonShift, 2025.
+✨ Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for AeonShift, 2025.  
+Feel free to contribute to this project, reuse it, share it, star it on GitHub if you like it, or donate if you like and can!

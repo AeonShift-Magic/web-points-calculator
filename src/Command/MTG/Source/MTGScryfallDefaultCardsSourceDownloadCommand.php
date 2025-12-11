@@ -2,10 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace App\Command\Source;
+namespace App\Command\MTG\Source;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\Source\DownloadModel\MTG\Scryfall\V1\ScryfallDefaultCardsSourceDownloadModel;
+use App\Model\Source\DownloadModel\MTG\Scryfall\V1\MTGScryfallDefaultCardsSourceDownloadModel;
 use Exception;
 use Override;
 use RuntimeException;
@@ -22,17 +22,17 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  * Starts a download of the Scryfall default cards bulk data file from the CLI.
  */
 #[AsCommand(
-    name: 'aeonshift:sourcedownload:scryfalldefaultcards',
+    name: 'aeonshift:mtg:sourcedownload:scryfalldefaultcards',
     description: 'Download Scryfall default cards bulk data',
-    aliases: ['as:sd:sdc']
+    aliases: ['as:mtg:sd:sdc']
 )]
-final class ScryfallDefaultCardsSourceDownloadCommand extends Command
+final class MTGScryfallDefaultCardsSourceDownloadCommand extends Command
 {
     /** @var int Error code for lock unavailable */
     private const int ERROR_LOCK_UNAVAILABLE = 2;
 
     public function __construct(
-        private readonly ScryfallDefaultCardsSourceDownloadModel $scryfallDownloader,
+        private readonly MTGScryfallDefaultCardsSourceDownloadModel $scryfallDownloader,
     )
     {
         parent::__construct();

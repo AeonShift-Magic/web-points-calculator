@@ -80,6 +80,7 @@ return new PhpCsFixer\Config('AS Calculator CS-Fixing')
             'method_argument_space'                            => true,
             'method_chaining_indentation'                      => true,
             'modernize_types_casting'                          => true,
+            'modifier_keywords'                                => true,
             'multiline_comment_opening_closing'                => true,
             'multiline_whitespace_before_semicolons'           => true,
             'native_type_declaration_casing'                   => true,
@@ -237,7 +238,6 @@ return new PhpCsFixer\Config('AS Calculator CS-Fixing')
             'trim_array_spaces'                                => true,
             'type_declaration_spaces'                          => true,
             'unary_operator_spaces'                            => true,
-            'visibility_required'                              => true,
             'void_return'                                      => true,
             'whitespace_after_comma_in_array'                  => true,
             'yoda_style'                                       => [

@@ -13,6 +13,7 @@
 ###> phpunit/phpunit ###
 /phpunit.xml
 .phpunit.result.cache
+.phpunit.cache
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
@@ -39,3 +40,6 @@ phpstan.neon
 
 ### Local card sources, temporary directory structure ###
 /cardsources
+
+### ElectronForge target directory ###
+out/
