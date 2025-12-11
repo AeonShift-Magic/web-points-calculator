@@ -5,6 +5,7 @@ const {FuseV1Options, FuseVersion} = require('@electron/fuses');
 module.exports = {
     packagerConfig: {
         asar: true,
+        executableName: "as-web-calculator",
     },
     rebuildConfig: {},
     // The "makers" section defines the output formats for the packaged application: Linux, Windows, and MacOS
