@@ -61,15 +61,15 @@ jobs:
             -   name: Warm Symfony cache for env Github
                 run: php bin/console cache:warmup --env=github -vvv --no-optional-warmers
 
-            # ---- Render Twig template to an output directory ----
+            # ---- Render the calculator assets to the correct output directory in /public ----
             -   name: Render Twig output
-                run: php bin/console aeonshift:mtg:builder:electronjs
+                run: php bin/console aeonshift:mtg:builder:staticassets:v1
 
             # ---- Install JS dependencies (importmap must be dumped beforehand) ----
             -   name: Install JS deps for Importmap
                 run: |
                     npm install -g esbuild
-                    php bin/console importmap:dump
+                    php bin/console importmap:install
 
             # ---- Build Electron deps ----
             -   name: Install Dependencies
@@ -87,12 +87,12 @@ jobs:
                     if-no-files-found: error
 
             # ---- Replace GitHub Release with all platform builds ----
-            - name: Replace Github Releases
-                  uses: softprops/action-gh-release@v1
-                  if: github.ref == 'refs/heads/main'
-                  with:
-                      tag_name: latest
-                      name: Latest Version of AeonShift Calculator App
-                      prerelease: false
-                  env:
-                      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: Replace Github Releases
+                uses: softprops/action-gh-release@v1
+                if: github.ref == 'refs/heads/main'
+                with:
+                    tag_name: latest
+                    name: Latest Version of AeonShift Calculator App
+                    prerelease: false
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -2,20 +2,18 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\Source\DownloadModel\MTG\Scryfall\V1;
+namespace App\Model\MTG\Source\DownloadModel\Scryfall\V1;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\Source\Factory\SourceActivityHistoryFactory;
+use App\Model\MTG\Source\Factory\SourceActivityHistoryFactory;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
-use const DIRECTORY_SEPARATOR;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
-use const PHP_URL_PATH;
 use RuntimeException;
 use Symfony\Component\Lock\Exception\LockAcquiringException;
 use Symfony\Component\Lock\LockFactory;
@@ -25,6 +23,8 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use const DIRECTORY_SEPARATOR;
+use const PHP_URL_PATH;
 
 /**
  * Model to download the default cards JSON file from Scryfall bulk data API.
@@ -32,7 +32,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  * Uses a Lock to prevent concurrent execution.
  * Uses native arrays instead of DTOs.
  */
-final class MTGScryfallDefaultCardsSourceDownloadModel
+final class MTGScryfallDefaultCardsSourceDownloadModelV1
 {
     /** @var string Channel string for DB logging */
     private const string CHANNEL = 'scryfall/defaultcards/download/' . self::VERSION;
@@ -121,7 +121,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModel
 
                 $this->validateDefaultCardsEntry($defaultCardsEntry);
 
-                $this->getLogger()->info('=== SCRYFALL DEFAULT CARDS DOWNLOAD STARTED ===');
+                $this->getLogger()->info('=== SCRYFALL DEFAULT CARDS DOWNLOAD STARTED - V' . self::VERSION . ' ===');
                 $this->getLogger()->info('Start time: {time}', ['time' => $startTime->format('Y-m-d H:i:s')]);
                 $this->getLogger()->info('Entry validation passed');
                 $this->getLogger()->info('Entry details', [

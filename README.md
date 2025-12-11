@@ -73,7 +73,7 @@ This codebase does several things:
 - import Magic The Gathering™ cards from Scryfall bulk data files into a local database,
 - provide dynamic a frontend interface to calculate Aeonshift points for decks of cards.
 - provide a static export of the points calculator for offline use, as a standalone web page.
-- provide an executable standalone version with ElectronJS for Windows 7-11, MacOS 10.15+, and Linux.
+- provide an executable standalone version with ElectronJS/ElectronForge for Windows 7-11, MacOS 10.15+, and Linux.
 
 This project uses vanilla JavaScript and [Symfony](https://symfony.com/)/PHP, and should mostly
 work on MySQL/MariaDB DB servers (though PostGresSQL should work too).
@@ -140,6 +140,15 @@ Admins should connect to the backend to do some maintenance tasks:
 - Import the Scryfall data from the downloaded local file into the database for cards.
 - Create a release when new rules are published, using a points calculator model in case it would change.
 
+You can locally generate the ElectronJS app with the provided commands:
+
+```shell
+# For MTG Electron app builds, locally
+npm run mtg-electron-build
+# Or as a file watcher for development
+npm run mtg-electron-start
+```
+
 ### 🔍 Code Quality
 
 Locally, you can run:
@@ -194,6 +203,26 @@ php bin/console doctrine:database:create
 php bin/console doctrine:schema:update --force
 ```
 
+You can also generate the static assets for production with:
+
+```shell
+php bin/console aeonshift:mtg:builder:staticassets:v1
+```
+
+This is used to generate the standalone builds for ElectronJS too.  
+You can build the ElectronJS/ElectronForge app for production with:
+
+```shell
+# On Windows
+.\electronjs.bat
+```
+Or simply use ElectronForge directly if you have Node installed:
+
+```shell
+# For MTG Electron app builds
+npm run mtg-electron-make
+```
+
 ### Usage
 
 To have stuff displayed on the frontend, you need to:
@@ -210,8 +239,8 @@ They can be automated. Using a cron job is a good idea, calling the console comm
 This will limit the use with cards in English only (base reference for judging Magic The Gathering™ cards).
 
 ```shell
-php bin/console aeonshift:mtg:updatedb:scryfalldefaultcards # to download the Scryfall file
-php bin/console aeonshift:mtg:sourcedownload:scryfalldefaultcards # to update from the Scryfall file if present
+php bin/console aeonshift:mtg:updatedb:scryfalldefaultcards:v1 # to download the Scryfall file
+php bin/console aeonshift:mtg:sourcedownload:scryfalldefaultcards:v1 # to update from the Scryfall file if present
 ```
 
 *(remember doing this too often will have your server banned if abusive, make sure it is done reasonably)*  

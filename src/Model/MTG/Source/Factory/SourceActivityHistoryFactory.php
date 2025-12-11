@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\Source\Factory;
+namespace App\Model\MTG\Source\Factory;
 
 use App\Entity\MTG\MTGCardSourceActivityHistory;
 use App\Entity\SourceActivityHistoryInterface;

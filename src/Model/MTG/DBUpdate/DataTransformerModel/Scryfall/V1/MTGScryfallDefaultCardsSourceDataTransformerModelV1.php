@@ -2,23 +2,17 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\DBUpdate\DataTransformerModel\MTG\Scryfall\V1;
+namespace App\Model\MTG\DBUpdate\DataTransformerModel\Scryfall\V1;
 
 use App\Entity\MTG\MTGSourceCard;
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\Source\Factory\SourceActivityHistoryFactory;
-use function count;
+use App\Model\MTG\Source\Factory\SourceActivityHistoryFactory;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
-use const DIRECTORY_SEPARATOR;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use function in_array;
-use function is_array;
-use function is_string;
-use const JSON_THROW_ON_ERROR;
 use JsonException;
 use JsonMachine\Items;
 use JsonMachine\JsonDecoder\ExtJsonDecoder;
@@ -30,6 +24,12 @@ use Stringable;
 use Symfony\Component\Lock\Exception\LockAcquiringException;
 use Symfony\Component\Lock\LockFactory;
 use Throwable;
+use function count;
+use function in_array;
+use function is_array;
+use function is_string;
+use const DIRECTORY_SEPARATOR;
+use const JSON_THROW_ON_ERROR;
 
 /**
  * This model transforms Scryfall JSON data from their "Default Cards" set (all versions only in English,
@@ -38,7 +38,7 @@ use Throwable;
  * Uses a Lock to prevent concurrent execution.
  * Uses native arrays instead of DTOs.
  */
-final class MTGScryfallDefaultCardsSourceDataTransformerModel
+final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 {
     /** @var int How many items/cards to check before securing a DB upsert */
     private const int BATCH_SIZE = 100;
@@ -110,7 +110,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModel
 
             // Initialize file fileLogger at the same directory that the JSON file is located in, erase existing log files
             $logFileName = $this->initializeLogger($jsonFilePath);
-            $this->getLogger()->info(sprintf('Starting import from: %s, setting up database trace as well', $jsonFilePath));
+            $this->getLogger()->info(sprintf('Starting import from: %s - V' . self::VERSION . ', setting up database trace as well', $jsonFilePath));
 
             // Initialize the table entry for this source activity history
             $this->initializeDatabaseSourceActivityHistory($startTime, $startedFrom, $logFileName);
@@ -460,7 +460,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModel
      *
      * @return array{isLegal2HGSpecial: bool, isLegalDuelSpecial: bool, isLegalMultiSpecial: bool} An array of legality flags
      *
-     * @see MTGScryfallDefaultCardsSourceDataTransformerModel::canCardBeACommander()
+     * @see MTGScryfallDefaultCardsSourceDataTransformerModelV1::canCardBeACommander()
      */
     private function getCardSpecialLegalityFromFlags(
         bool $isLegal2HG,

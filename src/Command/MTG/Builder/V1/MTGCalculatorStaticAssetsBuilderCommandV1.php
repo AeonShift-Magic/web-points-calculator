@@ -2,9 +2,8 @@
 
 declare(strict_types = 1);
 
-namespace App\Command\MTG\Builder;
+namespace App\Command\MTG\Builder\V1;
 
-use App\Model\DBUpdate\DataTransformerModel\MTG\Scryfall\V1\MTGScryfallDefaultCardsSourceDataTransformerModel;
 use Override;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -14,22 +13,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'aeonshift:mtg:builder:electronjs',
-    description: 'Build the ElectronJS MTG application assets',
-    aliases: ['as:mtg:b:ejs']
+    name: 'aeonshift:mtg:builder:staticassets:v1',
+    description: 'Build the static MTG application assets - V1',
+    aliases: ['as:mtg:b:sa:v1']
 )]
-final class MTGElectronJSAssetsAppBuilderCommand extends Command
+final class MTGCalculatorStaticAssetsBuilderCommandV1 extends Command
 {
-    /** @var int Error code for lock unavailable */
-    private const int ERROR_LOCK_UNAVAILABLE = 2;
-
-    public function __construct(
-        private readonly MTGScryfallDefaultCardsSourceDataTransformerModel $scryfallDefaultCardsSourceDataTransformerModel,
-    )
-    {
-        parent::__construct();
-    }
-
     #[Override]
     protected function configure(): void
     {
@@ -52,7 +41,7 @@ final class MTGElectronJSAssetsAppBuilderCommand extends Command
             return Command::SUCCESS;
         }
 
-        $io->success('MTG calculator ElectronJS + ElectronForge assets have been generated in /out');
+        $io->success('MTG calculator static assets have been generated in /public/static-calculators/mtg');
 
         return Command::SUCCESS;
     }
