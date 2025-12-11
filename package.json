@@ -28,8 +28,7 @@
         "mtg-electron-build": "electron .",
         "mtg-electron-start": "electron-forge start",
         "mtg-electron-package": "electron-forge package",
-        "mtg-electron-make": "electron-forge make",
-        "dist": "electron-forge make"
+        "mtg-electron-make": "electron-forge make"
     },
     "devDependencies": {
         "@electron-forge/cli": "^7.10.2",

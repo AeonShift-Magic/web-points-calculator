@@ -7,12 +7,18 @@ namespace App\Model\MTG\DBUpdate\DataTransformerModel\Scryfall\V1;
 use App\Entity\MTG\MTGSourceCard;
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\MTG\Source\Factory\SourceActivityHistoryFactory;
+use function count;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
+use const DIRECTORY_SEPARATOR;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use function in_array;
+use function is_array;
+use function is_string;
+use const JSON_THROW_ON_ERROR;
 use JsonException;
 use JsonMachine\Items;
 use JsonMachine\JsonDecoder\ExtJsonDecoder;
@@ -24,12 +30,6 @@ use Stringable;
 use Symfony\Component\Lock\Exception\LockAcquiringException;
 use Symfony\Component\Lock\LockFactory;
 use Throwable;
-use function count;
-use function in_array;
-use function is_array;
-use function is_string;
-use const DIRECTORY_SEPARATOR;
-use const JSON_THROW_ON_ERROR;
 
 /**
  * This model transforms Scryfall JSON data from their "Default Cards" set (all versions only in English,

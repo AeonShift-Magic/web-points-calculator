@@ -7,6 +7,7 @@ module.exports = {
         asar: true,
     },
     rebuildConfig: {},
+    // The "makers" section defines the output formats for the packaged application: Linux, Windows, and MacOS
     makers: [
         {
             name: '@electron-forge/maker-squirrel',
@@ -27,7 +28,7 @@ module.exports = {
         {
             name: '@electron-forge/maker-dmg',
             config: {
-                background: './assets/dmg-background.png',
+                background: './assets/images/dmg-background.png',
                 format: 'ULFO'
             }
         }

@@ -24,6 +24,6 @@ final class MTGCalculatorStaticAssetsBuilderModelV1
 
     public function buildMTGCalculatorStaticAssets(): string
     {
-        return 'Static assets successfully built for license ' . self::LICENSE . ' in "'. self::TARGET_DIRECTORY .'" for calculator model version ' . self::VERSION . '.';
+        return 'Static assets successfully built for license ' . self::LICENSE . ' in "' . self::TARGET_DIRECTORY . '" for calculator model version ' . self::VERSION . '.';
     }
 }
