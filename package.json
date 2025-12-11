@@ -1,5 +1,6 @@
 {
-    "name": "aeon-shift-web-points-calculator",
+    "name": "as-web-calculator",
+    "productName": "AeonShift Calculator",
     "version": "1.0.0",
     "description": "AeonShift Points Calculator ElectronJS Builder",
     "keywords": [

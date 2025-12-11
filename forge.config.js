@@ -28,6 +28,7 @@ module.exports = {
         {
             name: '@electron-forge/maker-dmg',
             config: {
+                volumeName: 'AeonShift Calculator',
                 background: './assets/images/dmg-background.png',
                 format: 'ULFO'
             }

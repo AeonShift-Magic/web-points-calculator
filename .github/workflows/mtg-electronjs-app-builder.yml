@@ -19,6 +19,9 @@ on:
 env:
     APP_ENV: github
 
+permissions:
+    contents: write
+
 jobs:
     ##############################################################
     #################### ElectronJS App Build ####################
