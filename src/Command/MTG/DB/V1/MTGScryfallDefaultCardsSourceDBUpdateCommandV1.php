@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Command\MTG\DB\V1;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\MTG\DBUpdate\DataTransformerModel\Scryfall\V1\MTGScryfallDefaultCardsSourceDataTransformerModelV1;
+use App\Model\MTG\Source\DataTransformer\Scryfall\V1\MTGScryfallDefaultCardsSourceDataTransformerModelV1;
 use Exception;
 use Override;
 use RuntimeException;
@@ -21,7 +21,7 @@ use Symfony\Component\Lock\Exception\LockAcquiringException;
  * Starts a parsing and database update based on the Scryfall default cards bulk data file imported.
  */
 #[AsCommand(
-    name: 'aeonshift:mtg:updatedb:scryfalldefaultcards:v1',
+    name: 'aeonshift:mtg:updatedb:scryfalldefaultmtgcards:v1',
     description: 'Parse and import latest Scryfall default cards download into database - V1',
     aliases: ['as:mtg:udb:sdc:v1']
 )]
@@ -51,7 +51,7 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
             'source',
             null,
             InputOption::VALUE_OPTIONAL,
-            'Specify the source that initiated the import (cli or cron)',
+            'Specify the source that initiated the import ("cli", "web" or "cron")',
             'cli'
         );
     }
@@ -63,8 +63,8 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
         $source = $input->getOption('source');
 
         // Validate the source option
-        if (! in_array($source, ['cli', 'cron'], true)) {
-            $io->error('Invalid source option. Must be "cli" or "cron".');
+        if (! in_array($source, ['cli', 'cron', 'web'], true)) {
+            $io->error('Invalid source option. Must be "cli", "web" or "cron".');
 
             return Command::FAILURE;
         }
@@ -80,6 +80,14 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
             $io->note('This process may take several minutes depending on the number of cards.');
 
             $progressBar = null;
+
+            if ($source === 'cron') {
+                $source = SourceActivityHistoryInterface::SOURCE_CRON;
+            } elseif ($source === 'web') {
+                $source = SourceActivityHistoryInterface::SOURCE_HTTP;
+            } else {
+                $source = SourceActivityHistoryInterface::SOURCE_CLI;
+            }
 
             $result = $this->scryfallDefaultCardsSourceDataTransformerModel->parseAndImport(
                 static function (int $processedCount, int $insertedCount, int $updatedCount, int $skippedCount) use ($io, &$progressBar): void {
@@ -100,9 +108,7 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
                     $progressBar->setMessage((string)$updatedCount, 'updated');
                     $progressBar->setMessage((string)$skippedCount, 'skipped');
                 },
-                $source === 'cron'
-                    ? SourceActivityHistoryInterface::SOURCE_CRON
-                    : SourceActivityHistoryInterface::SOURCE_CLI
+                $source
             );
 
             if ($progressBar !== null) {

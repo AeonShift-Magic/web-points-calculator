@@ -1,0 +1,418 @@
+account:
+    roles:
+        label: 'Role(s)/Permission(s) on this site:'
+        help: 'Defines the user''s permissions on the site. For example, an organizer can organize events, an administrator can manage the site, etc.'
+admin:
+    account:
+        email:
+            help: >
+                Your email. Must be unique. Will be used to recover access, communicate, and visible to people registered for events you create, and you will need to validate this address everytime you change it. 
+                <strong>WARNING: ALL emails will be sent to this address. Please triple-check before filling/changing this entry.</strong>
+            label: 'Email:'
+            placeholder: johnorjane.doe@provider.domain
+        roles:
+            label: 'Role(s)/Permissions on this site:'
+        username:
+            help: Your username on this website. Must be unique and not currently used by someone else.
+            label: 'Username:'
+            placeholder: JohnDoe84
+    customblock:
+        editlink:
+            label: ✏️ Edit this block ({blockkey})
+    form:
+        customblock:
+            create:
+                blockkey:
+                    help: If already used, all blocks with the correct language and location will be displayed in ascending weight order.
+                    label: Block location
+                    placeholder: Select a location
+                contents:
+                    help: |
+                        <strong>Be careful with HTML and its validity</strong>: may break site appearance or not display correctly.</strong> <br> <strong>Warning: remember there is about a 10-minute cache on all site blocks (for each language and location).</strong>
+                    label: Content
+                weight:
+                    help: Between -100 and 100. If already used, all blocks with the correct language and location will be displayed in ascending weight order.
+                    label: Weight
+                    placeholder: Weight of the block
+        page:
+            create:
+                contents:
+                    help: >
+                        <strong>Be careful with HTML and its validity</strong>: may break site appearance or not display correctly.</strong>
+                    label: Content
+                language:
+                    help: The language in which this page will be displayed.
+                    label: Language
+                slug:
+                    help: Leave blank to automatically generate a slug based on the title.
+                    label: Slug
+                title:
+                    help: The page title, which will be displayed in the header and search results.
+                    label: Title
+                weight:
+                    help: Between -100 and 100. If already used, all pages with the correct language and location will be displayed in ascending weight order.
+                    label: Weight
+                zone:
+                    help: The zone in which this page will be displayed. For example, "header" for header, "footer" for footer, etc.
+                    label: Zone
+        user:
+            create:
+                roles:
+                    invalid: Please choose valid roles for the user.
+                    multipleinvalid: Please choose valid roles for the user.
+        mtg:
+            update:
+                create:
+                    title:
+                        help: 'The public title of your update/announcement'
+                        label: 'Title'
+                    pointslist:
+                        help: 'Which points list to use'
+                        label: 'Points list to use'
+                    start:
+                        help: 'When does this update start being effective?'
+                        label: 'Start date'
+                    end:
+                        help: 'When does this update stop being effective?'
+                        label: 'End date'
+            cardsourceactivityhistory:
+                create:
+                    channel:
+                        label: 'Channel'
+                    startedat:
+                        label: 'Started at'
+                    endedat:
+                        label: 'Ended at'
+                    successsummary:
+                        label: 'Success summary'
+                    errorsummary:
+                        label: 'Error summary'
+                    startedfrom:
+                        label: 'Started from'
+                    logfilepath:
+                        label: 'Log file'
+                    uniqueid:
+                        label: 'Unique task ID'
+            points_list:
+                create:
+                    filename:
+                        label: 'Filename'
+                    nbcards:
+                        label: 'Number of cards'
+                    title:
+                        label: 'Title'
+                    uploadedat:
+                        label: 'Last uploaded at'
+            points_list_card:
+                create:
+                    pointslist:
+                        label: 'Points list'
+                    nameen:
+                        label: 'Name (EN)'
+                    scryfallid:
+                        label: 'Scryfall ID'
+                    scryfalluri:
+                        label: 'Scryfall URI'
+                    manavalue:
+                        label: 'Mana Value'
+                    oracleid:
+                        label: 'Oracle ID'
+    home:
+        goto:
+            text: 'Go to a sub-section of the admin area:'
+    nav:
+        customblocks:
+            edit:
+                label: '✏️ Edit custom block: location "{blockkey}" / weight "{weight}"'
+                title: 'Edit custom block: location "{blockkey}" / weight "{weight}"'
+            index:
+                label: Custom Blocks
+                title: Manage custom blocks
+            new:
+                label: ➕ Add a custom block
+                title: Add a custom block
+            show:
+                label: 'Custom block details: location "{blockkey}" / weight "{weight}"'
+        front:
+            label: Public home
+            title: Public home
+        home:
+            label: 🔴 Admin home
+            title: Admin home
+        pages:
+            index:
+                label: Pages
+                title: Manage pages
+            new:
+                label: ➕ Add a page
+                title: Add a page
+            edit:
+                label: '✏️ Edit page "{page}"'
+                title: 'Edit page "{page}"'
+            show:
+                label: 'Page details "{page}"'
+        users:
+            index:
+                label: Users
+                title: Manage users
+            new:
+                label: ➕ Add a user
+                title: Add a user
+            edit:
+                label: '✏️ Edit user "{user}"'
+                title: 'Edit user "{user}"'
+            editpassword:
+                label: '🛡️ Edit "{user}''s" password'
+            show:
+                label: 'User details: "{name}"'
+            pending:
+                label: '⏳ Pending users'
+                title: 'Pending users'
+        mtg:
+            cardsourceactivityhistory:
+                index:
+                    label: 'MTG Card Source Activity History'
+                    title: 'MTG Card Source Activity History'
+            pointslist:
+                index:
+                    label: 'MTG Points Lists'
+                    title: 'MTG Points Lists'
+                new:
+                    label: '➕ Create an MTG Points List'
+                    title: 'Create an MTG Points List'
+            pointslistcard:
+                index:
+                    label: 'MTG Points List Card'
+                    title: 'MTG Points List Card'
+                new:
+                    label: '➕ Create an MTG Points List Card'
+                    title: 'Create an MTG Points List Card'
+            update:
+                index:
+                    label: 'MTG Updates'
+                    title: 'MTG Updates'
+                new:
+                    label: '➕ Create an MTG Update'
+                    title: 'Create an MTG Update'
+            dbupdate:
+                index:
+                    title: 'MTG - Database Updates'
+                    label: 'MTG - Database Updates'
+                latest:
+                    label: 'MTG - Latest source database update state'
+                startnew:
+                    label: 'MTG - Manual start of a new source database update'
+            source:
+                index:
+                    title: 'MTG - Source Download / Import'
+                    label: 'MTG - Source Download / Import'
+            sourcedownload:
+                index:
+                    label: 'MTG - Source Download Status'
+                latest:
+                    label: 'MTG - Latest source download state'
+                startnew:
+                    label: 'MTG - Manual start of a new source download'
+            points_list_cards:
+                index:
+                    label: 'MTG - Points list cards'
+            points_list:
+                index:
+                    label: 'MTG - Points lists'
+        cardsourceactivityhistory:
+            index:
+                label: 'Card sources activity history'
+    user:
+        password:
+            password_updated_success: Password updated successfully for {username}.
+        forms:
+            password:
+                first: New password for the user
+                help: Please enter a valid password, which must contain an uppercase, a lowercase, and a digit, 8 characters minimum.
+                invalid_repeated: Passwords do not match
+                oldpassword:
+                    error: The old password does not seem correct.
+                    help: Please enter the current password to change it for security reasons.
+                    label: Current password
+                second: Enter the password again
+            edit:
+                id:
+                    label: 'Your unique internal ID: <strong>{id}</strong>&nbsp;<em>(you can use it to communicate with our team)</em>.'
+                fieldsets:
+                    private_data:
+                        label: 'Private Data'
+                    admin:
+                        label: 'Administration'
+                    password:
+                        label: 'Password'
+    mtg:
+        cardsourceactivityhistory:
+            error:
+                fileremoved: 'The requested log file does not exist anymore.'
+customblock:
+    footer:
+        en:
+            name: Pied de page (EN 🇬🇧)
+        fr:
+            name: Pied de page (FR 🇫🇷)
+    home1:
+        en:
+            name: Home Block 1 (EN 🇬🇧)
+        fr:
+            name: Home Block 1 (FR 🇫🇷)
+    home2:
+        en:
+            name: Home Block 2 (EN 🇬🇧)
+        fr:
+            name: Home Block 2 (FR 🇫🇷)
+    home3:
+        en:
+            name: Home Block 3 (EN 🇬🇧)
+        fr:
+            name: Home Block 3 (FR 🇫🇷)
+    home4:
+        en:
+            name: Home Block 4 (EN 🇬🇧)
+        fr:
+            name: Home Block 4 (FR 🇫🇷)
+    legal:
+        en:
+            name: Légal (EN 🇬🇧)
+        fr:
+            name: Légal (FR 🇫🇷)
+front:
+    nav:
+        login:
+            label: 🪪 Log in
+            title: Log in to the site
+        logout:
+            label: ⏻ Log out from the site
+            title: ⏻ Log out
+        home:
+            label: Home
+            title: Go back home
+        mtg:
+            title: 'Magic: The Gathering'
+            label: 'Magic: The Gathering'
+global:
+    actions:
+        label: Actions
+        title: Actions
+    back: ⬅️ Back
+    createbutton:
+        label: ➕ Add
+        title: Add an item
+    createdat:
+        label: Created on
+    dates:
+        label: Created / Last updated
+    delete:
+        confirmprompt: Do you really want to delete this item? This action cannot be undone.
+    deletebutton:
+        label: ❌ Delete
+        title: Delete this item
+    editbutton:
+        label: ✏️ Edit item
+        title: Edit
+    error:
+        404:
+            text: Oops! The page you requested could not be found. Perhaps you should use the menu above to start finding what you were looking for, or simply go back in your history...
+            title: 404 - Not Found 😔
+        500:
+            text: Oops! The server, like the winner of a tournament, has reached its point limits. If this error persists, please contact our team.
+            title: 500 - Server Error 😔
+    id:
+        label: ID
+    indexbutton:
+        label: 🔙 Go back to list
+        title: Back to list
+    mandatoryfields:
+        text: '* = These fields are mandatory.'
+    noelements:
+        label: No items to display.
+    none:
+        label: N/A
+    pagenumber: Page <strong>{current}/{total}</strong>
+    passwordbutton:
+        label: Change password
+        title: Change user's password
+    roles:
+        ROLE_ADMIN: Administrator
+        ROLE_USER: Regular user
+    savebutton:
+        label: 💾 Save
+        title: Save changes
+    savesuccess:
+        text: Saved successfully.
+    selectnone: --
+    skipcontent:
+        label: Skip to main content
+    showbutton:
+        label: View
+        title: View details
+    showbuttonfront:
+        label: 👁️ View (front)
+        title: 'View on the public side'
+    total:
+        label: <strong>{elements}</strong> total item(s)
+    updatedat:
+        label: Updated on
+    1:
+        label: 'Yes'
+    0:
+        label: 'No'
+    table:
+        summary: 'Entries _START_ to _END_ of _TOTAL_'
+        empty: '0 entries in total'
+        filtered: '(filtered from _MAX_ total entries)'
+        thousands: ''
+        menu: 'Show _MENU_ entries'
+        search: 'Search (use "xx yy" for continuous string):'
+        none: 'No matching entries found'
+        first: 'First'
+        last: 'Last'
+        next: 'Next'
+        previous: 'Previous'
+        ariasort: 'Sort this column'
+        ariasortreverse: 'Sort this column in reverse order'
+    legal:
+        title: 'Legal'
+        label: 'Legal'
+    rules:
+        label: 'Rules'
+        title: 'Game Rules'
+    start:
+        label: 'Start the command'
+        title: 'Start the command'
+    users:
+        label: 'Created by / Last updated by'
+page:
+    position:
+        footer:
+            label: Footer
+        header:
+            label: Header
+user:
+    login:
+        alreadylogged: You are already logged in as {user}, <a data-turbo="false" href="{url}" title="Log out">Log out</a>
+        helptext1: ℹ️ Don’t have an account yet? <a href="{link}" title="Click here to create an account">Create one first!</a>
+        helptext2: 😣 Forgot your password? <a href="{link}" title="Reset your password">Click here</a> to set a new one.
+        password:
+            help: Enter your password if you have set one.
+            label: Password
+            placeholder: your password
+        submit:
+            label: 🔑 Log in
+        success: You are now successfully authenticated as {username}
+        title: Sign in
+        username:
+            help: Enter your username here, usually the nickname you registered with.
+            label: Username
+            placeholder: your username
+    logout:
+        success: You are now logged out.
+    roles:
+        admin:
+            label: Administrator
+        user:
+            label: Regular User

@@ -4,34 +4,13 @@
 
 <fieldset class="rows-fieldset">
     <legend>
-        <span class="icon-cog"></span>{{ 'front.users.forms.edit.fieldsets.private_data.label'|trans }}</legend>
+        <span class="icon-cog"></span>{{ 'admin.user.forms.edit.fieldsets.private_data.label'|trans }}</legend>
     <div class="field-container">
         {% if user is defined %}
             <div class="form-widget-container form-info-container">
-                {{ 'front.users.forms.edit.id.label'|trans({'%id%': user.id})|raw }}
+                {{ 'admin.user.forms.edit.id.label'|trans({'%id%': user.id})|raw }}
             </div>
         {% endif %}
-        <div class="form-widget-container form-info-container">
-            {% if user is defined and user.verified %}
-                {{ 'front.users.forms.edit.verified_status.verified.label'|trans|raw }}
-            {% else %}
-                {{ 'front.users.forms.edit.verified_status.pending.label'|trans|raw }}
-            {% endif %}
-        </div>
-        <div class="form-widget-container form-info-container">
-            {% if user is defined and user.roles is defined %}
-                {% if 'ROLE_OPEN_TOURNAMENT_ORGANIZER' in user.roles %}
-                    {{ 'front.users.forms.edit.roles.tournament_manager.has.label'|trans|raw }}
-                {% else %}
-                    {{ 'front.users.forms.edit.roles.tournament_manager.has_not.label'|trans|raw }}
-                {% endif %}
-            {% endif %}
-        </div>
-        <div class="form-widget-container form-info-container mb-4">
-            {% if user is defined and user.addresses is defined %}
-                {{ 'front.users.forms.edit.addresses_count.label'|trans({'%count%': user.addresses|length})|raw }}
-            {% endif %}
-        </div>
         <div class="form-widget-container">
             {{ form_row(form.username) }}
         </div>
@@ -43,144 +22,7 @@
 
 <fieldset class="rows-fieldset">
     <legend>
-        <span class="icon-cog"></span>{{ 'front.users.forms.edit.fieldsets.basic_info.label'|trans }}</legend>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.type) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.firstName) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.lastName) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.picture) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.favoriteFormat) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.bioEN) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.bioFR) }}
-        </div>
-    </div>
-    <div class="form-widget-container">
-        {{ form_row(form.discordUsername) }}
-    </div>
-    <div class="form-widget-container">
-        {{ form_row(form.country) }}
-    </div>
-    <div class="form-widget-container">
-        {{ form_row(form.preferredLanguage) }}
-    </div>
-    <div class="form-widget-container">
-        {{ form_row(form.timezone) }}
-    </div>
-</fieldset>
-
-<fieldset class="rows-fieldset">
-    <legend>
-        <span class="icon-cog"></span>{{ 'front.users.forms.edit.fieldsets.contact.label'|trans }}</legend>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.contactEmail) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.phone) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.defaultAddress) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.website) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.facebookLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.instagramLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.twitterLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.youtubeLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.tiktokLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.weiboLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.vkLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.discordLink) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.redditLink) }}
-        </div>
-    </div>
-</fieldset>
-
-<fieldset class="rows-fieldset">
-    <legend>
-        <span class="icon-cog"></span>{{ 'front.users.forms.edit.fieldsets.tournament.label'|trans }}</legend>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.defaultTournamentName) }}
-        </div>
-    </div>
-    <div class="field-container">
-        <div class="form-widget-container">
-            {{ form_row(form.defaultTournamentBanner) }}
-        </div>
-    </div>
-</fieldset>
-
-<fieldset class="rows-fieldset">
-    <legend>
-        <span class="icon-cog"></span>{{ 'front.users.forms.edit.fieldsets.admin.label'|trans }}
+        <span class="icon-cog"></span>{{ 'admin.user.forms.edit.fieldsets.admin.label'|trans }}
     </legend>
     {{ form_rest(form) }}
     <div class="text-right">

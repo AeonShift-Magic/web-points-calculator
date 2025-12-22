@@ -1,0 +1,58 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.mtg.points_list_cards.index.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.points_list_cards.index.label'|trans }}</h1>
+
+    <h3 class="text-center w-full">
+        {{ 'global.total.label'|trans({'%elements%': points_list_cards.totalItemCount})|raw }}
+        {% if points_list_cards.totalItemCount / points_list_cards.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': points_list_cards.currentPageNumber, 'total': (points_list_cards.totalItemCount / points_list_cards.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+    </h3>
+
+    <a class="btn btn-green" href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+
+    <div class="navigation"></div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <thead>
+                <tr>
+                    <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list_card.create.pointslist.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list_card.create.nameen.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list_card.create.manavalue.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list_card.create.scryfallid.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list_card.create.scryfalluri.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list_card.create.oracleid.label'|trans }}</th>
+                    <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in points_list_cards %}
+                    <tr>
+                        <td>{{ page.id }}</td>
+                        <td>{{ page.pointsList.title|default('global.none.label'|trans) }}</td>
+                        <td>{{ page.nameEn }}</td>
+                        <td>{{ page.manaValue }}</td>
+                        <td>{{ page.scryfallId }}</td>
+                        <td>{{ page.scryfallUri }}</td>
+                        <td>{{ page.oracleId }}</td>
+                        <td>
+                            <a class="btn btn-gray w-full" href="{{ url('admin_mtg_points_list_card_show', {'id': page.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            <a class="btn btn-green w-full" href="{{ url('admin_mtg_points_list_card_edit', {'id': page.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">{{ 'global.noelements.label'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="navigation"></div>
+
+    <a class="btn btn-green" href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+{% endblock %}

@@ -47,10 +47,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(length: 255)]
     private string $email = '';
 
-    #[Assert\NotNull]
-    #[ORM\Column]
-    private bool $isVerified = false;
-
     /**
      * @var string The hashed password
      */
@@ -69,9 +65,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private Collection $resetPasswordRequests {
         get {
             return $this->resetPasswordRequests;
-        }
-        set(Collection $value) {
-            $this->resetPasswordRequests = $value;
         }
     }
 
@@ -94,6 +87,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         $this->__traitConstruct();
         $this->registeredAt = new DateTimeImmutable();
+        /* @noinspection UnusedConstructorDependenciesInspection */
         $this->resetPasswordRequests = new ArrayCollection();
     }
 
@@ -167,21 +161,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return ! empty($this->getRoles()) && in_array($role, $this->getRoles(), true);
     }
 
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
 
         return $this;
     }
@@ -219,13 +201,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
-
-        return $this;
-    }
-
-    public function setVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
 
         return $this;
     }

@@ -1,0 +1,117 @@
+@import "./common.css";
+
+.admin-fieldset {
+    background-color: rgba(245, 180, 180, 0.3);
+}
+
+.admin-layout table {
+    border-width: 2px;
+    border-color: #71717a;
+    border-style: solid;
+}
+
+.admin-menu .menu a {
+    min-width: 5em !important;
+}
+
+.admin-layout .header .home-link a::before {
+    left: 7px;
+}
+
+.admin-home-nav nav > ul {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.admin-home-nav nav > ul > li {
+    min-width: 5rem;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .admin-home-nav nav > ul > li {
+        width: calc((100% - 3rem) / 3);
+        box-sizing: border-box;
+    }
+}
+
+.admin-home-nav li {
+    padding: 0.5rem 1rem;
+}
+
+.admin-home-nav li {
+    list-style-type: none !important;
+    list-style-position: inside !important;
+    margin-left: 0 !important;
+}
+
+.admin-home-nav nav > ul > li {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #52525b;
+    border-radius: 0.5rem;
+}
+
+.admin-home-nav a, .admin-home-nav span {
+    width: 100%;
+    display: inline-block;
+}
+
+.admin-home-nav nav > ul > li li {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.admin-home-nav a {
+    width: 100%;
+    font-weight: 700;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    text-align: center;
+    display: inline-block;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+    text-wrap: balance;
+    background-color: #ea580c;
+    color: #fff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0), 0 4px 6px -2px rgba(0, 0, 0, 0);
+}
+
+.admin-home-nav a:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background-color: #9a3412;
+}
+
+.admin-home-nav a:focus {
+    outline: #000 solid 1px;
+}
+
+.admin-home-nav a:not([href]) {
+    color: #52525b;
+    cursor: pointer;
+    border-style: none;
+    background-color: transparent;
+    box-shadow: none;
+    outline-style: none;
+    border-width: 0;
+}
+
+.admin-home-nav a:not([href]):hover {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.admin-edit-shortcut {
+    position: absolute;
+    top: 1em;
+    right: 10%;
+}
+
+.admin-menu,
+.admin-menu ul {
+    background-color: var(--theme-red-dark) !important;
+}

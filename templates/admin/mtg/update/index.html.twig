@@ -1,0 +1,63 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.mtg.update.index.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.update.index.label'|trans }}</h1>
+
+    <h3 class="text-center w-full">
+        {{ 'global.total.label'|trans({'%elements%': updates.totalItemCount})|raw }}
+        {% if updates.totalItemCount / updates.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': updates.currentPageNumber, 'total': (updates.totalItemCount / updates.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+    </h3>
+
+    <a class="btn btn-green" href="{{ url('admin_mtg_update_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+
+    <div class="navigation"></div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <thead>
+                <tr>
+                    <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.update.create.title.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.update.create.pointslist.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.update.create.start.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.update.create.end.label'|trans }}</th>
+                    <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for update in updates %}
+                    <tr>
+                        <td>
+                            {{ update.id }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ update.titleEN }}
+                        </td>
+                        <td>
+                            {% if update.MTGPointsList %}
+                                {{ update.MTGPointsList.title }}
+                            {% else %}
+                                <span class="text-gray-400">{{ 'global.none.label'|trans }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ update.startingAt|date('Y-m-d H:i') }}
+                        </td>
+                        <td>
+                            {{ update.endingAt|date('Y-m-d H:i') }}
+                        </td>
+                        <td>
+                            <a class="btn btn-gray w-full" href="{{ url('admin_mtg_update_show', {'id': page.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            <a class="btn btn-green w-full" href="{{ url('admin_mtg_update_edit', {'id': page.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="navigation"></div>
+
+    <a class="btn btn-green" href="{{ url('admin_page_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+{% endblock %}

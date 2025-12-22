@@ -2,15 +2,80 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';">
         <title>AEONSHIT Calculator</title>
-        <link rel="stylesheet" href="aeonshit-calculator.css">
+        <style>
+            .titlebar {
+                height: 32px;
+                width: 100%;
+                background: #202020;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                -webkit-user-select: none;
+            }
+
+            .drag-region {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: calc(100% - 140px);
+                height: 32px;
+                -webkit-app-region: drag;
+            }
+
+            .window-controls {
+                display: flex;
+            }
+
+            .window-controls button {
+                width: 46px;
+                height: 32px;
+                border: none;
+                background: transparent;
+                color: white;
+                font-size: 14px;
+                -webkit-app-region: no-drag;
+                cursor: pointer;
+            }
+
+            .window-controls button:hover {
+                background: #3a3a3a;
+            }
+
+            #close-btn:hover {
+                background: #d00;
+            }
+        </style>
     </head>
     <body>
-        <script>
-            alert("AEONSHIT Calculator is under development. Please check back later!");
-        </script>
+        <div class="titlebar">
+            <div class="drag-region"></div>
+
+            <div class="window-controls">
+                <button id="min-btn">—</button>
+                <button id="max-btn">⬜</button>
+                <button id="close-btn">×</button>
+            </div>
+        </div>
         <p>
             AEONSHIT Calculator is under development. Please check back later! :)
         </p>
+        <script>
+            alert('AEONSHIT Calculator is under development. Please check back later!');
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const api = window.electronAPI;
+
+                document.getElementById('min-btn').onclick = () => api.minimize();
+                document.getElementById('max-btn').onclick = () => api.maximize();
+                document.getElementById('close-btn').onclick = () => api.close();
+
+                api.onMaximizeState((maximized) => {
+                    document.getElementById('max-btn').innerText = maximized ? '❐' : '⬜';
+                });
+            });
+        </script>
     </body>
 </html>

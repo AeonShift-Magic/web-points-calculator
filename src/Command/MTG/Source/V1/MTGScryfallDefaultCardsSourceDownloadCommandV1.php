@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Command\MTG\Source\V1;
 
 use App\Entity\SourceActivityHistoryInterface;
-use App\Model\MTG\Source\DownloadModel\Scryfall\V1\MTGScryfallDefaultCardsSourceDownloadModelV1;
+use App\Model\MTG\Source\Download\Scryfall\V1\MTGScryfallDefaultCardsSourceDownloadModelV1;
 use Exception;
 use Override;
 use RuntimeException;
@@ -22,7 +22,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
  * Starts a download of the Scryfall default cards bulk data file from the CLI.
  */
 #[AsCommand(
-    name: 'aeonshift:mtg:sourcedownload:scryfalldefaultcards:v1',
+    name: 'aeonshift:mtg:sourcedownload:scryfalldefaultmtgcards:v1',
     description: 'Download Scryfall default cards bulk data - V1',
     aliases: ['as:mtg:sd:sdc:v1']
 )]
@@ -65,8 +65,8 @@ final class MTGScryfallDefaultCardsSourceDownloadCommandV1 extends Command
         $source = $input->getOption('source');
 
         // Validate the source option
-        if (! in_array($source, ['cli', 'cron'], true)) {
-            $io->error('Invalid source option. Must be "cli" or "cron".');
+        if (! in_array($source, ['cli', 'cron', 'web'], true)) {
+            $io->error('Invalid source option. Must be "cli", "web" or "cron".');
 
             return Command::FAILURE;
         }
@@ -106,14 +106,20 @@ final class MTGScryfallDefaultCardsSourceDownloadCommandV1 extends Command
             $progressBar = $io->createProgressBar(isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size']) ? (int)$defaultCardsEntry['size'] : 0);
             $progressBar->start();
 
+            if ($source === 'cron') {
+                $source = SourceActivityHistoryInterface::SOURCE_CRON;
+            } elseif ($source === 'web') {
+                $source = SourceActivityHistoryInterface::SOURCE_HTTP;
+            } else {
+                $source = SourceActivityHistoryInterface::SOURCE_CLI;
+            }
+
             $downloadedPath = $this->scryfallDownloader->downloadDefaultCards(
                 $defaultCardsEntry,
                 static function (int $downloadedBytes) use ($progressBar): void {
                     $progressBar->setProgress($downloadedBytes);
                 },
-                $source === 'cron'
-                    ? SourceActivityHistoryInterface::SOURCE_CRON
-                    : SourceActivityHistoryInterface::SOURCE_CLI
+                $source
             );
 
             $progressBar->finish();
@@ -129,13 +135,6 @@ final class MTGScryfallDefaultCardsSourceDownloadCommandV1 extends Command
 
             return self::ERROR_LOCK_UNAVAILABLE;
         } catch (RuntimeException $e) {
-            if (str_contains($e->getMessage(), 'Another Scryfall default cards process is already running')) {
-                $io->error('Lock unavailable: ' . $e->getMessage());
-                $io->note('The lock expires automatically after 15 minutes. Please wait for the current process to complete or try again later.');
-
-                return self::ERROR_LOCK_UNAVAILABLE;
-            }
-
             $io->error('Error: ' . $e->getMessage());
 
             return Command::FAILURE;

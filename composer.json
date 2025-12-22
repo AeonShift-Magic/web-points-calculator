@@ -17,7 +17,7 @@
         "friendsofsymfony/ckeditor-bundle": "^2.7.1",
         "halaxa/json-machine": "^1.2.6",
         "helios-ag/fm-elfinder-bundle": "^12.7.3",
-        "karser/karser-recaptcha3-bundle": ">=0.2.1",
+        "karser/karser-recaptcha3-bundle": ">=0.3.0",
         "knplabs/knp-paginator-bundle": "^6.10.0",
         "liip/imagine-bundle": "^2.16.0",
         "symfony/apache-pack": ">=1.0.1",
@@ -42,6 +42,7 @@
         "symfony/translation": "7.4.*",
         "symfony/twig-bundle": "7.4.*",
         "symfony/uid": "7.4.*",
+        "symfony/ux-icons": "^2.31",
         "symfony/ux-live-component": "^2.31",
         "symfony/ux-turbo": "^2.31.0",
         "symfony/ux-twig-component": "^2.31",
@@ -51,18 +52,18 @@
         "symfonycasts/tailwind-bundle": "^0.10.1",
         "symfonycasts/verify-email-bundle": "^1.18.0",
         "twig/cache-extra": "^3.22.1",
-        "twig/extra-bundle": ">=3.22.1",
+        "twig/extra-bundle": ">=3.22.2",
         "twig/intl-extra": "^3.22.1",
         "twig/string-extra": "^3.22.1",
-        "twig/twig": "^3.22.1"
+        "twig/twig": "^3.22.2"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.91.3",
+        "friendsofphp/php-cs-fixer": "^3.92.2",
         "phpstan/extension-installer": "^1.4.3",
         "phpstan/phpstan": "^2.1.33",
         "phpstan/phpstan-doctrine": "^2.0.12",
         "phpstan/phpstan-symfony": "^2.0.9",
-        "phpunit/phpunit": "^12.5",
+        "phpunit/phpunit": "^12.5.4",
         "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "7.4.*",
         "symfony/css-selector": "7.4.*",
@@ -70,7 +71,7 @@
         "symfony/maker-bundle": "^1.65.1",
         "symfony/stopwatch": "7.4.*",
         "symfony/web-profiler-bundle": "7.4.*",
-        "vimeo/psalm": "^6.13.1",
+        "vimeo/psalm": "^6.14.2",
         "weirdan/doctrine-psalm-plugin": "^2.10"
     },
     "config": {
@@ -109,8 +110,7 @@
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
             "importmap:install": "symfony-cmd",
             "ckeditor:install --tag=4.22.1": "symfony-cmd",
-            "elfinder:install": "symfony-cmd",
-            "ckeditor:install": "symfony-cmd"
+            "elfinder:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"

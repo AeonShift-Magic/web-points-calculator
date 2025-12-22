@@ -1,0 +1,29 @@
+{% extends 'front/front_layout.html.twig' %}
+
+{% block title %}{{ 'front.nav.resetpassword.title'|trans }}{% endblock %}
+
+{% block main_layout %}
+    <div class="main-row theme1 translucent-row">
+        <div class="main-column main-content most-opquage-column">
+            <h1>{{ 'front.nav.resetpasswordconfirm.title'|trans }}</h1>
+        </div>
+    </div>
+
+    <div class="main-row spacer-row"></div>
+
+    <div class="main-row theme1 unique-row translucent-row">
+        <div class="main-column main-content most-opquage-column">
+            <div class="w-full mt-4 lg:w-1/2 form-container">
+                <div class="flex flex-col lg:flex-col justify-center w-full">
+                    <p>
+                        {{ 'front.resetpasswordconfirm.text1'|trans|raw }}
+                    </p>
+
+                    <p class="center">
+                        <a class="btn btn-gray ml-4" href="{{ url('front_forgot_password_request') }}" title="{{ 'global.back'|trans|raw|escape('html_attr') }}">{{ 'global.back'|trans }}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

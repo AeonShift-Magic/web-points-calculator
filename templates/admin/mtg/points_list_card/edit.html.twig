@@ -1,0 +1,31 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.mtg.pointslistcard.edit.title'|trans }}{% endblock %}
+
+{% block main_content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1>{{ 'admin.mtg.pointslistcard.edit.heading'|trans }}</h1>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+
+                <div class="flex items-center justify-between mt-6">
+                    <a href="{{ path('admin_mtg_points_list_card_index') }}" class="text-gray-600 hover:text-gray-800">
+                        {{ 'admin.mtg.pointslistcard.edit.back'|trans }}
+                    </a>
+                    <div>
+                        <a href="{{ path('admin_mtg_points_list_card_show', {'id': points_list_card.id}) }}" class="mr-2 text-gray-600 hover:text-gray-800">
+                            {{ 'admin.mtg.pointslistcard.edit.show'|trans }}
+                        </a>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            {{ 'admin.mtg.pointslistcard.edit.save'|trans }}
+                        </button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

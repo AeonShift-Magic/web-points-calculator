@@ -3,42 +3,30 @@
 {% block title %}{{ page.title|raw }}{% endblock %}
 
 {% block main_layout %}
-    <div class="main-row theme2 transparent-row">
-        <section class="main-column main-content">
-            <h1 class="font-bold text-5xl w-full lg:w-3/4 leading-normal text-center py-2 lg:my-4 tracking-wide spark-title spot-title">
-                {{ page.title|raw }}
-            </h1>
-        </section>
-    </div>
+    <section class="main-column main-content">
+        <h1 class="font-bold text-5xl w-full lg:w-3/4 leading-normal text-center py-2 lg:my-4 tracking-wide spark-title spot-title">
+            {{ page.title|raw }}
+        </h1>
+    </section>
 
     {% if breadcrumb is defined %}
-        <div class="main-row spacer-row"></div>
-
-        <div class="main-row theme1 breadcrumb-row">
-            <div class="main-column">
-                {{ include('front/_breadcrumb.html.twig') }}
-            </div>
+        <div class="main-column">
+            {{ include('front/_breadcrumb.html.twig') }}
         </div>
     {% endif %}
 
-    <div class="main-row spacer-row"></div>
-
     {% if app.user is defined and app.user is not empty %}
-        <div class="main-row theme1 transluent-row" data-loading="addClass(opacity-50)">
-            <div class="main-column main-content most-opquage-column">
-                {% if app.user is defined and is_granted('ROLE_SEASON_MANAGER') %}
-                    <div class="admin-edit-shortcut">
-                        <a href="{{ url('admin_page_edit', {'id': page.id, 'slug': page.slug}) }}" class="btn btn-red" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
-                    </div>
-                {% endif %}
-                <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full">
-                    {% if page.contents is defined %}
-                        <article class="page-content">
-                            {{ page.contents|raw }}
-                        </article>
-                    {% endif %}
-                </div>
+        {% if app.user is defined and is_granted('ROLE_SEASON_MANAGER') %}
+            <div class="admin-edit-shortcut">
+                <a href="{{ url('admin_page_edit', {'id': page.id, 'slug': page.slug}) }}" class="btn btn-red" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
             </div>
+        {% endif %}
+        <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full">
+            {% if page.contents is defined %}
+                <article class="page-content">
+                    {{ page.contents|raw }}
+                </article>
+            {% endif %}
         </div>
     {% endif %}
 

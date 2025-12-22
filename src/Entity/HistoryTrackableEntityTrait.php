@@ -20,20 +20,20 @@ trait HistoryTrackableEntityTrait
      * @var DateTime
      */
     #[ORM\Column(type: 'datetime')]
-    private DateTime $createdAt;
-
-    /**
-     * @var User|null
-     */
-    #[ORM\JoinColumn(nullable: true)]
-    #[ORM\ManyToOne]
-    private ?User $createdBy = null;
+    public DateTime $createdAt {
+        get {
+            return $this->createdAt;
+        }
+        set {
+            $this->createdAt = $value;
+        }
+    }
 
     /**
      * @var DateTime
      */
     #[ORM\Column(type: 'datetime')]
-    private DateTime $updatedAt {
+    public DateTime $updatedAt {
         get {
             return $this->updatedAt;
         }
@@ -41,6 +41,13 @@ trait HistoryTrackableEntityTrait
             $this->updatedAt = $value;
         }
     }
+
+    /**
+     * @var User|null
+     */
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne]
+    private ?User $createdBy = null;
 
     /**
      * @var User|null
@@ -65,16 +72,8 @@ trait HistoryTrackableEntityTrait
      */
     protected function __construct()
     {
-        $this->setCreatedAt(new DateTime());
+        $this->createdAt = new DateTime();
         $this->updatedAt = new DateTime();
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getCreatedAt(): ?DateTime
-    {
-        return $this->createdAt;
     }
 
     public function getCreatedBy(): ?User
@@ -85,14 +84,6 @@ trait HistoryTrackableEntityTrait
     public function getUpdatedBy(): ?User
     {
         return $this->updatedBy;
-    }
-
-    /**
-     * @param DateTime $createdAt
-     */
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     #[ORM\PrePersist]

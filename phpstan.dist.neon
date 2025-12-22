@@ -7,6 +7,8 @@ parameters:
         - config
         - src
     ignoreErrors:
+        # Ignore missing generic type errors, PHPStan is not yet able to infer them in some cases, why Psalm does
+        - identifier: missingType.generics
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     doctrine:

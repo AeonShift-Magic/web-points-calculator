@@ -225,6 +225,16 @@ npm run mtg-electron-make
 
 ### Usage
 
+#### Using the embedded native appliction
+
+EletroncJS and Electronforge generate native applications for Windows, MacOS, and Linux.
+You can download the latest releases from the [Releases section](https://github.com/AeonShift-Magic/web-points-calculator/releases/tag/latest).
+
+The native applications are NOT digitally signed, which means they'll trigger some security warnings on some OSes.
+You can safely bypass these warnings as this software is open-source and free of malware.
+
+#### Using [Scryfall "Default Cards" bulk JSON file](https://scryfall.com/docs/api/bulk-data) as source:
+
 To have stuff displayed on the frontend, you need to:
 
 1. Import Scryfall bulk file for cards.
@@ -234,21 +244,76 @@ To have stuff displayed on the frontend, you need to:
 Steps 1 and 2 need to be done each time you want to update the card database.
 They can be automated. Using a cron job is a good idea, calling the console commands below:
 
-#### Using [Scryfall "Default Cards" bulk JSON file](https://scryfall.com/docs/api/bulk-data) as source:
-
 This will limit the use with cards in English only (base reference for judging Magic The Gathering™ cards).
 
 ```shell
-php bin/console aeonshift:mtg:updatedb:scryfalldefaultcards:v1 # to download the Scryfall file
-php bin/console aeonshift:mtg:sourcedownload:scryfalldefaultcards:v1 # to update from the Scryfall file if present
+php bin/console aeonshift:mtg:updatedb:scryfalldefaultmtgcards:v1 # to download the Scryfall file
+php bin/console aeonshift:mtg:sourcedownload:scryfalldefaultmtgcards:v1 # to update from the Scryfall file if present
 ```
 
 *(remember doing this too often will have your server banned if abusive, make sure it is done reasonably)*  
 *(note: the commands are only in plain English for now, no localization available)*
 
-This software is distributed under the MIT License.
+### Other Considerations
+
+#### Adding your initial admin user
+
+Use the console to hash your password:
+
+```shell
+php bin/console security:hash-password
+```
+
+Then, run the following SQL query to insert your admin user into the `as_user` table.
+
+```sql
+INSERT INTO as_user (
+    email, 
+    password, 
+    is_verified, 
+    registered_at, 
+    roles, 
+    username, 
+    created_at, 
+    updated_at
+) 
+VALUES (
+    'admin@example.com',
+    'YOUR_HASHED_PASSWORD',
+    1,
+    NOW(),
+    '["ROLE_ADMIN"]',
+    'admin',
+    NOW(),
+    NOW()
+);
+```
+
+#### Official Colors
+
+Triad-based color set for branding:
+```shell
+# Neutral tones
+#151515 / #4E4E4E / #888888
+#FFFFFF
+
+# Tonality tones
+#0085D7 / #0073BB / #00619D
+#F5F200 / #BBB700 / #9D9A00
+#DBD848 / #A09E35 / #84822B
+#CD6666 / #B05858 / #753B3B 
+```
 
 <hr>
 
-✨ Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for AeonShift, 2025.  
+This software is distributed under the MIT License.
+
+*This software and the generated websites are not affiliated nor endorsed by Wizards of the Coast™.  
+The name Magic The Gathering™, the Magic The Gathering™ logo, 
+the illustrations and some materials here are the property of Wizards of the Coast™. ©Wizards of the Coast™ LLC. 
+This project follows Wizards Of The Coast™ fansite policy.*
+
+
+✨ Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for AeonShift, 2025.
+  
 Feel free to contribute to this project, reuse it, share it, star it on GitHub if you like it, or donate if you like and can!

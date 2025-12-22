@@ -1,8 +1,8 @@
 {% if block_key is defined and block_key is not empty %}
     {% if is_granted('ROLE_SEASON_MANAGER') %}
         <div class="front-admin-links-container text-sm">
-            <a href="{{ url('admin_custom_block_index') }}" title="{{ 'admin.customblocks.editlink.label'|trans({'blockkey': ('customblock.' ~ block_key ~ '.name')|trans}) }}">
-                {{ 'admin.customblocks.editlink.label'|trans({'%blockkey%': ('customblock.' ~ block_key ~ '.name')|trans}) }}
+            <a href="{{ url('admin_custom_block_index') }}" title="{{ 'admin.customblock.editlink.label'|trans({'blockkey': ('customblock.' ~ block_key ~ '.name')|trans}) }}">
+                {{ 'admin.customblock.editlink.label'|trans({'%blockkey%': ('customblock.' ~ block_key ~ '.name')|trans}) }}
             </a>
         </div>
     {% endif %}

@@ -3,39 +3,29 @@
 {% block title %}{{ 'front.nav.resetpassword.title'|trans }}{% endblock %}
 
 {% block main_layout %}
-    <div class="main-row theme1 transluent-row">
-        <div class="main-column main-content most-opquage-column">
-            <h1>{{ 'front.nav.resetpassword.title'|trans }}</h1>
-        </div>
-    </div>
+    <h1>{{ 'front.nav.resetpassword.title'|trans }}</h1>
 
-    <div class="main-row spacer-row"></div>
-
-    <div class="main-row theme1 unique-row transluent-row">
-        <div class="main-column main-content most-opquage-column">
-            <div class="w-full mt-4 lg:w-3/4 form-container">
-                <form method="post">
-                    {% if app.user %}
-                        <div class="w-full">
-                            <div class="mb-3">
-                                {{ 'user.login.alreadylogged'|trans({'user': app.user.userIdentifier, 'url': url('front_logout') }) }}
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <div class="flex flex-col lg:flex-col items-stretch justify-center w-full">
-                        {% if requestForm is defined %}
-                            {{ form_start(requestForm) }}
-                            <p>
-                                {{ 'front.resetpassword.text1'|trans }}
-                            </p>
-                            {{ form_row(requestForm.email) }}
-                            <button data-turbo="false" class="btn btn-gold">{{ 'front.nav.resetpassword.label'|trans }}</button>
-                            {{ form_end(requestForm) }}
-                        {% endif %}
+    <div class="w-full mt-4 lg:w-3/4 form-container">
+        <form method="post">
+            {% if app.user %}
+                <div class="w-full">
+                    <div class="mb-3">
+                        {{ 'user.login.alreadylogged'|trans({'user': app.user.userIdentifier, 'url': url('front_logout') }) }}
                     </div>
-                </form>
+                </div>
+            {% endif %}
+
+            <div class="flex flex-col lg:flex-col items-stretch justify-center w-full">
+                {% if requestForm is defined %}
+                    {{ form_start(requestForm) }}
+                    <p>
+                        {{ 'front.resetpassword.text1'|trans }}
+                    </p>
+                    {{ form_row(requestForm.email) }}
+                    <button data-turbo="false" class="btn btn-gold">{{ 'front.nav.resetpassword.label'|trans }}</button>
+                    {{ form_end(requestForm) }}
+                {% endif %}
             </div>
-        </div>
+        </form>
     </div>
 {% endblock %}

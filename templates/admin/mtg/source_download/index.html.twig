@@ -1,0 +1,64 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.mtg.sourcedownload.index.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.sourcedownload.index.label'|trans }}</h1>
+
+    {% if last_update is defined %}
+        <div class="table-wrapper w-full lg:w-3/4">
+            <table class="table center header-highlight-table">
+                <thead>
+                    <tr>
+                        <th colspan="2">{{ 'admin.nav.mtg.sourcedownload.latest.label'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ 'global.id.label'|trans }}</td>
+                        <td>{{ last_update.id }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.uniqueid.label'|trans }}</td>
+                        <td>{{ last_update.uniqueId }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.channel.label'|trans }}</td>
+                        <td>{{ colorize_channel(last_update.channel) }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.startedfrom.label'|trans }}</td>
+                        <td>{{ last_update.startedFrom }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.startedat.label'|trans }}</td>
+                        <td>{{ last_update.startedAt|date('Y-m-d H:i') }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.endedat.label'|trans }}</td>
+                        <td>{{ last_update.endedAt|date('Y-m-d H:i') }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.successsummary.label'|trans }}</td>
+                        <td>
+                            <span class="text-green-400">{{ last_update.successSummary }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.errorsummary.label'|trans }}</td>
+                        <td>
+                            <span class="text-red-400">{{ last_update.errorSummary }}</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'admin.form.mtg.cardsourceactivityhistory.create.logfilepath.label'|trans }}</td>
+                        <td>{{ file_link_or_string(last_update) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    <a class="btn btn-red mt-8" href="{{ url('admin_mtg_source_download_start') }}" title="{{ 'global.start.title'|trans }}">{{ 'global.start.label'|trans }}</a>
+
+{% endblock %}

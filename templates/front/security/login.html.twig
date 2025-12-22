@@ -3,64 +3,49 @@
 {% block title %}{{ 'user.login.title'|trans }}{% endblock %}
 
 {% block main_layout %}
-    <div class="main-row theme1 transluent-row">
-        <div class="main-column main-content most-opquage-column">
-            <h1>{{ 'user.login.title'|trans }}</h1>
-        </div>
-    </div>
+    <h1>{{ 'user.login.title'|trans }}</h1>
 
-    <div class="main-row spacer-row"></div>
+    <div class="w-full mt-4 lg:w-3/4 form-container">
+        <form method="post">
+            <div class="flex flex-col items-center justify-center">
 
-    <div class="main-row theme1 unique-row transluent-row">
-        <div class="main-column main-content most-opquage-column">
-            <div class="w-full mt-4 lg:w-3/4 form-container">
-                <form method="post">
-                    <div class="flex flex-col items-center justify-center">
+                {% if error %}
+                    <div class="w-full">
+                        <div class="flash-message flash-error alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                    </div>
+                {% endif %}
 
-                        {% if error %}
-                            <div class="w-full">
-                                <div class="flash-message flash-error alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-                            </div>
-                        {% endif %}
-
-                        {% if app.user %}
-                            <div class="w-full">
-                                <div class="mb-3">
-                                    {{ 'user.login.alreadylogged'|trans({'user': app.user.userIdentifier, 'url': url('front_logout') }) }}
-                                </div>
-                            </div>
-                        {% endif %}
-
-                        <div class="flex flex-col lg:flex-row items-stretch justify-center w-full">
-                            <div class="w-full lg:w-1/2 flex flex-col items-stretch">
-                                <div class="mb-3 flex flex-col">
-                                    <label for="inputUsername">{{ 'user.login.username.label'|trans }}</label>
-                                    <input size="40" placeholder="{{ 'user.login.username.placeholder'|trans }}" type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control w-full" autocomplete="username" required autofocus>
-                                    <div id="login_username_help" class="mt-1 text-gray-600 help-text">
-                                        {{ 'user.login.username.help'|trans }}
-                                    </div>
-                                </div>
-                                <div class="mb-3 flex flex-col">
-                                    <label for="inputPassword">{{ 'user.login.password.label'|trans }}</label>
-                                    <input size="40" placeholder="{{ 'user.login.password.placeholder'|trans }}" type="password" name="password" id="inputPassword" class="form-control w-full" autocomplete="current-password" required>
-                                    <div id="login_password_help" class="mt-1 text-gray-600 help-text">
-                                        {{ 'user.login.password.help'|trans }}
-                                    </div>
-                                </div>
-                                <div class="mb-3 text-center">
-                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                    <button data-turbo="false" class="btn btn-blue" type="submit" title="{{ 'user.login.submit.label'|trans }}">{{ 'user.login.submit.label'|trans }}</button>
-                                </div>
-                            </div>
-
-                            <div class="w-full lg:w-1/2 flex flex-col justify-items-stretch justify-around align-center">
-                                <p class="text-center">{{ 'user.login.helptext1'|trans({'link': url('front_register')})|raw }}</p>
-                                <p class="text-center">{{ 'user.login.helptext2'|trans({'link': url('front_forgot_password_request')})|raw }}</p>
-                            </div>
+                {% if app.user %}
+                    <div class="w-full">
+                        <div class="mb-3">
+                            {{ 'user.login.alreadylogged'|trans({'user': app.user.userIdentifier, 'url': url('front_logout') }) }}
                         </div>
                     </div>
-                </form>
+                {% endif %}
+
+                <div class="flex flex-col lg:flex-row items-stretch justify-center w-full">
+                    <div class="w-full lg:w-1/2 flex flex-col items-stretch">
+                        <div class="mb-3 flex flex-col">
+                            <label for="inputUsername">{{ 'user.login.username.label'|trans }}</label>
+                            <input size="40" placeholder="{{ 'user.login.username.placeholder'|trans }}" type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control w-full" autocomplete="username" required autofocus>
+                            <div id="login_username_help" class="mt-1 text-gray-600 help-text">
+                                {{ 'user.login.username.help'|trans }}
+                            </div>
+                        </div>
+                        <div class="mb-3 flex flex-col">
+                            <label for="inputPassword">{{ 'user.login.password.label'|trans }}</label>
+                            <input size="40" placeholder="{{ 'user.login.password.placeholder'|trans }}" type="password" name="password" id="inputPassword" class="form-control w-full" autocomplete="current-password" required>
+                            <div id="login_password_help" class="mt-1 text-gray-600 help-text">
+                                {{ 'user.login.password.help'|trans }}
+                            </div>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+                            <button data-turbo="false" class="btn btn-blue" type="submit" title="{{ 'user.login.submit.label'|trans }}">{{ 'user.login.submit.label'|trans }}</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 {% endblock %}

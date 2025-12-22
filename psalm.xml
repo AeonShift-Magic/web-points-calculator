@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <psalm
+        xmlns="https://getpsalm.org/schema/config"
         errorLevel="8"
         resolveFromConfigFile="true"
         showInfo="false"
@@ -41,6 +42,7 @@
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
                 <directory name="src/Entity" />
+                <referencedProperty name="Symfony\Bundle\FrameworkBundle\Controller\AbstractController::$container" />
             </errorLevel>
         </PropertyNotSetInConstructor>
         <PossiblyUnusedReturnValue>

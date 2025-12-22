@@ -1,0 +1,69 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.mtg.sourcecard.show.title'|trans }}{% endblock %}
+
+{% block main_content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1>{{ 'admin.mtg.sourcecard.show.heading'|trans }}</h1>
+            <a href="{{ path('admin_mtg_source_card_index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                {{ 'admin.mtg.sourcecard.show.back'|trans }}
+            </a>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full">
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.sourcecard.show.id'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ source_card.id }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.sourcecard.show.name'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ source_card.name }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.sourcecard.show.set'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ source_card.setCode }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.sourcecard.show.layout'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ source_card.layout }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.sourcecard.show.type'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ source_card.type }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.sourcecard.show.rarity'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ source_card.rarity }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

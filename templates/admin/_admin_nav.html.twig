@@ -10,85 +10,87 @@
             {% endif %}
         </li>
 
-        <li>
-            <a class="cursor-default" tabindex="0" title="{{ 'front.nav.mtg.title'|trans }}">
-                {{ 'front.nav.mtg.label'|trans }}
-            </a>
-            <ul>
-                {# MTG Seasons #}
-                {% if is_granted('ROLE_SEASON_MANAGER') %}
+        {% if is_granted('ROLE_MTG_MANAGER') %}
+            <li>
+                <a class="cursor-default" tabindex="0" title="{{ 'front.nav.mtg.title'|trans }}">
+                    {{ 'front.nav.mtg.label'|trans }}
+                </a>
+                <ul>
                     <li>
-                        <a href="{{ url('admin_mtgseason_index') }}" title="{{ 'admin.nav.mtg_season.index.title'|trans }}">{{ 'admin.nav.mtg_season.index.label'|trans }}</a>
+                        <a href="{{ url('admin_mtg_update_index') }}" title="{{ 'admin.nav.mtg.update.index.title'|trans }}">{{ 'admin.nav.mtg.update.index.label'|trans }}</a>
                         {% if extended_view is defined and extended_view is same as(true) %}
                             <span class="inline-block px-2 pb-2 text-center">
-                                {{ 'admin.nav.mtg_season.index.label'|trans }}
-                            </span>
-                        {% endif %}
-                        <ul>
-                            <li>
-                                <a href="{{ url('admin_mtgseason_new') }}" title="{{ 'admin.nav.mtg_season.new.title'|trans }}">{{ 'admin.nav.mtg_season.new.label'|trans }}</a>
-                                {% if extended_view is defined and extended_view is same as(true) %}
-                                    <span class="inline-block px-2 pb-2 text-center">
-                                        {{ 'admin.nav.mtg_season.new.label'|trans }}
-                                    </span>
-                                {% endif %}
-                            </li>
-                        </ul>
-                    </li>
-                    {# MTG Tournaments #}
-                    <li>
-                        <a href="{{ url('admin_mtgtournament_index') }}" title="{{ 'admin.nav.mtg_tournaments.index.title'|trans }}">{{ 'admin.nav.mtg_tournaments.index.label'|trans }}</a>
-                        {% if extended_view is defined and extended_view is same as(true) %}
-                            <span class="inline-block px-2 pb-2 text-center">
-                                {{ 'admin.nav.mtg_tournaments.index.label'|trans }}
-                            </span>
-                        {% endif %}
-                        <ul>
-                            <li>
-                                <a href="{{ url('front_mtgtournamentorganizer_create_step_1') }}" title="{{ 'admin.nav.mtg_tournament.new.title'|trans }}">{{ 'admin.nav.mtg_tournament.new.label'|trans }}</a>
-                                {% if extended_view is defined and extended_view is same as(true) %}
-                                    <span class="inline-block px-2 pb-2 text-center">
-                                        {{ 'admin.nav.mtg_tournament.new.label'|trans }}
-                                    </span>
-                                {% endif %}
-                            </li>
-                        </ul>
-                    </li>
-
-                    {# MTG Results #}
-                    <li>
-                        <a href="{{ url('admin_mtgresult_index') }}" title="{{ 'admin.nav.mtg_results.index.title'|trans }}">{{ 'admin.nav.mtg_results.index.label'|trans }}</a>
-                        {% if extended_view is defined and extended_view is same as(true) %}
-                            <span class="inline-block px-2 pb-2 text-center">
-                                {{ 'admin.nav.mtg_results.index.label'|trans }}
+                                {{ 'admin.nav.mtg.update.index.label'|trans }}
                             </span>
                         {% endif %}
                     </li>
-                {% endif %}
-
-                {% if is_granted('ROLE_CLOSED_TOURNAMENT_ORGANIZER') %}
-                    {# Prestige Qualified Players #}
                     <li>
-                        <a href="{{ url('admin_mtg_prestige_qualified_player_index') }}" title="{{ 'admin.nav.mtg_prestige_qualified_player.index.title'|trans }}">{{ 'admin.nav.mtg_prestige_qualified_player.index.label'|trans }}</a>
+                        <a href="{{ url('admin_mtg_update_new') }}" title="{{ 'admin.nav.mtg.update.new.title'|trans }}">{{ 'admin.nav.mtg.update.new.label'|trans }}</a>
                         {% if extended_view is defined and extended_view is same as(true) %}
                             <span class="inline-block px-2 pb-2 text-center">
-                                {{ 'admin.nav.mtg_prestige_qualified_player.index.label'|trans }}
+                                {{ 'admin.nav.mtg.update.new.label'|trans }}
                             </span>
                         {% endif %}
-                        <ul>
-                            <li>
-                                <a href="{{ url('admin_mtg_prestige_qualified_player_new') }}" title="{{ 'admin.nav.mtg_prestige_qualified_player.new.title'|trans }}">{{ 'admin.nav.mtg_prestige_qualified_player.new.label'|trans }}</a>
-                                {% if extended_view is defined and extended_view is same as(true) %}
-                                    <span class="inline-block px-2 pb-2 text-center">
-                                        {{ 'admin.nav.mtg_prestige_qualified_player.new.label'|trans }}
-                                    </span>
-                                {% endif %}
-                            </li>
-                        </ul>
                     </li>
-                {% endif %}
-            </ul>
-        </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'admin.nav.mtg.pointslist.index.title'|trans }}">{{ 'admin.nav.mtg.pointslist.index.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.pointslist.index.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_points_list_new') }}" title="{{ 'admin.nav.mtg.pointslist.new.title'|trans }}">{{ 'admin.nav.mtg.pointslist.new.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.pointslist.new.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_points_list_card_index') }}" title="{{ 'admin.nav.mtg.pointslistcard.index.title'|trans }}">{{ 'admin.nav.mtg.pointslistcard.index.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.pointslistcard.index.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'admin.nav.mtg.pointslistcard.new.title'|trans }}">{{ 'admin.nav.mtg.pointslistcard.new.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.pointslistcard.new.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_card_source_activity_history_index') }}" title="{{ 'admin.nav.mtg.cardsourceactivityhistory.index.title'|trans }}">{{ 'admin.nav.mtg.cardsourceactivityhistory.index.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.cardsourceactivityhistory.index.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_dbupdate_index') }}" title="{{ 'admin.nav.mtg.dbupdate.index.title'|trans }}">{{ 'admin.nav.mtg.dbupdate.index.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.dbupdate.index.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_source_download_index') }}" title="{{ 'admin.nav.mtg.source.index.title'|trans }}">{{ 'admin.nav.mtg.source.index.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.source.index.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
 
         {# Custom blocks #}
         {% if is_granted('ROLE_ADMIN') %}
@@ -134,50 +136,6 @@
             </li>
         {% endif %}
 
-        {# Articles #}
-        {% if is_granted('ROLE_CONTENT_MANAGER') %}
-            <li>
-                <a href="{{ url('admin_article_index') }}" title="{{ 'admin.nav.articles.index.title'|trans }}">{{ 'admin.nav.articles.index.label'|trans }}</a>
-                {% if extended_view is defined and extended_view is same as(true) %}
-                    <span class="inline-block px-2 pb-2 text-center">
-                        {{ 'admin.nav.articles.index.title'|trans }}
-                    </span>
-                {% endif %}
-                <ul>
-                    <li>
-                        <a href="{{ url('admin_article_new') }}" title="{{ 'admin.nav.articles.new.title'|trans }}">{{ 'admin.nav.articles.new.label'|trans }}</a>
-                        {% if extended_view is defined and extended_view is same as(true) %}
-                            <span class="inline-block px-2 pb-2 text-center">
-                                {{ 'admin.nav.articles.new.title'|trans }}
-                            </span>
-                        {% endif %}
-                    </li>
-                </ul>
-            </li>
-        {% endif %}
-
-        {# Team members #}
-        {% if is_granted('ROLE_ADMIN') %}
-            <li>
-                <a href="{{ url('admin_teammember_index') }}" title="{{ 'admin.nav.teammember.index.title'|trans }}">{{ 'admin.nav.teammember.index.label'|trans }}</a>
-                {% if extended_view is defined and extended_view is same as(true) %}
-                    <span class="inline-block px-2 pb-2 text-center">
-                        {{ 'admin.nav.teammember.index.title'|trans }}
-                    </span>
-                {% endif %}
-                <ul>
-                    <li>
-                        <a href="{{ url('admin_teammember_new') }}" title="{{ 'admin.nav.teammember.new.title'|trans }}">{{ 'admin.nav.teammember.new.label'|trans }}</a>
-                        {% if extended_view is defined and extended_view is same as(true) %}
-                            <span class="inline-block px-2 pb-2 text-center">
-                                {{ 'admin.nav.teammember.new.title'|trans }}
-                            </span>
-                        {% endif %}
-                    </li>
-                </ul>
-            </li>
-        {% endif %}
-
         {# Users #}
         {% if is_granted('ROLE_ADMIN') %}
             <li>
@@ -193,28 +151,6 @@
                         {% if extended_view is defined and extended_view is same as(true) %}
                             <span class="inline-block px-2 pb-2 text-center">
                                 {{ 'admin.nav.users.new.title'|trans }}
-                            </span>
-                        {% endif %}
-                    </li>
-                </ul>
-            </li>
-        {% endif %}
-
-        {# Addresses #}
-        {% if is_granted('ROLE_ADMIN') %}
-            <li>
-                <a href="{{ url('admin_address_index') }}" title="{{ 'admin.nav.address.index.title'|trans }}">{{ 'admin.nav.address.index.label'|trans }}</a>
-                {% if extended_view is defined and extended_view is same as(true) %}
-                    <span class="inline-block px-2 pb-2 text-center">
-                        {{ 'admin.nav.address.index.title'|trans }}
-                    </span>
-                {% endif %}
-                <ul>
-                    <li>
-                        <a href="{{ url('admin_address_new') }}" title="{{ 'admin.nav.address.new.title'|trans }}">{{ 'admin.nav.address.new.label'|trans }}</a>
-                        {% if extended_view is defined and extended_view is same as(true) %}
-                            <span class="inline-block px-2 pb-2 text-center">
-                                {{ 'admin.nav.address.new.title'|trans }}
                             </span>
                         {% endif %}
                     </li>

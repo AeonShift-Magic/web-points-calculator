@@ -4,4 +4,4 @@ workers:
     #     cmd: ['cmd.exe', '/C', 'del /F /S /Q C:\Users\[Your User]\.symfony5\var']
     # Enable Tailwind everytime we start the Symfony server
     tailwind:
-        cmd: ['symfony', 'console', 'tailwind:build', '--watch', '--poll']
+        cmd: ['symfony', 'console', 'tailwind:build', '--watch']

@@ -1,3 +1,46 @@
+fos_ck_editor:
+    base_path: 'bundles/fosckeditor'
+    js_path: 'bundles/fosckeditor/ckeditor.js'
+    default_config: image_config
+    configs:
+        public_config:
+            extraPlugins: [ 'uploadimage', 'justify', 'smiley', 'blockquote', 'link', 'showblocks', 'dialogadvtab' ]
+            uploadUrl: '/%kernel.default_locale%/media/rte/upload'
+            imageUploadUrl: '/%kernel.default_locale%/media/rte/upload?type=image'
+            filebrowserUploadUrl: '' #'/%kernel.default_locale%/media/rte/upload?type=image'
+            filebrowserBrowseUrl: '' #'/%kernel.default_locale%/media/rte/list?type=image'
+            allowedContent: true
+            height: '500px'
+            toolbar: 'oc_toolbar'
+            removeDialogTabs: 'upload,image:Upload'
+            removePlugins: [ 'exportpdf', ]
+            versionCheck: false
+            format_tags: 'p;h2;h3;h4;h5;h6;pre;address'
+            clipboard_handleImages: false
+            iframe_attributes:
+                sandbox: 'allow-scripts allow-same-origin'
+        image_config:
+            extraPlugins: [ 'uploadimage', 'justify', 'smiley', 'blockquote', 'link', 'showblocks', 'dialogadvtab' ]
+            uploadUrl: '/%kernel.default_locale%/media/rte/upload'
+            imageUploadUrl: '/%kernel.default_locale%/media/rte/upload?type=image'
+            filebrowserBrowseRoute: elfinder
+            filebrowserBrowseRouteParameters:
+                instance: ckeditor_user
+            allowedContent: true
+            height: '500px'
+            toolbar: 'image_toolbar'
+            removeDialogTabs: 'upload,image:Upload'
+            removePlugins: [ 'exportpdf' ]
+            contentsCss: 'styles/ckeditor.css'
+            versionCheck: false
+            clipboard_handleImages: false
+            iframe_attributes:
+                sandbox: 'allow-scripts allow-same-origin'
+    toolbars:
+        configs:
+            oc_toolbar: [ [ 'RemoveFormat', '-', 'Table', 'HorizontalRule', '-', 'SpecialChar', '-', 'Format', 'Bold', 'Italic', 'Strike','-', 'BulletedList', 'NumberedList', 'Blockquote', 'JustifyLeft', 'JustifyCenter', 'JustifyRight' ], [ 'Link', 'Unlink','Anchor' ], [ 'Source', '-', 'Undo', 'Redo' ], [ 'ShowBlocks' ] ]
+            image_toolbar: [ [ 'RemoveFormat', '-', 'Table', 'HorizontalRule', '-', 'SpecialChar', '-', 'Format', 'Bold', 'Italic', 'Strike','-', 'BulletedList', 'NumberedList', 'Blockquote', 'JustifyLeft', 'JustifyCenter', 'JustifyRight' ], [ 'Link', 'Unlink','Anchor' ], [ 'Source', '-', 'Undo', 'Redo' ], [ 'ShowBlocks', 'Maximize', 'Image' ] ]
+
 twig:
     form_themes:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'

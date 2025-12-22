@@ -1,0 +1,116 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.mtg.update.show.title'|trans }}{% endblock %}
+
+{% block main_content %}
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <h1>{{ 'admin.mtg.update.show.heading'|trans }}</h1>
+            <div>
+                <a href="{{ path('admin_mtg_update_edit', {'id': update.id}) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mr-2">
+                    {{ 'admin.mtg.update.show.edit'|trans }}
+                </a>
+                <a href="{{ path('admin_mtg_update_index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+                    {{ 'admin.mtg.update.show.back'|trans }}
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <table class="min-w-full">
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.id'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ update.id }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.title'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ update.titleEN }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.description'|trans }}
+                        </th>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            {{ update.descriptionEN|raw }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.rulesmodel'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ update.rulesModel }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.ispublic'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% if update.isPublic %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    {{ 'admin.mtg.update.show.yes'|trans }}
+                                </span>
+                            {% else %}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    {{ 'admin.mtg.update.show.no'|trans }}
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.pointslist'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% if update.pointsList %}
+                                <a href="{{ path('admin_mtg_points_list_show', {'id': update.pointsList.id}) }}" class="text-blue-600 hover:text-blue-800">
+                                    {{ update.pointsList.title }}
+                                </a>
+                            {% else %}
+                                <span class="text-gray-400">{{ 'admin.mtg.update.show.no_pointslist'|trans }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.start'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ update.startingAt|date('Y-m-d H:i:s') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.end'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ update.endingAt|date('Y-m-d H:i:s') }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                            {{ 'admin.mtg.update.show.user'|trans }}
+                        </th>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {% if update.user %}
+                                {{ update.user.username }}
+                            {% else %}
+                                <span class="text-gray-400">{{ 'admin.mtg.update.show.no_user'|trans }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.cardsourceactivityhistory.index.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.cardsourceactivityhistory.index.label'|trans }}</h1>
+
+    <h3 class="text-center w-full">
+        {{ 'global.total.label'|trans({'%elements%': histories.totalItemCount})|raw }}
+        {% if histories.totalItemCount / histories.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': histories.currentPageNumber, 'total': (histories.totalItemCount / histories.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+    </h3>
+
+    {% if histories is defined and histories is iterable %}
+        <div class="navigation">
+            {{ knp_pagination_render(histories) }}
+        </div>
+
+        <div class="table-wrapper">
+            <table class="table center header-highlight-table">
+                <thead>
+                    <tr>
+                        <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.uniqueid.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.channel.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.startedfrom.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.startedat.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.endedat.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.successsummary.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.errorsummary.label'|trans }}</th>
+                        <th>{{ 'admin.form.mtg.cardsourceactivityhistory.create.logfilepath.label'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for history in histories %}
+                        <tr>
+                            <td>
+                                {{ history.id }}
+                            </td>
+                            <td>
+                                {{ history.uniqueId }}
+                            </td>
+                            <td>
+                                {{ colorize_channel(history.channel) }}
+                            </td>
+                            <td>
+                                {{ history.startedFrom }}
+                            </td>
+                            <td>
+                                {{ history.startedAt|date('Y-m-d H:i') }}
+                            </td>
+                            <td>
+                                {{ history.endedAt|date('Y-m-d H:i') }}
+                            </td>
+                            <td>
+                                <span class="text-green-400">{{ history.successSummary }}</span>
+                            </td>
+                            <td>
+                                <span class="text-red-400">{{ history.errorSummary }}</span>
+                            </td>
+                            <td>
+                                {{ file_link_or_string(history) }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="navigation"></div>
+
+        <div class="navigation">
+            {{ knp_pagination_render(histories) }}
+        </div>
+    {% endif %}
+
+{% endblock %}

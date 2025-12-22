@@ -1,0 +1,389 @@
+roles:
+    label: 'Rôle(s)/Permission(s) sur ce site :'
+    help: 'Définit les permissions de l''utilisateur·ice sur le site. Par exemple, un organisateur·ice peut organiser des évènements, un administrateur·ice peut gérer le site, etc.'
+admin:
+    account:
+        email:
+            help: >
+                Votre email. Doit être unique. Sera utilisé pour récupérer éventuellement vos accès, communiquer, et visible par les personnes inscrites au évènements que vous créerez, et vous devrez valider cette adresse à chaque fois que vous la changerez. 
+                <strong>ATTENTION: TOUS les e-mails seront envoyés à cette adresse. Veuillez vérifier TROIS FOIS avant de remplir/changer cette entrée.</strong>
+            label: 'E-mail :'
+            placeholder: johnorjane.doe@provider.domain
+        roles:
+            label: 'Rôle(s)/Permission(s) sur ce site :'
+        username:
+            help: Votre pseudo sur ce site Web. Doit être unique et ne pas être actuellement utilisé par quelqu'un d'autre.
+            label: 'Pseudo:'
+            placeholder: JohnDoe84
+    customblock:
+        editlink:
+            label: ✏️ Editer ce bloc ({blockkey})
+    form:
+        customblock:
+            create:
+                blockkey:
+                    help: Si déjà utilisé, tous les blocs avec les bonne langue et emplacement seront affichés par poids croissant.
+                    label: Emplacement du bloc
+                    placeholder: Sélectionner un emplacement
+                contents:
+                    help: |
+                        <strong>Attention au HTML et à sa validité</strong> : peut casser l'apparence du site ou ne pas s'afficher correctement.</strong> <br> <strong>Attention : n'oubliez pas qu'il y a un cache d'environ 10 minutes sur tous les blocs du site (pour chaque langue et emplacement).</strong>
+                    label: Contenu
+                weight:
+                    help: Entre -100 et 100. Si déjà utilisé, tous les blocs avec les bonne langue et emplacement seront affichés par poids croissant.
+                    label: Poids
+                    placeholder: Poids du bloc
+        page:
+            create:
+                contents:
+                    help: >
+                        <strong>Attention au HTML et à sa validité</strong> : peut casser l'apparence du site ou ne pas s'afficher correctement.</strong>
+                    label: Contenu
+                language:
+                    help: La langue dans laquelle cette page sera affichée.
+                    label: Langue
+                slug:
+                    help: Laisser blanc pour générer automatiquement un slug basé sur le titre.
+                    label: Slug
+                title:
+                    help: Le titre de la page, qui sera affiché dans l'en-tête et dans les résultats de recherche.
+                    label: Titre
+                weight:
+                    help: Entre -100 et 100. Si déjà utilisé, toutes les pages avec les bonne langue et emplacement seront affichées par poids croissant.
+                    label: Poids
+                zone:
+                    help: La zone dans laquelle cette page sera affichée. Par exemple, "header" pour l'en-tête, "footer" pour le pied de page, etc.
+                    label: Zone
+        user:
+            create:
+                roles:
+                    invalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
+                    multipleinvalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
+        mtg:
+            update:
+                create:
+                    title:
+                        help: 'Le titre public de votre mise à jour / annonce'
+                        label: 'Titre'
+                    pointslist:
+                        help: 'Quelle liste de points utiliser'
+                        label: 'Liste de points à utiliser'
+                    start:
+                        help: 'Quand cette mise à jour entre-t-elle en vigueur ?'
+                        label: 'Date de début'
+                    end:
+                        help: 'Quand cette mise à jour cesse-t-elle d''être en vigueur ?'
+                        label: 'Date de fin'
+            points_list_card:
+                create:
+                    pointslist:
+                        label: 'Liste de points'
+                    nameen:
+                        label: 'Nom (EN)'
+                    scryfallid:
+                        label: 'ID Scryfall'
+                    scryfalluri:
+                        label: 'URI Scryfall'
+                    manavalue:
+                        label: 'Valeur de mana'
+                    oracleid:
+                        label: 'ID Oracle'
+    home:
+        goto:
+            text: 'Aller dans une sous-section de l''administration :'
+    mtg:
+        cardsourceactivityhistory:
+            error:
+                fileremoved: 'Le fichier de journalisation demandé n''existe plus.'
+    nav:
+        customblocks:
+            edit:
+                label: '✏️ Editer le bloc custom : emplacement "{blockkey}" / poids "{weight}"'
+                title: 'Editer le bloc custom : emplacement "{blockkey}" / poids "{weight}"'
+            index:
+                label: Blocs Custom
+                title: Gérer les blocs Custom
+            new:
+                label: ➕ Ajouter un bloc custom
+                title: Ajouter un bloc custom
+            show:
+                label: 'Détails du bloc custom : emplacement "{blockkey}" / poids "{weight}"'
+        front:
+            label: Accueil public
+            title: Accueil public
+        home:
+            label: 🔴 Accueil admin
+            title: Accueil admin
+        pages:
+            index:
+                label: Pages
+                title: Gérer les pages
+            new:
+                label: ➕ Ajouter une page
+                title: Ajouter une page
+            edit:
+                label: '✏️ Editer la page "{page}"'
+                title: 'Editer la page "{page}"'
+            show:
+                label: 'Détails de la page "{page}"'
+        users:
+            index:
+                label: Utilisateur·ice·s
+                title: Gérer les utilisateur·ice·s
+            new:
+                label: ➕ Ajouter un·e utilisateur·ice
+                title: Ajouter un·e utilisateur·ice
+            edit:
+                label: '✏️ Editer l''utilisateur·ice "{user}"'
+                title: 'Editer l''utilisateur·ice "{user}"'
+            editpassword:
+                label: '🛡️ Editer le mot de passe de "{user}"'
+            show:
+                label: 'Détails de l''utilisateur·ice : "{name}"'
+            pending:
+                label: '⏳ Utilisateur·ices à valider'
+                title: 'Utilisateur·ices à valider'
+        mtg:
+            cardsourceactivityhistory:
+                index:
+                    label: 'Historique de l''Activité des Sources de Cartes MTG'
+                    title: 'Historique de l''Activité des Sources de Cartes MTG'
+            pointslist:
+                index:
+                    label: 'Listes à Points MTG'
+                    title: 'Listes à Points MTG'
+                new:
+                    label: '➕ Créer une Liste à Points MTG'
+                    title: 'Créer une Liste à Points MTG'
+            pointslistcard:
+                index:
+                    label: 'Cartes des Listes à Points MTG'
+                    title: 'Cartes des Listes à Points MTG'
+                new:
+                    label: '➕ Créer une Carte de Liste à Points MTG'
+                    title: 'Créer une Carte de Liste à Points MTG'
+            update:
+                index:
+                    label: 'Mises à jour MTG'
+                    title: 'Mises à jour MTG'
+                new:
+                    label: '➕ Créer une mise à jour MTG'
+                    title: 'Créer une mise à jour MTG'
+            dbupdate:
+                index:
+                    title: 'MTG - Mises à jour de la base de données'
+                    label: 'MTG - Mises à jour de la base de données'
+                latest:
+                    label: 'MTG - Etat de la dernière mise à jour de la base de données des sources'
+                startnew:
+                    label: 'MTG - Lancement manuel HTTP d''une mise à jour de la base de données depuis les sources'
+            source:
+                index:
+                    title: 'MTG - Téléchargement / Import des sources'
+                    label: 'MTG - Téléchargement / Import des sources'
+            sourcedownload:
+                index:
+                    label: 'MTG - Etat du téléchargement des sources'
+                start:
+                    label: 'MTG - Etat du dernier téléchargement des sources'
+                startnew:
+                    label: 'MTG - Lancement manuel HTTP d''un téléchargement des sources'
+            points_list_cards:
+                index:
+                    label: 'MTG - Cartes des listes de points'
+            points_list:
+                index:
+                    label: 'MTG - Listes de points'
+        cardsourceactivityhistory:
+            index:
+                label: 'Historique d''activité des sources de cartes'
+    user:
+        forms:
+            password:
+                first: Nouveau mot de passe pour l'utilisateur·ice
+                help: Merci de saisir un mot de passe correct, qui doit contenir une majuscule, une minuscule et un chiffre, 8 caractères au total, au minimum.
+                invalid_repeated: Les mots de passe ne correspondent pas
+                oldpassword:
+                    error: L'ancien mot de passe n'a pas l'air d'être le bon.
+                    help: Veuillez saisir le mot de passe actuel pour pouvoir le changer, pour des raisons de sécurité.
+                    label: Le mot de passe actuel
+                second: Saisissez le mot de passe à nouveau
+            edit:
+                id:
+                    label: 'Votre identifiant interne unique : <strong>{id}</strong>&nbsp;<em>(vous pouvez l''utiliser pour communiquer avec notre équipe)</em>.'
+                fieldsets:
+                    private_data:
+                        label: 'Données privées'
+                    admin:
+                        label: 'Administration'
+                    password:
+                        label: 'Mot de passe'
+        password:
+            password_updated_success: Mot de passe mis à jour avec succès pour {username}.
+customblock:
+    footer:
+        en:
+            name: Footer (EN 🇬🇧)
+        fr:
+            name: Footer (FR 🇫🇷)
+    home1:
+        en:
+            name: Home Block 1 (EN 🇬🇧)
+        fr:
+            name: Home Block 1 (FR 🇫🇷)
+    home2:
+        en:
+            name: Home Block 2 (EN 🇬🇧)
+        fr:
+            name: Home Block 2 (FR 🇫🇷)
+    home3:
+        en:
+            name: Home Block 3 (EN 🇬🇧)
+        fr:
+            name: Home Block 3 (FR 🇫🇷)
+    home4:
+        en:
+            name: Home Block 4 (EN 🇬🇧)
+        fr:
+            name: Home Block 4 (FR 🇫🇷)
+    legal:
+        en:
+            name: Legal (EN 🇬🇧)
+        fr:
+            name: Legal (FR 🇫🇷)
+front:
+    nav:
+        login:
+            label: 🪪 S'identifier
+            title: S'identifier sur le site
+        logout:
+            label: ⏻ Se déconnecter du site
+            title: ⏻ Se déconnecter
+        home:
+            label: Accueil
+            title: Retour à l'accueil
+        mtg:
+            title: 'Magic: The Gathering'
+            label: 'Magic: The Gathering'
+global:
+    actions:
+        label: Actions
+        title: Actions
+    back: ⬅️ Retour
+    createbutton:
+        label: ➕ Ajouter
+        title: Ajouter un élément
+    createdat:
+        label: Créé le
+    dates:
+        label: Créé / Dernière mise à jour
+    delete:
+        confirmprompt: Voulez-vous vraiment supprimer cet élément ? Cette action est irréversible.
+    deletebutton:
+        label: ❌ Supprimer
+        title: Supprimer cet élément
+    editbutton:
+        label: ✏️ Modifier l'élément
+        title: Modifier
+    error:
+        404:
+            text: Oups ! La page que vous avez demandée n'a pas pu être trouvée. Peut-être devriez-vous utiliser le menu ci-dessus pour commencer à trouver ce que vous cherchiez, ou simplement revenir en arrière dans votre historique...
+            title: 404 - Non trouvé 😔
+        500:
+            text: Oups ! Le serveur, tout comme la personne gagnante d'un tournoi, a atteint ses limites de points. Si cette erreur persiste, veuillez contacter notre équipe.
+            title: 500 - Erreur serveur 😔
+    id:
+        label: ID
+    indexbutton:
+        label: 🔙 Revenir à la liste
+        title: Retour à la liste
+    noelements:
+        label: Aucun élément à afficher.
+    none:
+        label: N/A
+    pagenumber: Page <strong>{current}/{total}</strong>
+    mandatoryfields:
+        text: '* = Ces champs sont obligatoires.'
+    passwordbutton:
+        label: Changer le mot de passe
+        title: Changer le mot de passe de l'utilisateur·ice
+    roles:
+        ROLE_ADMIN: Administrateur·rice
+        ROLE_USER: Simple utilisateur·ice
+    savebutton:
+        label: 💾 Enregistrer
+        title: Enregistrer les modifications
+    savesuccess:
+        text: Enregistré avec succès.
+    selectnone: --
+    showbutton:
+        label: Voir
+        title: Voir les détails
+    showbuttonfront:
+        label: 👁️ Voir (front)
+        title: 'Voir sur la partie publique'
+    skipcontent:
+        label: Passer au contenu principal
+    total:
+        label: <strong>{elements}</strong> élément(s) au total
+    updatedat:
+        label: Mis à jour le
+    0:
+        label: 'Non'
+    1:
+        label: 'Oui'
+    table:
+        summary: 'Entrées de _START_ à _END_ sur un total de _TOTAL_'
+        empty: '0 entrées au total'
+        filtered: '(filtrées sur _MAX_ au total)'
+        thousands: ''
+        menu: 'Voir _MENU_ entrées'
+        search: 'Rechercher (utiliser "xx yy" pour une chaîne continue) :'
+        none: 'Aucune entrée correspondante trouvée'
+        first: 'Début'
+        last: 'Fin'
+        next: 'Suivant'
+        previous: 'Précédent'
+        ariasort: 'Trier sur cette colonne'
+        ariasortreverse: 'Trier sur cette colonne dans l''ordre inverse'
+    legal:
+        title: 'Mentions Légales'
+        label: 'Mentions légales'
+    rules:
+        label: 'Règles'
+        title: 'Règles du jeu'
+    start:
+        label: 'Lancer la commande'
+        title: 'Lancer la commande'
+    users:
+        label: 'Créé / Dernière modification par'
+page:
+    position:
+        footer:
+            label: Footer
+        header:
+            label: Header
+user:
+    login:
+        alreadylogged: Vous êtes déjà logué·e en tant que {user}, <a data-turbo="false" href="{url}" title="Se déconnecter">Se déconnecter</a>
+        helptext1: ℹ️ Pas encore de compte ? <a href="{link}" title="Cliquez ici pour créer un compte">Créez un compte avant tout !</a>
+        helptext2: 😣 Mot de passe oublié ? <a href="{link}" title="Remettez à zéro votre mot de passe">Cliquez ici</a> pour en définir un nouveau.
+        password:
+            help: Entrez votre mot de passe, si vous l'avez défini.
+            label: Mot de passe
+            placeholder: votre mot de passe
+        submit:
+            label: 🔑 Se connecter
+        success: Vous êtes maintenant authentifié·e avec succès en tant que {username}
+        title: S'identifier
+        username:
+            help: Entrez ici votre identifiant, généralement le pseudonyme avec lequel vous vous êtes inscrit·e.
+            label: Nom d'utilisateur·ice
+            placeholder: votre identifiant
+    logout:
+        success: Vous êtes à présent déconnecté·e.
+    roles:
+        admin:
+            label: Administrateur·ice
+        user:
+            label: Simple utilisateur·ice

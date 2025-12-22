@@ -32,6 +32,15 @@ class CustomBlock
         'home4.fr',
     ];
 
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
+    public ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
+
     #[Assert\Choice(choices: self::BLOCK_KEYS)]
     #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
@@ -40,15 +49,6 @@ class CustomBlock
     #[Assert\NotNull]
     #[ORM\Column(type: Types::TEXT)]
     private string $contents = '';
-
-    #[ORM\Column]
-    #[ORM\GeneratedValue]
-    #[ORM\Id]
-    private ?int $id = null {
-        get {
-            return $this->id;
-        }
-    }
 
     #[Assert\Range(min: -1000, max: 1000)]
     #[ORM\Column]

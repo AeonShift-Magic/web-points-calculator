@@ -23,18 +23,18 @@ class Page
         'footer',
     ];
 
-    #[Assert\NotNull]
-    #[ORM\Column(type: Types::TEXT)]
-    private string $contents = '';
-
     #[ORM\Column]
     #[ORM\GeneratedValue]
     #[ORM\Id]
-    private ?int $id = null {
+    public ?int $id = null {
         get {
             return $this->id;
         }
     }
+
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::TEXT)]
+    private string $contents = '';
 
     #[Assert\Language]
     #[Assert\Length(max: 20)]

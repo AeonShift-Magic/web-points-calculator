@@ -19,19 +19,23 @@ class MTGPointsList
         HistoryTrackableEntityTrait::__construct as private __traitConstruct;
     }
 
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
+    public ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
+
     #[Assert\Length(max: 255)]
     #[Assert\NotNull]
     #[ORM\Column(length: 255)]
     private string $filename = '';
 
-    #[ORM\Column]
-    #[ORM\GeneratedValue]
-    #[ORM\Id]
-    private ?int $id = null {
-        get {
-            return $this->id;
-        }
-    }
+    #[Assert\NotNull]
+    #[ORM\Column(type: 'datetime')]
+    private DateTime $lastUploadedAt;
 
     #[Assert\NotNull]
     #[ORM\Column]
@@ -43,10 +47,6 @@ class MTGPointsList
     private string $title = '';
 
     #[Assert\NotNull]
-    #[ORM\Column(type: 'datetime')]
-    private DateTime $uploadedAt;
-
-    #[Assert\NotNull]
     #[ORM\JoinColumn(nullable: true)]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $user = null;
@@ -54,12 +54,17 @@ class MTGPointsList
     public function __construct()
     {
         $this->__traitConstruct();
-        $this->uploadedAt = new DateTime();
+        $this->lastUploadedAt = new DateTime();
     }
 
     public function getFilename(): string
     {
         return $this->filename;
+    }
+
+    public function getLastUploadedAt(): DateTime
+    {
+        return $this->lastUploadedAt;
     }
 
     public function getNbCards(): int
@@ -70,11 +75,6 @@ class MTGPointsList
     public function getTitle(): string
     {
         return $this->title;
-    }
-
-    public function getUploadedAt(): DateTime
-    {
-        return $this->uploadedAt;
     }
 
     public function getUser(): ?User
@@ -89,6 +89,13 @@ class MTGPointsList
         return $this;
     }
 
+    public function setLastUploadedAt(DateTime $lastUploadedAt): static
+    {
+        $this->lastUploadedAt = $lastUploadedAt;
+
+        return $this;
+    }
+
     public function setNbCards(int $nbCards): static
     {
         $this->nbCards = $nbCards;
@@ -99,13 +106,6 @@ class MTGPointsList
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
-        return $this;
-    }
-
-    public function setUploadedAt(DateTime $uploadedAt): static
-    {
-        $this->uploadedAt = $uploadedAt;
 
         return $this;
     }

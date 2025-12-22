@@ -1,0 +1,15 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.mtg.sourcedownload.startnew.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.sourcedownload.startnew.label'|trans }}</h1>
+
+    <div class="table-wrapper w-full lg:w-3/4">
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        window.__outputReady = true;
+    </script>
+{% endblock %}

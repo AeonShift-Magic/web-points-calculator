@@ -18,6 +18,8 @@ interface SourceActivityHistoryInterface
 
     public function getEndedAt(): ?DateTime;
 
+    public function getErrorSummary(): string;
+
     public function getId(): ?int;
 
     public function getLogFilePath(): string;
@@ -26,11 +28,15 @@ interface SourceActivityHistoryInterface
 
     public function getStartedFrom(): string;
 
+    public function getSuccessSummary(): string;
+
     public function getUniqueId(): string;
 
     public function setChannel(string $channel): self;
 
     public function setEndedAt(?DateTime $endedAt): self;
+
+    public function setErrorSummary(string $errorSummary): self;
 
     public function setId(?int $id): self;
 
@@ -39,6 +45,8 @@ interface SourceActivityHistoryInterface
     public function setStartedAt(?DateTime $startedAt): self;
 
     public function setStartedFrom(string $startedFrom): self;
+
+    public function setSuccessSummary(string $successSummary): self;
 
     public function setUniqueId(string $uniqueId): self;
 }

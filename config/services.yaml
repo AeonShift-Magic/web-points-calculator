@@ -16,8 +16,11 @@ parameters:
     user_pictures_directory: '%kernel.project_dir%/public%user_photos_http_path%'
     # ----
     scryfall.bulk_api_url: 'https://api.scryfall.com/bulk-data'
-    scryfall.cards_source_dir: 'cardsources/scryfall/defaultcards'
+    scryfall.cards_source_dir: 'cardsources/scryfall/defaultmtgcards'
     scryfall.bulk_data_type: 'default_cards'
+    # ----
+    app.mtg_source_download_command: 'aeonshift:mtg:sourcedownload:scryfalldefaultmtgcards:v1'
+    app.mtg_db_update_command: 'aeonshift:mtg:updatedb:scryfalldefaultmtgcards:v1'
 
 services:
     _defaults:
@@ -29,7 +32,9 @@ services:
             $cardsSourceDir: '%scryfall.cards_source_dir%'
             $bulkDataType: '%scryfall.bulk_data_type%'
             $tablePrefix: '%app.table_prefix%'
-
+            $scryfallCardsSourceDir: '%scryfall.cards_source_dir%'
+            $MTGSourceDownloadCommand: '%app.mtg_source_download_command%'
+            $MTGDBUpdateCommand: '%app.mtg_db_update_command%'
 
     App\:
         resource: '../src/'

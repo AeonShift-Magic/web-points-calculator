@@ -22,19 +22,9 @@
                 <thead>
                     <tr>
                         <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
-                        <th><strong>{{ 'front.account.username.label'|trans }}</strong></th>
-                        <th>{{ 'front.account.names.label'|trans }}</th>
-                        <th class="w-48">{{ 'front.account.email.label'|trans }}</th>
-                        <th class="w-64">{{ 'front.account.roles.label'|trans }}</th>
-                        <th>
-                            {{ 'front.account.status.label'|trans }}
-                        </th>
-                        <th>
-                            {{ 'front.account.preferredlanguage.label'|trans }}
-                            <br>
-                            {{ 'front.account.country.label'|trans }}
-                        </th>
-                        <th>{{ 'front.account.registeredat.label'|trans }}</th>
+                        <th><strong>{{ 'admin.account.username.label'|trans }}</strong></th>
+                        <th class="w-48">{{ 'admin.account.email.label'|trans }}</th>
+                        <th class="w-64">{{ 'admin.account.roles.label'|trans }}</th>
                         <th>{{ 'global.dates.label'|trans }}</th>
                         <th class="actions-column w-64">{{ 'global.actions.label'|trans }}</th>
                     </tr>
@@ -44,14 +34,8 @@
                         <tr>
                             <td>{{ user.id }}</td>
                             <td>
-                                {% if user.picture is not empty %}
-                                    <div class="user-profile-picture-container micro-user-profile-container">
-                                        <img class="inline-block" src="{{ asset(user_photos_http_path ~ user.picture)|imagine_filter('nano_thumbnail') }}" alt="{{ 'front.globals.media_preview.title'|trans }}">
-                                    </div>
-                                {% endif %}
                                 <strong> {{ user.username }}</strong>
                             </td>
-                            <td>{{ user.firstName }} {{ user.lastName }}</td>
                             <td class="w-48">{{ user.email }}</td>
                             <td class="w-64">
                                 {% if user.roles is defined and user.roles is not empty and user.roles is iterable %}
@@ -64,19 +48,11 @@
                                     {{ 'global.none.label'|trans }}
                                 {% endif %}
                             </td>
-                            <td>{{ user.status.value }}</td>
-                            <td>
-                                {{ user.country|upper|country_name }}
-                                <br>
-                                {{ user.preferredLanguage|locale_name|default('global.selectnone'|trans) }}
-                            </td>
-                            <td>{{ user.registeredAt ? user.registeredAt|date('Y-m-d H:i') : '' }}</td>
                             <td>
                                 {{ user.createdAt ? user.createdAt|date('Y-m-d') : '' }} / {{ user.updatedAt ? user.updatedAt|date('Y-m-d') : '' }}
                             </td>
                             <td class="actions-column w-64">
                                 <a class="btn btn-gray w-full" href="{{ url('admin_user_show', {'id': user.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
-                                <a class="btn btn-gray w-full" href="{{ url('front_user_profile', {'userSlug': user.slug,'userId': user.id}) }}" title="{{ 'global.showbuttonfront.label'|trans }}">{{ 'global.showbuttonfront.label'|trans }}</a>
                                 <a class="btn btn-green w-full" href="{{ url('admin_user_edit', {'id': user.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
                                 <a class="btn btn-green w-full" href="{{ url('admin_user_edit_password', {'id': user.id}) }}"
                                    title="{{ 'global.passwordbutton.title'|trans }}">{{ 'global.passwordbutton.label'|trans }}</a>

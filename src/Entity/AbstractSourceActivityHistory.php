@@ -17,6 +17,11 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         HistoryTrackableEntityTrait::__construct as private __traitConstruct;
     }
 
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
+    public ?int $id = null;
+
     #[Assert\Length(max: 100)]
     #[Assert\NotBlank]
     #[ORM\Column(length: 100)]
@@ -29,11 +34,6 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
     #[Assert\NotNull]
     #[ORM\Column(length: 255)]
     private string $errorSummary = '';
-
-    #[ORM\Column]
-    #[ORM\GeneratedValue]
-    #[ORM\Id]
-    private ?int $id = null;
 
     #[Assert\Length(max: 255)]
     #[Assert\NotBlank]
@@ -77,6 +77,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this->endedAt;
     }
 
+    #[Override]
     public function getErrorSummary(): string
     {
         return $this->errorSummary;
@@ -106,6 +107,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this->startedFrom;
     }
 
+    #[Override]
     public function getSuccessSummary(): string
     {
         return $this->successSummary;
@@ -133,6 +135,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setErrorSummary(string $errorSummary): self
     {
         $this->errorSummary = $errorSummary;
@@ -172,6 +175,7 @@ abstract class AbstractSourceActivityHistory implements SourceActivityHistoryInt
         return $this;
     }
 
+    #[Override]
     public function setSuccessSummary(string $successSummary): self
     {
         $this->successSummary = $successSummary;

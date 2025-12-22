@@ -11,12 +11,12 @@
 {%- endblock widget_attributes -%}
 
 {%- block form_label -%}
-    {%- set label_attr = label_attr|merge({ class: label_attr.class|default(label_class|default('block text-gray-800')) }) -%}
+    {%- set label_attr = label_attr|merge({ class: label_attr.class|default(label_class|default('block text-gray-200')) }) -%}
     {{- parent() -}}
 {%- endblock form_label -%}
 
 {%- block form_help -%}
-    {%- set help_attr = help_attr|merge({ class: help_attr.class|default(help_class|default('mt-1 text-gray-600')) }) -%}
+    {%- set help_attr = help_attr|merge({ class: help_attr.class|default(help_class|default('mt-1 text-gray-400')) }) -%}
     {{- parent() -}}
 {%- endblock form_help -%}
 

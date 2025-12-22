@@ -1,6 +1,6 @@
 locale_redirect:
     path: /
-    controller: \App\Controller\Front\PointsController::index
+    controller: \App\Controller\IndexController::index
 controllers:
     resource:
         path: ../src/Controller/

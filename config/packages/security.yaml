@@ -26,9 +26,14 @@ security:
                 always_remember_me: true
 
     access_control:
-        - { path: ^/(%app.supported_locales_route_requirement%)/admin, roles: ROLE_ADMIN }
+        - { path: ^/(%app.supported_locales_route_requirement%)/admin/custom-block, roles: ROLE_ADMIN }
+        - { path: ^/(%app.supported_locales_route_requirement%)/admin/page, roles: ROLE_ADMIN }
+        - { path: ^/(%app.supported_locales_route_requirement%)/admin/user, roles: ROLE_ADMIN }
+        - { path: ^/(%app.supported_locales_route_requirement%)/admin/mtg, roles: ROLE_MTG_MANAGER }
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: ROLE_MTG_MANAGER
+        ROLE_MTG_MANAGER: ROLE_MANAGER
+        ROLE_MANAGER: ROLE_USER
 
 when@test:
     security:

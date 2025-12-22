@@ -1,6 +1,8 @@
 framework:
+    csrf_protection: true
     secret: '%env(APP_SECRET)%'
-    session: true
+    session:
+        enabled: true
 
 when@test:
     framework:

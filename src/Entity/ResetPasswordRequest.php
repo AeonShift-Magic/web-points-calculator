@@ -17,21 +17,21 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
 {
     use ResetPasswordRequestTrait;
 
+    #[ORM\Column]
+    #[ORM\GeneratedValue]
+    #[ORM\Id]
+    public ?int $id = null {
+        get {
+            return $this->id;
+        }
+    }
+
     #[Assert\NotNull]
     #[ORM\JoinColumn(nullable: false)]
     #[ORM\ManyToOne(inversedBy: 'resetPasswordRequests')]
     public User $user {
         get {
             return $this->user;
-        }
-    }
-
-    #[ORM\Column]
-    #[ORM\GeneratedValue]
-    #[ORM\Id]
-    private ?int $id = null {
-        get {
-            return $this->id;
         }
     }
 
