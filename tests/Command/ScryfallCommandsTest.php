@@ -68,7 +68,7 @@ final class ScryfallCommandsTest extends KernelTestCase
         $command = $this->application->find('aeonshift:mtg:updatedb:scryfalldefaultmtgcards:v1');
         $commandTester = new CommandTester($command);
 
-        $invalidSources = ['web', 'api', 'invalid', 'test', ''];
+        $invalidSources = ['http', 'api', 'invalid', 'test', ''];
 
         foreach ($invalidSources as $source) {
             $commandTester->execute([
@@ -79,7 +79,7 @@ final class ScryfallCommandsTest extends KernelTestCase
             self::assertSame(Command::FAILURE, $commandTester->getStatusCode());
             $output = $commandTester->getDisplay();
             self::assertStringContainsString('Invalid source option', $output);
-            self::assertStringContainsString('"cli" or "cron"', $output);
+            self::assertStringContainsString('"cli", "web" or "cron"', $output);
         }
     }
 
@@ -109,10 +109,10 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsSourceDownloadCommandInvalidSource(): void
     {
-        $command = $this->application->find('aeonshift:mtg:sourcedownload:scryfalldefaultcards:v1');
+        $command = $this->application->find('aeonshift:mtg:sourcedownload:scryfalldefaultmtgcards:v1');
         $commandTester = new CommandTester($command);
 
-        $invalidSources = ['web', 'api', 'invalid', 'test', ''];
+        $invalidSources = ['http', 'api', 'invalid', 'test', ''];
 
         foreach ($invalidSources as $source) {
             $commandTester->execute([
@@ -123,7 +123,7 @@ final class ScryfallCommandsTest extends KernelTestCase
             self::assertSame(Command::FAILURE, $commandTester->getStatusCode());
             $output = $commandTester->getDisplay();
             self::assertStringContainsString('Invalid source option', $output);
-            self::assertStringContainsString('"cli" or "cron"', $output);
+            self::assertStringContainsString('"cli", "web" or "cron"', $output);
         }
     }
 
@@ -132,7 +132,7 @@ final class ScryfallCommandsTest extends KernelTestCase
      */
     public function testScryfallDefaultCardsSourceDownloadCommandValidSources(): void
     {
-        $command = $this->application->find('aeonshift:mtg:sourcedownload:scryfalldefaultcards:v1');
+        $command = $this->application->find('aeonshift:mtg:sourcedownload:scryfalldefaultmtgcards:v1');
         $commandTester = new CommandTester($command);
 
         $validSources = ['cli', 'cron'];
