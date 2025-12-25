@@ -20,6 +20,7 @@
 
     /* Neutral tones */
     --theme-neutral-dark: #151515;
+    --theme-neutral-dark-table: #202020;
     --theme-neutral-dark-translucent: rgba(15,15,15,0.4);
     --theme-neutral-dark-hover: #272727;
     --theme-neutral-dark-alt: #303030;
@@ -191,7 +192,7 @@ ol, ul, menu {
 textarea,
 select,
 .dt-search input {
-    border-width: 1px;
+    border-width: 2px;
     border-color: #9ca3af;
     border-radius: 0.5rem;
     background-color: #fff;
@@ -567,7 +568,7 @@ table ul {
 }
 
 .theme1 .table tr {
-    background-color: var(--theme-neutral-dark);
+    background-color: var(--theme-neutral-dark-table);
     color: var(--theme-white);
 }
 

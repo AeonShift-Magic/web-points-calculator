@@ -62,22 +62,75 @@ admin:
         mtg:
             update:
                 create:
-                    title:
-                        help: 'Le titre public de votre mise à jour / annonce'
-                        label: 'Titre'
+                    titleen:
+                        help: 'Le titre public de votre mise à jour / annonce (English)'
+                        label: 'Titre (EN)'
+                        placeholder: 'My new announcement'
                     pointslist:
-                        help: 'Quelle liste de points utiliser'
-                        label: 'Liste de points à utiliser'
+                        help: 'Quelle Liste de Points utiliser'
+                        label: 'Liste de Points à utiliser'
+                        placeholder: 'Choisissez une liste de points'
                     start:
                         help: 'Quand cette mise à jour entre-t-elle en vigueur ?'
                         label: 'Date de début'
                     end:
                         help: 'Quand cette mise à jour cesse-t-elle d''être en vigueur ?'
                         label: 'Date de fin'
+                    descriptionen:
+                        label: 'Description (EN)'
+                        help: 'Détails complémentaires éventuels'
+                    public:
+                        label: 'Publique'
+                        help: 'Make this update publicly visible'
+            points_list:
+                create:
+                    filename:
+                        label: 'Nom du fichier'
+                    uploadnbcards:
+                        label: 'Nombre de cartes dans le fichier initial'
+                    title:
+                        help: 'Le titre de votre Liste de Points'
+                        label: 'Titre'
+                        placeholder: 'Ma Liste de Points du XX/XX/XXXX'
+                    lastuploadedat:
+                        label: 'Dernier upload'
+                    currentnbcards:
+                        label: 'Nombre de cartes actuel en base'
+                    relatedupdates:
+                        label: 'Annonces/mises à jour liées'
+                    validitystartingat:
+                        help: 'La date à partir de laquelle cette liste s''applique, utilisé pour trouver l''ordre et la plus récente'
+                        label: 'Début de validité'
+                    rulesmodel:
+                        label: 'Modèle de règles'
+                        help: 'Le modèle de règles à appliquer'
+                import:
+                    confirm:
+                        label: 'Je confirme que j''ai bien lu et compris les instructions ci-dessus et que je souhaite importer/mettre à jour points de la liste.'
+                    file:
+                        button:
+                            label: '📥 Importer/mettre à jour la Liste de Points (fichier CSV)'
+                            title: 'Importer/mettre à jour la Liste de Points (fichier CSV)'
+                        error: 'Merci de sélectionner un fichier CSV valide.'
+                        label: '📥 Importer/mettre à jour la Liste de Points (fichier CSV)'
+                        help: >
+                            Importer la Liste de Points depuis le modèle de fichier CSV fourni que vous aurez modifié, un résultat par ligne. Taille maximum : 4 Mo. <br><strong>Attention : ceci écrasera tous les cartes à points actuels de la liste et le processus est irréversible.</strong>
+                        unreadable: 'Le fichier est illisible ou vide, merci de vérifier que vous pouvez l''ouvrir, qu''il est au format CSV, UTF-8, avec des virgules comme séparateurs de colonnes et des retours à la ligne au format Unix (New Line).'
+                    updated:
+                        success: 'Points de la liste mis à jour avec succès : {number} résultat(s) mis à jour.'
+                    error:
+                        filecontents: 'Le contenu du fichier est invalide, merci de vérifier que vous avez bien suivi les instructions ci-dessus.'
+                        processing_line: 'Erreur lors du traitement de la ligne {line_number} : {error}. Merci de vérifier que vous avez bien suivi les instructions ci-dessus.'
+                        column_count: 'la ligne ne compte pas le bon nombre de colonnes, 7 attendues au moins'
+                        invalid_value: 'valeur invalide'
+                        invalid_name: 'Une carte doit avoir le même nom qu''au moins une carte dans la liste des cartes sources'
+                        invalid_game_points: 'Points invalides (doit être un entier entre -1000 et 1000)'
+                        incorrectname: 'Nom de carte incorrect : "{name}"'
+                        notfoundinsources: 'Carte inconnue dans les sources de référence : {name}"'
             points_list_card:
                 create:
                     pointslist:
-                        label: 'Liste de points'
+                        label: 'Liste de Points'
                     nameen:
                         label: 'Nom (EN)'
                     scryfallid:
@@ -153,15 +206,19 @@ admin:
                     label: 'Listes à Points MTG'
                     title: 'Listes à Points MTG'
                 new:
-                    label: '➕ Créer une Liste à Points MTG'
-                    title: 'Créer une Liste à Points MTG'
+                    label: '➕ Créer une Liste de Points MTG'
+                    title: 'Créer une Liste de Points MTG'
+                edit:
+                    title: 'Editer la Liste de Points MTG "{name}"'
+                show:
+                    label: 'Détails de la Liste de Points MTG "{name}"'
             pointslistcard:
                 index:
                     label: 'Cartes des Listes à Points MTG'
                     title: 'Cartes des Listes à Points MTG'
                 new:
-                    label: '➕ Créer une Carte de Liste à Points MTG'
-                    title: 'Créer une Carte de Liste à Points MTG'
+                    label: '➕ Créer une Carte de Liste de Points MTG'
+                    title: 'Créer une Carte de Liste de Points MTG'
             update:
                 index:
                     label: 'Mises à jour MTG'
@@ -169,6 +226,8 @@ admin:
                 new:
                     label: '➕ Créer une mise à jour MTG'
                     title: 'Créer une mise à jour MTG'
+                show:
+                    title: 'Détails de l''annonce/mise à jour "{name}"'
             dbupdate:
                 index:
                     title: 'MTG - Mises à jour de la base de données'
@@ -191,9 +250,6 @@ admin:
             points_list_cards:
                 index:
                     label: 'MTG - Cartes des listes de points'
-            points_list:
-                index:
-                    label: 'MTG - Listes de points'
         cardsourceactivityhistory:
             index:
                 label: 'Historique d''activité des sources de cartes'
@@ -317,7 +373,7 @@ global:
         text: Enregistré avec succès.
     selectnone: --
     showbutton:
-        label: Voir
+        label: 👁️ Voir
         title: Voir les détails
     showbuttonfront:
         label: 👁️ Voir (front)
@@ -357,6 +413,11 @@ global:
         title: 'Lancer la commande'
     users:
         label: 'Créé / Dernière modification par'
+    deletesuccess:
+        text: 'Elément supprimé avec succès'
+    import:
+        label: '📥 Importer/mettre à jour'
+        title: '📥 Importer/mettre à jour les cartes/points (fichier CSV)'
 page:
     position:
         footer:

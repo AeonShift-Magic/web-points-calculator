@@ -41,7 +41,7 @@ final class DateRangeValidator extends ConstraintValidator
 
         if ($end <= $start) {
             $context = $this->context;
-            $context->buildViolation(! empty($constraint->message) ? $constraint->message : 'front.daterange.invalid')
+            $context->buildViolation(! empty($constraint->message) ? $constraint->message : 'daterange.invalid')
                 ->setParameter('{{ startingAt }}', $start->format('Y-m-d H:i'))
                 ->setParameter('{{ endingAt }}', $end->format('Y-m-d H:i'))
                 ->atPath('endingAt')

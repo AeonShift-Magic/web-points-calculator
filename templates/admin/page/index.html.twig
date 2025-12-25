@@ -33,7 +33,7 @@
                     <tr>
                         <td>{{ page.id }}</td>
                         <td>{{ page.title }}</td>
-                        <td>{{ page.contents|slice(0, 200) }}[...]</td>
+                        <td>{{ page.contents|striptags|slice(0, 200) }}[...]</td>
                         <td>{{ page.zone }}</td>
                         <td>{{ page.language }}</td>
                         <td>{{ page.weight }}</td>

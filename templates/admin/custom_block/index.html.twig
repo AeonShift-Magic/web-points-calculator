@@ -37,7 +37,7 @@
                                 <br>
                                 <em>({{ custom_block.blockKey }})</em>
                             </td>
-                            <td>{{ custom_block.contents|slice(0, 200) }}[...]</td>
+                            <td>{{ custom_block.contents|striptags|slice(0, 200) }}[...]</td>
                             <td>{{ custom_block.weight }}</td>
                             <td>
                                 <a class="btn btn-gray w-full" href="{{ url('admin_custom_block_show', {'id': custom_block.id}) }}"

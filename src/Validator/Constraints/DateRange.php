@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraint;
 #[Attribute]
 final class DateRange extends Constraint
 {
-    public string $message = 'front.daterange.invalid';
+    public string $message = 'daterange.invalid';
 
     public function __construct(?string $message = null, ?array $groups = null, mixed $payload = null)
     {

@@ -1,16 +1,16 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}{{ 'admin.nav.mtg.points_list.index.label'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.pointslist.index.label'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>{{ 'admin.nav.mtg.points_list.index.label'|trans }}</h1>
+    <h1>{{ 'admin.nav.mtg.pointslist.index.label'|trans }}</h1>
 
     <h3 class="text-center w-full">
         {{ 'global.total.label'|trans({'%elements%': points_lists.totalItemCount})|raw }}
         {% if points_lists.totalItemCount / points_lists.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': points_lists.currentPageNumber, 'total': (points_lists.totalItemCount / points_lists.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
     </h3>
 
-    <a class="btn btn-green" href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+    <a class="btn btn-green" href="{{ url('admin_mtg_points_list_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
 
     <div class="navigation"></div>
 
@@ -20,9 +20,11 @@
                 <tr>
                     <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.points_list.create.title.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list.create.rulesmodel.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list.create.validitystartingat.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.points_list.create.filename.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.points_list.create.uploadedat.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.points_list.create.nbcards.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list.create.lastuploadedat.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.points_list.create.uploadnbcards.label'|trans }}</th>
                     <th>{{ 'global.dates.label'|trans }}</th>
                     <th>{{ 'global.users.label'|trans }}</th>
                     <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
@@ -33,18 +35,21 @@
                     <tr>
                         <td>{{ points_list.id }}</td>
                         <td>{{ points_list.title }}</td>
+                        <td>{{ points_list.rulesModel }}</td>
+                        <td>{{ points_list.validityStartingAt|date('Y-m-d H:i') }}</td>
                         <td>{{ points_list.filename }}</td>
-                        <td>{{ points_list.uploadedAt|date('Y-m-d H:i') }}</td>
+                        <td>{{ points_list.lastUploadedAt|date('Y-m-d H:i') }}</td>
                         <td>{{ points_list.nbcards }}</td>
                         <td>
                             {{ points_list.createdAt ? points_list.createdAt|date('Y-m-d') : '' }} / {{ points_list.updatedAt ? points_list.updatedAt|date('Y-m-d') : '' }}
                         </td>
                         <td>
-                            {{ mtg_tournament.createdBy ? mtg_tournament.createdBy.name|raw : 'N/A' }} / {{ mtg_tournament.updatedBy ? mtg_tournament.updatedBy.name|raw : 'N/A' }}
+                            {{ points_list.createdBy ? points_list.createdBy.username|raw : 'N/A' }} / {{ points_list.updatedBy ? points_list.updatedBy.username|raw : 'N/A' }}
                         </td>
                         <td>
-                            <a class="btn btn-gray w-full" href="{{ url('admin_mtg_points_list_card_show', {'id': points_list.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
-                            <a class="btn btn-green w-full" href="{{ url('admin_mtg_points_list_card_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+                            <a class="btn btn-gray w-full" href="{{ url('admin_mtg_points_list_show', {'id': points_list.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            <a class="btn btn-blue w-full" href="{{ url('admin_mtg_points_list_import', {'id': points_list.id}) }}" title="{{ 'global.import.title'|trans }}">{{ 'global.import.label'|trans }}</a>
+                            <a class="btn btn-green w-full" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
                         </td>
                     </tr>
                 {% else %}
@@ -58,5 +63,5 @@
 
     <div class="navigation"></div>
 
-    <a class="btn btn-green" href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+    <a class="btn btn-green" href="{{ url('admin_mtg_points_list_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
 {% endblock %}

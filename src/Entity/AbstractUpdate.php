@@ -39,11 +39,6 @@ class AbstractUpdate implements UpdateInterface
     #[ORM\Column]
     private bool $isPublic = false;
 
-    #[Assert\Length(max: 255)]
-    #[Assert\NotNull]
-    #[ORM\Column(length: 255)]
-    private string $rulesModel = '';
-
     #[Assert\NotNull]
     #[ORM\Column(type: 'datetime')]
     private DateTime $startingAt;
@@ -52,11 +47,6 @@ class AbstractUpdate implements UpdateInterface
     #[Assert\NotNull]
     #[ORM\Column(length: 255)]
     private string $titleEN = '';
-
-    #[Assert\NotNull]
-    #[ORM\JoinColumn(nullable: true)]
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    private ?User $user = null;
 
     public function __construct()
     {
@@ -77,11 +67,6 @@ class AbstractUpdate implements UpdateInterface
         return $this->endingAt;
     }
 
-    public function getRulesModel(): string
-    {
-        return $this->rulesModel;
-    }
-
     #[Override]
     public function getStartingAt(): DateTime
     {
@@ -91,12 +76,6 @@ class AbstractUpdate implements UpdateInterface
     public function getTitleEN(): string
     {
         return $this->titleEN;
-    }
-
-    #[Override]
-    public function getUser(): ?User
-    {
-        return $this->user;
     }
 
     public function isPublic(): bool
@@ -126,13 +105,6 @@ class AbstractUpdate implements UpdateInterface
         return $this;
     }
 
-    public function setRulesModel(string $rulesModel): static
-    {
-        $this->rulesModel = $rulesModel;
-
-        return $this;
-    }
-
     #[Override]
     public function setStartingAt(DateTime $startingAt): static
     {
@@ -144,14 +116,6 @@ class AbstractUpdate implements UpdateInterface
     public function setTitleEN(string $titleEN): static
     {
         $this->titleEN = $titleEN;
-
-        return $this;
-    }
-
-    #[Override]
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }

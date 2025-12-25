@@ -60,21 +60,30 @@ admin:
                 roles:
                     invalid: Please choose valid roles for the user.
                     multipleinvalid: Please choose valid roles for the user.
-        mtg:
+        abstract:
             update:
                 create:
-                    title:
-                        help: 'The public title of your update/announcement'
-                        label: 'Title'
+                    titleen:
+                        help: 'The public title of your update/announcement (English)'
+                        label: 'Title (EN)'
+                        placeholder: 'My new announcement'
                     pointslist:
                         help: 'Which points list to use'
                         label: 'Points list to use'
-                    start:
+                        placeholder: 'Please select a points list'
+                    startingat:
                         help: 'When does this update start being effective?'
                         label: 'Start date'
-                    end:
+                    endingat:
                         help: 'When does this update stop being effective?'
                         label: 'End date'
+                    descriptionen:
+                        label: 'Description (EN)'
+                        help: 'Possible complementary details'
+                    public:
+                        label: 'Public'
+                        help: 'Marquer cette mise à jour comme publique'
+        mtg:
             cardsourceactivityhistory:
                 create:
                     channel:
@@ -97,12 +106,47 @@ admin:
                 create:
                     filename:
                         label: 'Filename'
-                    nbcards:
-                        label: 'Number of cards'
+                    uploadnbcards:
+                        label: 'Number of cards in the initial file'
                     title:
+                        help: 'The title of your points list'
                         label: 'Title'
-                    uploadedat:
+                        placeholder: 'My XX/XX/XXXX points list'
+                    lastuploadedat:
                         label: 'Last uploaded at'
+                    currentnbcards:
+                        label: 'Current number of cards in database'
+                    relatedupdates:
+                        label: 'Related announcement/updates'
+                    validitystartingat:
+                        help: 'The date from which this list applies, used to find the order and the most recent'
+                        label: 'Validity starting at'
+                    rulesmodel:
+                        label: 'Rules model'
+                        help: 'The rules model to apply'
+                import:
+                    confirm:
+                        label: 'I confirm I have read and understood the instructions above and wish to import/update the points list.'
+                    file:
+                        button:
+                            label: '📥 Import/update points list (CSV file)'
+                            title: 'Import/update points list (CSV file)'
+                        error: 'Please select a valid CSV file.'
+                        label: '📥 Import/update points list (CSV file)'
+                        help: >
+                            Import points list from the provided CSV template, one result per line. Maximum size: 4 MB. <br><strong>Warning: this will overwrite all points list cards and is irreversible.</strong>
+                        unreadable: 'File is unreadable or empty. Check that it can be opened, is CSV UTF-8 format, commas as separators, Unix line endings.'
+                    updated:
+                        success: 'Points successfully updated: {number} line(s) updated.'
+                    error:
+                        filecontents: 'File contents are invalid; please follow the instructions above.'
+                        processing_line: 'Error processing line {line_number}: {error}. Please follow the instructions above.'
+                        column_count: 'Line does not have the correct number of columns, 7 expected at least'
+                        invalid_value: 'Invalid value'
+                        invalid_name: 'A card must have the same name as a card that''s in the source card list'
+                        invalid_game_points: 'Invalid points (must be an integer between -1000 and 1000)'
+                        incorrectname: 'Incorrect card name: "{name}"'
+                        notfoundinsources: 'Card unknown in source cards: {name}"'
             points_list_card:
                 create:
                     pointslist:
@@ -180,6 +224,10 @@ admin:
                 new:
                     label: '➕ Create an MTG Points List'
                     title: 'Create an MTG Points List'
+                edit:
+                    title: 'Edit MTG Points List "{name}"'
+                show:
+                    label: 'MTG Points List "{name}" details'
             pointslistcard:
                 index:
                     label: 'MTG Points List Card'
@@ -194,6 +242,8 @@ admin:
                 new:
                     label: '➕ Create an MTG Update'
                     title: 'Create an MTG Update'
+                show:
+                    title: 'Details on update/announcement "{name}"'
             dbupdate:
                 index:
                     title: 'MTG - Database Updates'
@@ -213,12 +263,6 @@ admin:
                     label: 'MTG - Latest source download state'
                 startnew:
                     label: 'MTG - Manual start of a new source download'
-            points_list_cards:
-                index:
-                    label: 'MTG - Points list cards'
-            points_list:
-                index:
-                    label: 'MTG - Points lists'
         cardsourceactivityhistory:
             index:
                 label: 'Card sources activity history'
@@ -308,6 +352,8 @@ global:
         label: Created / Last updated
     delete:
         confirmprompt: Do you really want to delete this item? This action cannot be undone.
+    deletesuccess:
+        text: 'Item successfully deleted'
     deletebutton:
         label: ❌ Delete
         title: Delete this item
@@ -348,7 +394,7 @@ global:
     skipcontent:
         label: Skip to main content
     showbutton:
-        label: View
+        label: 👁️ View
         title: View details
     showbuttonfront:
         label: 👁️ View (front)
@@ -386,6 +432,9 @@ global:
         title: 'Start the command'
     users:
         label: 'Created by / Last updated by'
+    import:
+        label: '📥 Import/update'
+        title: '📥 Import/update cards/points (CSV file)'
 page:
     position:
         footer:

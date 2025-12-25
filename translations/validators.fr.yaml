@@ -1,0 +1,16 @@
+admin:
+    form:
+        mtg:
+            points_list:
+                import:
+                    file:
+                        error: 'Merci de choisir un fichier CSV valide.'
+                create:
+                    validitystartingat:
+                        empty: 'Merci de rentrer une date valide'
+            update:
+                create:
+                    pointslist:
+                        empty: 'Merci de choisir une liste de points'
+daterange:
+    invalid: 'Attention à bien choisir une date de fin ultérieure à la date de début'

@@ -16,11 +16,11 @@
             </div>
         </div>
 
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div>
             <table class="min-w-full">
                 <tbody class="divide-y divide-gray-200">
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.id'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -28,7 +28,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.title'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -36,7 +36,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.description'|trans }}
                         </th>
                         <td class="px-6 py-4 text-sm text-gray-900">
@@ -44,7 +44,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.rulesmodel'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -52,7 +52,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.ispublic'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -68,7 +68,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.pointslist'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -77,12 +77,12 @@
                                     {{ update.pointsList.title }}
                                 </a>
                             {% else %}
-                                <span class="text-gray-400">{{ 'admin.mtg.update.show.no_pointslist'|trans }}</span>
+                                <span>{{ 'admin.mtg.update.show.no_pointslist'|trans }}</span>
                             {% endif %}
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.start'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -90,7 +90,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.end'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -98,14 +98,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
+                        <th>
                             {{ 'admin.mtg.update.show.user'|trans }}
                         </th>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {% if update.user %}
                                 {{ update.user.username }}
                             {% else %}
-                                <span class="text-gray-400">{{ 'admin.mtg.update.show.no_user'|trans }}</span>
+                                <span>{{ 'admin.mtg.update.show.no_user'|trans }}</span>
                             {% endif %}
                         </td>
                     </tr>

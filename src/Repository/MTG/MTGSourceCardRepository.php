@@ -17,4 +17,25 @@ final class MTGSourceCardRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, MTGSourceCard::class);
     }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getAllSourceCardNamesAsArray(): array
+    {
+        /** @var array<int, string> $cardNames */
+        $cardNames = array_column(
+            $this
+                ->getEntityManager()
+                ->createQueryBuilder()
+                ->select('c.nameEN')
+                ->from(MTGSourceCard::class, 'c')
+                ->orderBy('c.nameEN')
+                ->getQuery()
+                ->getArrayResult(),
+            'nameEN'
+        );
+
+        return $cardNames;
+    }
 }

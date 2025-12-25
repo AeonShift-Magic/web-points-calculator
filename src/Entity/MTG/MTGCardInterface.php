@@ -8,6 +8,10 @@ use App\Entity\CardInterface;
 
 interface MTGCardInterface extends CardInterface
 {
+    public int|null $id {
+        get;
+    }
+
     public function getMultiCZType(): ?string;
 
     public function getPoints2HG(): float;

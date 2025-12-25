@@ -5,15 +5,19 @@ declare(strict_types = 1);
 namespace App\Entity\MTG;
 
 use App\Entity\HistoryTrackableEntityTrait;
-use App\Entity\User;
+use App\Entity\PointsListInterface;
 use App\Repository\MTG\MTGPointsListRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Override;
+use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MTGPointsListRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class MTGPointsList
+class MTGPointsList implements PointsListInterface, Stringable
 {
     use HistoryTrackableEntityTrait {
         HistoryTrackableEntityTrait::__construct as private __traitConstruct;
@@ -27,6 +31,28 @@ class MTGPointsList
             return $this->id;
         }
     }
+
+    /**
+     * @var Collection<int, MTGPointsListCard>
+     */
+    #[ORM\OneToMany(
+        targetEntity: MTGPointsListCard::class,
+        mappedBy: 'pointsList',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $MTGPointListCards;
+
+    /**
+     * @var Collection<int, MTGUpdate>
+     */
+    #[ORM\OneToMany(
+        targetEntity: MTGUpdate::class,
+        mappedBy: 'pointsList',
+        cascade: ['persist'],
+        orphanRemoval: true
+    )]
+    private Collection $MTGUpdates;
 
     #[Assert\Length(max: 255)]
     #[Assert\NotNull]
@@ -44,17 +70,30 @@ class MTGPointsList
     #[Assert\Length(max: 255)]
     #[Assert\NotNull]
     #[ORM\Column(length: 255)]
+    private string $rulesModel = '';
+
+    #[Assert\Length(max: 255)]
+    #[Assert\NotNull]
+    #[ORM\Column(length: 255)]
     private string $title = '';
 
     #[Assert\NotNull]
-    #[ORM\JoinColumn(nullable: true)]
-    #[ORM\ManyToOne(targetEntity: User::class)]
-    private ?User $user = null;
+    #[ORM\Column(type: 'datetime')]
+    private DateTime $validityStartingAt;
 
     public function __construct()
     {
         $this->__traitConstruct();
         $this->lastUploadedAt = new DateTime();
+        $this->validityStartingAt = new DateTime();
+        $this->MTGPointListCards = new ArrayCollection();
+        $this->MTGUpdates = new ArrayCollection();
+    }
+
+    #[Override]
+    public function __toString()
+    {
+        return $this->getTitle() . ' [' . $this->getValidityStartingAt()->format('Y-m-d H:i') . ']' . ' [' . $this->MTGPointListCards->count() . ' cards]';
     }
 
     public function getFilename(): string
@@ -67,19 +106,37 @@ class MTGPointsList
         return $this->lastUploadedAt;
     }
 
+    public function getMTGPointListCards(): Collection
+    {
+        return $this->MTGPointListCards;
+    }
+
+    public function getMTGUpdates(): Collection
+    {
+        return $this->MTGUpdates;
+    }
+
     public function getNbCards(): int
     {
         return $this->nbCards;
     }
 
+    #[Override]
+    public function getRulesModel(): string
+    {
+        return $this->rulesModel;
+    }
+
+    #[Override]
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function getUser(): ?User
+    #[Override]
+    public function getValidityStartingAt(): DateTime
     {
-        return $this->user;
+        return $this->validityStartingAt;
     }
 
     public function setFilename(string $filename): static
@@ -96,6 +153,20 @@ class MTGPointsList
         return $this;
     }
 
+    public function setMTGPointListCards(Collection $MTGPointListCards): self
+    {
+        $this->MTGPointListCards = $MTGPointListCards;
+
+        return $this;
+    }
+
+    public function setMTGUpdates(Collection $MTGUpdates): self
+    {
+        $this->MTGUpdates = $MTGUpdates;
+
+        return $this;
+    }
+
     public function setNbCards(int $nbCards): static
     {
         $this->nbCards = $nbCards;
@@ -103,6 +174,15 @@ class MTGPointsList
         return $this;
     }
 
+    #[Override]
+    public function setRulesModel(string $rulesModel): static
+    {
+        $this->rulesModel = $rulesModel;
+
+        return $this;
+    }
+
+    #[Override]
     public function setTitle(string $title): static
     {
         $this->title = $title;
@@ -110,9 +190,10 @@ class MTGPointsList
         return $this;
     }
 
-    public function setUser(?User $user): static
+    #[Override]
+    public function setValidityStartingAt(DateTime $validityStartingAt): static
     {
-        $this->user = $user;
+        $this->validityStartingAt = $validityStartingAt;
 
         return $this;
     }

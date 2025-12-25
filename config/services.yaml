@@ -21,6 +21,8 @@ parameters:
     # ----
     app.mtg_source_download_command: 'aeonshift:mtg:sourcedownload:scryfalldefaultmtgcards:v1'
     app.mtg_db_update_command: 'aeonshift:mtg:updatedb:scryfalldefaultmtgcards:v1'
+    app.mtg.curent_calculator_model: \App\Model\MTG\Calculator\V1\MTGCalculatorV1
+    app.mtg.current_rules_model:
 
 services:
     _defaults:

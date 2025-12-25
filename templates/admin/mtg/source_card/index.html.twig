@@ -9,7 +9,7 @@
         </div>
 
         {% if source_cards|length > 0 %}
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+            <div>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
@@ -33,7 +33,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ source_card.id }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                <td>
                                     {{ source_card.name }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

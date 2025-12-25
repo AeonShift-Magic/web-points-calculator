@@ -19,10 +19,14 @@
             <thead>
                 <tr>
                     <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.update.create.title.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.update.create.pointslist.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.update.create.start.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.update.create.end.label'|trans }}</th>
+                    <th>{{ 'admin.form.abstract.update.create.titleen.label'|trans }}</th>
+                    <th>{{ 'admin.form.abstract.update.create.public.label'|trans }}</th>
+                    <th>{{ 'admin.form.abstract.update.create.pointslist.label'|trans }}</th>
+                    <th>{{ 'admin.form.abstract.update.create.startingat.label'|trans }}</th>
+                    <th>{{ 'admin.form.abstract.update.create.descriptionen.label'|trans }}</th>
+                    <th>{{ 'admin.form.abstract.update.create.endingat.label'|trans }}</th>
+                    <th>{{ 'global.dates.label'|trans }}</th>
+                    <th>{{ 'global.users.label'|trans }}</th>
                     <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
                 </tr>
             </thead>
@@ -32,25 +36,33 @@
                         <td>
                             {{ update.id }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td>
                             {{ update.titleEN }}
                         </td>
+                        <td>{{ ('global.' ~ update.public|default(0) ~ '.label')|trans }}</td>
                         <td>
-                            {% if update.MTGPointsList %}
+                            {% if update.MTGPointsList is defined and update.MTGPointsList is not null %}
                                 {{ update.MTGPointsList.title }}
                             {% else %}
-                                <span class="text-gray-400">{{ 'global.none.label'|trans }}</span>
+                                <span>{{ 'global.none.label'|trans }}</span>
                             {% endif %}
                         </td>
                         <td>
                             {{ update.startingAt|date('Y-m-d H:i') }}
                         </td>
+                        <td>{{ update.descriptionEN|striptags|slice(0, 200) }}[...]</td>
                         <td>
                             {{ update.endingAt|date('Y-m-d H:i') }}
                         </td>
                         <td>
-                            <a class="btn btn-gray w-full" href="{{ url('admin_mtg_update_show', {'id': page.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
-                            <a class="btn btn-green w-full" href="{{ url('admin_mtg_update_edit', {'id': page.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+                            {{ update.createdAt ? update.createdAt|date('Y-m-d') : '' }} / {{ update.updatedAt ? update.updatedAt|date('Y-m-d') : '' }}
+                        </td>
+                        <td>
+                            {{ update.createdBy ? update.createdBy.username|raw : 'N/A' }} / {{ update.updatedBy ? update.updatedBy.username|raw : 'N/A' }}
+                        </td>
+                        <td>
+                            <a class="btn btn-gray w-full" href="{{ url('admin_mtg_update_show', {'id': update.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            <a class="btn btn-green w-full" href="{{ url('admin_mtg_update_edit', {'id': update.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -59,5 +71,5 @@
     </div>
     <div class="navigation"></div>
 
-    <a class="btn btn-green" href="{{ url('admin_page_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+    <a class="btn btn-green" href="{{ url('admin_mtg_update_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
 {% endblock %}

@@ -14,17 +14,17 @@ class MTGPointsListCard extends MTGAbstractCard
 {
     #[Assert\NotNull]
     #[ORM\JoinColumn(nullable: true)]
-    #[ORM\ManyToOne(targetEntity: MTGPointsList::class)]
-    private ?MTGPointsList $list = null;
+    #[ORM\ManyToOne(targetEntity: MTGPointsList::class, inversedBy: 'MTGPointListCards')]
+    private ?MTGPointsList $pointsList = null;
 
-    public function getList(): ?MTGPointsList
+    public function getPointsList(): ?MTGPointsList
     {
-        return $this->list;
+        return $this->pointsList;
     }
 
-    public function setList(?MTGPointsList $list): static
+    public function setPointsList(MTGPointsList|null $list): static
     {
-        $this->list = $list;
+        $this->pointsList = $list;
 
         return $this;
     }

@@ -18,11 +18,7 @@ interface UpdateInterface
 
     public function getStartingAt(): ?DateTime;
 
-    public function getUser(): ?User;
-
     public function setEndingAt(DateTime $endingAt): static;
 
     public function setStartingAt(DateTime $startingAt): static;
-
-    public function setUser(?User $user): static;
 }

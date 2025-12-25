@@ -1,26 +1,15 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}{{ 'admin.mtg.update.new.title'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.update.new.title'|trans }}{% endblock %}
 
-{% block main_content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1>{{ 'admin.mtg.update.new.heading'|trans }}</h1>
-        </div>
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.update.new.title'|trans }}</h1>
 
-        <div class="bg-white shadow-md rounded-lg p-6">
-            {{ form_start(form) }}
-                {{ form_widget(form) }}
+    <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
 
-                <div class="flex items-center justify-between mt-6">
-                    <a href="{{ path('admin_mtg_update_index') }}" class="text-gray-600 hover:text-gray-800">
-                        {{ 'admin.mtg.update.new.back'|trans }}
-                    </a>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        {{ 'admin.mtg.update.new.save'|trans }}
-                    </button>
-                </div>
-            {{ form_end(form) }}
-        </div>
-    </div>
+    <div class="my-2"></div>
+
+    {{ include('admin/mtg/points_list/_form.html.twig') }}
+
+    <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
 {% endblock %}

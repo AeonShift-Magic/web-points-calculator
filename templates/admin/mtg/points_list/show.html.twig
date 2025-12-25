@@ -1,78 +1,79 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}{{ 'admin.mtg.pointslist.show.title'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.pointslist.show.label'|trans({'name': points_list.title}) }}{% endblock %}
 
-{% block main_content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1>{{ 'admin.mtg.pointslist.show.heading'|trans }}</h1>
-            <div>
-                <a href="{{ path('admin_mtg_points_list_edit', {'id': points_list.id}) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mr-2">
-                    {{ 'admin.mtg.pointslist.show.edit'|trans }}
-                </a>
-                <a href="{{ path('admin_mtg_points_list_index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                    {{ 'admin.mtg.pointslist.show.back'|trans }}
-                </a>
-            </div>
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.pointslist.show.label'|trans({'name': points_list.title}) }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/mtg/points_list/_delete_form.html.twig') }}
         </div>
+    </div>
 
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-            <table class="min-w-full">
-                <tbody class="divide-y divide-gray-200">
-                    <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ 'admin.mtg.pointslist.show.id'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ points_list.id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ 'admin.mtg.pointslist.show.title'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ points_list.title }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ 'admin.mtg.pointslist.show.filename'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ points_list.filename }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ 'admin.mtg.pointslist.show.cards'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ points_list.nbCards }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ 'admin.mtg.pointslist.show.uploaded'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ points_list.lastUploadedAt|date('Y-m-d H:i:s') }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th class="px-6 py-4 bg-gray-50 text-left text-sm font-medium text-gray-500 uppercase tracking-wider">
-                            {{ 'admin.mtg.pointslist.show.user'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {% if points_list.user %}
-                                {{ points_list.user.username }}
-                            {% else %}
-                                <span class="text-gray-400">{{ 'admin.mtg.pointslist.show.no_user'|trans }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <tbody>
+                <tr>
+                    <th class="w-1/4">{{ 'global.id.label'|trans }}</th>
+                    <td>{{ points_list.id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.points_list.create.title.label'|trans }}</th>
+                    <td>{{ points_list.title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.points_list.create.relatedupdates.label'|trans }}</th>
+                    <td>
+                        {% for mtg_update in points_list.MTGUpdates %}
+                            <a href="{{ url('admin_mtg_update_show', {'id': mtg_update.id}) }}" title="{{ 'admin.nav.mtg.update.show.title'|trans({'name': mtg_update.title}) }}">{{ mtg_update.title }}</a>
+                            {% if not loop.last %}<br>{% endif %}
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.points_list.create.filename.label'|trans }}</th>
+                    <td>{{ points_list.filename }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.points_list.create.lastuploadedat.label'|trans }}</th>
+                    <td>{{ points_list.lastUploadedAt|date('Y-m-d H:i') }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.points_list.create.uploadnbcards.label'|trans }}</th>
+                    <td>{{ points_list.nbcards }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.points_list.create.currentnbcards.label'|trans }}</th>
+                    <td>{{ points_list.MTGPointListCards|length }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.dates.label'|trans }}</th>
+                    <td>
+                        {{ points_list.createdAt ? points_list.createdAt|date('Y-m-d') : '' }} / {{ points_list.updatedAt ? points_list.updatedAt|date('Y-m-d') : '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.users.label'|trans }}</th>
+                    <td>
+                        {{ points_list.createdBy ? points_list.createdBy.username|raw : 'N/A' }} / {{ points_list.updatedBy ? points_list.updatedBy.username|raw : 'N/A' }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/mtg/points_list/_delete_form.html.twig') }}
         </div>
     </div>
 {% endblock %}

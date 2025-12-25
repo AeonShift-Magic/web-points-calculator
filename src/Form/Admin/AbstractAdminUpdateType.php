@@ -5,10 +5,8 @@ declare(strict_types = 1);
 namespace App\Form\Admin;
 
 use App\Entity\AbstractUpdate;
-use App\Entity\User;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Override;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -31,13 +29,13 @@ class AbstractAdminUpdateType extends AbstractType
                     'required'    => true,
                     'empty_data'  => '',
                     'constraints' => [
-                        new NotNull(message: 'admin.form.abstractupdate.create.titleen.null'),
-                        new Length(min: 0, max: 255, maxMessage: 'admin.form.abstractupdate.create.titleen.too_long'),
+                        new NotNull(message: 'admin.form.abstract.update.create.titleen.null'),
+                        new Length(min: 0, max: 255, maxMessage: 'admin.form.abstract.update.create.titleen.too_long'),
                     ],
-                    'label'       => 'admin.form.abstractupdate.create.titleen.label',
-                    'help'        => 'admin.form.abstractupdate.create.titleen.help',
+                    'label'       => 'admin.form.abstract.update.create.titleen.label',
+                    'help'        => 'admin.form.abstract.update.create.titleen.help',
                     'attr'        => [
-                        'placeholder' => 'admin.form.abstractupdate.create.titleen.placeholder',
+                        'placeholder' => 'admin.form.abstract.update.create.titleen.placeholder',
                     ],
                 ]
             )
@@ -48,28 +46,11 @@ class AbstractAdminUpdateType extends AbstractType
                     'required'    => true,
                     'empty_data'  => '',
                     'constraints' => [
-                        new NotNull(message: 'admin.form.abstractupdate.create.descriptionen.null'),
+                        new NotNull(message: 'admin.form.abstract.update.create.descriptionen.null'),
                     ],
-                    'label'       => 'admin.form.abstractupdate.create.descriptionen.label',
-                    'help'        => 'admin.form.abstractupdate.create.descriptionen.help',
+                    'label'       => 'admin.form.abstract.update.create.descriptionen.label',
+                    'help'        => 'admin.form.abstract.update.create.descriptionen.help',
                     'help_html'   => true,
-                ]
-            )
-            ->add(
-                'rulesModel',
-                TextType::class,
-                [
-                    'required'    => true,
-                    'empty_data'  => '',
-                    'constraints' => [
-                        new NotNull(message: 'admin.form.abstractupdate.create.rulesmodel.null'),
-                        new Length(min: 0, max: 255, maxMessage: 'admin.form.abstractupdate.create.rulesmodel.too_long'),
-                    ],
-                    'label'       => 'admin.form.abstractupdate.create.rulesmodel.label',
-                    'help'        => 'admin.form.abstractupdate.create.rulesmodel.help',
-                    'attr'        => [
-                        'placeholder' => 'admin.form.abstractupdate.create.rulesmodel.placeholder',
-                    ],
                 ]
             )
             ->add(
@@ -77,8 +58,8 @@ class AbstractAdminUpdateType extends AbstractType
                 CheckboxType::class,
                 [
                     'required' => false,
-                    'label'    => 'admin.form.abstractupdate.create.ispublic.label',
-                    'help'     => 'admin.form.abstractupdate.create.ispublic.help',
+                    'label'    => 'admin.form.abstract.update.create.public.label',
+                    'help'     => 'admin.form.abstract.update.create.public.help',
                 ]
             )
             ->add(
@@ -88,10 +69,10 @@ class AbstractAdminUpdateType extends AbstractType
                     'widget'      => 'single_text',
                     'required'    => true,
                     'constraints' => [
-                        new NotNull(message: 'admin.form.abstractupdate.create.startingat.null'),
+                        new NotNull(message: 'admin.form.abstract.update.create.startingat.null'),
                     ],
-                    'label'       => 'admin.form.abstractupdate.create.startingat.label',
-                    'help'        => 'admin.form.abstractupdate.create.startingat.help',
+                    'label'       => 'admin.form.abstract.update.create.startingat.label',
+                    'help'        => 'admin.form.abstract.update.create.startingat.help',
                 ]
             )
             ->add(
@@ -101,24 +82,10 @@ class AbstractAdminUpdateType extends AbstractType
                     'widget'      => 'single_text',
                     'required'    => true,
                     'constraints' => [
-                        new NotNull(message: 'admin.form.abstractupdate.create.endingat.null'),
+                        new NotNull(message: 'admin.form.abstract.update.create.endingat.null'),
                     ],
-                    'label'       => 'admin.form.abstractupdate.create.endingat.label',
-                    'help'        => 'admin.form.abstractupdate.create.endingat.help',
-                ]
-            )
-            ->add(
-                'user',
-                EntityType::class,
-                [
-                    'class'       => User::class,
-                    'required'    => false,
-                    'constraints' => [
-                        new NotNull(message: 'admin.form.abstractupdate.create.user.null'),
-                    ],
-                    'label'       => 'admin.form.abstractupdate.create.user.label',
-                    'help'        => 'admin.form.abstractupdate.create.user.help',
-                    'placeholder' => 'admin.form.abstractupdate.create.user.placeholder',
+                    'label'       => 'admin.form.abstract.update.create.endingat.label',
+                    'help'        => 'admin.form.abstract.update.create.endingat.help',
                 ]
             );
     }

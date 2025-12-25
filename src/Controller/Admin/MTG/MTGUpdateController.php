@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller\Admin\MTG;
 
 use App\Entity\MTG\MTGUpdate;
+use App\Entity\User;
 use App\Form\Admin\MTG\AdminMTGUpdateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -34,7 +35,11 @@ final class MTGUpdateController extends AbstractController
         $form = $this->createForm(AdminMTGUpdateType::class, $update);
         $form->handleRequest($request);
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $update->setUpdatedBy($currentUser);
             $entityManager->flush();
             $this->addFlash('success', $translator->trans('global.savesuccess.text'));
 
@@ -54,7 +59,12 @@ final class MTGUpdateController extends AbstractController
     #[Route(name: 'admin_mtg_update_index', methods: ['GET'])]
     public function index(PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $query = $entityManager->createQuery('SELECT u FROM App\Entity\MTG\MTGUpdate u ORDER BY u.startingAt DESC');
+        $query = $entityManager
+            ->createQueryBuilder()
+            ->select('u')
+            ->from(MTGUpdate::class, 'u')
+            ->orderBy('u.startingAt', 'DESC')
+            ->getQuery();
 
         $pagination = $paginator->paginate(
             $query,
@@ -74,7 +84,12 @@ final class MTGUpdateController extends AbstractController
         $form = $this->createForm(AdminMTGUpdateType::class, $update);
         $form->handleRequest($request);
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $update->setCreatedBy($currentUser);
+            $update->setUpdatedBy($currentUser);
             $entityManager->persist($update);
             $entityManager->flush();
             $this->addFlash('success', $translator->trans('global.savesuccess.text'));

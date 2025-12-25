@@ -18,6 +18,8 @@ final class AdminMTGUpdateType extends AbstractAdminUpdateType
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
+
         $builder
             ->add(
                 'pointsList',
@@ -26,11 +28,14 @@ final class AdminMTGUpdateType extends AbstractAdminUpdateType
                     'class'       => MTGPointsList::class,
                     'required'    => false,
                     'constraints' => [
-                        new NotNull(message: 'admin.form.mtgupdate.create.pointslist.null'),
+                        new NotNull(message: 'admin.form.abstract.update.create.pointslist.empty'),
                     ],
-                    'label'       => 'admin.form.mtgupdate.create.pointslist.label',
-                    'help'        => 'admin.form.mtgupdate.create.pointslist.help',
-                    'placeholder' => 'admin.form.mtgupdate.create.pointslist.placeholder',
+                    'label'        => 'admin.form.abstract.update.create.pointslist.label',
+                    'help'         => 'admin.form.abstract.update.create.pointslist.help',
+                    'placeholder'  => 'admin.form.abstract.update.create.pointslist.placeholder',
+                    'choice_label' => static function (MTGPointsList $MTGPointsList): string {
+                        return (string)$MTGPointsList;
+                    },
                 ]
             );
     }
