@@ -17,7 +17,7 @@ abstract class AbstractPointsListModel implements PointsListModelInterface, Stri
     #[Override]
     public function __toString(): string
     {
-        return static::LABEL . ' ' . $this->getReleaseDateAsDateTime()->format('Y-m-d H:i');
+        return static::getName();
     }
 
     #[Override]
@@ -27,7 +27,13 @@ abstract class AbstractPointsListModel implements PointsListModelInterface, Stri
     abstract public function processCSVString(string $csvSourceString, PointsListInterface $pointsList): array;
 
     #[Override]
-    public function getReleaseDateAsDateTime(): DateTime
+    public static function getName(): string
+    {
+        return static::LABEL . ' ' . static::getReleaseDateAsDateTime()->format('Y-m-d H:i');
+    }
+
+    #[Override]
+    public static function getReleaseDateAsDateTime(): DateTime
     {
         return new DateTime(static::RELEASE_DATE . ' ' . static::RELEASE_TIME, new DateTimeZone(static::RELEASE_TIMEZONE));
     }

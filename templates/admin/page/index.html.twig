@@ -32,7 +32,7 @@
                 {% for page in pages %}
                     <tr>
                         <td>{{ page.id }}</td>
-                        <td>{{ page.title }}</td>
+                        <td><strong>{{ page.title }}</strong></td>
                         <td>{{ page.contents|striptags|slice(0, 200) }}[...]</td>
                         <td>{{ page.zone }}</td>
                         <td>{{ page.language }}</td>

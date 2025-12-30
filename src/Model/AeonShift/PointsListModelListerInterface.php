@@ -8,15 +8,17 @@ interface PointsListModelListerInterface
 {
     /**
      * @return array{
-     *     label: string,
-     *     releaseDate: string,
-     *     className: class-string,
-     * }
+     *     array{
+     *         label: string,
+     *         releaseDate: string,
+     *         className: class-string,
+     *     }
+     * }|array{}
      */
-    public function getPointsListModelsAsArray(): array;
+    public function getPointsListModelsAsArrayForLicense(string $license): array;
 
     /**
-     * @return array<string, string>
+     * @return array<string, class-string>
      */
-    public function getPointsListModelsForForms(): array;
+    public function getPointsListModelsForForms(string $license): array;
 }

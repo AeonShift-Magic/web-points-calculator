@@ -1,56 +1,132 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}{{ 'admin.mtg.pointslistcard.show.title'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.pointslistcard.show.label'|trans({'name': points_list_card.nameEN}) }}{% endblock %}
 
-{% block main_content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1>{{ 'admin.mtg.pointslistcard.show.heading'|trans }}</h1>
-            <div>
-                <a href="{{ path('admin_mtg_points_list_card_edit', {'id': points_list_card.id}) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mr-2">
-                    {{ 'admin.mtg.pointslistcard.show.edit'|trans }}
-                </a>
-                <a href="{{ path('admin_mtg_points_list_card_index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                    {{ 'admin.mtg.pointslistcard.show.back'|trans }}
-                </a>
-            </div>
-        </div>
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.pointslistcard.show.label'|trans({'name': points_list_card.nameEN}) }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_card_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_points_list_card_edit', {'id': points_list_card.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
 
         <div>
-            <table class="min-w-full">
-                <tbody class="divide-y divide-gray-200">
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.pointslistcard.show.id'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ points_list_card.id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.pointslistcard.show.list'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {% if points_list_card.pointsList %}
-                                <a href="{{ path('admin_mtg_points_list_show', {'id': points_list_card.pointsList.id}) }}" class="text-blue-600 hover:text-blue-800">
-                                    {{ points_list_card.pointsList.title }}
-                                </a>
-                            {% else %}
-                                <span>{{ 'admin.mtg.pointslistcard.show.no_list'|trans }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.pointslistcard.show.name'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ points_list_card.name }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {{ include('admin/mtg/points_list_card/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <tbody>
+                <tr>
+                    <th class="w-1/4">{{ 'global.id.label'|trans }}</th>
+                    <td>{{ points_list_card.id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
+                    <td>{{ points_list_card.nameEN }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointslist.label'|trans }}</th>
+                    <td>
+                        {% if points_list_card.pointsList is defined and points_list_card.pointsList is not null %}
+                            <a href="{{ url('admin_mtg_points_list_show', {'id': points_list_card.pointsList.id}) }}" title="{{ 'admin.nav.mtg.pointslist.show.title'|trans({'name': points_list_card.pointsList.title}) }}">
+                                {{ points_list_card.pointsList.title|default('global.none.label'|trans) }}
+                            </a>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.scryfallid.label'|trans }}</th>
+                    <td>{{ points_list_card.scryfallId }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.scryfalluri.label'|trans }}</th>
+                    <td>{{ points_list_card.scryfallURI }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.oracleid.label'|trans }}</th>
+                    <td>{{ points_list_card.oracleId }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.manavalue.label'|trans }}</th>
+                    <td>{{ points_list_card.manaValue }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.multicztype.label'|trans }}</th>
+                    <td>{{ points_list_card.multiCZType }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduel.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalDuel|default(0) }}">{{ ('global.' ~ points_list_card.legalDuel|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduel.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsDuel|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalDuelSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legalDuelSpecial|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelspecial.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsDuelSpecial|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegal2hg.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legal2HG|default(0) }}">{{ ('global.' ~ points_list_card.legal2HG|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.points2hg.label'|trans }}</th>
+                    <td>{{ points_list_card.points2HG|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legal2HGSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legal2HGSpecial|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.points2hgspecial.label'|trans }}</th>
+                    <td>{{ points_list_card.points2HGSpecial|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmulti.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalMulti|default(0) }}">{{ ('global.' ~ points_list_card.legalMulti|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmulti.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsMulti|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmultispecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalMultiSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legalMultiSpecial|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmultispecial.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsMultiSpecial|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.dates.label'|trans }}</th>
+                    <td>
+                        {{ points_list_card.createdAt ? points_list_card.createdAt|date('Y-m-d') : '' }} / {{ points_list_card.updatedAt ? points_list_card.updatedAt|date('Y-m-d') : '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.users.label'|trans }}</th>
+                    <td>
+                        {{ points_list_card.createdBy ? points_list_card.createdBy.username|raw : 'N/A' }} / {{ points_list_card.updatedBy ? points_list_card.updatedBy.username|raw : 'N/A' }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_card_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_points_list_card_edit', {'id': points_list_card.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/mtg/points_list_card/_delete_form.html.twig') }}
         </div>
     </div>
 {% endblock %}

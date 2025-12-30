@@ -4,4 +4,5 @@ call .\csfixer.bat
 call .\psalm.bat
 call .\phpstan.bat
 call .\security.bat
+call .\unit.bat
 @echo All checks completed.

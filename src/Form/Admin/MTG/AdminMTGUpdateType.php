@@ -11,7 +11,6 @@ use Override;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotNull;
 
 final class AdminMTGUpdateType extends AbstractAdminUpdateType
 {
@@ -25,11 +24,8 @@ final class AdminMTGUpdateType extends AbstractAdminUpdateType
                 'pointsList',
                 EntityType::class,
                 [
-                    'class'       => MTGPointsList::class,
-                    'required'    => false,
-                    'constraints' => [
-                        new NotNull(message: 'admin.form.abstract.update.create.pointslist.empty'),
-                    ],
+                    'class'        => MTGPointsList::class,
+                    'required'     => false,
                     'label'        => 'admin.form.abstract.update.create.pointslist.label',
                     'help'         => 'admin.form.abstract.update.create.pointslist.help',
                     'placeholder'  => 'admin.form.abstract.update.create.pointslist.placeholder',

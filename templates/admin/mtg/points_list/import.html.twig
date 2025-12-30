@@ -1,10 +1,152 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}
+{% block title %}{{ 'admin.nav.mtg.pointslist.import.title'|trans({'name': points_list.title}) }}{% endblock %}
 
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.pointslist.import.title'|trans({'name': points_list.title}) }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_export', {'id': points_list.id}) }}" title="{{ 'global.export.title'|trans }}">{{ 'global.export.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+    </div>
+
+    <div class="my-2"></div>
+
+    <fieldset class="w-full mb-4">
+        <legend>
+            <span class="icon-info"></span>{{ 'admin.form.mtg.pointslist.import.info'|trans }}
+        </legend>
+
+        <p class="flash-message flash-warning">
+            {{ 'admin.form.mtg.pointslist.import.help'|trans|raw }}
+        </p>
+        <p class="flash-message flash-warning">
+            {{ 'admin.form.mtg.pointslist.import.help2'|trans|raw }}
+        </p>
+        <p class="flash-message flash-info">
+            {{ 'admin.form.mtg.pointslist.import.help3'|trans|raw }}
+        </p>
+        <p class="flash-message flash-info">
+            {{ 'admin.form.mtg.pointslist.import.help4'|trans|raw }}
+        </p>
+        <p class="flash-message flash-warning">
+            {{ 'admin.form.mtg.pointslist.import.help5'|trans|raw }}
+        </p>
+        <p class="flash-message flash-info">
+            {{ 'admin.form.mtg.pointslist.import.help6'|trans|raw }}
+        </p>
+        <p class="flash-message flash-info">
+            {{ 'admin.form.mtg.pointslist.import.help7'|trans|raw }}
+        </p>
+
+        <p>
+            {{ 'admin.form.mtg.pointslist.import.help8'|trans|raw }}
+        </p>
+        <table class="border-spacing-2 table-fixed border border-gray-400 border-solid example-table">
+            <tbody>
+                <tr>
+                    <td><em>⚠️ The first 5 Lines of this document will be ignored while importing, use them for metadata</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(ignored)</em></td>
+                    <td><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td>
+                        <em>&darr; {{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }} &darr;</em>
+                        <em>{{ 'admin.form.mtg.pointslistcard.create.firstline.label'|trans|raw }}</em>
+                    </td>
+                    <td><em>&darr; {{ 'admin.form.mtg.pointslistcard.create.pointsduel.label'|trans }} &darr;</em></td>
+                    <td><em>&darr; {{ 'admin.form.mtg.pointslistcard.create.pointsduelspecial.label'|trans }} &darr;</em></td>
+                    <td><em>&darr; {{ 'admin.form.mtg.pointslistcard.create.points2hg.label'|trans }} &darr;</em></td>
+                    <td><em>&darr; {{ 'admin.form.mtg.pointslistcard.create.points2hgspecial.label'|trans }} &darr;</em></td>
+                    <td><em>&darr; {{ 'admin.form.mtg.pointslistcard.create.pointsmulti.label'|trans }} &darr;</em></td>
+                    <td><em>&darr; {{ 'admin.form.mtg.pointslistcard.create.pointsmultispecial.label'|trans }} &darr;</em></td>
+                    <td><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td class="text-yellow-200">((unranked))</td>
+                    <td class="text-yellow-200">10</td>
+                    <td class="text-yellow-200">40</td>
+                    <td class="text-yellow-200">10</td>
+                    <td class="text-yellow-200">40</td>
+                    <td class="text-yellow-200">10</td>
+                    <td class="text-yellow-200">30</td>
+                    <td class="text-yellow-200"><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td>Academy Rector</td>
+                    <td>10</td>
+                    <td>0</td>
+                    <td>10</td>
+                    <td>0</td>
+                    <td>10</td>
+                    <td>0</td>
+                    <td><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td>Ardenn, Intrepid Archaeologist</td>
+                    <td>8</td>
+                    <td>30</td>
+                    <td>10</td>
+                    <td>40</td>
+                    <td>5</td>
+                    <td>9</td>
+                    <td><em>(these columns, and all on the right are ignored while importing)</em></td>
+                </tr>
+                <tr>
+                    <td class="text-center" colspan="8">...</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="text-right">
+            <button data-turbo="false" class="btn btn-blue" title="{{ 'global.import.title'|trans }}">{{ button_label|default('global.import.label'|trans) }}</button>
+        </div>
+        {{ form_end(form) }}
+    </fieldset>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_export', {'id': points_list.id}) }}" title="{{ 'global.export.title'|trans }}">{{ 'global.export.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+    </div>
 {% endblock %}
-
-{% block main_content %}
-
-{% endblock %}
-

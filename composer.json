@@ -11,7 +11,7 @@
         "ext-iconv": "*",
         "ext-zend-opcache": "*",
         "doctrine/dbal": "^4.4.1",
-        "doctrine/doctrine-bundle": "^3.2.1",
+        "doctrine/doctrine-bundle": "^3.2.2",
         "doctrine/doctrine-migrations-bundle": "^3.7.0",
         "doctrine/orm": "^3.6.0",
         "friendsofsymfony/ckeditor-bundle": "^2.8.0",

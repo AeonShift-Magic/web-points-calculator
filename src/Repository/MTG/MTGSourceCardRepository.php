@@ -5,23 +5,23 @@ declare(strict_types = 1);
 namespace App\Repository\MTG;
 
 use App\Entity\MTG\MTGSourceCard;
+use App\Repository\SourceItemsRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Override;
 
 /**
  * @extends ServiceEntityRepository<MTGSourceCard>
  */
-final class MTGSourceCardRepository extends ServiceEntityRepository
+final class MTGSourceCardRepository extends ServiceEntityRepository implements SourceItemsRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MTGSourceCard::class);
     }
 
-    /**
-     * @return array<int, string>
-     */
-    public function getAllSourceCardNamesAsArray(): array
+    #[Override]
+    public function getAllSourceItemsNamesAsArray(): array
     {
         /** @var array<int, string> $cardNames */
         $cardNames = array_column(

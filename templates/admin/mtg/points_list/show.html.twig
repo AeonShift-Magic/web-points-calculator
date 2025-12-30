@@ -7,6 +7,7 @@
 
     <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
         <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_import', {'id': points_list.id}) }}" title="{{ 'global.import.title'|trans }}">{{ 'global.import.label'|trans }}</a>
         <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
 
         <div>
@@ -22,14 +23,14 @@
                     <td>{{ points_list.id }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.points_list.create.title.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslist.create.title.label'|trans }}</th>
                     <td>{{ points_list.title }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.points_list.create.relatedupdates.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslist.create.relatedupdates.label'|trans }}</th>
                     <td>
                         {% for mtg_update in points_list.MTGUpdates %}
-                            <a href="{{ url('admin_mtg_update_show', {'id': mtg_update.id}) }}" title="{{ 'admin.nav.mtg.update.show.title'|trans({'name': mtg_update.title}) }}">{{ mtg_update.title }}</a>
+                            <a href="{{ url('admin_mtg_update_show', {'id': mtg_update.id}) }}" title="{{ 'admin.nav.mtg.update.show.title'|trans({'name': mtg_update.titleEn}) }}">{{ mtg_update.titleEn }}</a>
                             {% if not loop.last %}<br>{% endif %}
                         {% else %}
                             {{ 'global.none.label'|trans }}
@@ -37,20 +38,58 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.points_list.create.filename.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslist.create.filename.label'|trans }}</th>
                     <td>{{ points_list.filename }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.points_list.create.lastuploadedat.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslist.create.lastuploadedat.label'|trans }}</th>
                     <td>{{ points_list.lastUploadedAt|date('Y-m-d H:i') }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.points_list.create.uploadnbcards.label'|trans }}</th>
-                    <td>{{ points_list.nbcards }}</td>
+                    <th>{{ 'admin.form.mtg.pointslist.create.uploadnbcards.label'|trans }}</th>
+                    <td>{{ points_list.numberOfUploadedCards }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.points_list.create.currentnbcards.label'|trans }}</th>
-                    <td>{{ points_list.MTGPointListCards|length }}</td>
+                    <th>{{ 'admin.form.mtg.pointslist.create.currentnbcards.label'|trans }}</th>
+                    <td>
+                        <p class="py-1">
+                            {{ points_list.MTGPointListCards|length }}
+                        </p>
+                        {% if points_list.MTGPointListCards|length > 0 %}
+                            <table class="table center header-highlight-table mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
+                                        <th colspan="3">{{ 'admin.mtg.pointslistcard.points.label'|trans }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for points_list_card in points_list.MTGPointListCards %}
+                                        <tr>
+                                            <td>
+                                                <a href="{{ url('admin_mtg_points_list_card_show', {'id': points_list_card.id}) }}" title="">{{ points_list_card.nameEN }}</a>
+                                            </td>
+                                            <td>
+                                                <span class="text-blue-300">
+                                                    {{ points_list_card.pointsDuel }} / {{ points_list_card.pointsDuelSpecial }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-orange-300">
+                                                    {{ points_list_card.points2hg }} / {{ points_list_card.points2hgSpecial }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-amber-300">
+                                                    {{ points_list_card.pointsMulti }} / {{ points_list_card.pointsMultiSpecial }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ 'global.dates.label'|trans }}</th>
@@ -70,6 +109,7 @@
 
     <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
         <a class="btn btn-gray" href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_import', {'id': points_list.id}) }}" title="{{ 'global.import.title'|trans }}">{{ 'global.import.label'|trans }}</a>
         <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
 
         <div>

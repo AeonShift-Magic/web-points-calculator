@@ -45,6 +45,7 @@ class AbstractAdminUpdateType extends AbstractType
                 [
                     'required'    => true,
                     'empty_data'  => '',
+                    'config_name' => 'image_config',
                     'constraints' => [
                         new NotNull(message: 'admin.form.abstract.update.create.descriptionen.null'),
                     ],

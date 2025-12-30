@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 
-final class AdminMTGPointsListImportType extends AbstractType
+final class AdminMTGPointsListImportType extends AbstractType implements AdminMTGFormTypeInterface
 {
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -21,9 +21,9 @@ final class AdminMTGPointsListImportType extends AbstractType
                 'csv_file',
                 FileType::class,
                 [
-                    'label'       => 'admin.form.mtg.points_list.import.file.label',
+                    'label'       => 'admin.form.mtg.pointslist.import.file.label',
                     'required'    => true,
-                    'help'        => 'admin.form.mtg.points_list.import.file.help',
+                    'help'        => 'admin.form.mtg.pointslist.import.file.help',
                     'help_html'   => true,
                     'empty_data'  => '',
                     'constraints' => [
@@ -38,7 +38,7 @@ final class AdminMTGPointsListImportType extends AbstractType
                                     'text/plain',
                                 ],
                             ],
-                            extensionsMessage: 'admin.form.mtg.points_list.import.file.error',
+                            extensionsMessage: 'admin.form.mtg.pointslist.import.file.error',
                         ),
                     ],
                 ]
@@ -47,7 +47,7 @@ final class AdminMTGPointsListImportType extends AbstractType
                 'confirm',
                 CheckboxType::class,
                 [
-                    'label'      => 'admin.form.mtg.points_list.import.confirm.label',
+                    'label'      => 'admin.form.mtg.pointslist.import.confirm.label',
                     'required'   => true,
                     'empty_data' => false,
                 ]

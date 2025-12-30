@@ -41,11 +41,12 @@ final class AdminPageType extends AbstractType
                 'contents',
                 CKEditorType::class,
                 [
-                    'required'   => true,
-                    'empty_data' => '',
-                    'label'      => 'admin.form.page.create.contents.label',
-                    'help'       => 'admin.form.page.create.contents.help',
-                    'help_html'  => true,
+                    'required'    => true,
+                    'config_name' => 'image_config',
+                    'empty_data'  => '',
+                    'label'       => 'admin.form.page.create.contents.label',
+                    'help'        => 'admin.form.page.create.contents.help',
+                    'help_html'   => true,
                 ]
             )
             ->add(

@@ -12,7 +12,9 @@
 
     <a class="btn btn-green" href="{{ url('admin_mtg_update_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
 
-    <div class="navigation"></div>
+    <div class="navigation">
+        {{ knp_pagination_render(updates) }}
+    </div>
 
     <div class="table-wrapper">
         <table class="table center header-highlight-table">
@@ -23,8 +25,8 @@
                     <th>{{ 'admin.form.abstract.update.create.public.label'|trans }}</th>
                     <th>{{ 'admin.form.abstract.update.create.pointslist.label'|trans }}</th>
                     <th>{{ 'admin.form.abstract.update.create.startingat.label'|trans }}</th>
-                    <th>{{ 'admin.form.abstract.update.create.descriptionen.label'|trans }}</th>
                     <th>{{ 'admin.form.abstract.update.create.endingat.label'|trans }}</th>
+                    <th>{{ 'admin.form.abstract.update.create.descriptionen.label'|trans }}</th>
                     <th>{{ 'global.dates.label'|trans }}</th>
                     <th>{{ 'global.users.label'|trans }}</th>
                     <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
@@ -37,23 +39,23 @@
                             {{ update.id }}
                         </td>
                         <td>
-                            {{ update.titleEN }}
+                            <strong>{{ update.titleEN }}</strong>
                         </td>
-                        <td>{{ ('global.' ~ update.public|default(0) ~ '.label')|trans }}</td>
+                        <td class="{{ 'value' ~ update.public|default(0) }}">{{ ('global.' ~ update.public|default(0) ~ '.label')|trans }}</td>
                         <td>
-                            {% if update.MTGPointsList is defined and update.MTGPointsList is not null %}
-                                {{ update.MTGPointsList.title }}
+                            {% if update.pointsList is not null %}
+                                <a href="{{ url('admin_mtg_points_list_show', {'id': update.pointsList.id}) }}" title="{{ 'admin.nav.mtg.pointslist.show.title'|trans({'name': update.pointsList.title}) }}">{{ update.pointsList.title }}</a>
                             {% else %}
-                                <span>{{ 'global.none.label'|trans }}</span>
+                                {{ 'global.none.label'|trans }}
                             {% endif %}
                         </td>
                         <td>
                             {{ update.startingAt|date('Y-m-d H:i') }}
                         </td>
-                        <td>{{ update.descriptionEN|striptags|slice(0, 200) }}[...]</td>
                         <td>
                             {{ update.endingAt|date('Y-m-d H:i') }}
                         </td>
+                        <td>{{ update.descriptionEN|striptags|slice(0, 200) }}[...]</td>
                         <td>
                             {{ update.createdAt ? update.createdAt|date('Y-m-d') : '' }} / {{ update.updatedAt ? update.updatedAt|date('Y-m-d') : '' }}
                         </td>
@@ -62,14 +64,26 @@
                         </td>
                         <td>
                             <a class="btn btn-gray w-full" href="{{ url('admin_mtg_update_show', {'id': update.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            {% if update.public is same as(true)  %}
+                                <a class="btn btn-blue w-full" href="{{ url('admin_mtg_update_unpublish', {'id': update.id}) }}" title="{{ 'admin.mtg.update.unpublish'|trans }}">{{ 'admin.mtg.update.unpublish'|trans }}</a>
+                            {% else %}
+                                <a class="btn btn-orange w-full" href="{{ url('admin_mtg_update_publish', {'id': update.id}) }}" title="{{ 'admin.mtg.update.publish'|trans }}">{{ 'admin.mtg.update.publish'|trans }}</a>
+                            {% endif %}
                             <a class="btn btn-green w-full" href="{{ url('admin_mtg_update_edit', {'id': update.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
                         </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="10" class="text-center">{{ 'global.noelements.label'|trans }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <div class="navigation"></div>
+
+    <div class="navigation">
+        {{ knp_pagination_render(updates) }}
+    </div>
 
     <a class="btn btn-green" href="{{ url('admin_mtg_update_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
 {% endblock %}

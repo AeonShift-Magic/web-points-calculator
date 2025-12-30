@@ -1,116 +1,74 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}{{ 'admin.mtg.update.show.title'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.update.show.label'|trans({'name': update.titleEN}) }}{% endblock %}
 
-{% block main_content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1>{{ 'admin.mtg.update.show.heading'|trans }}</h1>
-            <div>
-                <a href="{{ path('admin_mtg_update_edit', {'id': update.id}) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mr-2">
-                    {{ 'admin.mtg.update.show.edit'|trans }}
-                </a>
-                <a href="{{ path('admin_mtg_update_index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                    {{ 'admin.mtg.update.show.back'|trans }}
-                </a>
-            </div>
-        </div>
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.update.show.label'|trans({'name': update.titleEN}) }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_update_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_update_edit', {'id': update.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
 
         <div>
-            <table class="min-w-full">
-                <tbody class="divide-y divide-gray-200">
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.id'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ update.id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.title'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ update.titleEN }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.description'|trans }}
-                        </th>
-                        <td class="px-6 py-4 text-sm text-gray-900">
-                            {{ update.descriptionEN|raw }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.rulesmodel'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ update.rulesModel }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.ispublic'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {% if update.isPublic %}
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    {{ 'admin.mtg.update.show.yes'|trans }}
-                                </span>
-                            {% else %}
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                    {{ 'admin.mtg.update.show.no'|trans }}
-                                </span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.pointslist'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {% if update.pointsList %}
-                                <a href="{{ path('admin_mtg_points_list_show', {'id': update.pointsList.id}) }}" class="text-blue-600 hover:text-blue-800">
-                                    {{ update.pointsList.title }}
-                                </a>
-                            {% else %}
-                                <span>{{ 'admin.mtg.update.show.no_pointslist'|trans }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.start'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ update.startingAt|date('Y-m-d H:i:s') }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.end'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ update.endingAt|date('Y-m-d H:i:s') }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.update.show.user'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {% if update.user %}
-                                {{ update.user.username }}
-                            {% else %}
-                                <span>{{ 'admin.mtg.update.show.no_user'|trans }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {{ include('admin/mtg/update/_delete_form.html.twig') }}
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <tbody>
+                <tr>
+                    <th class="w-1/4">{{ 'global.id.label'|trans }}</th>
+                    <td>{{ update.id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.update.create.titleen.label'|trans }}</th>
+                    <td>{{ update.titleEN }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.update.create.relatedpointslist.label'|trans }}</th>
+                    <td>
+                        {% if update.pointsList is not null %}
+                            <a href="{{ url('admin_mtg_points_list_show', {'id': update.pointsList.id}) }}" title="{{ 'admin.nav.mtg.pointslist.show.title'|trans({'name': update.pointsList.title}) }}">{{ update.pointsList.title }}</a>
+                        {% else %}
+                            {{ 'global.none.label'|trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.update.create.descriptionen.label'|trans }}</th>
+                    <td>{{ update.descriptionEN|raw }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.update.create.start.label'|trans }}</th>
+                    <td>{{ update.startingAt|date('Y-m-d H:i') }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.update.create.end.label'|trans }}</th>
+                    <td>{{ update.endingAt|date('Y-m-d H:i') }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.dates.label'|trans }}</th>
+                    <td>
+                        {{ update.createdAt ? update.createdAt|date('Y-m-d') : '' }} / {{ update.updatedAt ? update.updatedAt|date('Y-m-d') : '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.users.label'|trans }}</th>
+                    <td>
+                        {{ update.createdBy ? update.createdBy.username|raw : 'N/A' }} / {{ update.updatedBy ? update.updatedBy.username|raw : 'N/A' }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_update_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-green" href="{{ url('admin_mtg_update_edit', {'id': update.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/mtg/update/_delete_form.html.twig') }}
         </div>
     </div>
 {% endblock %}

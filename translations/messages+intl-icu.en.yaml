@@ -34,6 +34,8 @@ admin:
                     help: Between -100 and 100. If already used, all blocks with the correct language and location will be displayed in ascending weight order.
                     label: Weight
                     placeholder: Weight of the block
+            legends:
+                info: 'Block parameters'
         page:
             create:
                 contents:
@@ -55,6 +57,8 @@ admin:
                 zone:
                     help: The zone in which this page will be displayed. For example, "header" for header, "footer" for footer, etc.
                     label: Zone
+            legends:
+                info: 'Page details'
         user:
             create:
                 roles:
@@ -83,6 +87,11 @@ admin:
                     public:
                         label: 'Public'
                         help: 'Marquer cette mise à jour comme publique'
+                    rulesmodel:
+                        label: 'Rules model'
+                        help: 'The rules model to apply when using this list'
+                legends:
+                    info: 'Update details'
         mtg:
             cardsourceactivityhistory:
                 create:
@@ -102,7 +111,7 @@ admin:
                         label: 'Log file'
                     uniqueid:
                         label: 'Unique task ID'
-            points_list:
+            pointslist:
                 create:
                     filename:
                         label: 'Filename'
@@ -117,7 +126,7 @@ admin:
                     currentnbcards:
                         label: 'Current number of cards in database'
                     relatedupdates:
-                        label: 'Related announcement/updates'
+                        label: 'Related announcements/updates'
                     validitystartingat:
                         help: 'The date from which this list applies, used to find the order and the most recent'
                         label: 'Validity starting at'
@@ -125,6 +134,32 @@ admin:
                         label: 'Rules model'
                         help: 'The rules model to apply'
                 import:
+                    label: >
+                        📥 Import/update points list (CSV file)
+                    help: >
+                        Use this form to update points list from the provided CSV template, one card per line. 
+                        <br>
+                        <strong>Warning: this will overwrite all current points list and is irreversible.</strong>
+                    help2: >
+                        Note: our tool checks a minimum of the file integrity before overwriting and normalizes cell contents (case, length, numeric data...), but it is <strong>your responsibility</strong> to care about the content and any lost data.
+                    help3: >
+                        The CSV file must be in <strong>UTF-8 (Unicode)</strong> format, columns separated by <strong>commas</strong>, and line breaks in <strong>Unix (New Line)</strong> format. 
+                        <br>
+                        Values may be enclosed in double quotes ("). 
+                        <br>
+                        One result per line, each position (column "Name (EN)") must be unique and represent <strong> a card that exists in source cards database</strong> (line order does not matter). 
+                        <br>
+                        Points (6 columns)") are integers or decimal numbers (values like "10" or "10.5" are accepted).
+                    help4: >
+                        The file must contain exactly 5 lines at its top, which will be discarded, and the sixth line MUST have a card named "((unranked))" and sets the points for unranked cards.
+                    help5: >
+                        <strong>Do not modify the columns, their order, nor add extra columns on the left.</strong>
+                    help6: >
+                        You can also modify cards individually without re-uploading the entire file by clicking the button on the right of each line in the listing page.
+                    help7: >
+                        Note: changes are visible in real-time in the admin part ot this website, but public display and calculations may take up to 10 minutes.
+                    help8: >
+                        The table below shows an example of expected content in your CSV file:
                     confirm:
                         label: 'I confirm I have read and understood the instructions above and wish to import/update the points list.'
                     file:
@@ -145,22 +180,106 @@ admin:
                         invalid_value: 'Invalid value'
                         invalid_name: 'A card must have the same name as a card that''s in the source card list'
                         invalid_game_points: 'Invalid points (must be an integer between -1000 and 1000)'
+                        invalid_first_line: 'The card name in English in the first line MUST be "((unranked))"'
                         incorrectname: 'Incorrect card name: "{name}"'
                         notfoundinsources: 'Card unknown in source cards: {name}"'
-            points_list_card:
+                    info: 'Points Import'
+                legends:
+                    info: 'Points list details'
+            pointslistcard:
                 create:
                     pointslist:
                         label: 'Points list'
+                        help: 'Which points list to associate this card with'
+                        placeholder: 'Please choose a Points List'
                     nameen:
                         label: 'Name (EN)'
+                        help: 'The name of the card, in English. Must be character-precise similar to a card in database.'
                     scryfallid:
                         label: 'Scryfall ID'
+                        help: 'The Scryfall ID of the card, if needed'
                     scryfalluri:
                         label: 'Scryfall URI'
+                        help: 'The Scryfall URI of the card, if needed'
                     manavalue:
                         label: 'Mana Value'
+                        help: 'The mana value of the card'
                     oracleid:
                         label: 'Oracle ID'
+                        help: 'The Oracle ID of the card'
+                    multicztype:
+                        label: 'Multiple in Command Zone type'
+                        help: 'The type of multiple objects in Command Zones, like "doctors_companion", "choose_a_background", "friends_forever", "partner", "doctors_companion", "choose_a_background".'
+                    points2hg:
+                        label: 'Two-Headed Giant points'
+                        help: 'The points for this card in 2HG variant.'
+                    points2hgspecial:
+                        label: 'Two-Headed Giant points (special)'
+                        help: 'The points for this card in 2HG variant (special, like "As a Commander").'
+                    pointsduel:
+                        label: 'Duel points'
+                        help: 'The points for this card in Duel variant.'
+                    pointsduelspecial:
+                        label: 'Duel points (special)'
+                        help: 'The points for this card in Duel variant (special, like "As a Commander").'
+                    pointsmulti:
+                        label: 'Multiplayer Free-For-All points'
+                        help: 'The points for this card in Multiplayer Free-For-All variant.'
+                    pointsmultispecial:
+                        label: 'Multiplayer Free-For-All points (special)'
+                        help: 'The points for this card in Multiplayer Free-For-All variant (special, like "As a Commander").'
+                    islegal2hg:
+                        label: 'Legal in 2HG'
+                        help: 'Check if the card is legal in Two-Headed Giant'
+                    islegal2hgspecial:
+                        label: 'Legal in 2HG (special)'
+                        help: 'Check if the card is legal in Two-Headed Giant (special, like "As a Commander")'
+                    islegalduel:
+                        label: 'Legal in Duel'
+                        help: 'Check if the card is legal in Duel'
+                    islegalduelspecial:
+                        label: 'Legal in Duel (special)'
+                        help: 'Check if the card is legal in Duel (special, like "As a Commander")'
+                    islegalmulti:
+                        label: 'Legal in Multiplayer Free-For-All points'
+                        help: 'Check if the card is legal in Multiplayer Free-For-All points'
+                    islegalmultispecial:
+                        label: 'Legal in Multiplayer Free-For-All points (special)'
+                        help: 'Check if the card is legal in Multiplayer Free-For-All points (special, like "As a Commander")'
+                    firstline:
+                        label: 'The first name in Englisy MUST always be <code class="inline">((unranked))</code> (and defines the points for unranked cards)'
+                legends:
+                    info: 'Points List Card details'
+            update:
+                create:
+                    titleen:
+                        help: 'The public title of your update/announcement (English)'
+                        label: 'Title (EN)'
+                        placeholder: 'My new announcement'
+                    pointslist:
+                        help: 'Which Points List to use'
+                        label: 'Points List to use'
+                        placeholder: 'Choose a points list'
+                    start:
+                        help: 'When does this update become effective?'
+                        label: 'Start date'
+                    published:
+                        label: 'Published'
+                        help: 'Check to make this update visible to users'
+                    end:
+                        help: 'When does this update end?'
+                        label: 'End Date'
+                    descriptionen:
+                        label: 'Description (EN)'
+                        help: 'Optional Additional Details'
+                    public:
+                        label: 'Public'
+                        help: 'Make this update publicly visible'
+                    rulesmode:
+                        label: 'Rules Template'
+                        help: 'The rules template to apply when using this list'
+                    relatedpointslist:
+                        label: 'Related Points List(s)'
     home:
         goto:
             text: 'Go to a sub-section of the admin area:'
@@ -215,35 +334,50 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG Card Source Activity History'
-                    title: 'MTG Card Source Activity History'
+                    label: 'MTG - Card Source Activity History'
+                    title: 'MTG - Card Source Activity History'
             pointslist:
                 index:
-                    label: 'MTG Points Lists'
-                    title: 'MTG Points Lists'
+                    label: 'MTG - Points Lists'
+                    title: 'MTG - Points Lists'
                 new:
                     label: '➕ Create an MTG Points List'
                     title: 'Create an MTG Points List'
                 edit:
-                    title: 'Edit MTG Points List "{name}"'
+                    label: 'MTG - Edit Points List "{name}"'
+                    title: 'MTG - Edit Points List "{name}"'
                 show:
-                    label: 'MTG Points List "{name}" details'
+                    label: 'MTG - Points List "{name}" details'
+                    title: 'MTG - Points List "{name}" details'
+                import:
+                    label: 'MTG - Import Points for List "{name}"'
+                    title: 'MTG - Import Points for List "{name}"'
             pointslistcard:
                 index:
-                    label: 'MTG Points List Card'
-                    title: 'MTG Points List Card'
+                    label: 'MTG - Points List Cards'
+                    title: 'MTG - Points List Cards'
                 new:
                     label: '➕ Create an MTG Points List Card'
                     title: 'Create an MTG Points List Card'
+                edit:
+                    label: 'MTG - Edit Points List Card "{name}"'
+                    title: 'MTG - Edit Points List Card "{name}"'
+                show:
+                    title: 'MTG - Details on Points List Card "{name}"'
+                    label: 'MTG - Details on Points List Card "{name}"'
             update:
                 index:
-                    label: 'MTG Updates'
-                    title: 'MTG Updates'
+                    label: 'MTG - Updates'
+                    title: 'MTG - Updates'
                 new:
                     label: '➕ Create an MTG Update'
                     title: 'Create an MTG Update'
                 show:
-                    title: 'Details on update/announcement "{name}"'
+                    title: 'MTG - Details on update/announcement "{name}"'
+                    label: 'MTG - Details on update/announcement "{name}"'
+                edit:
+                    label: 'MTG - Edit update/announcement "{name}"'
+                    title: 'MTG - Edit update/announcement "{name}"'
             dbupdate:
                 index:
                     title: 'MTG - Database Updates'
@@ -289,10 +423,20 @@ admin:
                         label: 'Administration'
                     password:
                         label: 'Password'
+            legends:
+                info: 'User information'
     mtg:
         cardsourceactivityhistory:
             error:
                 fileremoved: 'The requested log file does not exist anymore.'
+        pointslistcard:
+            points:
+                label: 'Points (Duel - 2HG - Multi FFA)'
+        update:
+            publish: 'Publish'
+            unpublish: 'Unpublish'
+            published: 'Update successfully published.'
+            unpublished: 'Update successfully unpublished.'
 customblock:
     footer:
         en:
@@ -365,7 +509,7 @@ global:
             text: Oops! The page you requested could not be found. Perhaps you should use the menu above to start finding what you were looking for, or simply go back in your history...
             title: 404 - Not Found 😔
         500:
-            text: Oops! The server, like the winner of a tournament, has reached its point limits. If this error persists, please contact our team.
+            text: Oops! The server, like the winner of a points list, has reached its point limits. If this error persists, please contact our team.
             title: 500 - Server Error 😔
     id:
         label: ID
@@ -435,6 +579,9 @@ global:
     import:
         label: '📥 Import/update'
         title: '📥 Import/update cards/points (CSV file)'
+    export:
+        label: '📤 Export Points List CSV file'
+        title: 'Export this Points List with current values in CSV format to use in a spreadsheet or elsewhere and re-import later.'
 page:
     position:
         footer:

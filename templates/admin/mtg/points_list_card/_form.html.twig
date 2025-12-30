@@ -1,8 +1,13 @@
+{{ form_start(form) }}
 <fieldset class="w-full mb-4">
-    {{ form_start(form) }}
+    <legend>
+        <span class="icon-info"></span>{{ 'admin.form.mtg.pointslistcard.legends.info'|trans }}
+    </legend>
+
     {{ form_widget(form) }}
+
     <div class="text-right">
         <button data-turbo="false" class="btn btn-green" title="{{ 'global.savebutton.title'|trans }}">{{ button_label|default('global.savebutton.label'|trans) }}</button>
     </div>
-    {{ form_end(form) }}
 </fieldset>
+{{ form_end(form) }}

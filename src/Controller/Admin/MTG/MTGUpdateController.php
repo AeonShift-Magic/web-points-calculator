@@ -107,11 +107,31 @@ final class MTGUpdateController extends AbstractController
         );
     }
 
+    #[Route('/{id}/publish', name: 'admin_mtg_update_publish', methods: ['GET'])]
+    public function publish(#[MapEntity(id: 'id')] MTGUpdate $update, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
+    {
+        $update->setIsPublic(true);
+        $entityManager->flush();
+        $this->addFlash('success', $translator->trans('admin.mtg.update.published'));
+
+        return $this->redirectToRoute('admin_mtg_update_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}', name: 'admin_mtg_update_show', methods: ['GET'])]
     public function show(#[MapEntity(id: 'id')] MTGUpdate $update): Response
     {
         return $this->render('admin/mtg/update/show.html.twig', [
             'update' => $update,
         ]);
+    }
+
+    #[Route('/{id}/unpublish', name: 'admin_mtg_update_unpublish', methods: ['GET'])]
+    public function unpublish(#[MapEntity(id: 'id')] MTGUpdate $update, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
+    {
+        $update->setIsPublic(false);
+        $entityManager->flush();
+        $this->addFlash('success', $translator->trans('admin.mtg.update.unpublished'));
+
+        return $this->redirectToRoute('admin_mtg_update_index', [], Response::HTTP_SEE_OTHER);
     }
 }

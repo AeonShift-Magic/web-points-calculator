@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
+use RuntimeException;
 use Stringable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -49,8 +50,6 @@ class MTGPointsList implements PointsListInterface, Stringable
     #[ORM\OneToMany(
         targetEntity: MTGUpdate::class,
         mappedBy: 'pointsList',
-        cascade: ['persist'],
-        orphanRemoval: true
     )]
     private Collection $MTGUpdates;
 
@@ -65,7 +64,7 @@ class MTGPointsList implements PointsListInterface, Stringable
 
     #[Assert\NotNull]
     #[ORM\Column]
-    private int $nbCards = 0;
+    private int $numberOfUploadedCards = 0;
 
     #[Assert\Length(max: 255)]
     #[Assert\NotNull]
@@ -116,9 +115,9 @@ class MTGPointsList implements PointsListInterface, Stringable
         return $this->MTGUpdates;
     }
 
-    public function getNbCards(): int
+    public function getNumberOfUploadedCards(): int
     {
-        return $this->nbCards;
+        return $this->numberOfUploadedCards;
     }
 
     #[Override]
@@ -137,6 +136,16 @@ class MTGPointsList implements PointsListInterface, Stringable
     public function getValidityStartingAt(): DateTime
     {
         return $this->validityStartingAt;
+    }
+
+    #[ORM\PreRemove]
+    public function preventRemovalIfUpdatesExist(): void
+    {
+        if (! $this->MTGUpdates->isEmpty()) {
+            throw new RuntimeException(
+                'Cannot delete a points list that is referenced by one or more updates.'
+            );
+        }
     }
 
     public function setFilename(string $filename): static
@@ -167,9 +176,9 @@ class MTGPointsList implements PointsListInterface, Stringable
         return $this;
     }
 
-    public function setNbCards(int $nbCards): static
+    public function setNumberOfUploadedCards(int $numberOfUploadedCards): static
     {
-        $this->nbCards = $nbCards;
+        $this->numberOfUploadedCards = $numberOfUploadedCards;
 
         return $this;
     }

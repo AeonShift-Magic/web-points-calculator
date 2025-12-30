@@ -9,11 +9,13 @@ use App\Entity\User;
 use App\Form\Admin\MTG\AdminMTGPointsListImportType;
 use App\Form\Admin\MTG\AdminMTGPointsListType;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
+use App\Repository\MTG\MTGSourceCardRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use RuntimeException;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route('/admin/mtg/points-list')]
 final class MTGPointsListController extends AbstractController
 {
-    #[Route('/{id}/cards', name: 'admin_mtg_points_list_cards', methods: ['GET', 'POST'])]
+    #[Route('/{id}/cards', name: 'admin_mtg_points_list_card', methods: ['GET', 'POST'])]
     public function cards(#[MapEntity(id: 'id')] MTGPointsList $pointsList): Response
     {
         return $this->render(
@@ -84,17 +86,25 @@ final class MTGPointsListController extends AbstractController
         #[MapEntity(id: 'id')]
         MTGPointsList $MTGPointsList,
         Request $request,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+        MTGSourceCardRepository $MTGSourceCardRepository,
+        Security $security
     ): Response
     {
         $pointsListModelClass = $MTGPointsList->getRulesModel();
 
-        if(! class_exists($pointsListModelClass)) {
+        if (! class_exists($pointsListModelClass)) {
             throw $this->createNotFoundException('Given Points List doesn\'have a valid Rules Model.');
         }
 
         /** @var PointsListModelInterface $pointsListModel */
-        $pointsListModel = new $pointsListModelClass();
+        $pointsListModel = new $pointsListModelClass(
+            $entityManager,
+            $translator,
+            $MTGSourceCardRepository,
+            $security
+        );
 
         $form = $this->createForm(AdminMTGPointsListImportType::class);
         $form->handleRequest($request);
@@ -106,14 +116,14 @@ final class MTGPointsListController extends AbstractController
                     $fileContents = file_get_contents($uploadedFile->getPathname());
 
                     if ($fileContents === false) {
-                        $this->addFlash('error', $translator->trans('admin.form.mtg.points_list.import.file.unreadable'));
+                        $this->addFlash('error', $translator->trans('admin.form.mtg.pointslist.import.file.unreadable'));
                     } else {
                         $result = $pointsListModel->processCSVString($fileContents, $MTGPointsList);
 
                         if ($result['status'] === 'success') {
                             $this->addFlash('success', $result['message']);
 
-                            return $this->redirectToRoute('admin_mtg_points_list_cards', ['id' => $MTGPointsList->id]);
+                            return $this->redirectToRoute('admin_mtg_points_list_card', ['id' => $MTGPointsList->id]);
                         }
 
                         $this->addFlash('error', $result['message']);
@@ -122,15 +132,15 @@ final class MTGPointsListController extends AbstractController
                     return $this->json(['status' => 'error', 'message' => $e->getMessage()], 500);
                 }
             } else {
-                $this->addFlash('error', $translator->trans('admin.form.mtg.points_list.import.file.unreadable'));
+                $this->addFlash('error', $translator->trans('admin.form.mtg.pointslist.import.file.unreadable'));
             }
         }
 
         return $this->render(
             'admin/mtg/points_list/import.html.twig',
             [
-                'mtg_points_list' => $MTGPointsList,
-                'form'            => $form->createView(),
+                'points_list' => $MTGPointsList,
+                'form'        => $form->createView(),
             ]
         );
     }
@@ -142,7 +152,7 @@ final class MTGPointsListController extends AbstractController
             ->createQueryBuilder()
             ->select('p')
             ->from(MTGPointsList::class, 'p')
-            ->orderBy('p.title', 'ASC')
+            ->orderBy('p.validityStartingAt', 'DESC')
             ->getQuery();
 
         $pagination = $paginator->paginate(
@@ -197,23 +207,36 @@ final class MTGPointsListController extends AbstractController
      * Streamed response to download a CSV file of a given tournament, provided the current user has access to it.
      *
      * @param MTGPointsList $MTGPointsList
+     * @param EntityManagerInterface $entityManager
+     * @param MTGSourceCardRepository $MTGSourceCardRepository
+     * @param Security $security
+     * @param TranslatorInterface $translator
      *
      * @return Response
      */
     #[Route('/{id}/export', name: 'admin_mtg_points_list_export', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function tournamentExportResults(
         #[MapEntity(id: 'id')]
-        MTGPointsList $MTGPointsList
+        MTGPointsList $MTGPointsList,
+        EntityManagerInterface $entityManager,
+        MTGSourceCardRepository $MTGSourceCardRepository,
+        Security $security,
+        TranslatorInterface $translator
     ): Response
     {
         $pointsListModelClass = $MTGPointsList->getRulesModel();
 
-        if(! class_exists($pointsListModelClass)) {
+        if (! class_exists($pointsListModelClass)) {
             throw $this->createNotFoundException('Given Points List doesn\'have a valid Rules Model.');
         }
 
         /** @var PointsListModelInterface $pointsListModel */
-        $pointsListModel = new $pointsListModelClass();
+        $pointsListModel = new $pointsListModelClass(
+            $entityManager,
+            $translator,
+            $MTGSourceCardRepository,
+            $security
+        );
 
         return $pointsListModel->generateCSVResponseForList($MTGPointsList);
     }

@@ -4,14 +4,14 @@
 
 declare(strict_types = 1);
 
-namespace App\Model\AeonShift\PointsList\V1;
+namespace App\Model\AeonShift\PointsList\MTG\V1;
 
 use App\Entity\MTG\MTGPointsList;
 use App\Entity\MTG\MTGPointsListCard;
 use App\Entity\PointsListInterface;
 use App\Entity\User;
 use App\Model\AeonShift\PointsList\AbstractPointsListModel;
-use App\Repository\MTG\MTGSourceCardRepository;
+use App\Repository\SourceItemsRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use RuntimeException;
@@ -30,7 +30,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TranslatorInterface $translator,
-        private MTGSourceCardRepository $MTGSourceCardRepository,
+        private SourceItemsRepositoryInterface $MTGSourceCardRepository,
         private Security $security
     )
     {
@@ -70,19 +70,6 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 ]
             );
 
-            fputcsv(
-                $handle,
-                [
-                    '↓ Card Name ↓',
-                    'Duel Points',
-                    'Duel Points as a Commander',
-                    '2HG Points',
-                    '2HG Points as a Commander',
-                    'Multi Points',
-                    'Multi Points as a Commander',
-                ]
-            );
-
             for ($i = 1; $i <= 3; ++$i) {
                 fputcsv(
                     $handle,
@@ -97,6 +84,19 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                     ]
                 );
             }
+
+            fputcsv(
+                $handle,
+                [
+                    '↓ Card Name ↓',
+                    'Duel Points',
+                    'Duel Points as a Commander',
+                    '2HG Points',
+                    '2HG Points as a Commander',
+                    'Multi Points',
+                    'Multi Points as a Commander',
+                ]
+            );
 
             foreach ($pointsListCards as $result) {
                 fputcsv(
@@ -133,7 +133,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
     {
         // Generate a filename based on the tournament ID and current timestamp
         return 'AeonShift_MTG_List_'
-            . $pointsList->id
+            . (int)$pointsList->id
             . '_'
             . mb_substr(
                 (string)preg_replace(
@@ -171,7 +171,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
         if (empty($splitLines)) {
             return [
                 'status'  => 'error',
-                'message' => $this->translator->trans('admin.form.mtg.points_list.import.error.filecontents'),
+                'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.filecontents'),
             ];
         }
 
@@ -180,7 +180,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             array_shift($splitLines);
         }
 
-        $sourceCards = $this->MTGSourceCardRepository->getAllSourceCardNamesAsArray();
+        $sourceCards = $this->MTGSourceCardRepository->getAllSourceItemsNamesAsArray();
 
         // Validate and process each result entry
         while (! empty($splitLines)) {
@@ -189,6 +189,14 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             $shiftedLineArray = array_shift($splitLines);
             /** @var array<int, string> $CSVlineContentsAsArray */
             $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
+
+            // If we're on the first line, it MUST be the unranked cards line.
+            if(($processingLine === 1) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== '((unranked))') {
+                return [
+                    'status'  => 'error',
+                    'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.pointslist.import.error.column_count')]),
+                ];
+            }
 
             // If the line is empty, skip it
             if (count($CSVlineContentsAsArray) <= 1) {
@@ -202,7 +210,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             ) {
                 return [
                     'status'  => 'error',
-                    'message' => $this->translator->trans('admin.form.mtg.points_list.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.points_list.import.error.column_count')]),
+                    'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.pointslist.import.error.column_count')]),
                 ];
             }
 
@@ -212,7 +220,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             ) {
                 return [
                     'status'  => 'error',
-                    'message' => $this->translator->trans('admin.form.mtg.points_list.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.points_list.import.error.column_count')]),
+                    'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.pointslist.import.error.column_count')]),
                 ];
             }
 
@@ -221,11 +229,11 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 return [
                     'status'  => 'error',
                     'message' => $this->translator->trans(
-                        'admin.form.mtg.points_list.import.error.processing_line',
+                        'admin.form.mtg.pointslist.import.error.processing_line',
                         [
                             'line_number' => $processingLine,
                             'error'       => $this->translator->trans(
-                                'admin.form.mtg.points_list.import.error.incorrectname',
+                                'admin.form.mtg.pointslist.import.error.incorrectname',
                                 ['name' => $CSVlineContentsAsArray[0]]
                             ),
                         ]
@@ -238,11 +246,11 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 return [
                     'status'  => 'error',
                     'message' => $this->translator->trans(
-                        'admin.form.mtg.points_list.import.error.processing_line',
+                        'admin.form.mtg.pointslist.import.error.processing_line',
                         [
                             'line_number' => $processingLine,
                             'error'       => $this->translator->trans(
-                                'admin.form.mtg.points_list.import.error.notfoundinsources',
+                                'admin.form.mtg.pointslist.import.error.notfoundinsources',
                                 ['tournament_id' => $CSVlineContentsAsArray[0]]
                             ),
                         ]
@@ -261,7 +269,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             ) {
                 return [
                     'status'  => 'error',
-                    'message' => $this->translator->trans('admin.form.mtg.points_list.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.points_list.import.error.invalid_game_points')]),
+                    'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.pointslist.import.error.invalid_game_points')]),
                 ];
             }
 
@@ -311,7 +319,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
 
         return [
             'status'  => 'success',
-            'message' => $this->translator->trans('admin.form.mtg.points_list.import.updated.success', ['number' => $processingLine]),
+            'message' => $this->translator->trans('admin.form.mtg.pointslist.import.updated.success', ['number' => $processingLine]),
         ];
     }
 }

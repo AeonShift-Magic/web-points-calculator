@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Entity;
 
 use DateTime;
+use DateTimeZone;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
@@ -51,8 +52,20 @@ class AbstractUpdate implements UpdateInterface
     public function __construct()
     {
         $this->__traitConstruct();
-        $this->startingAt = new DateTime();
-        $this->endingAt = new DateTime();
+        // The reference for AeonShift is this timezone
+        $tz = new DateTimeZone('Europe/Paris');
+        $now = new DateTime('now', $tz);
+
+        $month = (int)$now->format('n');
+
+        // Determine next odd month
+        $this->startingAt = ($month % 2 === 1)
+            ? $now->modify('last monday of +0 month 20:00')
+            : $now->modify('last monday of +1 month 20:00');
+
+        $this->endingAt = ($month % 2 === 1)
+            ? (clone $now)->modify('last monday of +1 months 19:59')
+            : (clone $now)->modify('last monday of +2 months 19:59');
     }
 
     #[Override]

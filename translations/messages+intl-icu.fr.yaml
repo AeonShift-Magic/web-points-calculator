@@ -33,6 +33,8 @@ admin:
                     help: Entre -100 et 100. Si déjà utilisé, tous les blocs avec les bonne langue et emplacement seront affichés par poids croissant.
                     label: Poids
                     placeholder: Poids du bloc
+            legends:
+                info: 'Paramètres du bloc'
         page:
             create:
                 contents:
@@ -54,6 +56,8 @@ admin:
                 zone:
                     help: La zone dans laquelle cette page sera affichée. Par exemple, "header" pour l'en-tête, "footer" pour le pied de page, etc.
                     label: Zone
+            legends:
+                info: 'Détails de la page'
         user:
             create:
                 roles:
@@ -82,7 +86,12 @@ admin:
                     public:
                         label: 'Publique'
                         help: 'Make this update publicly visible'
-            points_list:
+                    rulesmode:
+                        label: 'Modèle de règles'
+                        help: 'Le modèle de règles à appliquer pour utiliser cette liste'
+                    relatedpointslist:
+                        label: 'Liste(s) de Points liée(s)'
+            pointslist:
                 create:
                     filename:
                         label: 'Nom du fichier'
@@ -104,7 +113,36 @@ admin:
                     rulesmodel:
                         label: 'Modèle de règles'
                         help: 'Le modèle de règles à appliquer'
+                    import:
+                        label: 'MTG - Importer les Points pour la Liste "{name}"'
+                        title: 'MTG - Importer les Points pour la Liste "{name}"'
                 import:
+                    label: >
+                        📥 Importer/mettre à jour la liste des points (fichier CSV)
+                    help: >
+                        Utilisez ce formulaire pour mettre à jour la liste des points à partir du modèle CSV fourni, une carte par ligne.
+                        <br>
+                        <strong>Attention: cette action écrasera la liste des points actuelle et est irréversible.</strong>
+                    help2: >
+                        Remarque : notre outil vérifie au minimum l'intégrité du fichier avant de l'écraser et normalise le contenu des cellules (casse, longueur, données numériques...), mais il est de <strong>votre responsabilité</strong> de veiller au contenu et à toute donnée perdue.
+                    help3: >
+                        Le fichier CSV doit être au format UTF-8 (Unicode), les colonnes séparées par des virgules et les sauts de ligne au format Unix (Nouvelle ligne).
+                        <br>
+                        Les valeurs peuvent être placées entre guillemets doubles (").
+                        <br>
+                        Un résultat par ligne. Chaque valeur (colonne "Nom (EN)") doit être unique et représenter une carte existante dans la base de données source (l'ordre des lignes n'a pas d'importance).
+                        <br>
+                        Les points (6 colonnes) sont des entiers ou des nombres décimaux (les valeurs telles que "10" ou "10,5" sont acceptées).
+                    help4: >
+                        Le fichier doit contenir exactement 5 lignes en haut, qui seront ignorées, et la sixième ligne DOIT avoir une carte nommée "((unranked))" et définit les points pour les cartes non classées (unranked).
+                    help5: >
+                        <strong>Ne modifiez pas les colonnes, leur ordre, n'ajoutez pas de colonnes supplémentaires à gauche.</strong>
+                    help6: >
+                        Vous pouvez également modifier les cartes individuellement sans avoir à télécharger à nouveau le fichier entier en cliquant sur le bouton situé à droite de chaque ligne dans la page de liste.
+                    help7: >
+                        Remarque : les modifications sont visibles en temps réel dans la partie administration de ce site web, mais l'affichage public et les calculs peuvent prendre jusqu'à 10 minutes.
+                    help8: >
+                        Le tableau ci-dessous montre un exemple de contenu attendu dans votre fichier CSV :
                     confirm:
                         label: 'Je confirme que j''ai bien lu et compris les instructions ci-dessus et que je souhaite importer/mettre à jour points de la liste.'
                     file:
@@ -124,23 +162,81 @@ admin:
                         column_count: 'la ligne ne compte pas le bon nombre de colonnes, 7 attendues au moins'
                         invalid_value: 'valeur invalide'
                         invalid_name: 'Une carte doit avoir le même nom qu''au moins une carte dans la liste des cartes sources'
+                        invalid_first_line: 'Le nom de la carte en anglais dans la première ligne doit impérativement être "((unranked))"'
                         invalid_game_points: 'Points invalides (doit être un entier entre -1000 et 1000)'
                         incorrectname: 'Nom de carte incorrect : "{name}"'
                         notfoundinsources: 'Carte inconnue dans les sources de référence : {name}"'
-            points_list_card:
+                    info: 'Import des points'
+                legends:
+                    info: 'Détails de la liste de points'
+            pointslistcard:
                 create:
                     pointslist:
-                        label: 'Liste de Points'
+                        label: 'Liste de points'
+                        help: 'À quelle liste de points associer cette carte ?'
+                        placeholder: 'Veuillez choisir une liste de points'
                     nameen:
                         label: 'Nom (EN)'
+                        help: 'Le nom de la carte, en anglais. Doit être au caractère près similaire à une carte en base.'
                     scryfallid:
                         label: 'ID Scryfall'
+                        help: 'L''ID Scryfall de la carte, si nécessaire'
                     scryfalluri:
                         label: 'URI Scryfall'
+                        help: 'L''URI Scryfall de la carte, si nécessaire'
                     manavalue:
                         label: 'Valeur de mana'
+                        help: 'La valeur de mana de la carte'
                     oracleid:
                         label: 'ID Oracle'
+                        help: 'L''ID Oracle de la carte'
+                    multicztype:
+                        label: 'Type d''objets multiples dans les zones de commandes'
+                        help: 'Le type d''objets multiples dans les zones de commandes, comme "doctors_companion", "choose_a_background", "friends_forever", "partner", "doctors_companion", "choose_a_background".'
+                    points2hg:
+                        label: 'Points Géant à deux têtes'
+                        help: 'Points de cette carte en variante Géant à deux têtes.'
+                    points2hgspecial:
+                        label: 'Points Géant à deux têtes (spécial)'
+                        help: 'Points de cette carte en variante Géant à deux têtes (spécial, comme "En tant que Commandant").'
+                    pointsduel:
+                        label: 'Points de Duel'
+                        help: 'Points de cette carte en variante Duel.'
+                    pointsduelspecial:
+                        label: 'Points de Duel (spécial)'
+                        help: 'Points de cette carte en variante Duel (spécial, comme "En tant que Commandant").'
+                    pointsmulti:
+                        label: 'Points Multijoueur Chacun pour soi'
+                        help: 'Points de cette carte en variante Multijoueur Chacun pour soi.'
+                    pointsmultispecial:
+                        label: 'Points multijoueurs chacun pour soi (spécial)'
+                        help: 'Les points de cette carte dans la variante multijoueur chacun pour soi (spéciale, comme «En tant que commandant»).'
+                    islegal2hg:
+                        label: 'Légal en 2HG'
+                        help: 'Vérifier si la carte est légale en Troll A Deux Têtes'
+                    islegal2hgspecial:
+                        label: 'Légal en 2HG (spécial)'
+                        help: 'Vérifier si la carte est légale en Troll A Deux Têtes (spécial, comme «En tant que Commandant»)'
+                    islegalduel:
+                        label: 'Légal en Duel'
+                        help: 'Vérifier si la carte est légale en Duel'
+                    islegalduelspecial:
+                        label: 'Légal en Duel (spécial)'
+                        help: 'Vérifier si la carte est légale en Duel (spécial, comme «En tant que Commandant»)'
+                    islegalmulti:
+                        label: 'Légal en points du mode multijoueur Chacun pour soi'
+                        help: 'Vérifier si la carte est légale en points du mode multijoueur Chacun pour soi'
+                    islegalmultispecial:
+                        label: 'Légal en points du mode multijoueur Chacun pour soi (spécial)'
+                        help: 'Vérifier si la carte est légale en multijoueur chacun pour soi (points spéciaux, comme «En tant que commandant»)'
+                    firstline:
+                        label: 'Le premier nom en anglais DOIT toujours être <code class="inline">((unranked))</code> (et définit les points pour les cartes non rankées)'
+                legends:
+                    info: 'Points List Card details'
+        abstract:
+            update:
+                legends:
+                    info: 'Détails de la mise à jour'
     home:
         goto:
             text: 'Aller dans une sous-section de l''administration :'
@@ -148,6 +244,14 @@ admin:
         cardsourceactivityhistory:
             error:
                 fileremoved: 'Le fichier de journalisation demandé n''existe plus.'
+        pointslistcard:
+            points:
+                label: 'Points (Duel - 2HG - Multi FFA)'
+        update:
+            publish: 'Publier'
+            unpublish: 'Dépublier'
+            published: 'Mise à jour publiée avec succès.'
+            unpublished: 'Mise à jour dépubliée avec succès.'
     nav:
         customblocks:
             edit:
@@ -199,35 +303,47 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'Historique de l''Activité des Sources de Cartes MTG'
-                    title: 'Historique de l''Activité des Sources de Cartes MTG'
+                    label: 'MTG - Historique de l''Activité des Sources de Cartes'
+                    title: 'MTG - Historique de l''Activité des Sources de Cartes'
             pointslist:
                 index:
-                    label: 'Listes à Points MTG'
-                    title: 'Listes à Points MTG'
+                    label: 'MTG - Listes à Points'
+                    title: 'MTG - Listes à Points'
                 new:
                     label: '➕ Créer une Liste de Points MTG'
                     title: 'Créer une Liste de Points MTG'
                 edit:
-                    title: 'Editer la Liste de Points MTG "{name}"'
+                    label: 'MTG - Editer la Liste de Points "{name}"'
+                    title: 'MTG - Editer la Liste de Points "{name}"'
                 show:
-                    label: 'Détails de la Liste de Points MTG "{name}"'
+                    label: 'MTG - Détails de la Liste de Points "{name}"'
+                    title: 'MTG - Détails de la Liste de Points "{name}"'
             pointslistcard:
                 index:
-                    label: 'Cartes des Listes à Points MTG'
-                    title: 'Cartes des Listes à Points MTG'
+                    label: 'MTG - Cartes des Listes de Points'
+                    title: 'MTG - Cartes des Listes de Points'
                 new:
                     label: '➕ Créer une Carte de Liste de Points MTG'
                     title: 'Créer une Carte de Liste de Points MTG'
+                edit:
+                    label: 'MTG - Editer la Carte de Liste de Points "{name}"'
+                    title: 'MTG - Editer la Carte de Liste de Points "{name}"'
+                show:
+                    title: 'MTG - Détails de la liste de points "{name}"'
+                    label: 'MTG - Détails de la liste de points'
             update:
                 index:
-                    label: 'Mises à jour MTG'
-                    title: 'Mises à jour MTG'
+                    label: 'MTG - Mises à jour'
+                    title: 'MTG - Mises à jour'
                 new:
                     label: '➕ Créer une mise à jour MTG'
                     title: 'Créer une mise à jour MTG'
                 show:
-                    title: 'Détails de l''annonce/mise à jour "{name}"'
+                    title: 'MTG - Détails de l''annonce/mise à jour "{name}"'
+                    label: 'MTG - Détails de l''annonce/mise à jour "{name}"'
+                edit:
+                    label: 'MTG - Editer la l''annonce/mise à jour "{name}"'
+                    title: 'MTG - Editer la l''annonce/mise à jour "{name}"'
             dbupdate:
                 index:
                     title: 'MTG - Mises à jour de la base de données'
@@ -247,9 +363,7 @@ admin:
                     label: 'MTG - Etat du dernier téléchargement des sources'
                 startnew:
                     label: 'MTG - Lancement manuel HTTP d''un téléchargement des sources'
-            points_list_cards:
-                index:
-                    label: 'MTG - Cartes des listes de points'
+
         cardsourceactivityhistory:
             index:
                 label: 'Historique d''activité des sources de cartes'
@@ -274,6 +388,8 @@ admin:
                         label: 'Administration'
                     password:
                         label: 'Mot de passe'
+            legends:
+                info: 'Information utilisateur·ice'
         password:
             password_updated_success: Mot de passe mis à jour avec succès pour {username}.
 customblock:

@@ -1,31 +1,27 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}{{ 'admin.mtg.update.edit.title'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.update.edit.title'|trans({'%name%': update.titleEN}) }}{% endblock %}
 
-{% block main_content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1>{{ 'admin.mtg.update.edit.heading'|trans }}</h1>
-        </div>
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.update.edit.title'|trans({'%name%': update.titleEN}) }}</h1>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray inline-block" href="{{ url('admin_mtg_update_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-gray" href="{{ url('admin_mtg_update_show', {'id': update.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
 
         <div>
-            {{ form_start(form) }}
-                {{ form_widget(form) }}
+            {{ include('admin/mtg/update/_delete_form.html.twig') }}
+        </div>
+    </div>
 
-                <div class="flex items-center justify-between mt-6">
-                    <a href="{{ path('admin_mtg_update_index') }}" class="text-gray-600 hover:text-gray-800">
-                        {{ 'admin.mtg.update.edit.back'|trans }}
-                    </a>
-                    <div>
-                        <a href="{{ path('admin_mtg_update_show', {'id': update.id}) }}" class="mr-2 text-gray-600 hover:text-gray-800">
-                            {{ 'admin.mtg.update.edit.show'|trans }}
-                        </a>
-                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            {{ 'admin.mtg.update.edit.save'|trans }}
-                        </button>
-                    </div>
-                </div>
-            {{ form_end(form) }}
+    {{ include('admin/mtg/update/_form.html.twig', {'button_label': 'global.savebutton.label'|trans}) }}
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray inline-block" href="{{ url('admin_mtg_update_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+        <a class="btn btn-gray" href="{{ url('admin_mtg_update_show', {'id': update.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+
+        <div>
+            {{ include('admin/mtg/update/_delete_form.html.twig') }}
         </div>
     </div>
 {% endblock %}

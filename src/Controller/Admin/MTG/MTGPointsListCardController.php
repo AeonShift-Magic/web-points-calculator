@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller\Admin\MTG;
 
 use App\Entity\MTG\MTGPointsListCard;
+use App\Entity\User;
 use App\Form\Admin\MTG\AdminMTGPointsListCardType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -34,7 +35,11 @@ final class MTGPointsListCardController extends AbstractController
         $form = $this->createForm(AdminMTGPointsListCardType::class, $pointsListCard);
         $form->handleRequest($request);
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $pointsListCard->setUpdatedBy($currentUser);
             $entityManager->flush();
             $this->addFlash('success', $translator->trans('global.savesuccess.text'));
 
@@ -54,7 +59,11 @@ final class MTGPointsListCardController extends AbstractController
     #[Route(name: 'admin_mtg_points_list_card_index', methods: ['GET'])]
     public function index(PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $query = $entityManager->createQuery('SELECT c FROM App\Entity\MTG\MTGPointsListCard c ORDER BY c.id ASC');
+        $query = $entityManager->createQueryBuilder()
+            ->select('c')
+            ->from(MTGPointsListCard::class, 'c')
+            ->orderBy('c.updatedAt', 'DESC')
+            ->getQuery();
 
         $pagination = $paginator->paginate(
             $query,
@@ -74,7 +83,12 @@ final class MTGPointsListCardController extends AbstractController
         $form = $this->createForm(AdminMTGPointsListCardType::class, $pointsListCard);
         $form->handleRequest($request);
 
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $pointsListCard->setCreatedBy($currentUser);
+            $pointsListCard->setUpdatedBy($currentUser);
             $entityManager->persist($pointsListCard);
             $entityManager->flush();
             $this->addFlash('success', $translator->trans('global.savesuccess.text'));

@@ -8,32 +8,32 @@ use App\Entity\MTG\MTGPointsList;
 use App\Entity\MTG\MTGPointsListCard;
 use Override;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-final class AdminMTGPointsListCardType extends AbstractType
+final class AdminMTGPointsListCardType extends AdminAbstractCardType implements AdminMTGFormTypeInterface
 {
     #[Override]
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        parent::buildForm($builder, $options);
+
         $builder
             ->add(
-                'list',
+                'pointsList',
                 EntityType::class,
                 [
                     'class'       => MTGPointsList::class,
                     'required'    => false,
                     'constraints' => [
-                        new NotNull(message: 'admin.form.mtgpointslistcard.create.list.null'),
+                        new NotNull(),
                     ],
-                    'label'       => 'admin.form.mtgpointslistcard.create.list.label',
-                    'help'        => 'admin.form.mtgpointslistcard.create.list.help',
-                    'placeholder' => 'admin.form.mtgpointslistcard.create.list.placeholder',
+                    'label'       => 'admin.form.mtg.pointslistcard.create.pointslist.label',
+                    'help'        => 'admin.form.mtg.pointslistcard.create.pointslist.help',
+                    'placeholder' => 'admin.form.mtg.pointslistcard.create.pointslist.placeholder',
                 ]
             );
-        // Additional fields for MTGAbstractCard will be inherited automatically or added separately
     }
 
     #[Override]

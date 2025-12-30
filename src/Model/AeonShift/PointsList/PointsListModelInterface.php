@@ -5,13 +5,20 @@ declare(strict_types = 1);
 namespace App\Model\AeonShift\PointsList;
 
 use App\Entity\PointsListInterface;
+use App\Repository\SourceItemsRepositoryInterface;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 interface PointsListModelInterface
 {
     /** Mostly used for admin forms. */
     public const string LABEL = 'Original';
+
+    /** @var string self-identifier for model grouping per license */
+    public const string LICENSE = 'MTG';
 
     /** Must be YYYY-MM-DD, mostly used for sorting and admin forms. */
     public const string RELEASE_DATE = '2026-01-26';
@@ -25,12 +32,31 @@ interface PointsListModelInterface
     /** @var int bump this everytime the base rules need a new, different model with a new class */
     public const int VERSION = 1;
 
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
+        SourceItemsRepositoryInterface $serviceEntityRepository,
+        Security $security
+    );
+
     /**
      * Mostly used for admin forms.
      *
      * @return string
      */
     public function __toString(): string;
+
+    /**
+     * @return string a static name generator for this classe, based on its constant properties
+     */
+    public static function getName(): string;
+
+    /**
+     * Simply return the static string of the release date and time.
+     *
+     * @return DateTime
+     */
+    public static function getReleaseDateAsDateTime(): DateTime;
 
     /**
      * This is the mandatory method used to extract current Points List values as a CSV file.
@@ -40,13 +66,6 @@ interface PointsListModelInterface
      * @return StreamedResponse
      */
     public function generateCSVResponseForList(PointsListInterface $pointsList): StreamedResponse;
-
-    /**
-     * Simply return the static string of the release date and time.
-     *
-     * @return DateTime
-     */
-    public function getReleaseDateAsDateTime(): DateTime;
 
     /**
      * This is the mandatory methode used to import, parse and validate
