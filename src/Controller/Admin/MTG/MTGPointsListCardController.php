@@ -59,20 +59,16 @@ final class MTGPointsListCardController extends AbstractController
     #[Route(name: 'admin_mtg_points_list_card_index', methods: ['GET'])]
     public function index(PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $query = $entityManager->createQueryBuilder()
-            ->select('c')
-            ->from(MTGPointsListCard::class, 'c')
-            ->orderBy('c.updatedAt', 'DESC')
-            ->getQuery();
+        $filters = $request->query->all();
+        $initialFiltersActive = false;
 
-        $pagination = $paginator->paginate(
-            $query,
-            $request->query->getInt('page', 1),
-            20
-        );
+        if (! empty($filters['nameEN']) || ! empty($filters['pointsList'])) {
+            $initialFiltersActive = true;
+        }
 
         return $this->render('admin/mtg/points_list_card/index.html.twig', [
-            'points_list_cards' => $pagination,
+            'filters'              => $filters,
+            'initialFiltersActive' => $initialFiltersActive,
         ]);
     }
 

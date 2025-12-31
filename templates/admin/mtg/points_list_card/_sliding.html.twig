@@ -1,0 +1,37 @@
+{% if pageCount > 1 and static_route is defined and static_route is not empty %}
+    <div class="pagination">
+        {% if first is defined and current != first %}
+            <span class="first">
+                <a data-turbo-frame="mtg-points-list-cards" href="{{ path(static_route, knp_pagination_query(query, first, options)) }}">&lt;&lt;</a>
+            </span>
+        {% endif %}
+
+        {% if previous is defined %}
+            <span class="previous">
+                <a data-turbo-frame="mtg-points-list-cards" rel="prev" href="{{ path(static_route, knp_pagination_query(query, previous, options)) }}">&lt;</a>
+            </span>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <span class="page">
+                    <a data-turbo-frame="mtg-points-list-cards" href="{{ path(static_route, knp_pagination_query(query, page, options)) }}">{{ page }}</a>
+                </span>
+            {% else %}
+                <span class="current">{{ page }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {% if next is defined %}
+            <span class="next">
+                <a data-turbo-frame="mtg-points-list-cards" rel="next" href="{{ path(static_route, knp_pagination_query(query, next, options)) }}">&gt;</a>
+            </span>
+        {% endif %}
+
+        {% if last is defined and current != last %}
+            <span class="last">
+                <a data-turbo-frame="mtg-points-list-cards" href="{{ path(static_route, knp_pagination_query(query, last, options)) }}">&gt;&gt;</a>
+            </span>
+        {% endif %}
+    </div>
+{% endif %}

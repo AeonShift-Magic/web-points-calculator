@@ -16,7 +16,7 @@
     {% endif %}
 
     {% if app.user is defined and app.user is not empty %}
-        {% if app.user is defined and is_granted('ROLE_SEASON_MANAGER') %}
+        {% if app.user is defined and is_granted('ROLE_ADMIN') %}
             <div class="admin-edit-shortcut">
                 <a href="{{ url('admin_page_edit', {'id': page.id, 'slug': page.slug}) }}" class="btn btn-red" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
             </div>

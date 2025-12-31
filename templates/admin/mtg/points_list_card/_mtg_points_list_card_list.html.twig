@@ -1,0 +1,119 @@
+{% set paginator_route = 'admin_mtg_points_list_card_index' %}
+{% set paginator_route_params = app.request.query.all() %}
+
+<div class="flex flex-col items-center justify-items-center">
+
+    {% if sourceCards.totalItemCount is defined %}
+        <h3 class="text-center w-full">
+            {{ 'global.total.label'|trans({'%elements%': sourceCards.totalItemCount})|raw }}
+            {% if sourceCards.totalItemCount / sourceCards.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': sourceCards.currentPageNumber, 'total': (sourceCards.totalItemCount / sourceCards.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+        </h3>
+    {% else %}
+        <h3 class="text-center w-full">
+            {{ 'global.total.label'|trans({'elements': sourceCards|length})|raw }}
+        </h3>
+        <h5 class="text-center w-full">
+            {{ 'global.max.label'|trans }}
+        </h5>
+    {% endif %}
+
+    <a class="btn btn-green flex-none my-4" href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+
+    {% if filtersActive is defined and not filtersActive and sourceCards is defined and sourceCards is iterable %}
+        <div class="navigation center">
+            {{ knp_pagination_render(
+                sourceCards,
+                'admin/mtg/points_list_card/_sliding.html.twig',
+                {},
+                {
+                    pageParameterName: 'page',
+                    static_route: paginator_route, routeParams: paginator_route_params,
+                }
+            ) }}
+        </div>
+    {% endif %}
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <thead>
+                <tr>
+                    <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointslist.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduel.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelspecial.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.points2hg.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.points2hgspecial.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmulti.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmultispecial.label'|trans }}</th>
+                    <th>{{ 'global.dates.label'|trans }}</th>
+                    <th>{{ 'global.users.label'|trans }}</th>
+                    <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for points_list_card in sourceCards %}
+                    <tr>
+                        <td>{{ points_list_card.id }}</td>
+                        <td>
+                            {% if points_list_card.nameEn|lower is not same as('((unranked))'|lower) %}
+                                <a href="https://scryfall.com/search?q={{ points_list_card.nameEn|e('url') }}" target="_blank">
+                                    <span class="icon-search"></span>
+                                    {{ points_list_card.nameEn }}
+                                </a>
+                            {% else %}
+                                {{ points_list_card.nameEn }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if points_list_card.pointsList is defined and points_list_card.pointsList is not null %}
+                                <strong>
+                                    <a href="{{ url('admin_mtg_points_list_show', {'id': points_list_card.pointsList.id}) }}" title="{{ 'admin.nav.mtg.pointslistcard.show.title'|trans({'name': points_list_card.pointsList.title}) }}">
+                                        {{ points_list_card.pointsList.title|default('global.none.label'|trans) }}
+                                    </a>
+                                </strong>
+                            {% else %}
+                                {{ 'global.none.label'|trans }}
+                            {% endif %}
+                        </td>
+                        <td><span class="text-blue-300">{% if points_list_card.pointsDuel > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuel }}{% if points_list_card.pointsDuel > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-blue-300">{% if points_list_card.pointsDuelSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelSpecial }}{% if points_list_card.pointsDuelSpecial > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-orange-300">{% if points_list_card.points2hg > 0 %}<strong>{% endif %}{{ points_list_card.points2hg }}{% if points_list_card.points2hg > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-orange-300">{% if points_list_card.points2hgSpecial > 0 %}<strong>{% endif %}{{ points_list_card.points2hgSpecial }}{% if points_list_card.points2hgSpecial > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-amber-300">{% if points_list_card.pointsMulti > 0 %}<strong>{% endif %}{{ points_list_card.pointsMulti }}{% if points_list_card.pointsMulti > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-amber-300">{% if points_list_card.pointsMultiSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsMultiSpecial }}{% if points_list_card.pointsMultiSpecial > 0 %}</strong>{% endif %}</span></td>
+                        <td>
+                            {{ points_list_card.createdAt ? points_list_card.createdAt|date('Y-m-d') : '' }} / {{ points_list_card.updatedAt ? points_list_card.updatedAt|date('Y-m-d') : '' }}
+                        </td>
+                        <td>
+                            {{ points_list_card.createdBy ? points_list_card.createdBy.username|raw : 'N/A' }} / {{ points_list_card.updatedBy ? points_list_card.updatedBy.username|raw : 'N/A' }}
+                        </td>
+                        <td>
+                            <a class="btn btn-gray w-full" href="{{ url('admin_mtg_points_list_card_show', {'id': points_list_card.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            <a class="btn btn-green w-full" href="{{ url('admin_mtg_points_list_card_edit', {'id': points_list_card.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">{{ 'global.noelements.label'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if filtersActive is defined and not filtersActive and sourceCards is defined and sourceCards is iterable %}
+        <div class="navigation center">
+            {{ knp_pagination_render(
+                sourceCards,
+                'admin/mtg/points_list_card/_sliding.html.twig',
+                {},
+                {
+                    pageParameterName: 'page',
+                    static_route: paginator_route, routeParams: paginator_route_params,
+                }
+            ) }}
+        </div>
+    {% endif %}
+
+</div>

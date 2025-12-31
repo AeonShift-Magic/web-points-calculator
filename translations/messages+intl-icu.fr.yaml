@@ -130,7 +130,7 @@ admin:
                         <br>
                         Les valeurs peuvent être placées entre guillemets doubles (").
                         <br>
-                        Un résultat par ligne. Chaque valeur (colonne "Nom (EN)") doit être unique et représenter une carte existante dans la base de données source (l'ordre des lignes n'a pas d'importance).
+                        Un résultat par ligne. Chaque valeur (colonne "Nom (EN)") doit être unique et représenter un nom de carte EXACT existant (vérifie chaque caractère, y compris : espaces, ponctuation, noms des deux faces et casse) dans la base de données source (l'ordre des lignes n'a pas d'importance).
                         <br>
                         Les points (6 colonnes) sont des entiers ou des nombres décimaux (les valeurs telles que "10" ou "10,5" sont acceptées).
                     help4: >
@@ -157,15 +157,15 @@ admin:
                     updated:
                         success: 'Points de la liste mis à jour avec succès : {number} résultat(s) mis à jour.'
                     error:
-                        filecontents: 'Le contenu du fichier est invalide, merci de vérifier que vous avez bien suivi les instructions ci-dessus.'
-                        processing_line: 'Erreur lors du traitement de la ligne {line_number} : {error}. Merci de vérifier que vous avez bien suivi les instructions ci-dessus.'
+                        filecontents: 'Le contenu du fichier est invalide, merci de vérifier que vous avez bien suivi les instructions ci-dessous.'
+                        processing_line: 'Erreur lors du traitement de la ligne {line_number} : {error}. Merci de vérifier que vous avez bien suivi les instructions ci-dessous.'
                         column_count: 'la ligne ne compte pas le bon nombre de colonnes, 7 attendues au moins'
                         invalid_value: 'valeur invalide'
                         invalid_name: 'Une carte doit avoir le même nom qu''au moins une carte dans la liste des cartes sources'
                         invalid_first_line: 'Le nom de la carte en anglais dans la première ligne doit impérativement être "((unranked))"'
                         invalid_game_points: 'Points invalides (doit être un entier entre -1000 et 1000)'
                         incorrectname: 'Nom de carte incorrect : "{name}"'
-                        notfoundinsources: 'Carte inconnue dans les sources de référence : {name}"'
+                        notfoundinsources: 'Carte inconnue dans les sources de référence : "{name}"'
                     info: 'Import des points'
                 legends:
                     info: 'Détails de la liste de points'
@@ -534,6 +534,14 @@ global:
     import:
         label: '📥 Importer/mettre à jour'
         title: '📥 Importer/mettre à jour les cartes/points (fichier CSV)'
+    filter:
+        label: Filtrer les résultats
+        title: 'Cliquer ici pour filtrer les résultats à partir de votre sélection'
+    reset:
+        title: 'Remettre le formulaire à zéro'
+        label: 'Remettre à zéro'
+    max:
+        label: 'Seuls les 100 premiers sont affichés.'
 page:
     position:
         footer:

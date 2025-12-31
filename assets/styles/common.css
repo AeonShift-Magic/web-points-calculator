@@ -252,7 +252,7 @@ select:focus,
 .dt-search input:focus {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     border-color: #3b82f6;
-    outline: 2px solid transparent;
+    outline: 2px solid var(--theme-neutral-dark-alt);
     outline-offset: 2px;
 }
 
@@ -266,17 +266,18 @@ input[type="file"] {
     font-size: 0.875rem;
     line-height: 1.25rem;
     border-width: 1px;
-    border-color: #d1d5db;
+    border-color: var(--theme-neutral-light-alt);
     border-radius: 0.5rem;
     cursor: pointer;
-    background-color: #fff;
-    color: #000;
+    background-color: var(--theme-neutral-dark-alt);
+    color: var(--theme-white);
     outline: 2px solid transparent;
     outline-offset: 2px;
 }
 
 input[type="file"]:hover {
     border-color: #3b82f6;
+    background-color: var(--theme-neutral-dark-hover);
 }
 
 input[type="checkbox"], input[type="radio"] {
@@ -286,7 +287,6 @@ input[type="checkbox"], input[type="radio"] {
 
 input[type="file"]::file-selector-button {
     color: white;
-    background: var(--theme-neutral-medium);
     border: 0;
     font-weight: bold;
     font-size: 1em;
@@ -294,7 +294,7 @@ input[type="file"]::file-selector-button {
     padding: 0.625rem 1rem 0.625rem 2rem;
     margin-inline-start: -1rem;
     margin-inline-end: 1rem;
-    background-color: var(--theme-neutral-dark-alt-hover);
+    background-color: var(--theme-blue-medium);
 }
 
 input[type="file"]::file-selector-button:hover {
@@ -338,6 +338,12 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.dtr-expanded > th.dtr-control:
     background-color: var(--theme-white);
     color: var(--theme-neutral-dark);
     border-color: var(--theme-neutral-medium);
+}
+
+caption {
+    font-size: 1.25em;
+    padding: 1.5em 0.9em 0.6em 0.9em;
+    font-weight: bold;
 }
 
 a {
@@ -1319,7 +1325,7 @@ blockquote::after {
 }
 
 code {
-    padding: 0.5rem;
+    padding: 0.15rem;
     margin-top: 0.25rem;
     border-radius: 0.25rem;
     border-width: 1px;

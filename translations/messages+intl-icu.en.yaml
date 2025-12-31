@@ -147,7 +147,7 @@ admin:
                         <br>
                         Values may be enclosed in double quotes ("). 
                         <br>
-                        One result per line, each position (column "Name (EN)") must be unique and represent <strong> a card that exists in source cards database</strong> (line order does not matter). 
+                        One result per line, each position (column "Name (EN)") must be unique and represent <strong> an EXACT card name (checks every character, including: spaces, punctuation, double-face names and case) that exists in source cards database</strong> (line order does not matter). 
                         <br>
                         Points (6 columns)") are integers or decimal numbers (values like "10" or "10.5" are accepted).
                     help4: >
@@ -174,15 +174,15 @@ admin:
                     updated:
                         success: 'Points successfully updated: {number} line(s) updated.'
                     error:
-                        filecontents: 'File contents are invalid; please follow the instructions above.'
-                        processing_line: 'Error processing line {line_number}: {error}. Please follow the instructions above.'
+                        filecontents: 'File contents are invalid; please follow the instructions below.'
+                        processing_line: 'Error processing line {line_number}: {error}. Please follow the instructions below.'
                         column_count: 'Line does not have the correct number of columns, 7 expected at least'
                         invalid_value: 'Invalid value'
                         invalid_name: 'A card must have the same name as a card that''s in the source card list'
                         invalid_game_points: 'Invalid points (must be an integer between -1000 and 1000)'
                         invalid_first_line: 'The card name in English in the first line MUST be "((unranked))"'
                         incorrectname: 'Incorrect card name: "{name}"'
-                        notfoundinsources: 'Card unknown in source cards: {name}"'
+                        notfoundinsources: 'Card unknown in source cards: "{name}"'
                     info: 'Points Import'
                 legends:
                     info: 'Points list details'
@@ -582,6 +582,14 @@ global:
     export:
         label: '📤 Export Points List CSV file'
         title: 'Export this Points List with current values in CSV format to use in a spreadsheet or elsewhere and re-import later.'
+    filter:
+        label: Filter results
+        title: 'Click here to filter results based on your selection'
+    reset:
+        title: 'Reset the form'
+        label: 'Reset'
+    max:
+        label: 'Only the first 100 are displayed.'
 page:
     position:
         footer:

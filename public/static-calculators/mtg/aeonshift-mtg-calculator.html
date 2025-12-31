@@ -2,7 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'nonce-calculator'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self';">
         <title>AEONSHIT Calculator</title>
         <style>
             .titlebar {
@@ -62,7 +62,7 @@
         <p>
             AEONSHIT Calculator is under development. Please check back later! :)
         </p>
-        <script>
+        <script nonce="calculator">
             alert('AEONSHIT Calculator is under development. Please check back later!');
 
             document.addEventListener('DOMContentLoaded', () => {

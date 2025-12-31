@@ -131,7 +131,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
      */
     public function generateCSVResultsFileNameForPointsList(PointsListInterface $pointsList): string
     {
-        // Generate a filename based on the tournament ID and current timestamp
+        // Generate a filename based on the Points List ID and current timestamp
         return 'AeonShift_MTG_List_'
             . (int)$pointsList->id
             . '_'
@@ -191,15 +191,35 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
 
             // If we're on the first line, it MUST be the unranked cards line.
-            if(($processingLine === 1) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== '((unranked))') {
+            if (($processingLine === 1) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== '((unranked))') {
                 return [
                     'status'  => 'error',
-                    'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.pointslist.import.error.column_count')]),
+                    'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.pointslist.import.error.invalid_first_line')]),
                 ];
             }
 
             // If the line is empty, skip it
-            if (count($CSVlineContentsAsArray) <= 1) {
+            if (
+                count($CSVlineContentsAsArray) <= 1
+                || (
+                    isset(
+                        $CSVlineContentsAsArray[0],
+                        $CSVlineContentsAsArray[1],
+                        $CSVlineContentsAsArray[2],
+                        $CSVlineContentsAsArray[3],
+                        $CSVlineContentsAsArray[4],
+                        $CSVlineContentsAsArray[5],
+                        $CSVlineContentsAsArray[6]
+                    )
+                    && empty($CSVlineContentsAsArray[0])
+                    && empty($CSVlineContentsAsArray[1])
+                    && empty($CSVlineContentsAsArray[2])
+                    && empty($CSVlineContentsAsArray[3])
+                    && empty($CSVlineContentsAsArray[4])
+                    && empty($CSVlineContentsAsArray[5])
+                    && empty($CSVlineContentsAsArray[6])
+                )
+            ) {
                 continue;
             }
 
@@ -241,8 +261,8 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 ];
             }
 
-            // Fourth, check that each line starts with a card name that's in source cards
-            if (! in_array($CSVlineContentsAsArray[0], $sourceCards, true)) {
+            // Fourth, check that each line starts with a card name that's in source cards OR is "((unranked))"
+            if ($CSVlineContentsAsArray[0] !== '((unranked))' && ! in_array($CSVlineContentsAsArray[0], $sourceCards, true)) {
                 return [
                     'status'  => 'error',
                     'message' => $this->translator->trans(
@@ -251,7 +271,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                             'line_number' => $processingLine,
                             'error'       => $this->translator->trans(
                                 'admin.form.mtg.pointslist.import.error.notfoundinsources',
-                                ['tournament_id' => $CSVlineContentsAsArray[0]]
+                                ['name' => $CSVlineContentsAsArray[0]]
                             ),
                         ]
                     ),
@@ -286,7 +306,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             ];
         }
 
-        // Clear existing results for the tournament before importing new ones
+        // Clear existing results for the Points List before importing new ones
         $this
             ->entityManager
             ->createQueryBuilder()

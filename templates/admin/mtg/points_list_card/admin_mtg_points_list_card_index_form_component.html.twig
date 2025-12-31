@@ -1,0 +1,53 @@
+<div {{ attributes }}>
+    <div data-controller="toggle" class="flex flex-col items-center align-center w-full" data-loading="addClass(data-loading)">
+        <a class="btn btn-blue widgets-toggle {% if this.filtersActive %}widget-toggle-open{% endif %}"
+           data-action="click->toggle#toggle"
+           data-target="toggle.container"
+           data-toggle-target="link">
+            {{ 'global.filter.label'|trans }}
+        </a>
+
+        <fieldset class="filter-form-container form-container {% if not this.filtersActive %}hidden-form{% endif %} w-full" data-toggle-target="container">
+            <legend>{{ 'global.filter.label'|trans }}</legend>
+
+            <div class="form-widgets w-full">
+                {{ form_start(form, {
+                    attr: {
+                        'data-live-url-value': 'true'
+                    }
+                }) }}
+                <div class="flex flex-col lg:flex-row gap-4">
+                    <div class="w-full lg:w-1/2">
+                        <div class="flex-1 px-4">
+                            {{ form_label(form.pointsList) }}
+                            {{ form_widget(form.pointsList, {
+                                'attr': {
+                                    'data-model': 'pointsList',
+                                    'data-live-change': 'pointsList',
+                                }
+                            }) }}
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/2">
+                        <div class="flex-1 px-4">
+                            {{ form_label(form.nameEN) }}
+                            {{ form_widget(form.nameEN, {
+                                'attr': {
+                                    'data-model': 'debounce(400)|nameEN',
+                                }
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full flex justify-center mt-4">
+                    <button type="button" {{ live_action('resetFilters') }} class="btn btn-gray" title="{{ 'global.reset.title'|trans }}">{{ button_label|default('global.reset.label'|trans) }}</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </fieldset>
+
+        <div class="mt-6 w-full">
+            {% include 'admin/mtg/points_list_card/_mtg_points_list_card_list.html.twig' with { sourceCards: this.sourceCards, filtersActive: this.filtersActive } %}
+        </div>
+    </div>
+</div>

@@ -59,6 +59,7 @@
                         </td>
                         <td>
                             <a class="btn btn-gray w-full" href="{{ url('admin_mtg_points_list_show', {'id': points_list.id}) }}" title="{{ 'global.showbutton.title'|trans }}">{{ 'global.showbutton.label'|trans }}</a>
+                            <a class="btn btn-blue w-full" href="{{ url('admin_mtg_points_list_export', {'id': points_list.id}) }}" title="{{ 'global.export.title'|trans }}">{{ 'global.export.label'|trans }}</a>
                             <a class="btn btn-blue w-full" href="{{ url('admin_mtg_points_list_import', {'id': points_list.id}) }}" title="{{ 'global.import.title'|trans }}">{{ 'global.import.label'|trans }}</a>
                             <a class="btn btn-green w-full" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
                         </td>

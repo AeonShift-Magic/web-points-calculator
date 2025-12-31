@@ -123,7 +123,7 @@ final class MTGPointsListController extends AbstractController
                         if ($result['status'] === 'success') {
                             $this->addFlash('success', $result['message']);
 
-                            return $this->redirectToRoute('admin_mtg_points_list_card', ['id' => $MTGPointsList->id]);
+                            return $this->redirectToRoute('admin_mtg_points_list_show', ['id' => $MTGPointsList->id]);
                         }
 
                         $this->addFlash('error', $result['message']);
@@ -204,7 +204,7 @@ final class MTGPointsListController extends AbstractController
     }
 
     /**
-     * Streamed response to download a CSV file of a given tournament, provided the current user has access to it.
+     * Streamed response to download a CSV file of a given points list, provided the current user has access to it.
      *
      * @param MTGPointsList $MTGPointsList
      * @param EntityManagerInterface $entityManager
@@ -215,7 +215,7 @@ final class MTGPointsListController extends AbstractController
      * @return Response
      */
     #[Route('/{id}/export', name: 'admin_mtg_points_list_export', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function tournamentExportResults(
+    public function pointsListExportContents(
         #[MapEntity(id: 'id')]
         MTGPointsList $MTGPointsList,
         EntityManagerInterface $entityManager,
