@@ -1,69 +1,137 @@
 {% extends 'admin/admin_layout.html.twig' %}
 
-{% block title %}{{ 'admin.mtg.sourcecard.show.title'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.sourcecard.show.title'|trans({'name': source_card.nameEN}) }}{% endblock %}
 
-{% block main_content %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1>{{ 'admin.mtg.sourcecard.show.heading'|trans }}</h1>
-            <a href="{{ path('admin_mtg_source_card_index') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                {{ 'admin.mtg.sourcecard.show.back'|trans }}
-            </a>
-        </div>
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.sourcecard.show.title'|trans({'name': source_card.nameEN}) }}</h1>
 
-        <div>
-            <table class="min-w-full">
-                <tbody class="divide-y divide-gray-200">
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.sourcecard.show.id'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ source_card.id }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.sourcecard.show.name'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ source_card.name }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.sourcecard.show.set'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ source_card.setCode }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.sourcecard.show.layout'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ source_card.layout }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.sourcecard.show.type'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ source_card.type }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ 'admin.mtg.sourcecard.show.rarity'|trans }}
-                        </th>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ source_card.rarity }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_source_card_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <tbody>
+                <tr>
+                    <th class="w-1/4">{{ 'global.id.label'|trans }}</th>
+                    <td>{{ source_card.id }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.nameen.label'|trans }}</th>
+                    <td>{{ source_card.nameEN }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.scryfallid.label'|trans }}</th>
+                    <td>{{ source_card.scryfallId }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.scryfalluri.label'|trans }}</th>
+                    <td><a href="{{ source_card.scryfallURI }}" target=_blank">{{ source_card.scryfallURI }}</a></td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.oracleid.label'|trans }}</th>
+                    <td>{{ source_card.oracleId }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.firstprintsetcode.label'|trans }}</th>
+                    <td>{{ source_card.firstPrintedSetCode|upper }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.firstprintedat.label'|trans }}</th>
+                    <td>{{ source_card.firstPrintedAt|date('Y-m-d') }} ({{ source_card.firstPrintedYear }})</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.maximumtimelinelegality.label'|trans }}</th>
+                    <td>{{ source_card.maximumTimelineLegality|title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.coloridentity.label'|trans }}</th>
+                    <td>{% if source_card.colorIdentity is defined and source_card.colorIdentity is iterable %}
+                            {{ source_card.colorIdentity|join(', ') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.isblue.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.blue|default(0) }}">{{ ('global.' ~ source_card.blue|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.isblack.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.black|default(0) }}">{{ ('global.' ~ source_card.black|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.iswhite.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.white|default(0) }}">{{ ('global.' ~ source_card.white|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.isgreen.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.green|default(0) }}">{{ ('global.' ~ source_card.green|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.isred.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.red|default(0) }}">{{ ('global.' ~ source_card.red|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.iscolorless.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.colorless|default(0) }}">{{ ('global.' ~ source_card.colorless|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.manavalue.label'|trans }}</th>
+                    <td>{{ source_card.manaValue }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.iscommandzoneeligible.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.commandZoneEligible|default(0) }}">{{ ('global.' ~ source_card.commandZoneEligible|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.ismultiplecommandzoneeligible.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.multipleCommandZoneEligible|default(0) }}">{{ ('global.' ~ source_card.multipleCommandZoneEligible|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.multicztype.label'|trans }}</th>
+                    <td>{{ source_card.multiCZType }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduel.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legalDuel|default(0) }}">{{ ('global.' ~ source_card.legalDuel|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legalDuelSpecial|default(0) }}">{{ ('global.' ~ source_card.legalDuelSpecial|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegal2hg.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legal2HG|default(0) }}">{{ ('global.' ~ source_card.legal2HG|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legal2HGSpecial|default(0) }}">{{ ('global.' ~ source_card.legal2HGSpecial|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmulti.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legalMulti|default(0) }}">{{ ('global.' ~ source_card.legalMulti|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmultispecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legalMultiSpecial|default(0) }}">{{ ('global.' ~ source_card.legalMultiSpecial|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.dates.label'|trans }}</th>
+                    <td>
+                        {{ source_card.createdAt ? source_card.createdAt|date('Y-m-d') : '' }} / {{ source_card.updatedAt ? source_card.updatedAt|date('Y-m-d') : '' }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'global.users.label'|trans }}</th>
+                    <td>
+                        {{ source_card.createdBy ? source_card.createdBy.username|raw : 'N/A' }} / {{ source_card.updatedBy ? source_card.updatedBy.username|raw : 'N/A' }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 lg:flex-row lg:gap-4 w-full lg:justify-center my-2">
+        <a class="btn btn-gray" href="{{ url('admin_mtg_source_card_index') }}" title="{{ 'global.indexbutton.title'|trans }}">{{ 'global.indexbutton.label'|trans }}</a>
     </div>
 {% endblock %}

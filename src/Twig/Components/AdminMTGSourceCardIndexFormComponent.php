@@ -4,12 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Twig\Components;
 
-use App\Entity\MTG\MTGPointsList;
-use App\Entity\MTG\MTGPointsListCard;
-use App\Form\Admin\MTG\AdminMTGPointsListCardIndexFormComponentType;
-use App\Repository\MTG\MTGPointsListCardRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\ORMException;
+use App\Entity\MTG\MTGSourceCard;
+use App\Form\Admin\MTG\AdminMTGSourceCardIndexFormComponentType;
+use App\Repository\MTG\MTGSourceCardRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Override;
@@ -22,16 +19,22 @@ use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: '/admin/mtg/points_list_card/admin_mtg_points_list_card_index_form_component.html.twig')]
-final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
+#[AsLiveComponent(template: '/admin/mtg/source_card/admin_mtg_source_card_index_form_component.html.twig')]
+final class AdminMTGSourceCardIndexFormComponent extends AbstractController
 {
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
     /**
-     * @var bool used to determine whether the filter for should be visible cause used or not
+     * @var bool used to determine whether the filter should be visible cause used or not
      */
     public bool $filtersActive = false;
+
+    /**
+     * null => no filter, true => eligible only, false => not eligible only.
+     */
+    #[LiveProp(writable: true, url: true)]
+    public ?bool $isCommandZoneEligible = null;
 
     #[LiveProp(writable: true, url: true)]
     public ?string $nameEN = null;
@@ -39,41 +42,33 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
     #[LiveProp(url: true)]
     public int $page = 1;
 
-    #[LiveProp(writable: true, url: true)]
-    public ?int $pointsList = null;
-
     public function __construct(
-        private MTGPointsListCardRepository $MTGPointsListCardRepository,
+        private MTGSourceCardRepository $MTGSourceCardRepository,
         private PaginatorInterface $paginator,
-        private EntityManagerInterface $entityManager,
     )
     {
     }
 
     /**
-     * @throws ORMException
-     *
-     * @return array<int, MTGPointsListCard>|PaginationInterface<int, mixed>
+     * @return array<int, MTGSourceCard>|PaginationInterface<int, mixed>
      */
     public function getSourceCards(): PaginationInterface|array
     {
         $queryBuilder = $this
-            ->MTGPointsListCardRepository
+            ->MTGSourceCardRepository
             ->createQueryBuilder('c')
-            ->leftJoin('c.pointsList', 'l')
-            ->addSelect('l')
             ->orderBy('c.updatedAt', 'DESC');
-
-        if ($this->pointsList !== null && is_numeric($this->nameEN)) {
-            $queryBuilder
-                ->andWhere('c.pointsList = :mtgPointsList')
-                ->setParameter('mtgPointsList', $this->entityManager->getReference(MTGPointsList::class, (int)$this->pointsList));
-        }
 
         if ($this->nameEN !== null && $this->nameEN !== '') {
             $queryBuilder
                 ->andWhere('c.nameEN LIKE :nameEN')
                 ->setParameter('nameEN', '%' . $this->nameEN . '%');
+        }
+
+        if ($this->isCommandZoneEligible !== null) {
+            $queryBuilder
+                ->andWhere('c.isCommandZoneEligible = :isCommandZoneEligible')
+                ->setParameter('isCommandZoneEligible', $this->isCommandZoneEligible);
         }
 
         if ($this->filtersActive === false) {
@@ -84,17 +79,16 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
             );
         }
 
+        $queryBuilder->setMaxResults(100);
+
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * @throws ORMException
-     */
     #[LiveAction]
     public function resetFilters(): void
     {
         $this->nameEN = null;
-        $this->pointsList = null;
+        $this->isCommandZoneEligible = null;
         $this->filtersActive = false;
         $this->page = 1;
 
@@ -108,10 +102,9 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
             $this->nameEN = null;
         }
 
-        $this->pointsList = $this->pointsList ?: null;
         $this->filtersActive = (
-            $this->pointsList !== null
-            || $this->nameEN !== null
+            $this->nameEN !== null
+            || $this->isCommandZoneEligible !== null
         );
 
         if ($this->filtersActive) {
@@ -119,20 +112,15 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
         }
     }
 
-    /**
-     * @throws ORMException
-     *
-     * @return FormInterface
-     */
     #[Override]
     protected function instantiateForm(): FormInterface
     {
-        $formData = new MTGPointsListCard();
+        $formData = new MTGSourceCard();
 
         $formData->setNameEN((string)$this->nameEN);
-        $formData->setPointsList($this->pointsList ? $this->entityManager->getReference(MTGPointsList::class, $this->pointsList) : null);
+        $formData->setIsCommandZoneEligible($this->isCommandZoneEligible ?? false);
 
-        $form = $this->createForm(AdminMTGPointsListCardIndexFormComponentType::class, $formData, [
+        $form = $this->createForm(AdminMTGSourceCardIndexFormComponentType::class, $formData, [
             'method'          => 'GET',
             'csrf_protection' => false,
         ]);

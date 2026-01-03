@@ -32,6 +32,7 @@
                             </span>
                         {% endif %}
                     </li>
+                    <li class="menu-separator"></li>
                     <li>
                         <a href="{{ url('admin_mtg_points_list_index') }}" title="{{ 'admin.nav.mtg.pointslist.index.title'|trans }}">{{ 'admin.nav.mtg.pointslist.index.label'|trans }}</a>
                         {% if extended_view is defined and extended_view is same as(true) %}
@@ -48,6 +49,7 @@
                             </span>
                         {% endif %}
                     </li>
+                    <li class="menu-separator"></li>
                     <li>
                         <a href="{{ url('admin_mtg_points_list_card_index') }}" title="{{ 'admin.nav.mtg.pointslistcard.index.title'|trans }}">{{ 'admin.nav.mtg.pointslistcard.index.label'|trans }}</a>
                         {% if extended_view is defined and extended_view is same as(true) %}
@@ -64,11 +66,20 @@
                             </span>
                         {% endif %}
                     </li>
+                    <li class="menu-separator"></li>
                     <li>
                         <a href="{{ url('admin_mtg_card_source_activity_history_index') }}" title="{{ 'admin.nav.mtg.cardsourceactivityhistory.index.title'|trans }}">{{ 'admin.nav.mtg.cardsourceactivityhistory.index.label'|trans }}</a>
                         {% if extended_view is defined and extended_view is same as(true) %}
                             <span class="inline-block px-2 pb-2 text-center">
                                 {{ 'admin.nav.mtg.cardsourceactivityhistory.index.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_source_card_index') }}" title="{{ 'admin.nav.mtg.sourcecard.index.title'|trans }}">{{ 'admin.nav.mtg.sourcecard.index.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.sourcecard.index.label'|trans }}
                             </span>
                         {% endif %}
                     </li>

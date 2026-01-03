@@ -108,6 +108,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      */
     public function parseAndImport(?callable $progressCallback = null, string $startedFrom = 'cli'): array
     {
+        ini_set('max_execution_time', 10000);
+
         $lock = $this->getLock();
 
         $jsonFilePath = $this->getLatestScryfallSourceJsonFile();
@@ -551,6 +553,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      * By default, a card is considered "printed", this is the default value.
      * Then, the card is considered "funny" if its "border_color" field has the value "silver"
      * or if its field "security_stamp" has the value "acorn".
+     * Then, if a card name is
      * Then, if the card field "legalities" contains either "restricted" or "legal" in vintage, it is classified as "eternal".
      * Then, it is classified as "eternal" also if all of the following:
      * - the card field "legalities" contains "banned" in vintage
@@ -578,6 +581,11 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $typeLine = isset($sourceCard['type_line']) && is_string($sourceCard['type_line']) ? $sourceCard['type_line'] : '';
         $oracleText = isset($sourceCard['oracle_text']) && is_string($sourceCard['oracle_text']) ? $sourceCard['oracle_text'] : '';
         $nameEN = isset($sourceCard['name']) && is_string($sourceCard['name']) ? $sourceCard['name'] : '';
+
+        // Check named exceptions
+        if (in_array($nameEN, ['Chaos Orb', 'Falling Star'], true)) {
+            return 'printed';
+        }
 
         // Check standard legality
         if (isset($legalities['standard']) && in_array($legalities['standard'], ['legal', 'restricted', 'banned'], true)) {

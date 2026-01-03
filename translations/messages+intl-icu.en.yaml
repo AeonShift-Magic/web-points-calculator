@@ -241,13 +241,15 @@ admin:
                         label: 'Legal in Duel (special)'
                         help: 'Check if the card is legal in Duel (special, like "As a Commander")'
                     islegalmulti:
-                        label: 'Legal in Multiplayer Free-For-All points'
+                        label: 'Legal in Multiplayer Free-For-All'
                         help: 'Check if the card is legal in Multiplayer Free-For-All points'
                     islegalmultispecial:
-                        label: 'Legal in Multiplayer Free-For-All points (special)'
+                        label: 'Legal in Multiplayer Free-For-All (special)'
                         help: 'Check if the card is legal in Multiplayer Free-For-All points (special, like "As a Commander")'
                     firstline:
                         label: 'The first name in Englisy MUST always be <code class="inline">((unranked))</code> (and defines the points for unranked cards)'
+                    isczeligible:
+                        label: 'messages'
                 legends:
                     info: 'Points List Card details'
             update:
@@ -280,6 +282,37 @@ admin:
                         help: 'The rules template to apply when using this list'
                     relatedpointslist:
                         label: 'Related Points List(s)'
+            sourcecard:
+                create:
+                    nameen:
+                        label: 'Name (EN)'
+                        help: 'The name of the card, in English. Must be character-precise.'
+                        placeholder: 'Black Lotus...'
+                    firstprintsetcode:
+                        label: 'First Print Set Code'
+                    iscommandzoneeligible:
+                        label: 'CZ Eligible'
+                        help: 'Is the card eligible to be a Commander?'
+                    coloridentity:
+                        label: 'Color Identity'
+                    firstprintedat:
+                        label: 'First printed on'
+                    ismultiplecommandzoneeligible:
+                        label: 'Multiple CZ Eligible'
+                    isblue:
+                        label: 'Blue ID.'
+                    isblack:
+                        label: 'Black ID.'
+                    iswhite:
+                        label: 'White ID.'
+                    isgreen:
+                        label: 'Green ID.'
+                    isred:
+                        label: 'Red ID.'
+                    iscolorless:
+                        label: 'Colorless ID.'
+                    maximumtimelinelegality:
+                        label: 'Maximum Timeline Legality'
     home:
         goto:
             text: 'Go to a sub-section of the admin area:'
@@ -397,6 +430,13 @@ admin:
                     label: 'MTG - Latest source download state'
                 startnew:
                     label: 'MTG - Manual start of a new source download'
+            sourcecard:
+                index:
+                    title: 'MTG - Source Cards'
+                    label: 'MTG - Source Cards'
+                show:
+                    title: 'MTG - Details on source card "{name}"'
+                    label: 'MTG - Details on source card "{name}"'
         cardsourceactivityhistory:
             index:
                 label: 'Card sources activity history'
@@ -590,6 +630,8 @@ global:
         label: 'Reset'
     max:
         label: 'Only the first 100 are displayed.'
+    choose:
+        label: '↓ Please choose'
 page:
     position:
         footer:

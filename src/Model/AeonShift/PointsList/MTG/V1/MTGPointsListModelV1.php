@@ -10,6 +10,7 @@ use App\Entity\MTG\MTGPointsList;
 use App\Entity\MTG\MTGPointsListCard;
 use App\Entity\PointsListInterface;
 use App\Entity\User;
+use App\Model\AeonShift\Calculator\MTG\AeonShiftMTGCalculator;
 use App\Model\AeonShift\PointsList\AbstractPointsListModel;
 use App\Repository\SourceItemsRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -191,7 +192,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
 
             // If we're on the first line, it MUST be the unranked cards line.
-            if (($processingLine === 1) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== '((unranked))') {
+            if (($processingLine === 1) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== AeonShiftMTGCalculator::UNRANKED_CARD_NAME) {
                 return [
                     'status'  => 'error',
                     'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.processing_line', ['line_number' => $processingLine, 'error' => $this->translator->trans('admin.form.mtg.pointslist.import.error.invalid_first_line')]),
@@ -262,7 +263,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             }
 
             // Fourth, check that each line starts with a card name that's in source cards OR is "((unranked))"
-            if ($CSVlineContentsAsArray[0] !== '((unranked))' && ! in_array($CSVlineContentsAsArray[0], $sourceCards, true)) {
+            if ($CSVlineContentsAsArray[0] !== AeonShiftMTGCalculator::UNRANKED_CARD_NAME && ! in_array($CSVlineContentsAsArray[0], $sourceCards, true)) {
                 return [
                     'status'  => 'error',
                     'message' => $this->translator->trans(

@@ -12,6 +12,11 @@ interface PointsListInterface
         get;
     }
 
+    /**
+     * @return array<ItemContractInterface>
+     */
+    public function getItems(): array;
+
     public function getRulesModel(): string;
 
     public function getTitle(): string;

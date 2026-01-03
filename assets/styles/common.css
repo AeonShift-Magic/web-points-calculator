@@ -836,6 +836,18 @@ table .btn {
     transition: all 0.08s ease-out;
 }
 
+.menu-separator {
+    height: 0.2em;
+    background-color: var(--theme-neutral-dark-translucent);
+}
+
+.admin-home-nav .menu-separator {
+    height: 0.05em;
+    background-color: var(--theme-neutral-medium);
+    padding: 0;
+    margin: 1em 0;
+}
+
 button, [role="button"] {
     cursor: pointer;
 }

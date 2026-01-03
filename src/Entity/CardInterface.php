@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Entity;
 
-interface CardInterface
+interface CardInterface extends ItemContractInterface
 {
     public int|null $id {
         get;

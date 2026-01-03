@@ -8,10 +8,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * AeonShift played on top of MTG License.
+ */
+#[Route('/mtg')]
 final class PointsController extends AbstractController
 {
-    #[Route('/front/points', name: 'app_front_points')]
-    public function index(): Response
+    /**
+     * Home route - choose between assistance and shortcuts.
+     *
+     * @return Response
+     */
+    #[Route(name: 'app_mtg_points_index')]
+    public function mtgPointsIndex(): Response
     {
         return $this->render('front/mtg/points/index.html.twig', [
             'controller_name' => 'PointsController',

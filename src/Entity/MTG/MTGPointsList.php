@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Entity\MTG;
 
 use App\Entity\HistoryTrackableEntityTrait;
+use App\Entity\ItemContractInterface;
 use App\Entity\PointsListInterface;
 use App\Repository\MTG\MTGPointsListRepository;
 use DateTime;
@@ -98,6 +99,15 @@ class MTGPointsList implements PointsListInterface, Stringable
     public function getFilename(): string
     {
         return $this->filename;
+    }
+
+    /**
+     * @return array<ItemContractInterface>
+     */
+    #[Override]
+    public function getItems(): array
+    {
+        return $this->MTGPointListCards->toArray();
     }
 
     public function getLastUploadedAt(): DateTime

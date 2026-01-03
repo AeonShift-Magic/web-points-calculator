@@ -1,0 +1,87 @@
+{% set paginator_route = 'admin_mtg_source_card_index' %}
+{% set paginator_route_params = app.request.query.all() %}
+
+<div class="flex flex-col items-center justify-items-center">
+
+    {% if sourceCards.totalItemCount is defined %}
+        <h3 class="text-center w-full">
+            {{ 'global.total.label'|trans({'%elements%': sourceCards.totalItemCount})|raw }}
+            {% if sourceCards.totalItemCount / sourceCards.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': sourceCards.currentPageNumber, 'total': (sourceCards.totalItemCount / sourceCards.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+        </h3>
+    {% else %}
+        <h3 class="text-center w-full">
+            {{ 'global.total.label'|trans({'elements': sourceCards|length})|raw }}
+        </h3>
+        <h5 class="text-center w-full">
+            {{ 'global.max.label'|trans }}
+        </h5>
+    {% endif %}
+
+
+
+    {% if filtersActive is defined and not filtersActive and sourceCards is defined and sourceCards is iterable %}
+        <div class="navigation center">
+            {{ knp_pagination_render(
+                sourceCards,
+                'admin/mtg/source_card/_sliding.html.twig',
+                {},
+                {
+                    pageParameterName: 'page',
+                    static_route: paginator_route, routeParams: paginator_route_params,
+                }
+            ) }}
+        </div>
+    {% endif %}
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <thead>
+                <tr>
+                    <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.nameen.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.firstprintsetcode.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.firstprintedat.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.scryfalluri.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.iscommandzoneeligible.label'|trans }}</th>
+                    <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for source_card in sourceCards %}
+                    <tr>
+                        <td>{{ source_card.id }}</td>
+                        <td>{{ source_card.nameEN }}</td>
+                        <td>{{ source_card.firstPrintedSetCode|upper }}</td>
+                        <td>{{ source_card.firstPrintedAt|date('Y-m-d') }} ({{ source_card.firstPrintedYear }})</td>
+                        <td><a href="{{ source_card.scryfallURI }}" target=_blank">{{ source_card.scryfallURI }}</a></td>
+                        <td class="{{ 'value' ~ source_card.isCommandZoneEligible|default(0) }}">{{ ('global.' ~ source_card.isCommandZoneEligible|default(0) ~ '.label')|trans }}</td>
+                        <td>
+                            <a class="btn btn-gray" href="{{ path('admin_mtg_source_card_show', {'id': source_card.id}) }}" title="{{ 'admin.nav.mtg.sourcecard.show.title'|trans({'name': source_card.nameEN}) }}">
+                                {{ 'global.showbutton.label'|trans }}
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">{{ 'global.noelements.label'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if filtersActive is defined and not filtersActive and sourceCards is defined and sourceCards is iterable %}
+        <div class="navigation center">
+            {{ knp_pagination_render(
+                sourceCards,
+                'admin/mtg/points_list_card/_sliding.html.twig',
+                {},
+                {
+                    pageParameterName: 'page',
+                    static_route: paginator_route, routeParams: paginator_route_params,
+                }
+            ) }}
+        </div>
+    {% endif %}
+
+</div>

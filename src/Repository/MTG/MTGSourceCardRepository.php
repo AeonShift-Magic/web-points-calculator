@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Repository\MTG;
 
+use App\Entity\ItemContractInterface;
 use App\Entity\MTG\MTGSourceCard;
 use App\Repository\SourceItemsRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -18,6 +19,22 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MTGSourceCard::class);
+    }
+
+    #[Override]
+    public function getAllItemsAsArray(): array
+    {
+        /** @var array<int, ItemContractInterface> $sourceCards */
+        $sourceCards = $this
+            ->getEntityManager()
+            ->createQueryBuilder()
+            ->select('c')
+            ->from(MTGSourceCard::class, 'c')
+            ->orderBy('c.nameEN')
+            ->getQuery()
+            ->getArrayResult();
+
+        return $sourceCards;
     }
 
     #[Override]

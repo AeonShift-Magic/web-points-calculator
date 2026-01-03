@@ -8,9 +8,9 @@
     {{ component('AdminMTGPointsListCardIndexFormComponent', {
         nameEN: filters.name|default(null),
         pointsList: filters.pointsList|default(null),
-        page: app.request.get('page')|default(1),
+        page: app.request.attributes.get('page')|default(1),
         filtersActive: initialFiltersActive
     }) }}
 
-    <a class="btn btn-green" href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
+    <a class="btn btn-green mt-4" href="{{ url('admin_mtg_points_list_card_new') }}" title="{{ 'global.createbutton.title'|trans }}">{{ 'global.createbutton.label'|trans }}</a>
 {% endblock %}

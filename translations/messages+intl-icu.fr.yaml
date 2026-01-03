@@ -233,6 +233,37 @@ admin:
                         label: 'Le premier nom en anglais DOIT toujours être <code class="inline">((unranked))</code> (et définit les points pour les cartes non rankées)'
                 legends:
                     info: 'Points List Card details'
+            sourcecard:
+                create:
+                    nameen:
+                        label: 'Nom (EN)'
+                        help: 'Le nom de la carte, en anglais. Doit être au caractère près similaire à une carte en base.'
+                        placeholder: 'Black Lotus...'
+                    firstprintsetcode:
+                        label: 'Code de set de première impression'
+                    iscommandzoneeligible:
+                        label: 'Eligible CZ'
+                        help: 'La carte est-elle éligible en tant que Commandant ?'
+                    coloridentity:
+                        label: 'Identité couleur'
+                    firstprintedat:
+                        label: 'Première impression le'
+                    ismultiplecommandzoneeligible:
+                        label: 'Eligible en CZ multiple'
+                    isblue:
+                        label: 'ID. Bleue'
+                    isblack:
+                        label: 'ID. Noire'
+                    iswhite:
+                        label: 'ID. Blanche'
+                    isgreen:
+                        label: 'ID. Verte'
+                    isred:
+                        label: 'ID. Rouge'
+                    iscolorless:
+                        label: 'ID. Incolore'
+                    maximumtimelinelegality:
+                        label: 'Légalité de Timeline maximum'
         abstract:
             update:
                 legends:
@@ -363,6 +394,13 @@ admin:
                     label: 'MTG - Etat du dernier téléchargement des sources'
                 startnew:
                     label: 'MTG - Lancement manuel HTTP d''un téléchargement des sources'
+            sourcecard:
+                index:
+                    label: 'MTG - Cartes sources'
+                    title: 'MTG - Cartes sources'
+                show:
+                    title: 'MTG - Détails de la carte source "{name}"'
+                    label: 'MTG - Détails de la carte source "{name}"'
 
         cardsourceactivityhistory:
             index:
@@ -542,6 +580,8 @@ global:
         label: 'Remettre à zéro'
     max:
         label: 'Seuls les 100 premiers sont affichés.'
+    choose:
+        label: '↓ Choisir'
 page:
     position:
         footer:

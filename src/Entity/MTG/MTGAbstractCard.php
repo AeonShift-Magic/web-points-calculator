@@ -146,11 +146,6 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this->points2HGSpecial;
     }
 
-    public function getPoints2playerTeam(): float
-    {
-        return $this->points2HG;
-    }
-
     #[Override]
     public function getPointsDuel(): float
     {

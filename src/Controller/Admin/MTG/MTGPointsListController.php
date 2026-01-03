@@ -195,14 +195,6 @@ final class MTGPointsListController extends AbstractController
         );
     }
 
-    #[Route('/{id}', name: 'admin_mtg_points_list_show', methods: ['GET'])]
-    public function show(#[MapEntity(id: 'id')] MTGPointsList $pointsList): Response
-    {
-        return $this->render('admin/mtg/points_list/show.html.twig', [
-            'points_list' => $pointsList,
-        ]);
-    }
-
     /**
      * Streamed response to download a CSV file of a given points list, provided the current user has access to it.
      *
@@ -239,5 +231,13 @@ final class MTGPointsListController extends AbstractController
         );
 
         return $pointsListModel->generateCSVResponseForList($MTGPointsList);
+    }
+
+    #[Route('/{id}', name: 'admin_mtg_points_list_show', methods: ['GET'])]
+    public function show(#[MapEntity(id: 'id')] MTGPointsList $pointsList): Response
+    {
+        return $this->render('admin/mtg/points_list/show.html.twig', [
+            'points_list' => $pointsList,
+        ]);
     }
 }
