@@ -19,7 +19,7 @@ final class PointsController extends AbstractController
      *
      * @return Response
      */
-    #[Route(name: 'app_mtg_points_index')]
+    #[Route('/{slug?}', name: 'front_mtg_points_index', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
     public function mtgPointsIndex(): Response
     {
         return $this->render('front/mtg/points/index.html.twig', [

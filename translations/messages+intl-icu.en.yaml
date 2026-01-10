@@ -1,7 +1,3 @@
-account:
-    roles:
-        label: 'Role(s)/Permission(s) on this site:'
-        help: 'Defines the user''s permissions on the site. For example, an organizer can organize events, an administrator can manage the site, etc.'
 admin:
     account:
         email:
@@ -11,7 +7,7 @@ admin:
             label: 'Email:'
             placeholder: johnorjane.doe@provider.domain
         roles:
-            label: 'Role(s)/Permissions on this site:'
+            label: 'Rôle(s)/Permission(s) on this site:'
         username:
             help: Your username on this website. Must be unique and not currently used by someone else.
             label: 'Username:'
@@ -59,11 +55,6 @@ admin:
                     label: Zone
             legends:
                 info: 'Page details'
-        user:
-            create:
-                roles:
-                    invalid: Please choose valid roles for the user.
-                    multipleinvalid: Please choose valid roles for the user.
         abstract:
             update:
                 create:
@@ -313,6 +304,11 @@ admin:
                         label: 'Colorless ID.'
                     maximumtimelinelegality:
                         label: 'Maximum Timeline Legality'
+        user:
+            account:
+                roles:
+                    label: 'Role(s)/Permission(s) on this site:'
+                    help: 'Defines the user''s permissions on the site. For example, an organizer can organize events, an administrator can manage the site, etc.'
     home:
         goto:
             text: 'Go to a sub-section of the admin area:'
@@ -330,7 +326,7 @@ admin:
             show:
                 label: 'Custom block details: location "{blockkey}" / weight "{weight}"'
         front:
-            label: Public home
+            label: Public home →
             title: Public home
         home:
             label: 🔴 Admin home
@@ -508,7 +504,95 @@ customblock:
             name: Légal (EN 🇬🇧)
         fr:
             name: Légal (FR 🇫🇷)
+email:
+    resetpassword:
+        subject: 🛡️ Your password reset request
+        success: Your password has been successfully reset, you can now log in using it.
+        text1: To reset your password, please visit the following link
+        text2: This link will expire in {expires}.
+        title: Password reset instructions for your account
 front:
+    home:
+        title: AeonShift Calculator
+        subtitle: Enter AeonShift, a strategic balance system for your games.
+        chooselicense: Which license do you want to play?
+        licenses:
+            mtg:
+                label: Magic The Gathering™
+                title: Play Magic The Gathering™ AeonShift
+        mtg:
+            popular:
+                singleton:
+                    eternal:
+                        2hg:
+                            label: Two-Headed Giant Duel Commander
+                            title: Play AeonShift 2HG Duel Commander
+                            subtitle: Coming soon!
+                        2hgcommander:
+                            label: Two-Headed Giant Commander / CEDH
+                            title: Play AeonShift 2HG Commander / CEDH
+                            subtitle: Coming soon!
+                        commander:
+                            label: Commander / CEDH
+                            title: Play AeonShift Commander / CEDH
+                            subtitle: 4+ players – free-for-all, 40 life, Command Zones, 100-card Singleton, one winning game
+                        duelcommander:
+                            label: Duel Commander
+                            title: Play AeonShift Duel Commander
+                            subtitle: 2 players, 20 life, Command Zones, 100-card Singleton, two winning games
+                        freeform:
+                            label: Freeform
+                            title: Play AeonShift Freeform
+                            suubtitle: Play with what you have!
+                        highlander:
+                            label: Highlander
+                            title: Play AeonShift Highlander
+                            subtitle: 2 players, 20 life, 100-card Singleton, two winning games
+                    modern:
+                        2hg:
+                            label: Two-Headed Giant Modern Duel Commander
+                            title: Play AeonShift 2HG Modern Duel Commander
+                            subtitle: Coming soon!
+                        2hgcommander:
+                            label: Two-Headed Giant Modern Commander / CEDH
+                            title: Play AeonShift 2HG Modern Commander / CEDH
+                            subtitle: Coming soon!
+                        commander:
+                            label: Modern Commander / CEDH
+                            title: Play AeonShift Modern Commander / CEDH
+                            subtitle: 4+ players – free-for-all, 40 life, Command Zones, 100-card Singleton, one winning game
+                        duelcommander:
+                            label: Modern Duel Commander
+                            title: Play AeonShift Modern Duel Commander
+                            subtitle: 2 players, 20 life, Command Zones, 100-card Singleton, two winning games
+                        freeform:
+                            label: Modern Freeform
+                            title: Play AeonShift Modern Freeform
+                            subtitle: Play with what you have!
+                        highlander:
+                            label: Modern Highlander
+                            title: Play AeonShift Modern Highlander
+                            subtitle: 2 players, 20 life, 100-card Singleton, two winning games
+        discover:
+            title: AeonShift, a rich balance system for games
+            link:
+                text: Discover
+                title: Click here to learn more about the AeonShift game system
+        links:
+            title: Go further
+            about:
+                text: About
+                title: More information about the game, its history, and its governance
+            directory:
+                text: Directory
+                title: Where can you play AeonShift?
+            faq:
+                text: FAQ
+                title: Frequently asked questions
+            rules:
+                text: MTG – Game Rules
+                title: Discover the AeonShift game rules for Magic The Gathering™
+
     nav:
         login:
             label: 🪪 Log in
@@ -522,6 +606,143 @@ front:
         mtg:
             title: 'Magic: The Gathering'
             label: 'Magic: The Gathering'
+        resetpassword:
+            label: 🛡️ Reset
+            title: Reset your password
+        resetpasswordconfirm:
+            title: Password reset request
+        updatepassword:
+            label: 🔐 Change my password
+            title: Change my password
+        learnmore:
+            label: 'Learn more'
+            title: 'Learn more about AeonShift'
+    resetpassword:
+        error: There was a problem processing your password reset request. Please contact our team.
+        text1: Enter the email you used to register. If it exists in our database, you will receive an email with instructions.
+        text2: ℹ️ Or simply log in <a href="{link}" title="Log in using your unique registration code">using your unique registration code</a> instead.
+    resetpasswordconfirm:
+        text1: If an email address exists in our database and matches an account, an email will be sent to that address with further instructions to reset the password of the associated account.
+    mtg:
+        points:
+            calculator:
+                title: 'AeonShift Magic The Gathering™ Points Calculator'
+            choose:
+                text: 'You''re playing AeonShift Magic The Gathering™.'
+                links:
+                    gotoform:
+                        text: 'Go to the calculator'
+                        title: 'Go to the complete calculator form, with all options'
+                    freeform:
+                        text: 'I don''t need a format'
+                        title: 'I just want to play <strong>with whatever I have</strong>, and count my points (Freeform AeonShift).'
+                    choose:
+                        text: 'I know my format'
+                        title: 'I want to <strong>choose a specific format</strong> to play AeonShift Magic The Gathering™.'
+                    quiz:
+                        text: 'Help me choose a format'
+                        title: 'Help me choose a format to play AeonShift Magic The Gathering™ via <strong>a quiz</strong>.'
+            form:
+                title: 'Configure your format:'
+                decklist1:
+                    label: 'Decklist (Player 1 Decklist if using teams)'
+                    help: 'Paste your deck here (your player 1 decklist here if using teams).'
+                    placeholder: |
+                        1 Black Lotus                        
+                        1 Library of Alexandria                        
+                        1 Argothian Enchantress
+                decklist2:
+                    label: 'Decklist - Player 2'
+                    help: 'Paste your player 2 decklist here if using teams.'
+                    placeholder: |
+                        1 Black Lotus                        
+                        1 Library of Alexandria                        
+                        1 Argothian Enchantress
+                decklist3:
+                    label: 'Decklist - Player 3'
+                    help: 'Paste your player 3 decklist here if using teams.'
+                    placeholder: |
+                        1 Black Lotus                        
+                        1 Library of Alexandria                        
+                        1 Argothian Enchantress
+                results:
+                    total:
+                        label: '# points'
+                    valid:
+                        no:
+                            label: 'Your deck is invalid.'
+                        yes:
+                            label: 'Your deck is valid.'
+            quiz:
+                back:
+                    label: '← Previous question'
+                    title: 'Go back to the previous question'
+                help:
+                    text1: 'Let''s help you find your format.'
+                    text2: 'Just answer these 5 quick questions. ↓'
+                question1:
+                    label: 'Players/teams/life:'
+                    text: 'How many players (teams) and life points do you want?'
+                    answer1:
+                        label: '2 (2)'
+                        help: 'Duel games: two players, two teams. <br><strong>20 life totals at start.</strong>'
+                    answer2:
+                        label: '4 (2)'
+                        help: 'Two-Headed Giant: four players, two teams of two. <br><strong>30 shared life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
+                    answer3:
+                        label: '4+ (4+)'
+                        help: 'CEDH/Commander: four players and more, free-for-all. <br><strong>40 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
+                    answer4:
+                        label: '6 (2)'
+                        help: 'Team Trio: two teams of three players, with special rules for matching. <br><strong>20 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
+                question2:
+                    label: 'Maximum copies of a card:'
+                    text: 'What''s the maximum number of copies a card in a deck should have?'
+                    answer1:
+                        label: '1'
+                        help: 'Singleton - a maximum of one copy of each card across in the entire decklist.'
+                    answer2:
+                        label: '4'
+                        help: 'Quadruples - a maximum of four copies of each card across in the entire decklist. <em class="comingsoon">Coming Soon!</em>'
+                question3:
+                    label: 'Cards in main deck/sideboard:'
+                    text: 'How many cards sould a deck have (main deck/sideboard)?'
+                    answer1:
+                        label: '100/0'
+                        help: '100 cards main deck, no sideboard.'
+                    answer2:
+                        label: '60+/0-15'
+                        help: '60 cards or more in the main deck, 0 to 15 in a sideboard. <em class="comingsoon">Coming Soon!</em>'
+                question4:
+                    label: 'Commanders/Command Zones:'
+                    text: 'Do you want to use Commanders/Command Zones?'
+                    answer1:
+                        label: 'No'
+                        help: 'No additional rules will be checked.'
+                    answer2:
+                        label: 'Yes'
+                        help: 'This will add special construction and gameplay rules and restrictions.'
+                question5:
+                    label: 'Maximum legality timeline:'
+                    text: 'What''s the maximum legality timeline you want to play with?'
+                    answer1:
+                        label: 'Printed'
+                        help: 'Whatever you have, as long as it''s an authentic Magic The Gathering™ card. This includes all cards ever printed.'
+                    answer2:
+                        label: 'Funny'
+                        help: 'This includes all Eternal card, plus the fun sets.'
+                    answer3:
+                        label: 'Eternal'
+                        help: 'Includes all cards from Eternal, more or less Vintage format cards.'
+                    answer4:
+                        label: 'Modern'
+                        help: 'Includes all cards that are legal or banned in Modern.'
+                    answer5:
+                        label: 'Pioneer'
+                        help: 'Includes all cards that are legal or banned in Pioneer.'
+                    answer6:
+                        label: 'Standard'
+                        help: 'Includes all cards that are legal or banned in Standard.'
 global:
     actions:
         label: Actions

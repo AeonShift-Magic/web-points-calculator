@@ -45,8 +45,8 @@ final class AdminUserType extends AbstractType
                     'choices'     => User::ROLES,
                     'expanded'    => true,
                     'multiple'    => true,
-                    'label'       => 'account.roles.label',
-                    'help'        => 'account.roles.help',
+                    'label'       => 'admin.form.user.account.roles.label',
+                    'help'        => 'admin.form.user.account.roles.help',
                     'constraints' => [
                         new Choice(
                             choices: User::ROLES,

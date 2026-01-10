@@ -9,6 +9,7 @@ use App\Entity\MTG\MTGSourceCard;
 use App\Entity\PointsListInterface;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTimeImmutable;
+use const JSON_THROW_ON_ERROR;
 
 final class AeonShiftMTGCalculator
 {
@@ -18,7 +19,7 @@ final class AeonShiftMTGCalculator
     {
         $mergedCards = $this->mergeMTGSourceAndPointsList($entityRepository, $pointsList);
 
-        return json_encode($mergedCards, \JSON_THROW_ON_ERROR);
+        return json_encode($mergedCards, JSON_THROW_ON_ERROR);
     }
 
     /**

@@ -1,0 +1,247 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('calculator');
+    if (!root) {
+        return;
+    }
+
+    const slug = window.location.pathname.replace(/\/+$/, '').split('/').pop();
+
+    const ALLOWED_KEYS = new Set([
+        'players',
+        'copies',
+        'structure',
+        'commander',
+        'timeline',
+        'decklist1',
+        'decklist2',
+        'decklist3'
+    ]);
+
+    // Cache DOM lookups once
+    const formatNameEl = root.querySelector('#format-name');
+    const formatFullNameEl = root.querySelector('#format-full-name');
+    const decklistContainer2El = root.querySelector('#decklist-container-2');
+    const decklistContainer3El = root.querySelector('#decklist-container-3');
+
+    // Canonical order for the displayed "full name"
+    const namePartGroupsInOrder = ['players', 'copies', 'timeline', 'structure', 'commander'];
+
+    // Presets: single source of truth for detection + slug shortcut application
+    const PRESETS = [
+        {
+            key: 'duel-commander',
+            title: '★ AeonShift Duel Commander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
+            slugs: ['aeonshift-duel-commander']
+        },
+        {
+            key: 'modern-duel-commander',
+            title: '★ AeonShift Modern Duel Commander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
+            slugs: ['aeonshift-modern-duel-commander']
+        },
+        {
+            key: 'commander',
+            title: '★ AeonShift Commander (or CEDH)',
+            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
+            slugs: ['aeonshift-commander']
+        },
+        {
+            key: 'modern-commander',
+            title: '★ AeonShift Modern Commander (or Modern CEDH)',
+            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
+            slugs: ['aeonshift-modern-commander']
+        },
+        {
+            key: 'highlander',
+            title: '★ AeonShift Highlander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'eternal' },
+            slugs: ['aeonshift-highlander']
+        },
+        {
+            key: 'modern-highlander',
+            title: '★ AeonShift Modern Highlander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'modern' },
+            slugs: ['aeonshift-modern-highlander']
+        }
+    ];
+
+    const PRESET_BY_SLUG = (() => {
+        const map = Object.create(null);
+        for (const preset of PRESETS) {
+            for (const s of preset.slugs) {
+                map[s] = preset;
+            }
+        }
+        return map;
+    })();
+
+    // Cache the current "checked" element per group once, then keep it updated via events
+    const checkedByGroup = Object.create(null);
+    for (const groupName of namePartGroupsInOrder) {
+        checkedByGroup[groupName] = root.querySelector(`input[name="${CSS.escape(groupName)}"]:checked`);
+    }
+
+    const getCurrentValues = () => ({
+        players: checkedByGroup.players?.value,
+        copies: checkedByGroup.copies?.value,
+        structure: checkedByGroup.structure?.value,
+        commander: checkedByGroup.commander?.value,
+        timeline: checkedByGroup.timeline?.value
+    });
+
+    const matchesPreset = (presetValues) => {
+        const current = getCurrentValues();
+        return (
+            current.players === presetValues.players &&
+            current.copies === presetValues.copies &&
+            current.structure === presetValues.structure &&
+            current.commander === presetValues.commander &&
+            current.timeline === presetValues.timeline
+        );
+    };
+
+    const findMatchingPreset = () => {
+        for (const preset of PRESETS) {
+            if (matchesPreset(preset.values)) {
+                return preset;
+            }
+        }
+        return null;
+    };
+
+    const updateDecklistVisibility = () => {
+        const playersValue = checkedByGroup.players?.value;
+
+        const show2 = playersValue === '2hg' || playersValue === 'teamtrio';
+        const show3 = playersValue === 'teamtrio';
+
+        if (decklistContainer2El) {
+            decklistContainer2El.classList.toggle('hidden', !show2);
+        }
+        if (decklistContainer3El) {
+            decklistContainer3El.classList.toggle('hidden', !show3);
+        }
+    };
+
+    const updateFormatNames = () => {
+        const matched = findMatchingPreset();
+
+        if (formatNameEl) {
+            formatNameEl.innerHTML = matched ? matched.title : 'AeonShift Custom';
+        }
+
+        if (formatFullNameEl) {
+            const parts = [];
+            for (const groupName of namePartGroupsInOrder) {
+                const checked = checkedByGroup[groupName];
+                const part = checked?.dataset?.namePart?.trim();
+                if (part) {
+                    parts.push(part);
+                }
+            }
+            formatFullNameEl.innerHTML = parts.join(' ');
+        }
+
+        updateDecklistVisibility();
+    };
+
+    const setRadio = (name, value) => {
+        const match = root.querySelector(
+            `input[type="radio"][name="${ CSS.escape(name) }"][value="${ CSS.escape(value) }"]`
+        );
+        if (match) {
+            match.checked = true;
+            if (name in checkedByGroup) {
+                checkedByGroup[name] = match; // keep cache in sync for programmatic changes
+            }
+        }
+    };
+
+    const setValueById = (id, value) => {
+        const el = root.querySelector(`#${ CSS.escape(id) }`);
+        if (el && 'value' in el) {
+            el.value = value;
+        }
+    };
+
+    const onControlChange = (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) {
+            return;
+        }
+
+        if (target.tagName.toLowerCase() === 'textarea') {
+            return;
+        }
+
+        if (target.matches('input[type="radio"][name]')) {
+            const name = target.getAttribute('name');
+            if (name && name in checkedByGroup) {
+                checkedByGroup[name] = target;
+            }
+        }
+
+        if (target.matches('input, select')) {
+            updateFormatNames();
+        }
+    };
+
+    // Use capture so it still works even if something stops propagation on inner nodes
+    root.addEventListener('change', onControlChange, true);
+    root.addEventListener('input', onControlChange, true);
+
+    // Shortcut: predefined slugs force a predefined state (ignore query params)
+    const forcedPreset = PRESET_BY_SLUG[slug];
+    if (forcedPreset) {
+        setRadio('players', forcedPreset.values.players);
+        setRadio('copies', forcedPreset.values.copies);
+        setRadio('structure', forcedPreset.values.structure);
+        setRadio('commander', forcedPreset.values.commander);
+        setRadio('timeline', forcedPreset.values.timeline);
+        updateFormatNames();
+        return;
+    }
+
+    // Get URL query parameters
+    const params = new URLSearchParams(window.location.search);
+
+    const fields = root.querySelectorAll('input, textarea, select');
+
+    for (const el of fields) {
+        const tag = el.tagName.toLowerCase();
+        const type = (el.getAttribute('type') || '').toLowerCase();
+
+        const key = el.getAttribute('name') || el.getAttribute('id');
+        if (!key || !ALLOWED_KEYS.has(key) || !params.has(key)) {
+            continue;
+        }
+
+        const raw = params.get(key);
+        if (raw === null) {
+            continue;
+        }
+
+        if (tag === 'input' && type === 'radio') {
+            setRadio(key, raw);
+            continue;
+        }
+
+        if (tag === 'input' && type === 'checkbox') {
+            el.checked = !(raw === '0' || raw === 'false' || raw === 'off' || raw === '');
+            continue;
+        }
+
+        if (tag === 'textarea') {
+            // Textareas use ids in the template
+            setValueById(key, raw);
+            continue;
+        }
+
+        if (tag === 'select' || tag === 'input') {
+            el.value = raw;
+        }
+    }
+
+    updateFormatNames();
+});

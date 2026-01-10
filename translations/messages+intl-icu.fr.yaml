@@ -1,6 +1,3 @@
-roles:
-    label: 'Rôle(s)/Permission(s) sur ce site :'
-    help: 'Définit les permissions de l''utilisateur·ice sur le site. Par exemple, un organisateur·ice peut organiser des évènements, un administrateur·ice peut gérer le site, etc.'
 admin:
     account:
         email:
@@ -58,11 +55,6 @@ admin:
                     label: Zone
             legends:
                 info: 'Détails de la page'
-        user:
-            create:
-                roles:
-                    invalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
-                    multipleinvalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
         mtg:
             update:
                 create:
@@ -268,6 +260,11 @@ admin:
             update:
                 legends:
                     info: 'Détails de la mise à jour'
+        user:
+            account:
+                roles:
+                    label: 'Role(s)/Permission(s) on this site:'
+                    help: 'Defines the user''s permissions on the site. For example, an organizer can organize events, an administrator can manage the site, etc.'
     home:
         goto:
             text: 'Aller dans une sous-section de l''administration :'
@@ -297,7 +294,7 @@ admin:
             show:
                 label: 'Détails du bloc custom : emplacement "{blockkey}" / poids "{weight}"'
         front:
-            label: Accueil public
+            label: Accueil public →
             title: Accueil public
         home:
             label: 🔴 Accueil admin
@@ -461,7 +458,94 @@ customblock:
             name: Legal (EN 🇬🇧)
         fr:
             name: Legal (FR 🇫🇷)
+email:
+    resetpassword:
+        subject: 🛡️ Votre demande de réinitialisation de mot de passe
+        success: Votre mot de passe a été réinitialisé avec succès, vous pouvez maintenant vous connecter en l'utilisant.
+        text1: Pour réinitialiser votre mot de passe, veuillez visiter le lien suivant
+        text2: Ce lien expirera dans {expires}.
+        title: Instructions de réinitialisation du mot de passe pour votre compte
 front:
+    home:
+        title: AeonShift Calculateur
+        subtitle: Entrez dans AeonShift, un sytème d'équilibre stratégique pour vos jeux.
+        chooselicense: A quelle licence jouez-vous ?
+        licenses:
+            mtg:
+                label: Magic The Gathering™
+                title: Jouer à Magic The Gathering™ AeonShift
+        mtg:
+            popular:
+                singleton:
+                    eternal:
+                        2hg:
+                            label: Two-Headed Giant Duel Commander
+                            title: Jouer en AeonShift 2HG Duel Commander
+                            subtitle: Bientôt disponible !
+                        2hgcommander:
+                            label: Two-Headed Giant Commander / CEDH
+                            title: Jouer en AeonShift 2HG Commander / CEDH
+                            subtitle: Bientôt disponible !
+                        commander:
+                            label: Commander / CEDH
+                            title: Jouer en AeonShift Commander / CEDH
+                            subtitle: 4+ joueur·ses - chacun pour soi, 40 points de vie, Zones de Commandement, Singleton 100 cartes, une manche gagnante
+                        duelcommander:
+                            label: Duel Commander
+                            title: Jouer en AeonShift Duel Commander
+                            subtitle: 2 joueur·ses, 20 points de vie, Zones de Commandement, Singleton 100 cartes, 2 manches gagnantes
+                        freeform:
+                            label: Freeform
+                            title: Jouer en AeonShift Freeform
+                            suubtitle: Jouez avec ce que vous avez !
+                        highlander:
+                            label: Highlander
+                            title: Jouer en AeonShift Highlander
+                            subtitle: 2 joueur·ses, 20 points de vie, Singleton 100 cartes, 2 manches gagnantes
+                    modern:
+                        2hg:
+                            label: Two-Headed Giant Modern Duel Commander
+                            title: Jouer en AeonShift 2HG Modern Duel Commander
+                            subtitle: Bientôt disponible !
+                        2hgcommander:
+                            label: Two-Headed Giant Modern Commander / CEDH
+                            title: Jouer en AeonShift 2HG ModernCommander / CEDH
+                            subtitle: Bientôt disponible !
+                        commander:
+                            label: Modern Commander / CEDH
+                            title: Jouer en AeonShift Modern Commander / CEDH
+                            subtitle: 4+ joueur·ses - chacun pour soi, 40 points de vie, Zones de Commandement, Singleton 100 cartes, une manche gagnante
+                        duelcommander:
+                            label: Modern Duel Commander
+                            title: Jouer en AeonShift Modern Duel Commander
+                            subtitle: 2 joueur·ses, 20 points de vie, Zones de Commandement, Singleton 100 cartes, 2 manches gagnantes
+                        freeform:
+                            label: Modern Freeform
+                            title: Jouer en AeonShift Modern Freeform
+                            subtitle: Jouez avec ce que vous avez !
+                        highlander:
+                            label: Modern Highlander
+                            title: Jouer en AeonShift Modern Highlander
+                            subtitle: 2 joueur·ses, 20 points de vie, Singleton 100 cartes, 2 manches gagnantes
+        discover:
+            title: AeonShift, un système d'équilibre riche pour les jeux
+            link:
+                text: Découvrir
+                title: Cliquez ici pour en savoir plus sur le système de jeu AeonShift
+        links:
+            title: Aller plus loin
+            about:
+                text: A propos
+                title: Plus d'informations sur le jeu, son histoire, sa gouvernance
+            directory:
+                text: Répertoire
+                title: Où jouer à AeonShift ?
+            faq:
+                text: FAQ
+                title: Questions les plus fréquemment posées
+            rules:
+                text: MTG - Règles du jeu
+                title: Découvrir les règles du jeu AeonShift pour Magic The Gathering™
     nav:
         login:
             label: 🪪 S'identifier
@@ -475,6 +559,40 @@ front:
         mtg:
             title: 'Magic: The Gathering'
             label: 'Magic: The Gathering'
+        resetpassword:
+            label: 🛡️ Réinitialiser
+            title: Réinitialiser votre mot de passe
+        resetpasswordconfirm:
+            title: Demande de réinitialisation de mot de passe
+        updatepassword:
+            label: 🔐 Changer mon mot de passe
+            title: Changer mon mot de passe
+        learnmore:
+            label: 'En savoir plus'
+            title: 'En savoir plus sur AeonShift'
+    resetpassword:
+        error: Un problème est survenu lors du traitement de votre demande de réinitialisation de mot de passe. Veuillez contacter notre équipe.
+        text1: Entrez l'email avec lequel vous vous êtes inscrit·e. S'il est présent dans notre base de données, vous recevrez un email avec des instructions.
+        text2: ℹ️ Ou connectez-vous simplement <a href="{link}" title="Identifiez-vous à laide de votre code d'inscription unique">à l'aide de votre code d'inscription unique</a> à la place.
+    resetpasswordconfirm:
+        text1: Si une adresse e-mail existe dans notre base de données et correspond à un compte, un e-mail sera envoyé à cette adresse e-mail avec des instructions supplémentaires pour réinitialiser le mot de passe du compte qui lui est associé.
+    mtg:
+        points:
+            choose:
+                text: 'Vous jouez à AeonShift Magic The Gathering™'
+                links:
+                    gotoform:
+                        text: 'Revenir au calculateur'
+                        title: 'Revenir au formulaire de calcul avec toutes les options'
+                    freeform:
+                        text: 'Je n''ai pas besoin de format'
+                        title: 'Je veux juste jouer <strong>avec ce que j''ai</strong>, et compter mes points (Freeform AeonShift).'
+                    choose:
+                        text: 'Je connais mon format'
+                        title: 'Je veux <strong>choisir un format spécifique</strong> AeonShift Magic The Gathering™.'
+                    quiz:
+                        text: 'Aidez-moi à choisir'
+                        title: 'Aidez-moi à choisir un format AeonShift Magic The Gathering™ via un <strong>quiz</strong>.'
 global:
     actions:
         label: Actions

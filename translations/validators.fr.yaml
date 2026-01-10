@@ -12,5 +12,10 @@ admin:
                 create:
                     pointslist:
                         empty: 'Merci de choisir une liste de points'
+        user:
+            create:
+                roles:
+                    invalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
+                    multipleinvalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
 daterange:
     invalid: 'Attention à bien choisir une date de fin ultérieure à la date de début'

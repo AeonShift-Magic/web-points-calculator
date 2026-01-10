@@ -1,14 +1,38 @@
 <nav>
     <ul class="menu-{{ zone|default('header') }}">
         <li class="first home-link">
-            <a href="{{ url('front_home') }}" title="{{ 'front.nav.home.title'|trans }}">{{ 'front.nav.home.label'|trans }}</a>
+            <a tabindex="0" href="{{ url('front_home') }}" title="{{ 'front.nav.home.title'|trans }}">{{ 'front.nav.home.label'|trans }}</a>
         </li>
         {% if global_pages is defined %}
             {% for global_page in global_pages %}
                 <li>
-                    <a href="{{ url('front_static_page', {id: global_page.id, slug: global_page.slug}) }}" title="{{ global_page.title|e('html_attr') }}">{{ global_page.title }}</a>
+                    <a tabindex="0" href="{{ url('front_static_page', {id: global_page.id, slug: global_page.slug}) }}" title="{{ global_page.title|e('html_attr') }}">{{ global_page.title }}</a>
                 </li>
             {% endfor %}
+        {% endif %}
+        {% if app.user is defined and is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <li>
+                <a tabindex="0">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                        <g>
+                            <circle cx="12" cy="9" r="3" stroke-width="1.5" stroke="currentColor" fill="currentColor"/>
+                            <circle cx="12" cy="12" r="10" stroke-width="1.5" stroke="currentColor" fill="transparanet"/>
+                            <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="currentColor" fill="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </g>
+                    </svg>
+                    <span class="whoiam">
+                        {{ app.user.username }}
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a tabindex="0" href="{{ url('front_logout') }}" data-turbo="false" title="{{ 'front.nav.logout.title'|trans }}">{{ 'front.nav.logout.label'|trans }}</a>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a tabindex="0" href="{{ url('admin_home') }}" title="{{ 'admin.nav.home.title'|trans }}">{{ 'admin.nav.home.label'|trans }}</a>
+                </li>
+            {% endif %}
         {% endif %}
         <li>
             <a target="_blank" href="https://play.aeonshift.games/rules" title="{{ 'global.rules.title'|trans|e('html_attr') }}">{{ 'global.rules.label'|trans }}</a>

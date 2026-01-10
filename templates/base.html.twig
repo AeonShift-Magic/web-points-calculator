@@ -64,6 +64,8 @@
            title="{{ 'global.skipcontent.label'|trans }}">{{ 'global.skipcontent.label'|trans }}</a>
         <main id="swup">
 
+            {% block beforemenu %}{% endblock %}
+
             {% block menu %}{% endblock %}
 
             {% block messages %}

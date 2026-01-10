@@ -1,20 +1,92 @@
-{% extends 'base.html.twig' %}
+{% extends 'front/front_layout.html.twig' %}
 
-{% block title %}Hello PointsController!{% endblock %}
+{% block title %}{{ 'front.nav.home.label'|trans }}{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block custom_js %}
+    {# Inline the calculator JavaScript #}
+    <script async>{{ include('front/mtg/points/_vanilla_tilt.js.twig') }}</script>
+    <script async>{{ include('front/mtg/points/_js_calculator.js.twig') }}</script>
+{% endblock %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{% block link_canonical %}
+    <link rel="canonical" href="{{ url('front_mtg_points_index') }}">
+{% endblock %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>F:/Important/git/web-points-calculator/src/Controller/Front/PointsController.php</code></li>
-        <li>Your template at <code>F:/Important/git/web-points-calculator/templates/front/points/index.html.twig</code></li>
-    </ul>
-</div>
+{% block top_spacer %}{% endblock %}
+
+{% block beforemenu %}
+    <div class="top-video-overflow-container">
+        <div class="top-video-height-container">
+            <video class="hidden lg:block" controlslist="nodownload, nofullscreen, noremoteplayback" disablepictureinpicture="" autoplay="" muted="" loop="loop">
+                <source src="{{ asset('videos/numbers.mp4') }}" type="video/mp4">
+            </video>
+        </div>
+    </div>
+{% endblock %}
+
+{% block main_layout %}
+    <div class="main-row theme1 unique-row h-screen transparent-row">
+        <div class="main-column main-content h-full w-full">
+            {% block main_content %}
+                {% block body %}
+                    <div class="w-full text-center flex flex-col justify-center items-center mb-28">
+                        <div class="w-full format-incentive flex flex-col justify-around items-center">
+                            <p class="inline-block w-full text-3xl mt-6 mb-12">{{ 'front.mtg.points.choose.text'|trans }}</p>
+                            <div class="flex flex-col lg:flex-row w-full justify-around items-center">
+                                <div class="flex flex-col justify-center items-center px-6">
+                                    <a class="btn btn-star btn-green btn-big m-2" href="#formats" title="{{ 'front.mtg.points.choose.links.choose.title'|trans|striptags }}" data-turbo="false">
+                                        <span class="top-left"></span>
+                                        <span class="top-right"></span>
+                                        <span class="title">
+                                            <span class="icon-target"></span>
+                                            {{ 'front.mtg.points.choose.links.choose.text'|trans }}
+                                        </span>
+                                        <span class="bottom-left"></span>
+                                        <span class="bottom-right"></span>
+                                    </a>
+                                    <p class="format-help">{{ 'front.mtg.points.choose.links.choose.title'|trans|raw }}</p>
+                                </div>
+                                <div class="flex flex-col justify-center items-center px-6">
+                                    <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.points.choose.links.freeform.title'|trans|striptags }}" data-turbo="false">
+                                        <span class="top-left"></span>
+                                        <span class="top-right"></span>
+                                        <span class="title">
+                                            <span class="icon-cancel"></span>
+                                            {{ 'front.mtg.points.choose.links.freeform.text'|trans }}
+                                        </span>
+                                        <span class="bottom-left"></span>
+                                        <span class="bottom-right"></span>
+                                    </a>
+                                    <p class="format-help">{{ 'front.mtg.points.choose.links.freeform.title'|trans|raw }}</p>
+                                </div>
+                                <div class="flex flex-col justify-center items-center px-6">
+                                    <a class="btn btn-star btn-blue btn-big m-2" href="#quiz" title="{{ 'front.mtg.points.choose.links.quiz.title'|trans|striptags }}" data-turbo="false">
+                                        <span class="top-left"></span>
+                                        <span class="top-right"></span>
+                                        <span class="title">
+                                            <span class="icon-question"></span>
+                                            {{ 'front.mtg.points.choose.links.quiz.text'|trans }}
+                                        </span>
+                                        <span class="bottom-left"></span>
+                                        <span class="bottom-right"></span>
+                                    </a>
+                                    <p class="format-help">{{ 'front.mtg.points.choose.links.quiz.title'|trans|raw }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endblock %}
+            {% endblock %}
+        </div>
+    </div>
+
+    {# Format choice quiz #}
+    {{ include('front/mtg/points/_format_choice_quiz.html.twig') }}
+
+    {# Format choice cards #}
+    {{ include('front/mtg/points/_format_choice_cards.html.twig') }}
+
+    {# Calculator form #}
+    {{ include('front/mtg/points/_calculator_form.html.twig') }}
+
 {% endblock %}
