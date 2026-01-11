@@ -10,12 +10,23 @@
     border-style: solid;
 }
 
+.admin-menu {
+    position: fixed !important;
+}
+
 .admin-menu .menu a {
     min-width: 5em !important;
+    padding: 0.7em 1em;
+    font-size: 1em;
+}
+
+.admin-layout .header .home-link a {
+    padding-left: 45px;
 }
 
 .admin-layout .header .home-link a::before {
-    left: 7px;
+    left: 8px;
+    top: 6px;
 }
 
 .admin-home-nav nav > ul {
@@ -29,6 +40,11 @@
     min-width: 5rem;
     margin-top: 1rem;
     width: 100%;
+}
+
+.admin-menu nav > ul > li > ul {
+    box-shadow: 0 5px 7px -2px var(--theme-neutral-dark);
+    border-radius: 0 0 5px 5px;
 }
 
 @media (min-width: 1024px) {

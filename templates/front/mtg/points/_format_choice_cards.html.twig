@@ -1,6 +1,7 @@
-<div class="spaceless-row theme1 quiz-choice-row mt-12" id="formats">
-    <div class="main-column no-shadow lg:pt-20 min-h-screen">
+<div class="spaceless-row theme1 quiz-choice-row my-4" id="formats">
+    <div class="main-column no-shadow lg:pt-4 min-h-screen">
         <div class="w-full text-center flex flex-col justify-center items-center">
+
             <div class="flex flex-col lg:flex-row w-full justify-around items-center">
                 <a class="btn btn-star btn-blue btn-big m-2" href="#quiz" title="{{ 'front.mtg.points.choose.links.quiz.title'|trans|striptags }}" data-turbo="false">
                     <span class="top-left"></span>
@@ -23,6 +24,225 @@
                     <span class="bottom-right"></span>
                 </a>
             </div>
+
+            <h2 class="w-full mt-12">
+                <span class="icon-star"></span>
+                {{ 'front.mtg.points.choose.title'|trans|raw }}
+                <span class="icon-star"></span>
+            </h2>
+
+            <hr class="w-1/2">
+
+            <h3 class="w-full mt-6 mb-8">{{ 'front.home.mtg.popular.eternal.title'|trans|raw }}</h3>
+
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(340px,1fr))] max-w-7xl gap-12 mb-10">
+                <div class="format-card" data-tilt data-tilt-max="10" data-tilt-speed="100" data-tilt-perspective="3000" data-tilt-glare data-tilt-max-glare="0.4" data-tilt-scale="1.03" data-tilt-reset="true">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.eternal.duelcommander.title'|trans }}" data-format-switch="aeonshift-duel-commander">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/dc.jpg') }}" alt="MTG background, Command Tower">
+                            <span class="format-ball top-[calc(50%-22px)] left-[calc(25%-12px)] pop-text">20</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-22px)] right-[calc(25%-12px)] pop-text">20</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.eternal.duelcommander.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.eternal.duelcommander.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card coming-soon">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.eternal.commander.title'|trans }}" data-format-switch="aeonshift-commander">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/commander.jpg') }}" alt="MTG background, Arcane Signet">
+                            <span class="format-ball top-[calc(25%-22px)] left-[calc(25%-12px)] pop-text">40</span>
+                            <span class="format-ball format-ball-blue top-[calc(25%-22px)] right-[calc(25%-12px)] pop-text">40</span>
+                            <span class="format-ball format-ball-red bottom-[calc(25%-22px)] left-[calc(25%-12px)] pop-text">40</span>
+                            <span class="format-ball format-ball-green bottom-[calc(25%-22px)] right-[calc(25%-12px)] pop-text">40</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.eternal.commander.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.eternal.commander.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card" data-tilt data-tilt-max="10" data-tilt-speed="100" data-tilt-perspective="3000" data-tilt-glare data-tilt-max-glare="0.4" data-tilt-scale="1.03" data-tilt-reset="true">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.eternal.highlander.title'|trans }}" data-format-switch="aeonshift-highlander">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/highlander.jpg') }}" alt="MTG background, Demonic Tutor">
+                            <span class="format-ball top-[calc(50%-22px)] left-[calc(25%-12px)] pop-text">20</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-22px)] right-[calc(25%-12px)] pop-text">20</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.eternal.highlander.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.eternal.highlander.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card" data-tilt data-tilt-max="10" data-tilt-speed="100" data-tilt-perspective="3000" data-tilt-glare data-tilt-max-glare="0.4" data-tilt-scale="1.03" data-tilt-reset="true">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.eternal.freeform.title'|trans }}" data-format-switch="aeonshift-eternal-freeform">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/freeform.jpg') }}" alt="MTG background, Fraternal Exaltation">
+                            <span class="format-ball format-ball-gray top-[calc(50%-22px)] left-[calc(50%-22px)] pop-text">?</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.eternal.freeform.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.eternal.freeform.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card coming-soon">
+                    <a title="{{ 'front.home.mtg.popular.singleton.eternal.2hg.title'|trans }}" data-format-switch="aeonshift-2hg">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/2hg.jpg') }}" alt="MTG background, Back to Basics">
+                            <span class="format-ball top-[calc(50%-49px)] left-[calc(25%-12px)] pop-text">3</span>
+                            <span class="format-ball top-[calc(50%+13px)] left-[calc(25%-12px)] pop-text">0</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-49px)] right-[calc(25%-12px)] pop-text">3</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%+13px)] right-[calc(25%-12px)] pop-text">0</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.eternal.2hg.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.eternal.2hg.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card coming-soon">
+                    <a title="{{ 'front.home.mtg.popular.quadruples.eternal.vintage.title'|trans }}" data-format-switch="aeonshift-vintage">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/vintage.jpg') }}" alt="MTG background, Channel">
+                            <span class="format-ball top-[calc(50%-22px)] left-[calc(25%-12px)] pop-text">20</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-22px)] right-[calc(25%-12px)] pop-text">20</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.quadruples.eternal.vintage.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.quadruples.eternal.vintage.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <hr class="w-1/2">
+
+            <h3 class="w-full mt-6 mb-8">{{ 'front.home.mtg.popular.modern.title'|trans|raw }}</h3>
+
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(340px,1fr))] max-w-7xl gap-12 mb-10">
+                <div class="format-card" data-tilt data-tilt-max="10" data-tilt-speed="100" data-tilt-perspective="3000" data-tilt-glare data-tilt-max-glare="0.4" data-tilt-scale="1.03" data-tilt-reset="true">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.modern.duelcommander.title'|trans }}" data-format-switch="aeonshift-modern-duel-commander">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/modern-duel.jpg') }}" alt="MTG background, Prismatic Vista">
+                            <span class="format-ball top-[calc(50%-22px)] left-[calc(25%-12px)] pop-text">20</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-22px)] right-[calc(25%-12px)] pop-text">20</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.modern.duelcommander.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.modern.duelcommander.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card coming-soon">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.modern.commander.title'|trans }}" data-format-switch="aeonshift-commander">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/modern-commander.jpg') }}" alt="MTG background, Arcane Signet">
+                            <span class="format-ball top-[calc(25%-22px)] left-[calc(25%-12px)] pop-text">40</span>
+                            <span class="format-ball format-ball-blue top-[calc(25%-22px)] right-[calc(25%-12px)] pop-text">40</span>
+                            <span class="format-ball format-ball-red bottom-[calc(25%-22px)] left-[calc(25%-12px)] pop-text">40</span>
+                            <span class="format-ball format-ball-green bottom-[calc(25%-22px)] right-[calc(25%-12px)] pop-text">40</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.modern.commander.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.modern.commander.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card" data-tilt data-tilt-max="10" data-tilt-speed="100" data-tilt-perspective="3000" data-tilt-glare data-tilt-max-glare="0.4" data-tilt-scale="1.03" data-tilt-reset="true">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.modern.highlander.title'|trans }}" data-format-switch="aeonshift-modern-highlander">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/modern-highlander.jpg') }}" alt="MTG background, Mental Misstep">
+                            <span class="format-ball top-[calc(50%-22px)] left-[calc(25%-12px)] pop-text">20</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-22px)] right-[calc(25%-12px)] pop-text">20</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.modern.highlander.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.modern.highlander.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card" data-tilt data-tilt-max="10" data-tilt-speed="100" data-tilt-perspective="3000" data-tilt-glare data-tilt-max-glare="0.4" data-tilt-scale="1.03" data-tilt-reset="true">
+                    <a href="#calculator" title="{{ 'front.home.mtg.popular.singleton.modern.freeform.title'|trans }}" data-format-switch="aeonshift-modern-freeform">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/modern-freeform.jpg') }}" alt="MTG background, Treasure Cruise">
+                            <span class="format-ball format-ball-gray top-[calc(50%-22px)] left-[calc(50%-22px)] pop-text">?</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.modern.freeform.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.modern.freeform.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card coming-soon">
+                    <a title="{{ 'front.home.mtg.popular.singleton.modern.2hg.title'|trans }}" data-format-switch="aeonshift-modern-2hg">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/modern-2hg.jpg') }}" alt="MTG background, Atarka's Command">
+                            <span class="format-ball top-[calc(50%-49px)] left-[calc(25%-12px)] pop-text">3</span>
+                            <span class="format-ball top-[calc(50%+13px)] left-[calc(25%-12px)] pop-text">0</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-49px)] right-[calc(25%-12px)] pop-text">3</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%+13px)] right-[calc(25%-12px)] pop-text">0</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.singleton.modern.2hg.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.singleton.modern.2hg.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="format-card coming-soon">
+                    <a title="{{ 'front.home.mtg.popular.quadruples.modern.modern.title'|trans }}" data-format-switch="aeonshift-modern">
+                        <span class="inline-block relative format-image-container">
+                            <img src="{{ asset('images/modern.jpg') }}" alt="MTG background, Nadu, Winged Wisdom">
+                            <span class="format-ball top-[calc(50%-22px)] left-[calc(25%-12px)] pop-text">20</span>
+                            <span class="format-ball format-ball-blue top-[calc(50%-22px)] right-[calc(25%-12px)] pop-text">20</span>
+                        </span>
+                        <span class="pop-text w-full h-full py-3 px-2 flex flex-col items-center justify-around">
+                            <span class="inline-block title-h3 white-text pt-0 pb-3">{{ 'front.home.mtg.popular.quadruples.modern.modern.label'|trans }}</span>
+                            <span class="inline-flex w-full green-text pt-4 pb-2 px-4 text-lg flex-1 flex-col items-center justify-around">
+                                <span>{{ 'front.home.mtg.popular.quadruples.modern.modern.subtitle'|trans|raw }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <hr class="w-1/2">
+
+            <h3 class="w-full mt-6 mb-8">{{ 'front.home.mtg.popular.pioneer.title'|trans|raw }}</h3>
+
+            <p class="text-xl">{{ 'front.home.mtg.popular.comingsoon.text'|trans|raw }}</p>
+
+            <hr class="w-1/2">
+
+            <h3 class="w-full mt-6 mb-8">{{ 'front.home.mtg.popular.standard.title'|trans|raw }}</h3>
+
+            <p class="text-xl">{{ 'front.home.mtg.popular.comingsoon.text'|trans|raw }}</p>
+
         </div>
     </div>
 </div>

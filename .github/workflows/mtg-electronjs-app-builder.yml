@@ -89,6 +89,7 @@ jobs:
                     name: build-${{ matrix.os }}
                     path: out/**
                     if-no-files-found: error
+                    retention-days: 5
 
     ##############################################################
     ####### Replace GitHub Release with all platform builds ######

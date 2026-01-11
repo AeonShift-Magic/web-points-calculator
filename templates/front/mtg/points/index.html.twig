@@ -4,7 +4,6 @@
 
 {% block custom_js %}
     {# Inline the calculator JavaScript #}
-    <script async>{{ include('front/mtg/points/_vanilla_tilt.js.twig') }}</script>
     <script async>{{ include('front/mtg/points/_js_calculator.js.twig') }}</script>
 {% endblock %}
 
@@ -15,8 +14,8 @@
 {% block top_spacer %}{% endblock %}
 
 {% block beforemenu %}
-    <div class="top-video-overflow-container">
-        <div class="top-video-height-container">
+    <div class="top-video-overflow-container min-h-screen">
+        <div class="top-video-height-container min-h-[1000px]">
             <video class="hidden lg:block" controlslist="nodownload, nofullscreen, noremoteplayback" disablepictureinpicture="" autoplay="" muted="" loop="loop">
                 <source src="{{ asset('videos/numbers.mp4') }}" type="video/mp4">
             </video>
@@ -25,13 +24,16 @@
 {% endblock %}
 
 {% block main_layout %}
-    <div class="main-row theme1 unique-row h-screen transparent-row">
+    <div class="main-row theme1 unique-row justify-center transparent-row min-h-screen">
         <div class="main-column main-content h-full w-full">
             {% block main_content %}
                 {% block body %}
-                    <div class="w-full text-center flex flex-col justify-center items-center mb-28">
-                        <div class="w-full format-incentive flex flex-col justify-around items-center">
-                            <p class="inline-block w-full text-3xl mt-6 mb-12">{{ 'front.mtg.points.choose.text'|trans }}</p>
+                    <div class="w-full text-center flex flex-col justify-center items-center">
+                        <div class="w-full format-incentive flex flex-col justify-around items-center p-px">
+                            <div class="gradient-cycle">
+                                <img class="game-choice-image w-full" src="{{ asset('images/mtg-banner.jpg') }}" alt="Magic The Gathering cards: Black Lotus, Channel, Jeweled Lotus, The One Ring, Shahrazad">
+                            </div>
+                            <p class="inline-block w-full text-4xl mt-10 mb-16">{{ 'front.mtg.points.choose.text'|trans|raw }}</p>
                             <div class="flex flex-col lg:flex-row w-full justify-around items-center">
                                 <div class="flex flex-col justify-center items-center px-6">
                                     <a class="btn btn-star btn-green btn-big m-2" href="#formats" title="{{ 'front.mtg.points.choose.links.choose.title'|trans|striptags }}" data-turbo="false">
@@ -89,4 +91,8 @@
     {# Calculator form #}
     {{ include('front/mtg/points/_calculator_form.html.twig') }}
 
+{% endblock %}
+
+{% block endbody %}
+    <script>{{ include('front/mtg/points/_vanilla_tilt.js.twig') }}</script>
 {% endblock %}

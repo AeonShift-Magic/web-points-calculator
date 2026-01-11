@@ -522,57 +522,70 @@ front:
                 title: Play Magic The Gathering™ AeonShift
         mtg:
             popular:
+                comingsoon:
+                    text: '<em class="blue-text">Coming soon!</em> Stay tuned.'
+                eternal:
+                    title: 'Timeline: <strong class="blue-text">Eternal</strong>'
+                modern:
+                    title: 'Timeline: <strong class="blue-text">Modern</strong>'
+                pioneer:
+                    title: 'Timeline: <strong class="blue-text">Pioneer</strong>'
+                standard:
+                    title: 'Timeline: <strong class="blue-text">Standard</strong>'
+                quadruples:
+                    eternal:
+                        vintage:
+                            label: Vintage
+                            title: Play AeonShift Vintage
+                            subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>60</strong> maindeck cards minimum + <strong>0-15</strong> sideboard cards, <strong>two</strong> winning games, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
+                    modern:
+                        modern:
+                            label: Modern
+                            title: Play AeonShift Modern
+                            subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>60</strong> maindeck cards minimum + <strong>0-15</strong> sideboard cards, <strong>two</strong> winning games, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
                 singleton:
                     eternal:
                         2hg:
                             label: Two-Headed Giant Duel Commander
                             title: Play AeonShift 2HG Duel Commander
-                            subtitle: Coming soon!
-                        2hgcommander:
-                            label: Two-Headed Giant Commander / CEDH
-                            title: Play AeonShift 2HG Commander / CEDH
-                            subtitle: Coming soon!
+                            subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
                         commander:
-                            label: Commander / CEDH
-                            title: Play AeonShift Commander / CEDH
-                            subtitle: 4+ players – free-for-all, 40 life, Command Zones, 100-card Singleton, one winning game
+                            label: Commander/cEDH
+                            title: Play AeonShift Commander/cEDH
+                            subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
                         duelcommander:
                             label: Duel Commander
                             title: Play AeonShift Duel Commander
-                            subtitle: 2 players, 20 life, Command Zones, 100-card Singleton, two winning games
+                            subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Eternal</strong> timeline
                         freeform:
                             label: Freeform
                             title: Play AeonShift Freeform
-                            suubtitle: Play with what you have!
+                            subtitle: Play with <strong>whatever cards</strong> you have, <strong>20</strong> life, <strong>unlimited</strong> games and cards, <strong>Eternal</strong> timeline!
                         highlander:
                             label: Highlander
                             title: Play AeonShift Highlander
-                            subtitle: 2 players, 20 life, 100-card Singleton, two winning games
+                            subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Eternal</strong> timeline
                     modern:
                         2hg:
                             label: Two-Headed Giant Modern Duel Commander
                             title: Play AeonShift 2HG Modern Duel Commander
-                            subtitle: Coming soon!
-                        2hgcommander:
-                            label: Two-Headed Giant Modern Commander / CEDH
-                            title: Play AeonShift 2HG Modern Commander / CEDH
-                            subtitle: Coming soon!
+                            subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
                         commander:
-                            label: Modern Commander / CEDH
-                            title: Play AeonShift Modern Commander / CEDH
-                            subtitle: 4+ players – free-for-all, 40 life, Command Zones, 100-card Singleton, one winning game
+                            label: Modern Commander/cEDH
+                            title: Play AeonShift Modern Commander/cEDH
+                            subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
                         duelcommander:
                             label: Modern Duel Commander
                             title: Play AeonShift Modern Duel Commander
-                            subtitle: 2 players, 20 life, Command Zones, 100-card Singleton, two winning games
+                            subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Modern</strong> timeline
                         freeform:
                             label: Modern Freeform
                             title: Play AeonShift Modern Freeform
-                            subtitle: Play with what you have!
+                            subtitle: Play with <strong>whatever cards</strong> you have, <strong>20</strong> life, <strong>unlimited</strong> games and cards, <strong>Modern</strong> timeline!
                         highlander:
                             label: Modern Highlander
                             title: Play AeonShift Modern Highlander
-                            subtitle: 2 players, 20 life, 100-card Singleton, two winning games
+                            subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Modern</strong> timeline
         discover:
             title: AeonShift, a rich balance system for games
             link:
@@ -628,7 +641,8 @@ front:
             calculator:
                 title: 'AeonShift Magic The Gathering™ Points Calculator'
             choose:
-                text: 'You''re playing AeonShift Magic The Gathering™.'
+                title: 'Pick an <strong class="green-text">AeonShift star format</strong> below'
+                text: 'You''re playing <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
                 links:
                     gotoform:
                         text: 'Go to the calculator'
@@ -691,7 +705,7 @@ front:
                         help: 'Two-Headed Giant: four players, two teams of two. <br><strong>30 shared life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
                     answer3:
                         label: '4+ (4+)'
-                        help: 'CEDH/Commander: four players and more, free-for-all. <br><strong>40 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
+                        help: 'cEDH/Commander: four players and more, free-for-all. <br><strong>40 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
                     answer4:
                         label: '6 (2)'
                         help: 'Team Trio: two teams of three players, with special rules for matching. <br><strong>20 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
@@ -733,7 +747,7 @@ front:
                         help: 'This includes all Eternal card, plus the fun sets.'
                     answer3:
                         label: 'Eternal'
-                        help: 'Includes all cards from Eternal, more or less Vintage format cards.'
+                        help: 'Includes all cards from Eternal, more or less Vintage-printed, sanctioned-tournament-legal cards.'
                     answer4:
                         label: 'Modern'
                         help: 'Includes all cards that are legal or banned in Modern.'

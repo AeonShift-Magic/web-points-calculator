@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * - The legalities "special" ar so far used for Command Zones only (Commander usage).
  * - The colors are based on color identity, not on card colors.
- * - The term "multi" refers to FFA 3+ players (Commander, CEDH, etc.).
+ * - The term "multi" refers to FFA 3+ players (Commander, cEDH, etc.).
  */
 #[ORM\HasLifecycleCallbacks]
 #[ORM\MappedSuperclass]

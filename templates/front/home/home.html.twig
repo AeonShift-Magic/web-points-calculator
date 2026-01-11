@@ -5,8 +5,8 @@
 {% block top_spacer %}{% endblock %}
 
 {% block beforemenu %}
-    <div class="top-video-overflow-container">
-        <div class="top-video-height-container">
+    <div class="top-video-overflow-container min-h-screen">
+        <div class="top-video-height-container min-h-[1000px]">
             <video class="hidden lg:block" controlslist="nodownload, nofullscreen, noremoteplayback" disablepictureinpicture="" autoplay="" muted="" loop="loop">
                 <source src="{{ asset('videos/numbers.mp4') }}" type="video/mp4">
             </video>
@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block main_layout %}
-    <div class="main-row theme1 unique-row h-screen transparent-row">
+    <div class="main-row theme1 unique-row justify-center transparent-row min-h-screen">
         <div class="main-column main-content h-full w-full">
             {% block main_content %}
                 {% block body %}
@@ -27,7 +27,7 @@
                             <h1 class="w-full inline-block">{{ 'front.home.title'|trans }}</h1>
                             <p class="w-full inline-block text-lg italic">{{ 'front.home.subtitle'|trans }}</p>
                         </div>
-                        <div class="w-full lg:mt-28 format-incentive lg:max-w-3/4 flex flex-col justify-center items-center">
+                        <div class="w-full lg:mt-28 pb-8 format-incentive lg:max-w-3/4 flex flex-col justify-center items-center">
                             <p class="w-full inline-block text-3xl">{{ 'front.home.chooselicense'|trans }}</p>
                             <a class="btn btn-star btn-big" href="{{ url('front_mtg_points_index') }}" title="{{ 'front.home.licenses.mtg.title'|trans }}">
                                 <span class="top-left"></span>

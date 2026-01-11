@@ -59,7 +59,7 @@ admin:
             update:
                 create:
                     titleen:
-                        help: 'Le titre public de votre mise à jour / annonce (English)'
+                        help: 'Le titre public de votre mise à jour/annonce (English)'
                         label: 'Titre (EN)'
                         placeholder: 'My new announcement'
                     pointslist:
@@ -283,8 +283,8 @@ admin:
     nav:
         customblocks:
             edit:
-                label: '✏️ Editer le bloc custom : emplacement "{blockkey}" / poids "{weight}"'
-                title: 'Editer le bloc custom : emplacement "{blockkey}" / poids "{weight}"'
+                label: '✏️ Editer le bloc custom : emplacement "{blockkey}"/poids "{weight}"'
+                title: 'Editer le bloc custom : emplacement "{blockkey}"/poids "{weight}"'
             index:
                 label: Blocs Custom
                 title: Gérer les blocs Custom
@@ -292,7 +292,7 @@ admin:
                 label: ➕ Ajouter un bloc custom
                 title: Ajouter un bloc custom
             show:
-                label: 'Détails du bloc custom : emplacement "{blockkey}" / poids "{weight}"'
+                label: 'Détails du bloc custom : emplacement "{blockkey}"/poids "{weight}"'
         front:
             label: Accueil public →
             title: Accueil public
@@ -382,8 +382,8 @@ admin:
                     label: 'MTG - Lancement manuel HTTP d''une mise à jour de la base de données depuis les sources'
             source:
                 index:
-                    title: 'MTG - Téléchargement / Import des sources'
-                    label: 'MTG - Téléchargement / Import des sources'
+                    title: 'MTG - Téléchargement/Import des sources'
+                    label: 'MTG - Téléchargement/Import des sources'
             sourcedownload:
                 index:
                     label: 'MTG - Etat du téléchargement des sources'
@@ -479,52 +479,52 @@ front:
                 singleton:
                     eternal:
                         2hg:
-                            label: Two-Headed Giant Duel Commander
+                            label: AeonShift Two-Headed Giant Duel Commander
                             title: Jouer en AeonShift 2HG Duel Commander
                             subtitle: Bientôt disponible !
                         2hgcommander:
-                            label: Two-Headed Giant Commander / CEDH
-                            title: Jouer en AeonShift 2HG Commander / CEDH
+                            label: AeonShift Two-Headed Giant Commander/cEDH
+                            title: Jouer en AeonShift 2HG Commander/cEDH
                             subtitle: Bientôt disponible !
                         commander:
-                            label: Commander / CEDH
-                            title: Jouer en AeonShift Commander / CEDH
+                            label: AeonShift Commander/cEDH
+                            title: Jouer en AeonShift Commander/cEDH
                             subtitle: 4+ joueur·ses - chacun pour soi, 40 points de vie, Zones de Commandement, Singleton 100 cartes, une manche gagnante
                         duelcommander:
-                            label: Duel Commander
+                            label: AeonShift Duel Commander
                             title: Jouer en AeonShift Duel Commander
                             subtitle: 2 joueur·ses, 20 points de vie, Zones de Commandement, Singleton 100 cartes, 2 manches gagnantes
                         freeform:
-                            label: Freeform
+                            label: AeonShift Freeform
                             title: Jouer en AeonShift Freeform
                             suubtitle: Jouez avec ce que vous avez !
                         highlander:
-                            label: Highlander
+                            label: AeonShift Highlander
                             title: Jouer en AeonShift Highlander
                             subtitle: 2 joueur·ses, 20 points de vie, Singleton 100 cartes, 2 manches gagnantes
                     modern:
                         2hg:
-                            label: Two-Headed Giant Modern Duel Commander
+                            label: AeonShift Two-Headed Giant Modern Duel Commander
                             title: Jouer en AeonShift 2HG Modern Duel Commander
                             subtitle: Bientôt disponible !
                         2hgcommander:
-                            label: Two-Headed Giant Modern Commander / CEDH
-                            title: Jouer en AeonShift 2HG ModernCommander / CEDH
+                            label: AeonShift Two-Headed Giant Modern Commander/cEDH
+                            title: Jouer en AeonShift 2HG ModernCommander/cEDH
                             subtitle: Bientôt disponible !
                         commander:
-                            label: Modern Commander / CEDH
-                            title: Jouer en AeonShift Modern Commander / CEDH
+                            label: AeonShift Modern Commander/cEDH
+                            title: Jouer en AeonShift Modern Commander/cEDH
                             subtitle: 4+ joueur·ses - chacun pour soi, 40 points de vie, Zones de Commandement, Singleton 100 cartes, une manche gagnante
                         duelcommander:
-                            label: Modern Duel Commander
+                            label: AeonShift Modern Duel Commander
                             title: Jouer en AeonShift Modern Duel Commander
                             subtitle: 2 joueur·ses, 20 points de vie, Zones de Commandement, Singleton 100 cartes, 2 manches gagnantes
                         freeform:
-                            label: Modern Freeform
+                            label: AeonShift Modern Freeform
                             title: Jouer en AeonShift Modern Freeform
                             subtitle: Jouez avec ce que vous avez !
                         highlander:
-                            label: Modern Highlander
+                            label: AeonShift Modern Highlander
                             title: Jouer en AeonShift Modern Highlander
                             subtitle: 2 joueur·ses, 20 points de vie, Singleton 100 cartes, 2 manches gagnantes
         discover:
@@ -604,7 +604,7 @@ global:
     createdat:
         label: Créé le
     dates:
-        label: Créé / Dernière mise à jour
+        label: Créé/Dernière mise à jour
     delete:
         confirmprompt: Voulez-vous vraiment supprimer cet élément ? Cette action est irréversible.
     deletebutton:
@@ -684,7 +684,7 @@ global:
         label: 'Lancer la commande'
         title: 'Lancer la commande'
     users:
-        label: 'Créé / Dernière modification par'
+        label: 'Créé/Dernière modification par'
     deletesuccess:
         text: 'Elément supprimé avec succès'
     import:
