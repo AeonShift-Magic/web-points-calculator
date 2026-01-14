@@ -40,12 +40,12 @@
                     <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.pointslist.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduel.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelspecial.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelcommander.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelcommanderspecial.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.points2hg.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.points2hgspecial.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmulti.label'|trans }}</th>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmultispecial.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointscommander.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointscommanderspecial.label'|trans }}</th>
                     <th>{{ 'global.dates.label'|trans }}</th>
                     <th>{{ 'global.users.label'|trans }}</th>
                     <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
@@ -76,12 +76,12 @@
                                 {{ 'global.none.label'|trans }}
                             {% endif %}
                         </td>
-                        <td><span class="text-blue-300">{% if points_list_card.pointsDuel > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuel }}{% if points_list_card.pointsDuel > 0 %}</strong>{% endif %}</span></td>
-                        <td><span class="text-blue-300">{% if points_list_card.pointsDuelSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelSpecial }}{% if points_list_card.pointsDuelSpecial > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-blue-300">{% if points_list_card.pointsDuelCommander > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelCommander }}{% if points_list_card.pointsDuelCommander > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-blue-300">{% if points_list_card.pointsDuelCommanderSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelCommanderSpecial }}{% if points_list_card.pointsDuelCommanderSpecial > 0 %}</strong>{% endif %}</span></td>
                         <td><span class="text-orange-300">{% if points_list_card.points2hg > 0 %}<strong>{% endif %}{{ points_list_card.points2hg }}{% if points_list_card.points2hg > 0 %}</strong>{% endif %}</span></td>
                         <td><span class="text-orange-300">{% if points_list_card.points2hgSpecial > 0 %}<strong>{% endif %}{{ points_list_card.points2hgSpecial }}{% if points_list_card.points2hgSpecial > 0 %}</strong>{% endif %}</span></td>
-                        <td><span class="text-amber-300">{% if points_list_card.pointsMulti > 0 %}<strong>{% endif %}{{ points_list_card.pointsMulti }}{% if points_list_card.pointsMulti > 0 %}</strong>{% endif %}</span></td>
-                        <td><span class="text-amber-300">{% if points_list_card.pointsMultiSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsMultiSpecial }}{% if points_list_card.pointsMultiSpecial > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-amber-300">{% if points_list_card.pointsCommander > 0 %}<strong>{% endif %}{{ points_list_card.pointsCommander }}{% if points_list_card.pointsCommander > 0 %}</strong>{% endif %}</span></td>
+                        <td><span class="text-amber-300">{% if points_list_card.pointsCommanderSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsCommanderSpecial }}{% if points_list_card.pointsCommanderSpecial > 0 %}</strong>{% endif %}</span></td>
                         <td>
                             {{ points_list_card.createdAt ? points_list_card.createdAt|date('Y-m-d') : '' }} / {{ points_list_card.updatedAt ? points_list_card.updatedAt|date('Y-m-d') : '' }}
                         </td>

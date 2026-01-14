@@ -2,7 +2,6 @@
 <psalm
         xmlns="https://getpsalm.org/schema/config"
         errorLevel="8"
-        resolveFromConfigFile="true"
         showInfo="false"
 >
     <projectFiles>

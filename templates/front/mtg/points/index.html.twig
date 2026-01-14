@@ -15,7 +15,7 @@
 
 {% block beforemenu %}
     <div class="top-video-overflow-container min-h-screen">
-        <div class="top-video-height-container min-h-[1000px]">
+        <div class="top-video-height-container min-h-[1300px]">
             <video class="hidden lg:block" controlslist="nodownload, nofullscreen, noremoteplayback" disablepictureinpicture="" autoplay="" muted="" loop="loop">
                 <source src="{{ asset('videos/numbers.mp4') }}" type="video/mp4">
             </video>
@@ -33,46 +33,46 @@
                             <div class="gradient-cycle">
                                 <img class="game-choice-image w-full" src="{{ asset('images/mtg-banner.jpg') }}" alt="Magic The Gathering cards: Black Lotus, Channel, Jeweled Lotus, The One Ring, Shahrazad">
                             </div>
-                            <p class="inline-block w-full text-4xl mt-10 mb-16">{{ 'front.mtg.points.choose.text'|trans|raw }}</p>
+                            <p class="inline-block w-full text-4xl mt-10 mb-16">{{ 'front.mtg.choose.text'|trans|raw }}</p>
                             <div class="flex flex-col lg:flex-row w-full justify-around items-center">
                                 <div class="flex flex-col justify-center items-center px-6">
-                                    <a class="btn btn-star btn-green btn-big m-2" href="#formats" title="{{ 'front.mtg.points.choose.links.choose.title'|trans|striptags }}" data-turbo="false">
+                                    <a class="btn btn-star btn-green btn-big m-2" href="#formats" title="{{ 'front.mtg.choose.links.choose.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
                                             <span class="icon-target"></span>
-                                            {{ 'front.mtg.points.choose.links.choose.text'|trans }}
+                                            {{ 'front.mtg.choose.links.choose.text'|trans }}
                                         </span>
                                         <span class="bottom-left"></span>
                                         <span class="bottom-right"></span>
                                     </a>
-                                    <p class="format-help">{{ 'front.mtg.points.choose.links.choose.title'|trans|raw }}</p>
+                                    <p class="format-help">{{ 'front.mtg.choose.links.choose.title'|trans|raw }}</p>
                                 </div>
                                 <div class="flex flex-col justify-center items-center px-6">
-                                    <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.points.choose.links.freeform.title'|trans|striptags }}" data-turbo="false">
+                                    <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.choose.links.gotoform.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
-                                            <span class="icon-cancel"></span>
-                                            {{ 'front.mtg.points.choose.links.freeform.text'|trans }}
+                                            <span class="icon-chart-bar"></span>
+                                            {{ 'front.mtg.choose.links.gotoform.text'|trans }}
                                         </span>
                                         <span class="bottom-left"></span>
                                         <span class="bottom-right"></span>
                                     </a>
-                                    <p class="format-help">{{ 'front.mtg.points.choose.links.freeform.title'|trans|raw }}</p>
+                                    <p class="format-help">{{ 'front.mtg.choose.links.gotoform.title'|trans|raw }}</p>
                                 </div>
                                 <div class="flex flex-col justify-center items-center px-6">
-                                    <a class="btn btn-star btn-blue btn-big m-2" href="#quiz" title="{{ 'front.mtg.points.choose.links.quiz.title'|trans|striptags }}" data-turbo="false">
+                                    <a class="btn btn-star btn-blue btn-big m-2" href="#quiz" title="{{ 'front.mtg.choose.links.quiz.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
                                             <span class="icon-question"></span>
-                                            {{ 'front.mtg.points.choose.links.quiz.text'|trans }}
+                                            {{ 'front.mtg.choose.links.quiz.text'|trans }}
                                         </span>
                                         <span class="bottom-left"></span>
                                         <span class="bottom-right"></span>
                                     </a>
-                                    <p class="format-help">{{ 'front.mtg.points.choose.links.quiz.title'|trans|raw }}</p>
+                                    <p class="format-help">{{ 'front.mtg.choose.links.quiz.title'|trans|raw }}</p>
                                 </div>
                             </div>
                         </div>

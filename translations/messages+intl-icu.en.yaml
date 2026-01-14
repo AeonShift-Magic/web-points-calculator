@@ -207,40 +207,58 @@ admin:
                     points2hgspecial:
                         label: 'Two-Headed Giant points (special)'
                         help: 'The points for this card in 2HG variant (special, like "As a Commander").'
-                    pointsduel:
-                        label: 'Duel points'
-                        help: 'The points for this card in Duel variant.'
-                    pointsduelspecial:
-                        label: 'Duel points (special)'
-                        help: 'The points for this card in Duel variant (special, like "As a Commander").'
-                    pointsmulti:
+                    pointsduelcommander:
+                        label: 'Duel Commander points'
+                        help: 'The points for this card in Duel Commander.'
+                    pointsduelcommanderspecial:
+                        label: 'Duel Commander points (special)'
+                        help: 'The points for this card in Duel Commander (special, like "As a Commander").'
+                    pointscommander:
                         label: 'Multiplayer Free-For-All points'
-                        help: 'The points for this card in Multiplayer Free-For-All variant.'
-                    pointsmultispecial:
+                        help: 'The points for this card in Multiplayer Free-For-All Commander/CEDH.'
+                    pointscommanderspecial:
                         label: 'Multiplayer Free-For-All points (special)'
-                        help: 'The points for this card in Multiplayer Free-For-All variant (special, like "As a Commander").'
+                        help: 'The points for this card in Multiplayer Free-For-All Commander/CEDH (special, like "As a Commander").'
                     islegal2hg:
                         label: 'Legal in 2HG'
                         help: 'Check if the card is legal in Two-Headed Giant'
                     islegal2hgspecial:
                         label: 'Legal in 2HG (special)'
                         help: 'Check if the card is legal in Two-Headed Giant (special, like "As a Commander")'
-                    islegalduel:
-                        label: 'Legal in Duel'
-                        help: 'Check if the card is legal in Duel'
-                    islegalduelspecial:
-                        label: 'Legal in Duel (special)'
+                    islegalduelcommander:
+                        label: 'Legal in Duel Commander'
+                        help: 'Check if the card is legal in Duel Commander'
+                    islegalduelcommanderspecial:
+                        label: 'Legal in Duel Commander (special)'
                         help: 'Check if the card is legal in Duel (special, like "As a Commander")'
-                    islegalmulti:
-                        label: 'Legal in Multiplayer Free-For-All'
-                        help: 'Check if the card is legal in Multiplayer Free-For-All points'
-                    islegalmultispecial:
-                        label: 'Legal in Multiplayer Free-For-All (special)'
-                        help: 'Check if the card is legal in Multiplayer Free-For-All points (special, like "As a Commander")'
+                    islegalcommander:
+                        label: 'Legal in Multiplayer Free-For-All Commander/CEDH'
+                        help: 'Check if the card is legal in Multiplayer Free-For-All Commander/CEDH'
+                    islegalcommanderspecial:
+                        label: 'Legal in Multiplayer Free-For-All Commander/CEDH (special)'
+                        help: 'Check if the card is legal in Multiplayer Free-For-All Commander/CEDH (special, like "As a Commander")'
                     firstline:
-                        label: 'The first name in Englisy MUST always be <code class="inline">((unranked))</code> (and defines the points for unranked cards)'
+                        label: 'The first name in English MUST always be <code class="inline">((unranked))</code> (and defines the points for unranked cards)'
                     isczeligible:
                         label: 'messages'
+                    pointshighlander:
+                        label: 'Highlander points'
+                        help: 'The points for this card Highlander.'
+                    pointsmodern:
+                        label: 'Modern points'
+                        help: 'The points for this card Modern.'
+                    pointspioneer:
+                        label: 'Pioneer points'
+                        help: 'The points for this card Pioneer.'
+                    pointsstandard:
+                        label: 'Standard points'
+                        help: 'The points for this card Standard.'
+                    pointsbasesingleton:
+                        label: 'Base Singleton points'
+                        help: 'The Base points for this card in Singleton.'
+                    pointsbasequadruples:
+                        label: 'Base Quadruples points'
+                        help: 'The Base points for this card in Quadruples.'
                 legends:
                     info: 'Points List Card details'
             update:
@@ -304,6 +322,12 @@ admin:
                         label: 'Colorless ID.'
                     maximumtimelinelegality:
                         label: 'Maximum Timeline Legality'
+                    mtgoprice:
+                        label: 'MTGO price'
+                        help: 'The MTGO price of this card.'
+                    mvalue:
+                        label: 'M-Value'
+                        help: 'The M-Value of this card (mixed money value in EUR-USD).'
         user:
             account:
                 roles:
@@ -467,7 +491,7 @@ admin:
                 fileremoved: 'The requested log file does not exist anymore.'
         pointslistcard:
             points:
-                label: 'Points (Duel - 2HG - Multi FFA)'
+                label: 'RAW Points (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
         update:
             publish: 'Publish'
             unpublish: 'Unpublish'
@@ -505,6 +529,8 @@ customblock:
         fr:
             name: Légal (FR 🇫🇷)
 email:
+    appendix:
+        label: ' | AeonShift'
     resetpassword:
         subject: 🛡️ Your password reset request
         success: Your password has been successfully reset, you can now log in using it.
@@ -512,6 +538,19 @@ email:
         text2: This link will expire in {expires}.
         title: Password reset instructions for your account
 front:
+    globals:
+        media_preview:
+            title: 'Media preview'
+            label: '(this is the current file)'
+        share:
+            facebook: 'Share on Facebook'
+            messenger_mobile: 'Send via Facebook Messenger (mobile)'
+            messenger_computer: 'Send via Facebook Messenger (desktop)'
+            twitter: 'Share on Twitter/X'
+            email: 'Send via email'
+            bluesky: 'Share on Bluesky'
+            reddit: 'Share on Reddit'
+            link: 'Copy link'
     home:
         title: AeonShift Calculator
         subtitle: Enter AeonShift, a strategic balance system for your games.
@@ -520,72 +559,6 @@ front:
             mtg:
                 label: Magic The Gathering™
                 title: Play Magic The Gathering™ AeonShift
-        mtg:
-            popular:
-                comingsoon:
-                    text: '<em class="blue-text">Coming soon!</em> Stay tuned.'
-                eternal:
-                    title: 'Timeline: <strong class="blue-text">Eternal</strong>'
-                modern:
-                    title: 'Timeline: <strong class="blue-text">Modern</strong>'
-                pioneer:
-                    title: 'Timeline: <strong class="blue-text">Pioneer</strong>'
-                standard:
-                    title: 'Timeline: <strong class="blue-text">Standard</strong>'
-                quadruples:
-                    eternal:
-                        vintage:
-                            label: Vintage
-                            title: Play AeonShift Vintage
-                            subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>60</strong> maindeck cards minimum + <strong>0-15</strong> sideboard cards, <strong>two</strong> winning games, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
-                    modern:
-                        modern:
-                            label: Modern
-                            title: Play AeonShift Modern
-                            subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>60</strong> maindeck cards minimum + <strong>0-15</strong> sideboard cards, <strong>two</strong> winning games, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
-                singleton:
-                    eternal:
-                        2hg:
-                            label: Two-Headed Giant Duel Commander
-                            title: Play AeonShift 2HG Duel Commander
-                            subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
-                        commander:
-                            label: Commander/cEDH
-                            title: Play AeonShift Commander/cEDH
-                            subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
-                        duelcommander:
-                            label: Duel Commander
-                            title: Play AeonShift Duel Commander
-                            subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Eternal</strong> timeline
-                        freeform:
-                            label: Freeform
-                            title: Play AeonShift Freeform
-                            subtitle: Play with <strong>whatever cards</strong> you have, <strong>20</strong> life, <strong>unlimited</strong> games and cards, <strong>Eternal</strong> timeline!
-                        highlander:
-                            label: Highlander
-                            title: Play AeonShift Highlander
-                            subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Eternal</strong> timeline
-                    modern:
-                        2hg:
-                            label: Two-Headed Giant Modern Duel Commander
-                            title: Play AeonShift 2HG Modern Duel Commander
-                            subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
-                        commander:
-                            label: Modern Commander/cEDH
-                            title: Play AeonShift Modern Commander/cEDH
-                            subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
-                        duelcommander:
-                            label: Modern Duel Commander
-                            title: Play AeonShift Modern Duel Commander
-                            subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Modern</strong> timeline
-                        freeform:
-                            label: Modern Freeform
-                            title: Play AeonShift Modern Freeform
-                            subtitle: Play with <strong>whatever cards</strong> you have, <strong>20</strong> life, <strong>unlimited</strong> games and cards, <strong>Modern</strong> timeline!
-                        highlander:
-                            label: Modern Highlander
-                            title: Play AeonShift Modern Highlander
-                            subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Modern</strong> timeline
         discover:
             title: AeonShift, a rich balance system for games
             link:
@@ -637,126 +610,140 @@ front:
     resetpasswordconfirm:
         text1: If an email address exists in our database and matches an account, an email will be sent to that address with further instructions to reset the password of the associated account.
     mtg:
-        points:
-            calculator:
-                title: 'AeonShift Magic The Gathering™ Points Calculator'
-            choose:
-                title: 'Pick an <strong class="green-text">AeonShift star format</strong> below'
-                text: 'You''re playing <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
-                links:
-                    gotoform:
-                        text: 'Go to the calculator'
-                        title: 'Go to the complete calculator form, with all options'
-                    freeform:
-                        text: 'I don''t need a format'
-                        title: 'I just want to play <strong>with whatever I have</strong>, and count my points (Freeform AeonShift).'
-                    choose:
-                        text: 'I know my format'
-                        title: 'I want to <strong>choose a specific format</strong> to play AeonShift Magic The Gathering™.'
-                    quiz:
-                        text: 'Help me choose a format'
-                        title: 'Help me choose a format to play AeonShift Magic The Gathering™ via <strong>a quiz</strong>.'
-            form:
-                title: 'Configure your format:'
-                decklist1:
-                    label: 'Decklist (Player 1 Decklist if using teams)'
-                    help: 'Paste your deck here (your player 1 decklist here if using teams).'
-                    placeholder: |
-                        1 Black Lotus                        
-                        1 Library of Alexandria                        
-                        1 Argothian Enchantress
-                decklist2:
-                    label: 'Decklist - Player 2'
-                    help: 'Paste your player 2 decklist here if using teams.'
-                    placeholder: |
-                        1 Black Lotus                        
-                        1 Library of Alexandria                        
-                        1 Argothian Enchantress
-                decklist3:
-                    label: 'Decklist - Player 3'
-                    help: 'Paste your player 3 decklist here if using teams.'
-                    placeholder: |
-                        1 Black Lotus                        
-                        1 Library of Alexandria                        
-                        1 Argothian Enchantress
-                results:
-                    total:
-                        label: '# points'
-                    valid:
-                        no:
-                            label: 'Your deck is invalid.'
-                        yes:
-                            label: 'Your deck is valid.'
-            quiz:
-                back:
-                    label: '← Previous question'
-                    title: 'Go back to the previous question'
-                help:
-                    text1: 'Let''s help you find your format.'
-                    text2: 'Just answer these 5 quick questions. ↓'
-                question1:
-                    label: 'Players/teams/life:'
-                    text: 'How many players (teams) and life points do you want?'
-                    answer1:
-                        label: '2 (2)'
-                        help: 'Duel games: two players, two teams. <br><strong>20 life totals at start.</strong>'
-                    answer2:
-                        label: '4 (2)'
-                        help: 'Two-Headed Giant: four players, two teams of two. <br><strong>30 shared life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
-                    answer3:
-                        label: '4+ (4+)'
-                        help: 'cEDH/Commander: four players and more, free-for-all. <br><strong>40 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
-                    answer4:
-                        label: '6 (2)'
-                        help: 'Team Trio: two teams of three players, with special rules for matching. <br><strong>20 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
-                question2:
-                    label: 'Maximum copies of a card:'
-                    text: 'What''s the maximum number of copies a card in a deck should have?'
-                    answer1:
-                        label: '1'
-                        help: 'Singleton - a maximum of one copy of each card across in the entire decklist.'
-                    answer2:
-                        label: '4'
-                        help: 'Quadruples - a maximum of four copies of each card across in the entire decklist. <em class="comingsoon">Coming Soon!</em>'
-                question3:
-                    label: 'Cards in main deck/sideboard:'
-                    text: 'How many cards sould a deck have (main deck/sideboard)?'
-                    answer1:
-                        label: '100/0'
-                        help: '100 cards main deck, no sideboard.'
-                    answer2:
-                        label: '60+/0-15'
-                        help: '60 cards or more in the main deck, 0 to 15 in a sideboard. <em class="comingsoon">Coming Soon!</em>'
-                question4:
-                    label: 'Commanders/Command Zones:'
-                    text: 'Do you want to use Commanders/Command Zones?'
-                    answer1:
-                        label: 'No'
-                        help: 'No additional rules will be checked.'
-                    answer2:
-                        label: 'Yes'
-                        help: 'This will add special construction and gameplay rules and restrictions.'
-                question5:
-                    label: 'Maximum legality timeline:'
-                    text: 'What''s the maximum legality timeline you want to play with?'
-                    answer1:
-                        label: 'Printed'
-                        help: 'Whatever you have, as long as it''s an authentic Magic The Gathering™ card. This includes all cards ever printed.'
-                    answer2:
-                        label: 'Funny'
-                        help: 'This includes all Eternal card, plus the fun sets.'
-                    answer3:
-                        label: 'Eternal'
-                        help: 'Includes all cards from Eternal, more or less Vintage-printed, sanctioned-tournament-legal cards.'
-                    answer4:
-                        label: 'Modern'
-                        help: 'Includes all cards that are legal or banned in Modern.'
-                    answer5:
-                        label: 'Pioneer'
-                        help: 'Includes all cards that are legal or banned in Pioneer.'
-                    answer6:
-                        label: 'Standard'
-                        help: 'Includes all cards that are legal or banned in Standard.'
+        calculator:
+            title: 'AeonShift Magic The Gathering™ Points Calculator'
+        choose:
+            title: 'Pick an <strong class="green-text">AeonShift star format</strong> below'
+            text: 'You''re playing <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
+            links:
+                gotoform:
+                    text: 'Go to the calculator'
+                    title: 'Simply go to the <strong>calculator</strong> form, with all the options to choose from.'
+                freeform:
+                    text: 'I don''t need a format'
+                    title: 'I just want to play <strong>with whatever I have</strong>, and count my points (Freeform AeonShift).'
+                choose:
+                    text: 'Pick a star format'
+                    title: 'I want to <strong>choose a specific format</strong> to play AeonShift Magic The Gathering™.'
+                quiz:
+                    text: 'Help me choose a format'
+                    title: 'Help me choose a format to play AeonShift Magic The Gathering™ via <strong>a quiz</strong>.'
+        form:
+            title: 'Configure your format:'
+            decklist1:
+                label: 'Decklist (Player 1 Decklist if using teams)'
+                help: 'Paste your deck here (your player 1 decklist here if using teams).'
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Argothian Enchantress
+                    ...
+            decklist2:
+                label: 'Decklist - Player 2'
+                help: 'Paste your player 2 decklist here if using teams.'
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Argothian Enchantress
+                    ...
+            decklist3:
+                label: 'Decklist - Player 3'
+                help: 'Paste your player 3 decklist here if using teams.'
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Argothian Enchantress
+                    ...
+            results:
+                total:
+                    label: '# points'
+                valid:
+                    no:
+                        label: 'Your deck is invalid.'
+                    yes:
+                        label: 'Your deck is valid.'
+        quiz:
+            back:
+                label: '← Previous question'
+                title: 'Go back to the previous question'
+            help:
+                text1: 'Let''s help you find your format.'
+                text2: 'Just answer these 5 quick questions. ↓'
+            question1:
+                label: 'Players/teams/life:'
+                text: 'How many players (teams) and life points do you want?'
+                answer1:
+                    label: '2 Players (Duel)'
+                    help: 'Duel games: two players, two teams. <br><strong>20 life totals at start.</strong>'
+                answer2:
+                    label: '4 Players (2 Teams)'
+                    help: 'Two-Headed Giant: four players, two teams of two. <br><strong>30 shared life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
+                answer3:
+                    label: '4+ Players (Free-For-All)'
+                    help: 'cEDH/Commander: four players and more, free-for-all. <br><strong>40 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
+                answer4:
+                    label: '6 Players (2 Teams)'
+                    help: 'Team Trio: two teams of three players, with special rules for matching. <br><strong>20 life totals at start.</strong> <em class="comingsoon">Coming Soon!</em>'
+            question2:
+                label: 'Maximum copies of a card in a deck:'
+                text: 'What''s the maximum number of copies a card in a deck should have, including Command Zones and Sideboards?'
+                answer1:
+                    label: '1 copy max.'
+                    help: 'Singleton - a maximum of one copy of each card across in the entire decklist.'
+                answer2:
+                    label: '4 copies max.'
+                    help: 'Quadruples - a maximum of four copies of each card across in the entire decklist.'
+            question3:
+                label: 'Cards in main deck/sideboard:'
+                text: 'How many cards sould a deck have (main deck/sideboard)?'
+                answer1:
+                    label: '100/0'
+                    help: '100 cards main deck, no sideboard.'
+                answer2:
+                    label: '60+/0-15'
+                    help: '60 cards or more in the main deck, 0 to 15 in a sideboard.'
+            question4:
+                label: 'Commanders/Command Zones:'
+                text: 'Do you want to use Commanders/Command Zones?'
+                answer1:
+                    label: 'No'
+                    help: 'No additional rules will be checked.'
+                answer2:
+                    label: 'Yes'
+                    help: 'This will add special construction and gameplay rules and restrictions.'
+            question5:
+                label: 'Maximum legality timeline:'
+                text: 'What''s the maximum legality timeline you want to play with?'
+                answer1:
+                    label: 'Printed'
+                    help: 'Whatever you have, as long as it''s an authentic Magic The Gathering™ card. This includes all cards ever printed.'
+                answer2:
+                    label: 'Funny'
+                    help: 'This includes all Eternal card, plus the fun sets.'
+                answer3:
+                    label: 'Eternal'
+                    help: 'Includes all cards from Eternal, more or less Vintage-printed, sanctioned-tournament-legal cards.'
+                answer4:
+                    label: 'Modern'
+                    help: 'Includes all cards that are legal or banned in Modern.'
+                answer5:
+                    label: 'Pioneer'
+                    help: 'Includes all cards that are legal or banned in Pioneer. <em class="comingsoon">Coming Soon!</em>'
+                answer6:
+                    label: 'Standard'
+                    help: 'Includes all cards that are legal or banned in Standard. <em class="comingsoon">Coming Soon!</em>'
+            question6:
+                label: 'P-value:'
+                text: 'What''s your reference P-value?'
+                answer1:
+                    label: '100 Points - Standard Play'
+                    help: 'This is the default P-value, and the recommended value for most players.'
+                answer2:
+                    label: 'Lite Play'
+                    help: 'This is a more conservative P-value, and is recommended for players who want to play with a lower P-value, which means less money invested and less explosiveness. <em class="comingsoon">Coming Soon!</em>'
+                answer3:
+                    label: 'Power Play'
+                    help: 'This is a more aggressive P-value, and is recommended for players who want to play with a higher P-value, which means less limits on cards and explosiveness. <em class="comingsoon">Coming Soon!</em>'
 global:
     actions:
         label: Actions
@@ -779,6 +766,8 @@ global:
     editbutton:
         label: ✏️ Edit item
         title: Edit
+    email:
+        responsibility: AeonShift only sends emails for its essential features and will never contact you for any other reason. If you receive a suspicious email, do not click on any links and contact our team.
     error:
         404:
             text: Oops! The page you requested could not be found. Perhaps you should use the menu above to start finding what you were looking for, or simply go back in your history...
@@ -867,6 +856,72 @@ global:
         label: 'Only the first 100 are displayed.'
     choose:
         label: '↓ Please choose'
+mtg:
+    popular:
+        comingsoon:
+            text: '<em class="blue-text">Coming soon!</em> Stay tuned.'
+        eternal:
+            title: 'Timeline: <strong class="blue-text">Eternal</strong>'
+        modern:
+            title: 'Timeline: <strong class="blue-text">Modern</strong>'
+        pioneer:
+            title: 'Timeline: <strong class="blue-text">Pioneer</strong>'
+        standard:
+            title: 'Timeline: <strong class="blue-text">Standard</strong>'
+        quadruples:
+            eternal:
+                eternal:
+                    label: Eternal
+                    title: Play AeonShift Eternal
+                    subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>60</strong> maindeck cards minimum + <strong>0-15</strong> sideboard cards, <strong>two</strong> winning games, <strong>Eternal</strong> timeline
+            modern:
+                modern:
+                    label: Modern
+                    title: Play AeonShift Modern
+                    subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>60</strong> maindeck cards minimum + <strong>0-15</strong> sideboard cards, <strong>two</strong> winning games, <strong>Modern</strong> timeline
+        singleton:
+            eternal:
+                2hg:
+                    label: Two-Headed Giant Duel Commander
+                    title: Play AeonShift 2HG Duel Commander
+                    subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
+                commander:
+                    label: Commander/cEDH
+                    title: Play AeonShift Commander/cEDH
+                    subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Eternal</strong> timeline <em class="blue-text">Coming soon!</em>
+                duelcommander:
+                    label: Duel Commander
+                    title: Play AeonShift Duel Commander
+                    subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Eternal</strong> timeline
+                freeform:
+                    label: Freeform
+                    title: Play AeonShift Freeform
+                    subtitle: Play with <strong>whatever cards</strong> you have, <strong>20</strong> life, <strong>60</strong> cards minimum, <strong>unlimited</strong> games, <strong>Eternal</strong> timeline!
+                highlander:
+                    label: Highlander
+                    title: Play AeonShift Highlander
+                    subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Eternal</strong> timeline
+            modern:
+                2hg:
+                    label: Two-Headed Giant Modern Duel Commander
+                    title: Play AeonShift 2HG Modern Duel Commander
+                    subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
+                commander:
+                    label: Modern Commander/cEDH
+                    title: Play AeonShift Modern Commander/cEDH
+                    subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>one</strong> winning game, <strong>Modern</strong> timeline <em class="blue-text">Coming soon!</em>
+                duelcommander:
+                    label: Modern Duel Commander
+                    title: Play AeonShift Modern Duel Commander
+                    subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Modern</strong> timeline
+                freeform:
+                    label: Modern Freeform
+                    title: Play AeonShift Modern Freeform
+                    subtitle: Play with <strong>whatever cards</strong> you have, <strong>20</strong> life, <strong>60</strong> cards minimum, <strong>unlimited</strong> games, <strong>Modern</strong> timeline!
+                highlander:
+                    label: Modern Highlander
+                    title: Play AeonShift Modern Highlander
+                    subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Modern</strong> timeline
 page:
     position:
         footer:

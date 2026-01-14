@@ -8,7 +8,6 @@ use App\Entity\MTG\MTGPointsListCard;
 use App\Entity\User;
 use App\Form\Admin\MTG\AdminMTGPointsListCardType;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +56,7 @@ final class MTGPointsListCardController extends AbstractController
     }
 
     #[Route(name: 'admin_mtg_points_list_card_index', methods: ['GET'])]
-    public function index(PaginatorInterface $paginator, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Request $request): Response
     {
         $filters = $request->query->all();
         $initialFiltersActive = false;

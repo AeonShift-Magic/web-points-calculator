@@ -28,6 +28,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Presets: single source of truth for detection + slug shortcut application
     const PRESETS = [
+        // Printed timeline
+        {
+            key: 'printed',
+            title: '★ AeonShift All-Time',
+            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'printed' },
+            slugs: ['aeonshift-printed']
+        },
+        {
+            key: 'printed-duel-commander',
+            title: '★ AeonShift All-Time Duel Commander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'printed' },
+            slugs: ['aeonshift-printed-duel-commander']
+        },
+        {
+            key: 'printed-commander',
+            title: '★ AeonShift All-Time Commander (or cEDH)',
+            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'printed' },
+            slugs: ['aeonshift-printed-commander']
+        },
+        {
+            key: 'printed-highlander',
+            title: '★ AeonShift All-Time Highlander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'printed' },
+            slugs: ['aeonshift-printed-highlander']
+        },
+        // Funny timeline
+        {
+            key: 'eternal',
+            title: '★ AeonShift Funny',
+            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'funny' },
+            slugs: ['aeonshift-funny']
+        },
+        {
+            key: 'funny-duel-commander',
+            title: '★ AeonShift Funny Duel Commander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'funny' },
+            slugs: ['aeonshift-funny-duel-commander']
+        },
+        {
+            key: 'funny-commander',
+            title: '★ AeonShift Funny Commander (or cEDH)',
+            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'funny' },
+            slugs: ['aeonshift-funny-commander']
+        },
+        {
+            key: 'funny-highlander',
+            title: '★ AeonShift Funny Highlander',
+            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'funny' },
+            slugs: ['aeonshift-funny-highlander']
+        },
+        // Eternal timeline
         {
             key: 'duel-commander',
             title: '★ AeonShift Duel Commander',
@@ -47,6 +98,25 @@ document.addEventListener('DOMContentLoaded', () => {
             slugs: ['aeonshift-commander']
         },
         {
+            key: 'team-trio-duel-commander',
+            title: '★ AeonShift Team Trio Duel Commander',
+            values: { players: 'teamtrio', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
+            slugs: ['aeonshift-team-trio-duel-commander']
+        },
+        {
+            key: 'team-trio-eternal',
+            title: '★ AeonShift Team Trio Eternal',
+            values: { players: 'teamtrio', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
+            slugs: ['aeonshift-team-trio-eternal']
+        },
+        {
+            key: 'eternal',
+            title: '★ AeonShift Eternal',
+            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'eternal' },
+            slugs: ['aeonshift-eternal']
+        },
+        // Modern timeline
+        {
             key: 'modern-commander',
             title: '★ AeonShift Modern Commander (or Modern cEDH)',
             values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
@@ -63,6 +133,38 @@ document.addEventListener('DOMContentLoaded', () => {
             title: '★ AeonShift Modern Highlander',
             values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'modern' },
             slugs: ['aeonshift-modern-highlander']
+        },
+        {
+            key: 'modern',
+            title: '★ AeonShift Modern',
+            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
+            slugs: ['aeonshift-modern']
+        },
+        {
+            key: 'team-trio-modern',
+            title: '★ AeonShift Team Trio Modern',
+            values: { players: 'teamtrio', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
+            slugs: ['aeonshift-team-trio-modern']
+        },
+        {
+            key: 'team-trio-modern-duel-commander',
+            title: '★ AeonShift Team Trio Modern Duel Commander',
+            values: { players: 'teamtrio', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
+            slugs: ['aeonshift-team-trio-modern-duel-commander']
+        },
+        // Pioneer timeline
+        {
+            key: 'pioneer',
+            title: '★ AeonShift Pioneer',
+            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'pioneer' },
+            slugs: ['aeonshift-pioneer']
+        },
+        // Standard timeline
+        {
+            key: 'standard',
+            title: '★ AeonShift Standard',
+            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'standard' },
+            slugs: ['aeonshift-standard']
         }
     ];
 

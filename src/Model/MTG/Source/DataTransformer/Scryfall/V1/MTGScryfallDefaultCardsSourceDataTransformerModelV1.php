@@ -259,7 +259,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      * @param array<string, mixed> $card A JSON card source converted into a PHP array
      * @param DateTimeImmutable $currentDate The exact date at which the model was instanciated
      *
-     * @return array{isLegalDuel: bool, isLegalMulti: bool, isLegal2HG: bool}
+     * @return array{isLegalDuelCommander: bool, isLegalCommander: bool, isLegal2HG: bool}
      */
     private function calculateASCardVariantsLegality(array $card, DateTimeImmutable $currentDate): array
     {
@@ -278,9 +278,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         // Special case: Shahrazad is always legal
         if ($nameEN === 'Shahrazad') {
             return [
-                'isLegalDuel'  => true,
-                'isLegalMulti' => true,
-                'isLegal2HG'   => true,
+                'isLegalDuelCommander'  => true,
+                'isLegalCommander'      => true,
+                'isLegal2HG'            => true,
             ];
         }
 
@@ -342,9 +342,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         }
 
         return [
-            'isLegalDuel'  => $isLegal,
-            'isLegalMulti' => $isLegal,
-            'isLegal2HG'   => $isLegal,
+            'isLegalDuelCommander'  => $isLegal,
+            'isLegalCommander'      => $isLegal,
+            'isLegal2HG'            => $isLegal,
         ];
     }
 
@@ -487,7 +487,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      * @param bool $isLegalMulti
      * @param bool $isCommandZoneEligible
      *
-     * @return array{isLegal2HGSpecial: bool, isLegalDuelSpecial: bool, isLegalMultiSpecial: bool} An array of legality flags
+     * @return array{isLegal2HGSpecial: bool, isLegalDuelCommanderSpecial: bool, isLegalCommanderSpecial: bool} An array of legality flags
      *
      * @see MTGScryfallDefaultCardsSourceDataTransformerModelV1::canCardBeACommander()
      */
@@ -499,9 +499,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     ): array
     {
         return [
-            'isLegal2HGSpecial'   => $isLegal2HG && $isCommandZoneEligible,
-            'isLegalDuelSpecial'  => $isLegalDuel && $isCommandZoneEligible,
-            'isLegalMultiSpecial' => $isLegalMulti && $isCommandZoneEligible,
+            'isLegal2HGSpecial'            => $isLegal2HG && $isCommandZoneEligible,
+            'isLegalDuelCommanderSpecial'  => $isLegalDuel && $isCommandZoneEligible,
+            'isLegalCommanderSpecial'      => $isLegalMulti && $isCommandZoneEligible,
         ];
     }
 
@@ -1013,8 +1013,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         // Calculate special legalities
         $specialLegality = $this->getCardSpecialLegalityFromFlags(
             $legality['isLegal2HG'],
-            $legality['isLegalDuel'],
-            $legality['isLegalMulti'],
+            $legality['isLegalDuelCommander'],
+            $legality['isLegalCommander'],
             $isCommandZoneEligible
         );
 
@@ -1050,11 +1050,11 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'first_printed_at'                  => $firstPrintedAt,
             'first_printed_set_code'            => $set,
             'first_printed_year'                => $firstPrintedYear,
-            'is_legal_duel'                     => (int)$legality['isLegalDuel'],
-            'is_legal_multi'                    => (int)$legality['isLegalMulti'],
+            'is_legal_duel'                     => (int)$legality['isLegalDuelCommander'],
+            'is_legal_multi'                    => (int)$legality['isLegalCommander'],
             'is_legal_2hg'                      => (int)$legality['isLegal2HG'],
-            'is_legal_duel_special'             => (int)$specialLegality['isLegalDuelSpecial'],
-            'is_legal_multi_special'            => (int)$specialLegality['isLegalMultiSpecial'],
+            'is_legal_duel_special'             => (int)$specialLegality['isLegalDuelCommanderSpecial'],
+            'is_legal_multi_special'            => (int)$specialLegality['isLegalCommanderSpecial'],
             'is_legal_2hg_special'              => (int)$specialLegality['isLegal2HGSpecial'],
             'is_command_zone_eligible'          => (int)$isCommandZoneEligible,
             'is_multiple_command_zone_eligible' => (int)$isMultipleCommandZoneEligibility,

@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 const nameCheck = /^[-_a-zA-Z0-9]{4,22}$/;
 const tokenCheck = /^[-_/+a-zA-Z0-9]{24,}$/;
 

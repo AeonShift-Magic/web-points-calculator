@@ -92,28 +92,36 @@
                     <td>{{ source_card.multiCZType }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduel.label'|trans }}</th>
-                    <td class="{{ 'value' ~ source_card.legalDuel|default(0) }}">{{ ('global.' ~ source_card.legalDuel|default(0) ~ '.label')|trans }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelcommander.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legalDuelCommander|default(0) }}">{{ ('global.' ~ source_card.legalDuelCommander|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
-                    <td class="{{ 'value' ~ source_card.legalDuelSpecial|default(0) }}">{{ ('global.' ~ source_card.legalDuelSpecial|default(0) ~ '.label')|trans }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelcommanderspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legalDuelCommanderSpecial|default(0) }}">{{ ('global.' ~ source_card.legalDuelCommanderSpecial|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.islegal2hg.label'|trans }}</th>
                     <td class="{{ 'value' ~ source_card.legal2HG|default(0) }}">{{ ('global.' ~ source_card.legal2HG|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelcommanderspecial.label'|trans }}</th>
                     <td class="{{ 'value' ~ source_card.legal2HGSpecial|default(0) }}">{{ ('global.' ~ source_card.legal2HGSpecial|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmulti.label'|trans }}</th>
-                    <td class="{{ 'value' ~ source_card.legalMulti|default(0) }}">{{ ('global.' ~ source_card.legalMulti|default(0) ~ '.label')|trans }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalcommander.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legalCommander|default(0) }}">{{ ('global.' ~ source_card.legallegalCommander|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmultispecial.label'|trans }}</th>
-                    <td class="{{ 'value' ~ source_card.legalMultiSpecial|default(0) }}">{{ ('global.' ~ source_card.legalMultiSpecial|default(0) ~ '.label')|trans }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalcommanderspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ source_card.legallegalCommanderSpecial|default(0) }}">{{ ('global.' ~ source_card.legallegalCommanderSpecial|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.mtgoprice.label'|trans }}</th>
+                    <td>{{ source_card.MTGOPrice|default(0.0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.mvalue.label'|trans }}</th>
+                    <td>{{ source_card.MValue|default(0.0) }}</td>
                 </tr>
                 <tr>
                     <th>{{ 'global.dates.label'|trans }}</th>

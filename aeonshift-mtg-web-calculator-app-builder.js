@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols,SymfonyImportMapModuleIsNotInstalled
+
 const { app, BrowserWindow, Menu, ipcMain } = require('electron');
 
 const createWindow = () => {

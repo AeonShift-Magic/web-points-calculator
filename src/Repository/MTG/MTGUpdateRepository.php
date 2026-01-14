@@ -17,4 +17,25 @@ final class MTGUpdateRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, MTGUpdate::class);
     }
+
+    /**
+     * @return MTGUpdate[]
+     */
+    public function getAllPublishedMTGUpdatesByStartingDate(): array
+    {
+        /** @var MTGUpdate[] $result */
+        $result = $this
+            ->createQueryBuilder('u')
+            ->andWhere('u.isPublic LIKE :isPublic')
+            ->setParameter('isPublic', true)
+            ->join('u.pointsList', 'p')
+            ->addSelect('p')
+            ->join('p.MTGPointListCards', 'c')
+            ->addSelect('c')
+            ->orderBy('u.startingAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $result;
+    }
 }

@@ -43,19 +43,19 @@ abstract class MTGAbstractCard implements MTGCardInterface
 
     #[Assert\NotNull]
     #[ORM\Column]
-    private bool $isLegalDuel = false;
+    private bool $isLegalCommander = false;
 
     #[Assert\NotNull]
     #[ORM\Column]
-    private bool $isLegalDuelSpecial = false;
+    private bool $isLegalCommanderSpecial = false;
 
     #[Assert\NotNull]
     #[ORM\Column]
-    private bool $isLegalMulti = false;
+    private bool $isLegalDuelCommander = false;
 
     #[Assert\NotNull]
     #[ORM\Column]
-    private bool $isLegalMultiSpecial = false;
+    private bool $isLegalDuelCommanderSpecial = false;
 
     #[Assert\NotNull]
     #[ORM\Column(type: 'float')]
@@ -75,29 +75,41 @@ abstract class MTGAbstractCard implements MTGCardInterface
     #[ORM\Column(type: 'guid', nullable: true)]
     private ?string $oracleId = null;
 
-    #[Assert\NotNull]
-    #[ORM\Column(name: 'points_2hg', type: 'float')]
-    private float $points2HG = 0.0;
+    #[ORM\Column(name: 'points_2hg', type: 'float', nullable: true)]
+    private ?float $points2HG = null;
 
-    #[Assert\NotNull]
-    #[ORM\Column(name: 'points_2hg_special', type: 'float')]
-    private float $points2HGSpecial = 0.0;
+    #[ORM\Column(name: 'points_2hg_special', type: 'float', nullable: true)]
+    private ?float $points2HGSpecial = null;
 
-    #[Assert\NotNull]
-    #[ORM\Column(type: 'float')]
-    private float $pointsDuel = 0.0;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsBaseQuadruples = null;
 
-    #[Assert\NotNull]
-    #[ORM\Column(type: 'float')]
-    private float $pointsDuelSpecial = 0.0;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsBaseSingleton = null;
 
-    #[Assert\NotNull]
-    #[ORM\Column(type: 'float')]
-    private float $pointsMulti = 0.0;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsCommander = null;
 
-    #[Assert\NotNull]
-    #[ORM\Column(type: 'float')]
-    private float $pointsMultiSpecial = 0.0;
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsCommanderSpecial = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsDuelCommander = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsDuelCommanderSpecial = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsHighlander = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsModern = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsPioneer = null;
+
+    #[ORM\Column(type: 'float', nullable: true)]
+    private ?float $pointsStandard = null;
 
     #[Assert\Uuid]
     #[ORM\Column(type: 'guid', nullable: true)]
@@ -110,6 +122,61 @@ abstract class MTGAbstractCard implements MTGCardInterface
     public function __construct()
     {
         $this->__traitConstruct();
+    }
+
+    /**
+     * @return array <string, float|null> the real points (with precedence) of a card as an associative array
+     */
+    public function getCalculatorPointsAsArray(): array
+    {
+        $points = [];
+
+        // Base points first, default to 0.0 if not set.
+        $points['basequadruples'] = $this->pointsBaseQuadruples ?? 0.0;
+        $points['basesingletonrules'] = $this->pointsBaseSingleton ?? 0.0;
+
+        // Then, format-specific points, in order of precedence.
+
+        // Highlander
+        $points['highlander'] = $this->pointsHighlander ?? $points['basesingletonrules'];
+
+        // Duel Commander
+        $points['duelcommander'] = $this->pointsDuelCommander ?? $points['basesingletonrules'];
+        // Duel Commander Special
+        if ($this->pointsDuelCommanderSpecial !== null) {
+            $points['duelcommanderspecial'] = $this->pointsDuelCommanderSpecial;
+        } else {
+            $points['duelcommanderspecial'] = $points['duelcommander'];
+        }
+
+        // Commander
+        $points['commander'] = $this->pointsCommander ?? $points['basesingletonrules'];
+        // Commander Special
+        if ($this->pointsCommanderSpecial !== null) {
+            $points['commanderspecial'] = $this->pointsCommanderSpecial;
+        } else {
+            $points['commanderspecial'] = $points['commander'];
+        }
+
+        // 2HG
+        $points['2hg'] = $this->points2HG ?? $points['basequadruples'];
+        // 2HG Special
+        if ($this->points2HGSpecial !== null) {
+            $points['2hgspecial'] = $this->points2HGSpecial;
+        } else {
+            $points['2hgspecial'] = $points['2hg'];
+        }
+
+        // Modern
+        $points['modern'] = $this->pointsModern ?? $points['basequadruples'];
+
+        // Pioneer
+        $points['pioneer'] = $this->pointsPioneer ?? $points['basequadruples'];
+
+        // Standard
+        $points['standard'] = $this->pointsStandard ?? $points['basequadruples'];
+
+        return $points;
     }
 
     public function getManaValue(): float
@@ -134,40 +201,91 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this->oracleId;
     }
 
-    #[Override]
-    public function getPoints2HG(): float
+    public function getPoints2HG(): ?float
     {
         return $this->points2HG;
     }
 
-    #[Override]
-    public function getPoints2HGSpecial(): float
+    public function getPoints2HGSpecial(): ?float
     {
         return $this->points2HGSpecial;
     }
 
     #[Override]
-    public function getPointsDuel(): float
+    public function getPointsBaseQuadruples(): ?float
     {
-        return $this->pointsDuel;
+        return $this->pointsBaseQuadruples;
     }
 
     #[Override]
-    public function getPointsDuelSpecial(): float
+    public function getPointsBaseSingleton(): ?float
     {
-        return $this->pointsDuelSpecial;
+        return $this->pointsBaseSingleton;
     }
 
     #[Override]
-    public function getPointsMulti(): float
+    public function getPointsCommander(): ?float
     {
-        return $this->pointsMulti;
+        return $this->pointsCommander;
     }
 
     #[Override]
-    public function getPointsMultiSpecial(): float
+    public function getPointsCommanderSpecial(): ?float
     {
-        return $this->pointsMultiSpecial;
+        return $this->pointsCommanderSpecial;
+    }
+
+    #[Override]
+    public function getPointsDuelCommander(): ?float
+    {
+        return $this->pointsDuelCommander;
+    }
+
+    #[Override]
+    public function getPointsDuelCommanderSpecial(): ?float
+    {
+        return $this->pointsDuelCommanderSpecial;
+    }
+
+    public function getPointsHighlander(): ?float
+    {
+        return $this->pointsHighlander;
+    }
+
+    public function getPointsModern(): ?float
+    {
+        return $this->pointsModern;
+    }
+
+    public function getPointsPioneer(): ?float
+    {
+        return $this->pointsPioneer;
+    }
+
+    public function getPointsStandard(): ?float
+    {
+        return $this->pointsStandard;
+    }
+
+    /**
+     * @return array <string, float|null> the raw points (no precedence) of a card as an associative array
+     */
+    public function getRawPointsAsArray(): array
+    {
+        return [
+            'standard'             => $this->pointsStandard,
+            'pioneer'              => $this->pointsPioneer,
+            'modern'               => $this->pointsModern,
+            'highlander'           => $this->pointsHighlander,
+            'commander'            => $this->pointsCommander,
+            'commanderspecial'     => $this->pointsCommanderSpecial,
+            'duelcommander'        => $this->pointsDuelCommander,
+            'duelcommanderspecial' => $this->pointsDuelCommanderSpecial,
+            '2hg'                  => $this->points2HG,
+            '2hgspecial'           => $this->points2HGSpecial,
+            'basequadruples'       => $this->pointsBaseQuadruples,
+            'basesingletonrules'   => $this->pointsBaseSingleton,
+        ];
     }
 
     public function getScryfallId(): ?string
@@ -193,27 +311,27 @@ abstract class MTGAbstractCard implements MTGCardInterface
     }
 
     #[Override]
-    public function isLegalDuel(): bool
+    public function isLegalCommander(): bool
     {
-        return $this->isLegalDuel;
+        return $this->isLegalCommander;
     }
 
     #[Override]
-    public function isLegalDuelSpecial(): bool
+    public function isLegalCommanderSpecial(): bool
     {
-        return $this->isLegalDuelSpecial;
+        return $this->isLegalCommanderSpecial;
     }
 
     #[Override]
-    public function isLegalMulti(): bool
+    public function isLegalDuelCommander(): bool
     {
-        return $this->isLegalMulti;
+        return $this->isLegalDuelCommander;
     }
 
     #[Override]
-    public function isLegalMultiSpecial(): bool
+    public function isLegalDuelCommanderSpecial(): bool
     {
-        return $this->isLegalMultiSpecial;
+        return $this->isLegalDuelCommanderSpecial;
     }
 
     #[Override]
@@ -233,33 +351,33 @@ abstract class MTGAbstractCard implements MTGCardInterface
     }
 
     #[Override]
-    public function setIsLegalDuel(bool $isLegalDuel): static
+    public function setIsLegalCommander(bool $isLegalMulti): static
     {
-        $this->isLegalDuel = $isLegalDuel;
+        $this->isLegalCommander = $isLegalMulti;
 
         return $this;
     }
 
     #[Override]
-    public function setIsLegalDuelSpecial(bool $isLegalDuelSpecial): static
+    public function setIsLegalCommanderSpecial(bool $isLegalMultiSpecial): static
     {
-        $this->isLegalDuelSpecial = $isLegalDuelSpecial;
+        $this->isLegalCommanderSpecial = $isLegalMultiSpecial;
 
         return $this;
     }
 
     #[Override]
-    public function setIsLegalMulti(bool $isLegalMulti): static
+    public function setIsLegalDuelCommander(bool $isLegalDuel): static
     {
-        $this->isLegalMulti = $isLegalMulti;
+        $this->isLegalDuelCommander = $isLegalDuel;
 
         return $this;
     }
 
     #[Override]
-    public function setIsLegalMultiSpecial(bool $isLegalMultiSpecial): static
+    public function setIsLegalDuelCommanderSpecial(bool $isLegalDuelSpecial): static
     {
-        $this->isLegalMultiSpecial = $isLegalMultiSpecial;
+        $this->isLegalDuelCommanderSpecial = $isLegalDuelSpecial;
 
         return $this;
     }
@@ -294,16 +412,14 @@ abstract class MTGAbstractCard implements MTGCardInterface
         return $this;
     }
 
-    #[Override]
-    public function setPoints2HG(float $points2HG): static
+    public function setPoints2HG(?float $points2HG): static
     {
         $this->points2HG = $points2HG;
 
         return $this;
     }
 
-    #[Override]
-    public function setPoints2HGSpecial(float $points2HGSpecial): static
+    public function setPoints2HGSpecial(?float $points2HGSpecial): static
     {
         $this->points2HGSpecial = $points2HGSpecial;
 
@@ -311,33 +427,77 @@ abstract class MTGAbstractCard implements MTGCardInterface
     }
 
     #[Override]
-    public function setPointsDuel(float $pointsDuel): static
+    public function setPointsBaseQuadruples(?float $pointsBaseQuadruples): static
     {
-        $this->pointsDuel = $pointsDuel;
+        $this->pointsBaseQuadruples = $pointsBaseQuadruples;
 
         return $this;
     }
 
     #[Override]
-    public function setPointsDuelSpecial(float $pointsDuelSpecial): static
+    public function setPointsBaseSingleton(?float $pointsBaseSingleton): static
     {
-        $this->pointsDuelSpecial = $pointsDuelSpecial;
+        $this->pointsBaseSingleton = $pointsBaseSingleton;
 
         return $this;
     }
 
     #[Override]
-    public function setPointsMulti(float $pointsMulti): static
+    public function setPointsCommander(?float $pointsCommander): static
     {
-        $this->pointsMulti = $pointsMulti;
+        $this->pointsCommander = $pointsCommander;
 
         return $this;
     }
 
     #[Override]
-    public function setPointsMultiSpecial(float $pointsMultiSpecial): static
+    public function setPointsCommanderSpecial(?float $pointsCommanderSpecial): static
     {
-        $this->pointsMultiSpecial = $pointsMultiSpecial;
+        $this->pointsCommanderSpecial = $pointsCommanderSpecial;
+
+        return $this;
+    }
+
+    #[Override]
+    public function setPointsDuelCommander(?float $pointsDuelCommander): static
+    {
+        $this->pointsDuelCommander = $pointsDuelCommander;
+
+        return $this;
+    }
+
+    #[Override]
+    public function setPointsDuelCommanderSpecial(?float $pointsDuelCommanderSpecial): static
+    {
+        $this->pointsDuelCommanderSpecial = $pointsDuelCommanderSpecial;
+
+        return $this;
+    }
+
+    public function setPointsHighlander(?float $pointsHighlander): static
+    {
+        $this->pointsHighlander = $pointsHighlander;
+
+        return $this;
+    }
+
+    public function setPointsModern(?float $pointsModern): static
+    {
+        $this->pointsModern = $pointsModern;
+
+        return $this;
+    }
+
+    public function setPointsPioneer(?float $pointsPioneer): static
+    {
+        $this->pointsPioneer = $pointsPioneer;
+
+        return $this;
+    }
+
+    public function setPointsStandard(?float $pointsStandard): static
+    {
+        $this->pointsStandard = $pointsStandard;
 
         return $this;
     }

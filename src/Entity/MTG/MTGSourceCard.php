@@ -31,6 +31,17 @@ class MTGSourceCard extends MTGAbstractCard
         'standard' => 60,
     ];
 
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private string $MTGOPrice = '0.00';
+
+    /**
+     * @var string $MValue the average value of the card in the market, in mixed EUR/USD
+     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private string $MValue = '0.00';
+
     /**
      * @var list<string>
      */
@@ -117,6 +128,26 @@ class MTGSourceCard extends MTGAbstractCard
         return $this->firstPrintedYear;
     }
 
+    public function getMTGOPrice(): string
+    {
+        return $this->MTGOPrice;
+    }
+
+    public function getMTGOPriceAsFloat(): float
+    {
+        return (float)$this->MTGOPrice;
+    }
+
+    public function getMValue(): string
+    {
+        return $this->MValue;
+    }
+
+    public function getMValueAsFloat(): float
+    {
+        return (float)$this->MValue;
+    }
+
     public function getMaximumTimelineLegality(): string
     {
         return $this->maximumTimelineLegality;
@@ -179,7 +210,7 @@ class MTGSourceCard extends MTGAbstractCard
         return $this;
     }
 
-    public function setFirstPrintedSetCode(string $firstPrintedSetCode): self
+    public function setFirstPrintedSetCode(string $firstPrintedSetCode): static
     {
         $this->firstPrintedSetCode = $firstPrintedSetCode;
 
@@ -249,7 +280,56 @@ class MTGSourceCard extends MTGAbstractCard
         return $this;
     }
 
-    public function setMaximumTimelineLegality(string $maximumTimelineLegality): self
+    /**
+     * @param numeric-string $MTGOPrice
+     *
+     * @return $this
+     */
+    public function setMTGOPrice(string $MTGOPrice): static
+    {
+        $this->MTGOPrice = bcadd($MTGOPrice, '0', 2);
+
+        return $this;
+    }
+
+    /**
+     * @param numeric-string $MValue
+     *
+     * @return $this
+     */
+    public function setMValue(string $MValue): static
+    {
+        $this->MValue = bcadd($MValue, '0', 2);
+
+        return $this;
+    }
+
+    /**
+     * @param numeric-string ...$mixedPrices
+     *
+     * @return static
+     */
+    public function setMValueFromMixedPrices(string ...$mixedPrices): static
+    {
+        if (count($mixedPrices) === 0) {
+            $this->MValue = '0.00';
+
+            return $this;
+        }
+
+        $sum = '0.00';
+
+        foreach ($mixedPrices as $price) {
+            $sum = bcadd($sum, $price, 4); // extra precision during calc
+        }
+
+        $avg = bcdiv($sum, (string)count($mixedPrices), 4);
+        $this->MValue = bcadd($avg, '0', 2); // round to scale
+
+        return $this;
+    }
+
+    public function setMaximumTimelineLegality(string $maximumTimelineLegality): static
     {
         $this->maximumTimelineLegality = $maximumTimelineLegality;
 

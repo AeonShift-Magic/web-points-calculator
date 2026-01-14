@@ -78,6 +78,9 @@ final class MTGPointsListController extends AbstractController
      * @param MTGPointsList $MTGPointsList
      * @param Request $request
      * @param TranslatorInterface $translator
+     * @param EntityManagerInterface $entityManager
+     * @param MTGSourceCardRepository $MTGSourceCardRepository
+     * @param Security $security
      *
      * @return Response
      */

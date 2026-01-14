@@ -191,16 +191,16 @@ admin:
                     points2hgspecial:
                         label: 'Points Géant à deux têtes (spécial)'
                         help: 'Points de cette carte en variante Géant à deux têtes (spécial, comme "En tant que Commandant").'
-                    pointsduel:
+                    pointsduelcommander:
                         label: 'Points de Duel'
                         help: 'Points de cette carte en variante Duel.'
-                    pointsduelspecial:
+                    pointsduelcommanderspecial:
                         label: 'Points de Duel (spécial)'
                         help: 'Points de cette carte en variante Duel (spécial, comme "En tant que Commandant").'
-                    pointsmulti:
+                    pointscommander:
                         label: 'Points Multijoueur Chacun pour soi'
                         help: 'Points de cette carte en variante Multijoueur Chacun pour soi.'
-                    pointsmultispecial:
+                    pointscommanderspecial:
                         label: 'Points multijoueurs chacun pour soi (spécial)'
                         help: 'Les points de cette carte dans la variante multijoueur chacun pour soi (spéciale, comme «En tant que commandant»).'
                     islegal2hg:
@@ -209,20 +209,38 @@ admin:
                     islegal2hgspecial:
                         label: 'Légal en 2HG (spécial)'
                         help: 'Vérifier si la carte est légale en Troll A Deux Têtes (spécial, comme «En tant que Commandant»)'
-                    islegalduel:
+                    islegalduelcommander:
                         label: 'Légal en Duel'
                         help: 'Vérifier si la carte est légale en Duel'
-                    islegalduelspecial:
+                    islegalduelcommanderspecial:
                         label: 'Légal en Duel (spécial)'
                         help: 'Vérifier si la carte est légale en Duel (spécial, comme «En tant que Commandant»)'
-                    islegalmulti:
+                    islegalcommander:
                         label: 'Légal en points du mode multijoueur Chacun pour soi'
                         help: 'Vérifier si la carte est légale en points du mode multijoueur Chacun pour soi'
-                    islegalmultispecial:
+                    islegalcommanderspecial:
                         label: 'Légal en points du mode multijoueur Chacun pour soi (spécial)'
                         help: 'Vérifier si la carte est légale en multijoueur chacun pour soi (points spéciaux, comme «En tant que commandant»)'
                     firstline:
                         label: 'Le premier nom en anglais DOIT toujours être <code class="inline">((unranked))</code> (et définit les points pour les cartes non rankées)'
+                    pointshighlander:
+                        label: 'Points en Highlander'
+                        help: 'Les points pour cette carte en Highlander.'
+                    pointsmodern:
+                        label: 'Points en Modern'
+                        help: 'Les points pour cette carte en Modern.'
+                    pointspioneer:
+                        label: 'Points en Pioneer'
+                        help: 'Les points pour cette carte en Pioneer.'
+                    pointsstandard:
+                        label: 'Points en Standard'
+                        help: 'Les points pour cette carte en Standard.'
+                    pointsbasesingleton:
+                        label: 'Points de Base en Singleton'
+                        help: 'Les points de base pour cette carte en Singleton.'
+                    pointsbasequadruples:
+                        label: 'Points de Base en Quadruples'
+                        help: 'Les points de base pour cette carte en Quadruples.'
                 legends:
                     info: 'Points List Card details'
             sourcecard:
@@ -256,6 +274,12 @@ admin:
                         label: 'ID. Incolore'
                     maximumtimelinelegality:
                         label: 'Légalité de Timeline maximum'
+                    mtgoprice:
+                        label: 'Prix sur MTGO'
+                        help: 'Le prix de la carte sur MTGO, si disponible.'
+                    mvalue:
+                        label: 'M-Value'
+                        help: 'La valeur monétaire mélangée de la carte, en EUR-USD.'
         abstract:
             update:
                 legends:
@@ -274,7 +298,7 @@ admin:
                 fileremoved: 'Le fichier de journalisation demandé n''existe plus.'
         pointslistcard:
             points:
-                label: 'Points (Duel - 2HG - Multi FFA)'
+                label: 'Points BRUTS (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
         update:
             publish: 'Publier'
             unpublish: 'Dépublier'
@@ -459,6 +483,8 @@ customblock:
         fr:
             name: Legal (FR 🇫🇷)
 email:
+    appendix:
+        label: ' | AeonShift'
     resetpassword:
         subject: 🛡️ Votre demande de réinitialisation de mot de passe
         success: Votre mot de passe a été réinitialisé avec succès, vous pouvez maintenant vous connecter en l'utilisant.
@@ -466,6 +492,19 @@ email:
         text2: Ce lien expirera dans {expires}.
         title: Instructions de réinitialisation du mot de passe pour votre compte
 front:
+    globals:
+        media_preview:
+            title: 'Aperçu du média'
+            label: '(ceci est le fichier actuel)'
+        share:
+            facebook: 'Partager sur Facebook'
+            messenger_mobile: 'Envoyer sur Facebook Messenger (mobile)'
+            messenger_computer: 'Envoyer sur Facebook Messenger (desktop)'
+            twitter: 'Partager sur Twitter/X'
+            email: 'Envoyer par email'
+            bluesky: 'Partager sur Bluesky'
+            reddit: 'Partager sur Reddit'
+            link: 'Copier le lien'
     home:
         title: AeonShift Calculateur
         subtitle: Entrez dans AeonShift, un sytème d'équilibre stratégique pour vos jeux.
@@ -613,6 +652,8 @@ global:
     editbutton:
         label: ✏️ Modifier l'élément
         title: Modifier
+    email:
+        responsibility: AeonShift n'envoie que des emails pour ses fonctionnalités essentielles, et ne communiquera jamais avec vous pour d'autre raison. Si vous recevez un email suspect, ne cliquez sur aucun lien et contactez notre équipe.
     error:
         404:
             text: Oups ! La page que vous avez demandée n'a pas pu être trouvée. Peut-être devriez-vous utiliser le menu ci-dessus pour commencer à trouver ce que vous cherchiez, ou simplement revenir en arrière dans votre historique...

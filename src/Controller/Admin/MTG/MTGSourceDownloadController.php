@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller\Admin\MTG;
 
 use App\Repository\MTG\MTGCardSourceActivityHistoryRepository;
+use const JSON_THROW_ON_ERROR;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -45,7 +46,7 @@ final class MTGSourceDownloadController extends AbstractController
             $process->run(static function ($type, $buffer): void {
                 echo '<script>';
                 echo 'if (window.__outputReady) {';
-                echo 'document.getElementById("output").textContent += ' . json_encode($buffer, \JSON_THROW_ON_ERROR) . ';';
+                echo 'document.getElementById("output").textContent += ' . json_encode($buffer, JSON_THROW_ON_ERROR) . ';';
                 echo '}';
                 echo '</script>';
                 flush();

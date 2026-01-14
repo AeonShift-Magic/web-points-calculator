@@ -57,22 +57,45 @@
                     <th>{{ 'admin.form.mtg.pointslistcard.create.multicztype.label'|trans }}</th>
                     <td>{{ points_list_card.multiCZType }}</td>
                 </tr>
+
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduel.label'|trans }}</th>
-                    <td class="{{ 'value' ~ points_list_card.legalDuel|default(0) }}">{{ ('global.' ~ points_list_card.legalDuel|default(0) ~ '.label')|trans }}</td>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsbasesingleton.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsBaseSingleton|default(0) }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduel.label'|trans }}</th>
-                    <td>{{ points_list_card.pointsDuel|default(0) }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsbasequadruples.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsBaseQuadruples|default(0) }}</td>
+                </tr>
+
+                <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelcommander.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalDuelCommander|default(0) }}">{{ ('global.' ~ points_list_card.legalDuelCommander|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
-                    <td class="{{ 'value' ~ points_list_card.legalDuelSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legalDuelSpecial|default(0) ~ '.label')|trans }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelcommander.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsDuelCommander|default(0) }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelspecial.label'|trans }}</th>
-                    <td>{{ points_list_card.pointsDuelSpecial|default(0) }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelcommanderspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalDuelCommanderSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legalDuelCommanderSpecial|default(0) ~ '.label')|trans }}</td>
                 </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsduelcommanderspecial.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsDuelCommanderSpecial|default(0) }}</td>
+                </tr>
+
+                <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.islegal2hg.label'|trans }}</th>
                     <td class="{{ 'value' ~ points_list_card.legal2HG|default(0) }}">{{ ('global.' ~ points_list_card.legal2HG|default(0) ~ '.label')|trans }}</td>
@@ -82,29 +105,60 @@
                     <td>{{ points_list_card.points2HG|default(0) }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalduelspecial.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegal2hgspecial.label'|trans }}</th>
                     <td class="{{ 'value' ~ points_list_card.legal2HGSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legal2HGSpecial|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.points2hgspecial.label'|trans }}</th>
                     <td>{{ points_list_card.points2HGSpecial|default(0) }}</td>
                 </tr>
+
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmulti.label'|trans }}</th>
-                    <td class="{{ 'value' ~ points_list_card.legalMulti|default(0) }}">{{ ('global.' ~ points_list_card.legalMulti|default(0) ~ '.label')|trans }}</td>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalcommander.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalCommander|default(0) }}">{{ ('global.' ~ points_list_card.legalCommander|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmulti.label'|trans }}</th>
-                    <td>{{ points_list_card.pointsMulti|default(0) }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointscommander.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsCommander|default(0) }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalmultispecial.label'|trans }}</th>
-                    <td class="{{ 'value' ~ points_list_card.legalMultiSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legalMultiSpecial|default(0) ~ '.label')|trans }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.islegalcommanderspecial.label'|trans }}</th>
+                    <td class="{{ 'value' ~ points_list_card.legalCommanderSpecial|default(0) }}">{{ ('global.' ~ points_list_card.legalCommanderSpecial|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
-                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmultispecial.label'|trans }}</th>
-                    <td>{{ points_list_card.pointsMultiSpecial|default(0) }}</td>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointscommanderspecial.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsCommanderSpecial|default(0) }}</td>
                 </tr>
+
+                <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointshighlander.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsHighlander|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsmodern.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsModern|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointspioneer.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsPioneer|default(0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointsstandard.label'|trans }}</th>
+                    <td>{{ points_list_card.pointsStandard|default(0) }}</td>
+                </tr>
+
+                <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+
                 <tr>
                     <th>{{ 'global.dates.label'|trans }}</th>
                     <td>

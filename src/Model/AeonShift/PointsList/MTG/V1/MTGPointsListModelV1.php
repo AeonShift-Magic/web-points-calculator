@@ -104,12 +104,12 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                     $handle,
                     [
                         $result->getNameEN(),
-                        $result->getPointsDuel(),
-                        $result->getPointsDuelSpecial(),
+                        $result->getPointsDuelCommander(),
+                        $result->getPointsDuelCommanderSpecial(),
                         $result->getPoints2HG(),
                         $result->getPoints2HGSpecial(),
-                        $result->getPointsMulti(),
-                        $result->getPointsMultiSpecial(),
+                        $result->getPointsCommander(),
+                        $result->getPointsCommanderSpecial(),
                     ],
                 );
             }
@@ -297,13 +297,13 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             // Add the result to the final results array
             // Duel Points, Duel Points as a Commander, 2HG Points, 2HG Points as a Commander, Multi Points, Multi Points as a Commander
             $finalResults[] = [
-                'nameEN'             => $CSVlineContentsAsArray[0],
-                'pointsDuel'         => (float)$CSVlineContentsAsArray[1],
-                'pointsDuelSpecial'  => (float)$CSVlineContentsAsArray[2],
-                'points2HG'          => (float)$CSVlineContentsAsArray[3],
-                'points2HGSpecial'   => (float)$CSVlineContentsAsArray[4],
-                'pointsMulti'        => (float)$CSVlineContentsAsArray[5],
-                'pointsMultiSpecial' => (float)$CSVlineContentsAsArray[6],
+                'nameEN'                      => $CSVlineContentsAsArray[0],
+                'pointsDuelCommander'         => (float)$CSVlineContentsAsArray[1],
+                'pointsDuelCommanderSpecial'  => (float)$CSVlineContentsAsArray[2],
+                'points2HG'                   => (float)$CSVlineContentsAsArray[3],
+                'points2HGSpecial'            => (float)$CSVlineContentsAsArray[4],
+                'pointsCommander'             => (float)$CSVlineContentsAsArray[5],
+                'pointsCommanderSpecial'      => (float)$CSVlineContentsAsArray[6],
             ];
         }
 
@@ -323,12 +323,12 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             $MTGResult
                 ->setPointsList($pointsList)
                 ->setNameEN($this->sanitizeStringFromCSVFile($finalResult['nameEN']))
-                ->setPointsDuel($finalResult['pointsDuel'])
-                ->setPointsDuelSpecial($finalResult['pointsDuelSpecial'])
+                ->setPointsDuelCommander($finalResult['pointsDuelCommander'])
+                ->setPointsDuelCommanderSpecial($finalResult['pointsDuelCommanderSpecial'])
                 ->setPoints2HG($finalResult['points2HG'])
                 ->setPoints2HGSpecial($finalResult['points2HGSpecial'])
-                ->setPointsMulti($finalResult['pointsMulti'])
-                ->setPointsMultiSpecial($finalResult['pointsMultiSpecial'])
+                ->setPointsCommander($finalResult['pointsCommander'])
+                ->setPointsCommanderSpecial($finalResult['pointsCommanderSpecial'])
                 ->setCreatedBy($currentUser)
                 ->setUpdatedBy($currentUser);
 

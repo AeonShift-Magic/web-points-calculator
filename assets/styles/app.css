@@ -2,6 +2,7 @@ body {
     background-color: skyblue;
 }
 
+/*noinspection CssUnusedSymbol*/
 .draggable {
     -webkit-app-region: drag;
 }

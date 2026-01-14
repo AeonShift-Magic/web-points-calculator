@@ -61,7 +61,7 @@
                                 <thead>
                                     <tr>
                                         <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
-                                        <th colspan="3">{{ 'admin.mtg.pointslistcard.points.label'|trans }}</th>
+                                        <th colspan="8w">{{ 'admin.mtg.pointslistcard.points.label'|trans }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,25 +70,53 @@
                                             <td>
                                                 <a href="{{ url('admin_mtg_points_list_card_show', {'id': points_list_card.id}) }}" title="">{{ points_list_card.nameEN }}</a>
                                             </td>
+                                            {# Points (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard) #}
                                             <td>
                                                 <span class="text-blue-300">
-                                                    {% if points_list_card.pointsDuel > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuel }}{% if points_list_card.pointsDuel > 0 %}</strong>{% endif %}
+                                                    {% if points_list_card.pointsBaseSingleton > 0 %}<strong>{% endif %}{{ points_list_card.pointsBaseSingleton }}{% if points_list_card.pointsBaseSingleton > 0 %}</strong>{% endif %}
                                                     /
-                                                    {% if points_list_card.pointsDuelSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelSpecial }}{% if points_list_card.pointsDuelSpecial > 0 %}</strong>{% endif %}
+                                                    {% if points_list_card.pointsBaseQuadruples > 0 %}<strong>{% endif %}{{ points_list_card.pointsBaseQuadruples }}{% if points_list_card.pointsBaseQuadruples > 0 %}</strong>{% endif %}
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="text-orange-300">
+                                                    {% if points_list_card.pointsDuelCommander > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelCommander }}{% if points_list_card.pointsDuelCommander > 0 %}</strong>{% endif %}
+                                                    /
+                                                    {% if points_list_card.pointsDuelCommanderSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelCommanderSpecial }}{% if points_list_card.pointsDuelCommanderSpecial > 0 %}</strong>{% endif %}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-amber-300">
+                                                    {% if points_list_card.pointsCommander > 0 %}<strong>{% endif %}{{ points_list_card.pointsCommander }}{% if points_list_card.pointsCommander > 0 %}</strong>{% endif %}
+                                                    /
+                                                    {% if points_list_card.pointsCommanderSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsCommanderSpecial }}{% if points_list_card.pointsCommanderSpecial > 0 %}</strong>{% endif %}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-emerald-300">
                                                     {% if points_list_card.points2hg > 0 %}<strong>{% endif %}{{ points_list_card.points2hg }}{% if points_list_card.points2hg > 0 %}</strong>{% endif %}
                                                     /
                                                     {% if points_list_card.points2hgSpecial > 0 %}<strong>{% endif %}{{ points_list_card.points2hgSpecial }}{% if points_list_card.points2hgSpecial > 0 %}</strong>{% endif %}
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="text-amber-300">
-                                                    {% if points_list_card.pointsMulti > 0 %}<strong>{% endif %}{{ points_list_card.pointsMulti }}{% if points_list_card.pointsMulti > 0 %}</strong>{% endif %}
-                                                    /
-                                                    {% if points_list_card.pointsMultiSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsMultiSpecial }}{% if points_list_card.pointsMultiSpecial > 0 %}</strong>{% endif %}
+                                                <span class="text-sky-300">
+                                                    {% if points_list_card.pointsHighlander > 0 %}<strong>{% endif %}{{ points_list_card.pointsHighlander }}{% if points_list_card.pointsHighlander > 0 %}</strong>{% endif %}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-sky-300">
+                                                    {% if points_list_card.pointsModern > 0 %}<strong>{% endif %}{{ points_list_card.pointsModern }}{% if points_list_card.pointsModern > 0 %}</strong>{% endif %}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-sky-300">
+                                                    {% if points_list_card.pointsPioneer > 0 %}<strong>{% endif %}{{ points_list_card.pointsPioneer }}{% if points_list_card.pointsPioneer > 0 %}</strong>{% endif %}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="text-sky-300">
+                                                    {% if points_list_card.pointsStandard > 0 %}<strong>{% endif %}{{ points_list_card.pointsStandard }}{% if points_list_card.pointsStandard > 0 %}</strong>{% endif %}
                                                 </span>
                                             </td>
                                         </tr>

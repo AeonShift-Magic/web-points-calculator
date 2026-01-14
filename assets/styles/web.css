@@ -10,8 +10,13 @@
     border-style: solid;
 }
 
+.admin-layout .main-content .main-row {
+    min-height: auto;
+}
+
 .admin-menu {
     position: fixed !important;
+    box-shadow: 0 5px 7px -2px var(--theme-neutral-dark);
 }
 
 .admin-menu .menu a {
