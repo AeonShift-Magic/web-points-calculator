@@ -67,7 +67,7 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
         if ($this->pointsList !== null && is_numeric($this->nameEN)) {
             $queryBuilder
                 ->andWhere('c.pointsList = :mtgPointsList')
-                ->setParameter('mtgPointsList', $this->entityManager->getReference(MTGPointsList::class, (int)$this->pointsList));
+                ->setParameter('mtgPointsList', $this->entityManager->getReference(MTGPointsList::class, $this->pointsList));
         }
 
         if ($this->nameEN !== null && $this->nameEN !== '') {
@@ -108,7 +108,6 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
             $this->nameEN = null;
         }
 
-        $this->pointsList = $this->pointsList ?: null;
         $this->filtersActive = (
             $this->pointsList !== null
             || $this->nameEN !== null
@@ -130,7 +129,7 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
         $formData = new MTGPointsListCard();
 
         $formData->setNameEN((string)$this->nameEN);
-        $formData->setPointsList($this->pointsList ? $this->entityManager->getReference(MTGPointsList::class, $this->pointsList) : null);
+        $formData->setPointsList($this->pointsList !== null ? $this->entityManager->getReference(MTGPointsList::class, $this->pointsList) : null);
 
         $form = $this->createForm(AdminMTGPointsListCardIndexFormComponentType::class, $formData, [
             'method'          => 'GET',

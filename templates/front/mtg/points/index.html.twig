@@ -4,7 +4,8 @@
 
 {% block custom_js %}
     {# Inline the calculator JavaScript #}
-    <script async>{{ include('front/mtg/points/_js_calculator.js.twig') }}</script>
+    <script async>{{ include('front/mtg/points/_pointslists.js.twig') }}</script>
+    <script async>{{ include('front/mtg/points/_calculator_js.js.twig') }}</script>
 {% endblock %}
 
 {% block link_canonical %}
@@ -24,12 +25,13 @@
 {% endblock %}
 
 {% block main_layout %}
-    <div class="main-row theme1 unique-row justify-center transparent-row min-h-screen">
+    <div class="main-row theme1 unique-row justify-center transparent-row lg:min-h-screen">
         <div class="main-column main-content h-full w-full">
             {% block main_content %}
                 {% block body %}
                     <div class="w-full text-center flex flex-col justify-center items-center">
-                        <div class="w-full format-incentive flex flex-col justify-around items-center p-px">
+                        <img class="max-w-full lg:max-w-7xl color-cycle mb-8" src="{{ asset('images/aeonshift-logo-transparent.png') }}" alt="AeonShift Logo">
+                        <div class="w-full format-incentive flex flex-col justify-around items-center p-px mb-4">
                             <div class="gradient-cycle">
                                 <img class="game-choice-image w-full" src="{{ asset('images/mtg-banner.jpg') }}" alt="Magic The Gathering cards: Black Lotus, Channel, Jeweled Lotus, The One Ring, Shahrazad">
                             </div>
@@ -82,11 +84,11 @@
         </div>
     </div>
 
-    {# Format choice quiz #}
-    {{ include('front/mtg/points/_format_choice_quiz.html.twig') }}
-
     {# Format choice cards #}
     {{ include('front/mtg/points/_format_choice_cards.html.twig') }}
+
+    {# Format choice quiz #}
+    {{ include('front/mtg/points/_format_choice_quiz.html.twig') }}
 
     {# Calculator form #}
     {{ include('front/mtg/points/_calculator_form.html.twig') }}

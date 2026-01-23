@@ -125,6 +125,70 @@ admin:
                         label: 'Rules model'
                         help: 'The rules model to apply'
                 import:
+                    firstline:
+                        text: '⚠️ The first 5 Lines of this document will be ignored while importing, use them for metadata'
+                    columnsright:
+                        text: '(these columns, and all on the right are ignored while importing)'
+                    pvalues:
+                        text: 'P-Values, in this order: Standard Play (line 6), Lite Play (line 7), Power Play (line 8)'
+                        header:
+                            liteplay:
+                                text: 'Lite Play P-Values'
+                            standardplay:
+                                text: 'Standard Play P-Values'
+                            powerplay:
+                                text: 'Power Play P-Values'
+                        liteplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value (Lite Play)'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value (Lite Play)'
+                            duelcommander:
+                                text: 'Duel Commander P-Value (Lite Play)'
+                            commander:
+                                text: 'Commander/CEDH FFA P-Value (Lite Play)'
+                            highlander:
+                                text: 'Highlander P-Value (Lite Play)'
+                            modern:
+                                text: 'Modern P-Value (Lite Play)'
+                            pioneer:
+                                text: 'Pioneer P-Value (Lite Play)'
+                            standard:
+                                text: 'Standard P-Value (Lite Play)'
+                        standardplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value (Standard Play)'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value (Standard Play)'
+                            duelcommander:
+                                text: 'Duel Commander P-Value (Standard Play)'
+                            commander:
+                                text: 'Commander/CEDH FFA P-Value (Standard Play)'
+                            highlander:
+                                text: 'Highlander P-Value (Standard Play)'
+                            modern:
+                                text: 'Modern P-Value (Standard Play)'
+                            pioneer:
+                                text: 'Pioneer P-Value (Standard Play)'
+                            standard:
+                                text: 'Standard P-Value (Standard Play)'
+                        powerplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value (Power Play)'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value (Power Play)'
+                            duelcommander:
+                                text: 'Duel Commander P-Value (Power Play)'
+                            commander:
+                                text: 'Commander/CEDH FFA P-Value (Power Play)'
+                            highlander:
+                                text: 'Highlander P-Value (Power Play)'
+                            modern:
+                                text: 'Modern P-Value (Power Play)'
+                            pioneer:
+                                text: 'Pioneer P-Value (Power Play)'
+                            standard:
+                                text: 'Standard P-Value (Power Play)'
                     label: >
                         📥 Import/update points list (CSV file)
                     help: >
@@ -142,7 +206,7 @@ admin:
                         <br>
                         Points (6 columns)") are integers or decimal numbers (values like "10" or "10.5" are accepted).
                     help4: >
-                        The file must contain exactly 5 lines at its top, which will be discarded, and the sixth line MUST have a card named "((unranked))" and sets the points for unranked cards.
+                        The file must contain exactly 5 lines at its top, which will be discarded, then 3 lines for P-Values in order (Standard Play, Lite Play, Power Play) and the ninth line MUST have a card named "((unranked))" and sets the points for unranked cards.
                     help5: >
                         <strong>Do not modify the columns, their order, nor add extra columns on the left.</strong>
                     help6: >
@@ -163,7 +227,7 @@ admin:
                             Import points list from the provided CSV template, one result per line. Maximum size: 4 MB. <br><strong>Warning: this will overwrite all points list cards and is irreversible.</strong>
                         unreadable: 'File is unreadable or empty. Check that it can be opened, is CSV UTF-8 format, commas as separators, Unix line endings.'
                     updated:
-                        success: 'Points successfully updated: {number} line(s) updated.'
+                        success: 'Points successfully updated: {number} line(s) processed.'
                     error:
                         filecontents: 'File contents are invalid; please follow the instructions below.'
                         processing_line: 'Error processing line {line_number}: {error}. Please follow the instructions below.'
@@ -214,10 +278,10 @@ admin:
                         label: 'Duel Commander points (special)'
                         help: 'The points for this card in Duel Commander (special, like "As a Commander").'
                     pointscommander:
-                        label: 'Multiplayer Free-For-All points'
+                        label: 'Commander/CEDH Free-For-All points'
                         help: 'The points for this card in Multiplayer Free-For-All Commander/CEDH.'
                     pointscommanderspecial:
-                        label: 'Multiplayer Free-For-All points (special)'
+                        label: 'Commander/CEDH Free-For-All points (special)'
                         help: 'The points for this card in Multiplayer Free-For-All Commander/CEDH (special, like "As a Commander").'
                     islegal2hg:
                         label: 'Legal in 2HG'
@@ -238,7 +302,7 @@ admin:
                         label: 'Legal in Multiplayer Free-For-All Commander/CEDH (special)'
                         help: 'Check if the card is legal in Multiplayer Free-For-All Commander/CEDH (special, like "As a Commander")'
                     firstline:
-                        label: 'The first name in English MUST always be <code class="inline">((unranked))</code> (and defines the points for unranked cards)'
+                        label: 'The first name in English after the P-values MUST always be <code class="inline">((unranked))</code> (and defines the points for unranked cards)'
                     isczeligible:
                         label: 'messages'
                     pointshighlander:
@@ -297,6 +361,10 @@ admin:
                         label: 'Name (EN)'
                         help: 'The name of the card, in English. Must be character-precise.'
                         placeholder: 'Black Lotus...'
+                    flavorofnameen:
+                        label: 'Flavor Name Of (EN)'
+                        help: 'The flavor name / skinned card name of the card ("Minas Morgul" for "Cabal Coffers"...), in English. Must be character-precise.'
+                        placeholder: 'Minas Morgul...'
                     firstprintsetcode:
                         label: 'First Print Set Code'
                     iscommandzoneeligible:
@@ -629,10 +697,11 @@ front:
                     text: 'Help me choose a format'
                     title: 'Help me choose a format to play AeonShift Magic The Gathering™ via <strong>a quiz</strong>.'
         form:
-            title: 'Configure your format:'
+            title: 'Configure your format'
+            formtitle: 'You''re playing:'
             decklist1:
                 label: 'Decklist (Player 1 Decklist if using teams)'
-                help: 'Paste your deck here (your player 1 decklist here if using teams).'
+                help: 'Paste your deck here (your Player 1 decklist here if using teams). Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA. <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>'
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -640,7 +709,7 @@ front:
                     ...
             decklist2:
                 label: 'Decklist - Player 2'
-                help: 'Paste your player 2 decklist here if using teams.'
+                help: 'Paste your Player 2 decklist here if using teams. Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA. <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>'
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -648,20 +717,79 @@ front:
                     ...
             decklist3:
                 label: 'Decklist - Player 3'
-                help: 'Paste your player 3 decklist here if using teams.'
+                help: 'Paste your Player 3 decklist here if using teams. Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA. <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>'
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
                     1 Argothian Enchantress
                     ...
             results:
-                total:
-                    label: '# points'
-                valid:
+                breakdown:
+                    title: 'Your points breakdown:'
+                    basepoints:
+                        text: 'Base Points (P-Value):'
+                        help: 'This is your P-Value, the base points as determined by your format choices in the form above.'
+                    modulations:
+                        text: 'Modulations:'
+                        help: 'These are possible modulations of your P-Value, based on the format and card choices you made.'
+                    cardzones:
+                        text: 'Card Zone Totals:'
+                        maindeck: 'Main Deck:'
+                        sideboard: 'Sideboard:'
+                        commandzone: 'Command Zone:'
+                        companion: 'Companions:'
+                        attractions: 'Attractions:'
+                        contraptions: 'Contraptions:'
+                        stickers: 'Stickers:'
+                        total: 'Total identified cards (all zones):'
+                    usage:
+                        text: 'Points Usage:'
+                        help: 'These are the points you used in your deck, sorted from most consuming to least consuming.'
+                    budget:
+                        text: 'Budget Points:'
+                        help: 'These are the points you can spend in your deck, based on your format choices (and Commanders, if any).'
+                    remaining:
+                        text: 'Remaining, Unused Points:'
+                        help: 'These are the remaning points you have left. Feel free to keep using them if that helps.'
+                decklist1:
+                    label: 'Results for decklist 1:'
+                decklist2:
+                    label: 'Results for decklist 2:'
+                decklist3:
+                    label: 'Results for decklist 3:'
+                errors:
+                    containsinvalidtimelinecards:
+                        text: 'The decklist contains cards that are not legal in the selected timeline.'
+                    invalidcommandzone:
+                        text: 'Your Command Zone (Commander(s)) is not valid.'
+                    invalidnumberofcards:
+                        text: 'The decklist does not contain the correct number of cards.'
+                    invalidsideboard:
+                        text: 'Your sideboard is invalid.'
+                    copies:
+                        text: 'The decklist contains illegal copies of a same card.'
+                    nocommander:
+                        text: 'No Commander was found in your decklist, despite trying all possible source text formats.'
+                    impossibletofindacommander:
+                        text: 'Determining the Commander(s) in your decklist is impossible, please add more cards and check line breaks in the decklist.'
+                    toomanypoints:
+                        text: 'Your decklist consumed too many points. You need to adjust your points to stay within your P-Value.'
+                    tooexpensive:
+                        text: 'Your decklist has a M-Value higher than the maximum allowed by your format.'
+                    failedparsing:
+                        text: 'The decklist could not be parsed, please check what you pasted is valid.'
+                    internalerror:
+                        text: 'An internal error occurred while processing your decklist. Please contact our team.'
+                legal:
                     no:
-                        label: 'Your deck is invalid.'
+                        label: 'Your deck is <strong>NOT LEGAL</strong> within your format choices.'
                     yes:
-                        label: 'Your deck is valid.'
+                        label: 'Your deck is <strong>LEGAL</strong> within your format choices.'
+        pointslist:
+            choice:
+                label: '{name} ({datestart} → {dateend})'
+            latest:
+                label: '{name} (Current List)'
         quiz:
             back:
                 label: '← Previous question'
@@ -692,7 +820,7 @@ front:
                     help: 'Singleton - a maximum of one copy of each card across in the entire decklist.'
                 answer2:
                     label: '4 copies max.'
-                    help: 'Quadruples - a maximum of four copies of each card across in the entire decklist.'
+                    help: 'Quadruples - a maximum of four copies of each card across in the entire decklist. <em class="comingsoon">Coming Soon!</em>'
             question3:
                 label: 'Cards in main deck/sideboard:'
                 text: 'How many cards sould a deck have (main deck/sideboard)?'
@@ -701,13 +829,13 @@ front:
                     help: '100 cards main deck, no sideboard.'
                 answer2:
                     label: '60+/0-15'
-                    help: '60 cards or more in the main deck, 0 to 15 in a sideboard.'
+                    help: '60 cards or more in the main deck, 0 to 15 in a sideboard. <em class="comingsoon">Coming Soon!</em>'
             question4:
                 label: 'Commanders/Command Zones:'
                 text: 'Do you want to use Commanders/Command Zones?'
                 answer1:
                     label: 'No'
-                    help: 'No additional rules will be checked.'
+                    help: 'No additional rules will be checked. <em class="comingsoon">Coming Soon!</em>'
                 answer2:
                     label: 'Yes'
                     help: 'This will add special construction and gameplay rules and restrictions.'
@@ -725,7 +853,7 @@ front:
                     help: 'Includes all cards from Eternal, more or less Vintage-printed, sanctioned-tournament-legal cards.'
                 answer4:
                     label: 'Modern'
-                    help: 'Includes all cards that are legal or banned in Modern.'
+                    help: 'Includes all cards that are legal or banned in Modern. <em class="comingsoon">Coming Soon!</em>'
                 answer5:
                     label: 'Pioneer'
                     help: 'Includes all cards that are legal or banned in Pioneer. <em class="comingsoon">Coming Soon!</em>'
@@ -734,16 +862,30 @@ front:
                     help: 'Includes all cards that are legal or banned in Standard. <em class="comingsoon">Coming Soon!</em>'
             question6:
                 label: 'P-value:'
-                text: 'What''s your reference P-value?'
+                text: 'What''s your reference P-value? The P-value determines the base points for building, before any modulations.'
                 answer1:
-                    label: '100 Points - Standard Play'
-                    help: 'This is the default P-value, and the recommended value for most players.'
+                    label: 'Standard Play'
+                    help: 'This is the default P-value, and the recommended value for most players. Use this if you don''t know what to choose.'
                 answer2:
                     label: 'Lite Play'
                     help: 'This is a more conservative P-value, and is recommended for players who want to play with a lower P-value, which means less money invested and less explosiveness. <em class="comingsoon">Coming Soon!</em>'
                 answer3:
                     label: 'Power Play'
                     help: 'This is a more aggressive P-value, and is recommended for players who want to play with a higher P-value, which means less limits on cards and explosiveness. <em class="comingsoon">Coming Soon!</em>'
+            question7:
+                label: 'Apply financial constraints'
+                text: 'Are you using financial constraints?'
+                answer1:
+                    label: 'No'
+                    help: 'You''re playing with original cards only (or allowing proxies).'
+                answer2:
+                    label: 'Yes'
+                    help: 'You''playing original cards only, but you have a money constraint on decks, and want to use our M-value for that. <em class="comingsoon">Coming Soon!</em>'
+            question8:
+                label: 'Points List Update to use:'
+                text: 'Which points list update should be used? Always use the latest one unless checking past decklists.'
+            previous:
+                text: '⬅️ Previous question'
 global:
     actions:
         label: Actions
@@ -764,7 +906,7 @@ global:
         label: ❌ Delete
         title: Delete this item
     editbutton:
-        label: ✏️ Edit item
+        label: ✏️ Edit
         title: Edit
     email:
         responsibility: AeonShift only sends emails for its essential features and will never contact you for any other reason. If you receive a suspicious email, do not click on any links and contact our team.

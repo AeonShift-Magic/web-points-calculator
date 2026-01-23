@@ -28,6 +28,12 @@
                     <td>{{ points_list.title }}</td>
                 </tr>
                 <tr>
+                    <th>{{ 'admin.form.mtg.pointslist.create.rulesmodel.label'|trans }}</th>
+                    <td>
+                        {{ points_list.rulesModelName }} <em>({{ points_list.rulesModel }})</em>
+                    </td>
+                </tr>
+                <tr>
                     <th>{{ 'admin.form.mtg.pointslist.create.relatedupdates.label'|trans }}</th>
                     <td>
                         {% for mtg_update in points_list.MTGUpdates %}
@@ -45,6 +51,136 @@
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslist.create.lastuploadedat.label'|trans }}</th>
                     <td>{{ points_list.lastUploadedAt|date('Y-m-d H:i') }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslist.import.pvalues.text'|trans }}</th>
+                    <td class="text-center">
+                        <table class="table center">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">{{ 'admin.form.mtg.pointslist.import.pvalues.header.standardplay.text'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.basesingleton.text'|trans }}</td>
+                                    <td>{{ points_list.pValueBaseSingletonStandardPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.basequadruples.text'|trans }}</td>
+                                    <td>{{ points_list.pValueBaseQuadruplesStandardPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.duelcommander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueDuelCommanderStandardPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.commander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueCommanderStandardPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.highlander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueHighlanderStandardPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.modern.text'|trans }}</td>
+                                    <td>{{ points_list.pValueModernStandardPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.pioneer.text'|trans }}</td>
+                                    <td>{{ points_list.pValuePioneerStandardPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.standard.text'|trans }}</td>
+                                    <td>{{ points_list.pValueStandardStandardPlay }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <table class="table center">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">{{ 'admin.form.mtg.pointslist.import.pvalues.header.liteplay.text'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.basesingleton.text'|trans }}</td>
+                                    <td>{{ points_list.pValueBaseSingletonLitePlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.basequadruples.text'|trans }}</td>
+                                    <td>{{ points_list.pValueBaseQuadruplesLitePlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.duelcommander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueDuelCommanderLitePlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.commander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueCommanderLitePlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.highlander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueHighlanderLitePlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.modern.text'|trans }}</td>
+                                    <td>{{ points_list.pValueModernLitePlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.pioneer.text'|trans }}</td>
+                                    <td>{{ points_list.pValuePioneerLitePlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.standard.text'|trans }}</td>
+                                    <td>{{ points_list.pValueStandardLitePlay }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <table class="table center">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">{{ 'admin.form.mtg.pointslist.import.pvalues.header.powerplay.text'|trans }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.basesingleton.text'|trans }}</td>
+                                    <td>{{ points_list.pValueBaseSingletonPowerPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.basequadruples.text'|trans }}</td>
+                                    <td>{{ points_list.pValueBaseQuadruplesPowerPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.duelcommander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueDuelCommanderPowerPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.commander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueCommanderPowerPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.highlander.text'|trans }}</td>
+                                    <td>{{ points_list.pValueHighlanderPowerPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.modern.text'|trans }}</td>
+                                    <td>{{ points_list.pValueModernPowerPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.pioneer.text'|trans }}</td>
+                                    <td>{{ points_list.pValuePioneerPowerPlay }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.standard.text'|trans }}</td>
+                                    <td>{{ points_list.pValueStandardPowerPlay }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslist.create.uploadnbcards.label'|trans }}</th>

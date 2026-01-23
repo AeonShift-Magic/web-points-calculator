@@ -79,97 +79,73 @@ abstract class AdminAbstractCardType extends AbstractType
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointsbasesingleton.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointsbasesingleton.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsBaseQuadruples', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointsbasequadruples.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointsbasequadruples.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('points2HG', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.points2hg.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.points2hg.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('points2HGSpecial', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.points2hgspecial.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.points2hgspecial.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsDuelCommander', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointsduelcommander.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointsduelcommander.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsDuelCommanderSpecial', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointsduelcommanderspecial.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointsduelcommanderspecial.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsCommander', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointscommander.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointscommander.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsCommanderSpecial', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointscommanderspecial.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointscommanderspecial.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsHighlander', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointshighlander.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointshighlander.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsModern', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointsmodern.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointsmodern.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsPioneer', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointspioneer.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointspioneer.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('pointsStandard', NumberType::class, [
                 'label'       => 'admin.form.mtg.pointslistcard.create.pointsstandard.label',
                 'help'        => 'admin.form.mtg.pointslistcard.create.pointsstandard.help',
                 'scale'       => 2,
-                'constraints' => [
-                    new NotNull(),
-                ],
+                'required'    => false,
             ])
             ->add('isLegal2HG', CheckboxType::class, [
                 'label'    => 'admin.form.mtg.pointslistcard.create.islegal2hg.label',

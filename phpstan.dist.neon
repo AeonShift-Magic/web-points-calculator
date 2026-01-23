@@ -1,7 +1,15 @@
 parameters:
     excludePaths:
         - src/Repository/ResetPasswordRequestRepository.php
+        - config/bundles.php
+        - config/preload.php
         - config/reference.php
+        - src\Model\AeonShift\PointsList\MTG\V1\MTGPointsListModelV1.php
+    parallel:
+        processTimeout: 300.0
+        jobSize: 20
+        maximumNumberOfProcesses: 16
+        minimumNumberOfJobsPerProcess: 2
     level: 10
     paths:
         - config

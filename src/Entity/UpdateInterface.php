@@ -18,6 +18,10 @@ interface UpdateInterface
 
     public function getStartingAt(): ?DateTime;
 
+    public function getTitleEN(): string;
+
+    public function getTitleForForms(): string;
+
     public function setEndingAt(DateTime $endingAt): static;
 
     public function setStartingAt(DateTime $startingAt): static;

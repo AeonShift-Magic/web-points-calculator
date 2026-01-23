@@ -8,8 +8,10 @@ use App\Entity\MTG\MTGPointsList;
 use App\Entity\User;
 use App\Form\Admin\MTG\AdminMTGPointsListImportType;
 use App\Form\Admin\MTG\AdminMTGPointsListType;
+use App\Model\AeonShift\PointsList\AbstractPointsListModel;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
 use App\Repository\MTG\MTGSourceCardRepository;
+use App\Repository\MTG\MTGUpdateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use RuntimeException;
@@ -56,6 +58,16 @@ final class MTGPointsListController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $pointsList->setUpdatedBy($currentUser);
+
+            // Update the model with its real name
+            if(class_exists($pointsList->getRulesModel()) && method_exists($pointsList->getRulesModel(), 'getName')) {
+                /** @var class-string $class */
+                $class = $pointsList->getRulesModel();
+                /** @var string $fullName */
+                $fullName = $class::getName();
+                $pointsList->setRulesModelName($fullName);
+            }
+
             $entityManager->flush();
             $this->addFlash('success', $translator->trans('global.savesuccess.text'));
 
@@ -80,6 +92,7 @@ final class MTGPointsListController extends AbstractController
      * @param TranslatorInterface $translator
      * @param EntityManagerInterface $entityManager
      * @param MTGSourceCardRepository $MTGSourceCardRepository
+     * @param MTGUpdateRepository $MTGUpdateRepository
      * @param Security $security
      *
      * @return Response
@@ -92,6 +105,7 @@ final class MTGPointsListController extends AbstractController
         TranslatorInterface $translator,
         EntityManagerInterface $entityManager,
         MTGSourceCardRepository $MTGSourceCardRepository,
+        MTGUpdateRepository $MTGUpdateRepository,
         Security $security
     ): Response
     {
@@ -106,7 +120,8 @@ final class MTGPointsListController extends AbstractController
             $entityManager,
             $translator,
             $MTGSourceCardRepository,
-            $security
+            $security,
+            $MTGUpdateRepository
         );
 
         $form = $this->createForm(AdminMTGPointsListImportType::class);
@@ -115,13 +130,14 @@ final class MTGPointsListController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid() && $form->get('csv_file')->getData() instanceof UploadedFile) {
                 try {
+                    /** @var UploadedFile $uploadedFile */
                     $uploadedFile = $form->get('csv_file')->getData();
                     $fileContents = file_get_contents($uploadedFile->getPathname());
 
                     if ($fileContents === false) {
                         $this->addFlash('error', $translator->trans('admin.form.mtg.pointslist.import.file.unreadable'));
                     } else {
-                        $result = $pointsListModel->processCSVString($fileContents, $MTGPointsList);
+                        $result = $pointsListModel->processCSVString($fileContents, $MTGPointsList, $uploadedFile->getClientOriginalName());
 
                         if ($result['status'] === 'success') {
                             $this->addFlash('success', $result['message']);
@@ -182,6 +198,16 @@ final class MTGPointsListController extends AbstractController
             $pointsList->setCreatedBy($currentUser);
             $pointsList->setUpdatedBy($currentUser);
             $entityManager->persist($pointsList);
+
+            // Update the model with its real name
+            if(class_exists($pointsList->getRulesModel()) && method_exists($pointsList->getRulesModel(), 'getName')) {
+                /** @var class-string $class */
+                $class = $pointsList->getRulesModel();
+                /** @var string $fullName */
+                $fullName = $class::getName();
+                $pointsList->setRulesModelName($fullName);
+            }
+
             $entityManager->flush();
             $this->addFlash('success', $translator->trans('global.savesuccess.text'));
 
@@ -206,6 +232,7 @@ final class MTGPointsListController extends AbstractController
      * @param MTGSourceCardRepository $MTGSourceCardRepository
      * @param Security $security
      * @param TranslatorInterface $translator
+     * @param MTGUpdateRepository $MTGUpdateRepository
      *
      * @return Response
      */
@@ -216,7 +243,8 @@ final class MTGPointsListController extends AbstractController
         EntityManagerInterface $entityManager,
         MTGSourceCardRepository $MTGSourceCardRepository,
         Security $security,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        MTGUpdateRepository $MTGUpdateRepository
     ): Response
     {
         $pointsListModelClass = $MTGPointsList->getRulesModel();
@@ -230,7 +258,8 @@ final class MTGPointsListController extends AbstractController
             $entityManager,
             $translator,
             $MTGSourceCardRepository,
-            $security
+            $security,
+            $MTGUpdateRepository,
         );
 
         return $pointsListModel->generateCSVResponseForList($MTGPointsList);

@@ -38,7 +38,12 @@
                     <tr>
                         <td>{{ points_list.id }}</td>
                         <td><strong>{{ points_list.title }}</strong></td>
-                        <td>{{ points_list.rulesModel }}</td>
+                        <td>
+                            {{ points_list.rulesModelName }}
+                            <br>
+                            <br>
+                            <em>({{ points_list.rulesModel }})</em>
+                        </td>
                         <td>{{ points_list.validityStartingAt|date('Y-m-d H:i') }}</td>
                         <td>
                             {% for mtg_update in points_list.MTGUpdates %}

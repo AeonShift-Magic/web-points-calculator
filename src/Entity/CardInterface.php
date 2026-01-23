@@ -63,40 +63,40 @@ interface CardInterface extends ItemContractInterface
      *
      * @return static
      */
-    public function setPointsBaseQuadruples(?float $pointsBaseQuadruples): static;
+    public function setPointsBaseQuadruples(?float $pointsBaseQuadruples): self;
 
     /**
      * @param float|null $pointsBaseSingleton the default points for a single card when played in a singleton format
      *
      * @return static
      */
-    public function setPointsBaseSingleton(?float $pointsBaseSingleton): static;
+    public function setPointsBaseSingleton(?float $pointsBaseSingleton): self;
 
     /**
      * @param float|null $pointsCommander
      *
      * @return static overriden points for Multiplayer formats (FFA)
      */
-    public function setPointsCommander(?float $pointsCommander): static;
+    public function setPointsCommander(?float $pointsCommander): self;
 
     /**
      * @param float|null $pointsCommanderSpecial
      *
      * @return static Overriden special points for Multiplayer formats (FFA), i.e. as a Commander.
      */
-    public function setPointsCommanderSpecial(?float $pointsCommanderSpecial): static;
+    public function setPointsCommanderSpecial(?float $pointsCommanderSpecial): self;
 
     /**
      * @param float|null $pointsDuelCommander overriden points for Duel Commander
      *
      * @return $this
      */
-    public function setPointsDuelCommander(?float $pointsDuelCommander): static;
+    public function setPointsDuelCommander(?float $pointsDuelCommander): self;
 
     /**
      * @param float|null $pointsDuelCommanderSpecial Overriden special points for Duel Commander, i.e. as a Commander.
      *
      * @return $this
      */
-    public function setPointsDuelCommanderSpecial(?float $pointsDuelCommanderSpecial): static;
+    public function setPointsDuelCommanderSpecial(?float $pointsDuelCommanderSpecial): self;
 }

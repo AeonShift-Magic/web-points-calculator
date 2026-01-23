@@ -32,7 +32,7 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
             ->from(MTGSourceCard::class, 'c')
             ->orderBy('c.nameEN')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
 
         return $sourceCards;
     }
@@ -49,7 +49,7 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
                 ->from(MTGSourceCard::class, 'c')
                 ->orderBy('c.nameEN')
                 ->getQuery()
-                ->getArrayResult(),
+                ->getResult(),
             'nameEN'
         );
 

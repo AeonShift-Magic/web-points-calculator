@@ -12,9 +12,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MTGSourceCardRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Index(name: 'idx_oracle_id', columns: ['oracle_id'])]
+#[ORM\Index(name: 'idx_oracle_name', columns: ['name_en'])]
 class MTGSourceCard extends MTGAbstractCard
 {
+    /** The count of prices to retain for the average value calculation. */
+    public const int PRICE_RETENTION_COUNT = 30;
+
     /**
      * Timeline legalities precedence values.
      * Used at fast speed integer comparisons.
@@ -36,11 +39,18 @@ class MTGSourceCard extends MTGAbstractCard
     private string $MTGOPrice = '0.00';
 
     /**
-     * @var string $MValue the average value of the card in the market, in mixed EUR/USD
+     * @var int $MValueCount the number of counted prices updates for the average value
+     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $MValueCount = 0;
+
+    /**
+     * @var numeric-string $MValueTrend the average value of the card in the market, in mixed EUR/USD
      */
     #[Assert\NotNull]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private string $MValue = '0.00';
+    private string $MValueTrend = '0.00';
 
     /**
      * @var list<string>
@@ -93,6 +103,20 @@ class MTGSourceCard extends MTGAbstractCard
     #[ORM\Column]
     private bool $isWhite = false;
 
+    /**
+     * @var numeric-string $latestMValue the average value of the card in the market, in mixed EUR/USD
+     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    private string $latestMValue = '0.00';
+
+    /**
+     * @var int $maxCopies the maximum number of copies of this card that can be in a deck, sometimes overriden by oracle text. -1 for infinite.
+     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $maxCopies = 1;
+
     #[Assert\Choice(choices: ['printed', 'funny', 'eternal', 'modern', 'pioneer', 'standard', 'unranked'])]
     #[Assert\Length(max: 20)]
     #[Assert\NotBlank]
@@ -128,6 +152,14 @@ class MTGSourceCard extends MTGAbstractCard
         return $this->firstPrintedYear;
     }
 
+    /**
+     * @return numeric-string
+     */
+    public function getLatestMValue(): string
+    {
+        return $this->latestMValue;
+    }
+
     public function getMTGOPrice(): string
     {
         return $this->MTGOPrice;
@@ -138,14 +170,27 @@ class MTGSourceCard extends MTGAbstractCard
         return (float)$this->MTGOPrice;
     }
 
-    public function getMValue(): string
-    {
-        return $this->MValue;
-    }
-
     public function getMValueAsFloat(): float
     {
-        return (float)$this->MValue;
+        return (float)$this->MValueTrend;
+    }
+
+    public function getMValueCount(): int
+    {
+        return $this->MValueCount;
+    }
+
+    /**
+     * @return numeric-string
+     */
+    public function getMValueTrend(): string
+    {
+        return $this->MValueTrend;
+    }
+
+    public function getMaxCopies(): int
+    {
+        return $this->maxCopies;
     }
 
     public function getMaximumTimelineLegality(): string
@@ -281,38 +326,26 @@ class MTGSourceCard extends MTGAbstractCard
     }
 
     /**
-     * @param numeric-string $MTGOPrice
-     *
-     * @return $this
-     */
-    public function setMTGOPrice(string $MTGOPrice): static
-    {
-        $this->MTGOPrice = bcadd($MTGOPrice, '0', 2);
-
-        return $this;
-    }
-
-    /**
-     * @param numeric-string $MValue
-     *
-     * @return $this
-     */
-    public function setMValue(string $MValue): static
-    {
-        $this->MValue = bcadd($MValue, '0', 2);
-
-        return $this;
-    }
-
-    /**
-     * @param numeric-string ...$mixedPrices
+     * @param numeric-string $latestMValue
      *
      * @return static
      */
-    public function setMValueFromMixedPrices(string ...$mixedPrices): static
+    public function setLatestMValue(string $latestMValue): static
+    {
+        $this->latestMValue = $latestMValue;
+
+        return $this;
+    }
+
+    /**
+     * @param numeric-string ...$mixedPrices The new prices to take into account.
+     *
+     * @return static
+     */
+    public function setLatestMValueFromMixedPrices(string ...$mixedPrices): static
     {
         if (count($mixedPrices) === 0) {
-            $this->MValue = '0.00';
+            $this->latestMValue = '0.00';
 
             return $this;
         }
@@ -324,7 +357,45 @@ class MTGSourceCard extends MTGAbstractCard
         }
 
         $avg = bcdiv($sum, (string)count($mixedPrices), 4);
-        $this->MValue = bcadd($avg, '0', 2); // round to scale
+        $this->latestMValue = bcadd($avg, '0', 2); // round to scale
+
+        return $this;
+    }
+
+    /**
+     * @param numeric-string $MTGOPrice
+     *
+     * @return static
+     */
+    public function setMTGOPrice(string $MTGOPrice): static
+    {
+        $this->MTGOPrice = bcadd($MTGOPrice, '0', 2);
+
+        return $this;
+    }
+
+    public function setMValueCount(int $MValueCount): static
+    {
+        $this->MValueCount = $MValueCount;
+
+        return $this;
+    }
+
+    /**
+     * @param numeric-string $MValueTrend
+     *
+     * @return static
+     */
+    public function setMValueTrend(string $MValueTrend): static
+    {
+        $this->MValueTrend = bcadd($MValueTrend, '0', 2);
+
+        return $this;
+    }
+
+    public function setMaxCopies(int $maxCopies): self
+    {
+        $this->maxCopies = $maxCopies;
 
         return $this;
     }
@@ -332,6 +403,51 @@ class MTGSourceCard extends MTGAbstractCard
     public function setMaximumTimelineLegality(string $maximumTimelineLegality): static
     {
         $this->maximumTimelineLegality = $maximumTimelineLegality;
+
+        return $this;
+    }
+
+    /**
+     * This method takes multiple prices as parameters, then:
+     * - updates the latest MValue with the averate of the new prices
+     * - updates the MValueCount with the new count of prices, shifting it if necessary
+     * - updates the MValueTrend with the new trend of the average
+     *
+     * @param numeric-string ...$mixedPrices The new prices to take into account.
+     *
+     * @return static
+     */
+    public function updateMValueWithNewPrices(string ...$mixedPrices): static
+    {
+        // First, save this latest value
+        $this->setLatestMValueFromMixedPrices(...$mixedPrices);
+
+        // Only update the prices if the latest price found is > 0.0
+        if ((float)$this->latestMValue > 0.0) {
+
+            // Second, update the count and trend
+            // Update the new total
+            // If we have too many prices already...
+            if ($this->MValueCount >= static::PRICE_RETENTION_COUNT) {
+                $this->MValueCount = static::PRICE_RETENTION_COUNT;
+            } else {
+                ++$this->MValueCount;
+            }
+
+            $this->MValueTrend = bcdiv(
+                bcadd(
+                    bcmul(
+                        (string)($this->MValueCount - 1),
+                        $this->MValueTrend,
+                        4
+                    ),
+                    $this->getLatestMValue(),
+                    4
+                ),
+                (string)$this->MValueCount,
+                4
+            ); // extra precision during calc
+        }
 
         return $this;
     }

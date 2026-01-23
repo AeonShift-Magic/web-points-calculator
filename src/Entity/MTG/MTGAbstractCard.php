@@ -33,6 +33,11 @@ abstract class MTGAbstractCard implements MTGCardInterface
         }
     }
 
+    #[Assert\Length(max: 255)]
+    #[Assert\NotNull]
+    #[ORM\Column(length: 255)]
+    private string $flavorOfNameEN = '';
+
     #[Assert\NotNull]
     #[ORM\Column(name: 'is_legal_2hg')]
     private bool $isLegal2HG = false;
@@ -75,39 +80,51 @@ abstract class MTGAbstractCard implements MTGCardInterface
     #[ORM\Column(type: 'guid', nullable: true)]
     private ?string $oracleId = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(name: 'points_2hg', type: 'float', nullable: true)]
     private ?float $points2HG = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(name: 'points_2hg_special', type: 'float', nullable: true)]
     private ?float $points2HGSpecial = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsBaseQuadruples = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsBaseSingleton = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsCommander = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsCommanderSpecial = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsDuelCommander = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsDuelCommanderSpecial = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsHighlander = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsModern = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsPioneer = null;
 
+    #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: 'float', nullable: true)]
     private ?float $pointsStandard = null;
 
@@ -177,6 +194,11 @@ abstract class MTGAbstractCard implements MTGCardInterface
         $points['standard'] = $this->pointsStandard ?? $points['basequadruples'];
 
         return $points;
+    }
+
+    public function getFlavorOfNameEN(): string
+    {
+        return $this->flavorOfNameEN;
     }
 
     public function getManaValue(): float
@@ -332,6 +354,13 @@ abstract class MTGAbstractCard implements MTGCardInterface
     public function isLegalDuelCommanderSpecial(): bool
     {
         return $this->isLegalDuelCommanderSpecial;
+    }
+
+    public function setFlavorOfNameEN(string $flavorOfNameEN): self
+    {
+        $this->flavorOfNameEN = $flavorOfNameEN;
+
+        return $this;
     }
 
     #[Override]

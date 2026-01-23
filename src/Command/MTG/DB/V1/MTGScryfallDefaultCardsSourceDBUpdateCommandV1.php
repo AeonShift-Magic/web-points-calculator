@@ -90,16 +90,18 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
             }
 
             $result = $this->scryfallDefaultCardsSourceDataTransformerModel->parseAndImport(
-                static function (int $processedCount, int $insertedCount, int $updatedCount, int $skippedCount) use ($io, &$progressBar): void {
+                static function (int $processedCount, int $insertedCount, int $updatedCount, int $skippedCount, int $pricesCount, int $errorCount) use ($io, &$progressBar): void {
                     if ($progressBar === null) {
                         $progressBar = $io->createProgressBar();
                         $progressBar->setFormat(
                             ' %current% cards processed | %elapsed:6s% elapsed | Memory: %memory:6s%' . "\n" .
-                            ' Inserted: %inserted% | Updated: %updated% | Skipped: %skipped%'
+                            ' Inserted: %inserted% | Updated: %updated% | Skipped: %skipped% | Prices Updated: %prices% | Errors: %errors%'
                         );
                         $progressBar->setMessage((string)$insertedCount, 'inserted');
                         $progressBar->setMessage((string)$updatedCount, 'updated');
                         $progressBar->setMessage((string)$skippedCount, 'skipped');
+                        $progressBar->setMessage((string)$pricesCount, 'prices');
+                        $progressBar->setMessage((string)$errorCount, 'errors');
                         $progressBar->start();
                     }
 
@@ -107,6 +109,8 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
                     $progressBar->setMessage((string)$insertedCount, 'inserted');
                     $progressBar->setMessage((string)$updatedCount, 'updated');
                     $progressBar->setMessage((string)$skippedCount, 'skipped');
+                    $progressBar->setMessage((string)$pricesCount, 'prices');
+                    $progressBar->setMessage((string)$errorCount, 'errors');
                 },
                 $source
             );
@@ -125,6 +129,7 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
                     ['Cards Inserted', number_format($result['inserted'])],
                     ['Cards Updated', number_format($result['updated'])],
                     ['Cards Skipped (no changes)', number_format($result['skipped'])],
+                    ['Prices Updated', number_format($result['prices'])],
                     ['Errors', number_format($result['errors'])],
                 ]
             );

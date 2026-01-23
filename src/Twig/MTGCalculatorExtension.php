@@ -4,18 +4,16 @@ declare(strict_types = 1);
 
 namespace App\Twig;
 
-use App\Model\AeonShift\Calculator\MTG\AeonShiftMTGCalculator;
-use App\Repository\MTG\MTGSourceCardRepository;
-use App\Repository\MTG\MTGUpdateRepository;
-use const JSON_THROW_ON_ERROR;
+use App\Model\AeonShift\PointsList\MTG\V1\MTGPointsListModelV1;
 use JsonException;
 use Override;
+use Psr\Cache\InvalidArgumentException;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 final class MTGCalculatorExtension extends AbstractExtension
 {
-    public function __construct(private AeonShiftMTGCalculator $aeonShiftMTGCalculator, private MTGUpdateRepository $MTGUpdateRepository, private MTGSourceCardRepository $MTGSourceCardRepository)
+    public function __construct(private MTGPointsListModelV1 $pointsList)
     {
     }
 
@@ -29,30 +27,12 @@ final class MTGCalculatorExtension extends AbstractExtension
     }
 
     /**
-     * @throws JsonException
+     * @throws InvalidArgumentException
      *
      * @return string
      */
     public function getUpdatesAndPointsListsAsJSON(): string
     {
-        $MTGUpdates = $this->MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
-        $outputArray = [
-            'updates' => [],
-        ];
-
-        foreach ($MTGUpdates as $MTGUpdate) {
-            if ($MTGUpdate->getPointsList() !== null) {
-                $outputArray['updates'] = [
-                    'title'                => $MTGUpdate->getTitleEN(),
-                    'startingAtSimplified' => $MTGUpdate->getStartingAt()->format('Y-m-d'),
-                    'endingAtSimplified'   => $MTGUpdate->getEndingAt()->format('Y-m-d'),
-                    'startingAtDate'       => $MTGUpdate->getStartingAt()->format('Y-m-d\TH:i:s\Z'),
-                    'endingAtDate'         => $MTGUpdate->getEndingAt()->format('Y-m-d\TH:i:s\Z'),
-                    'pointsList'           => $this->aeonShiftMTGCalculator->mergeMTGSourceAndPointsList($this->MTGSourceCardRepository, $MTGUpdate->getPointsList()),
-                ];
-            }
-        }
-
-        return json_encode($outputArray, JSON_THROW_ON_ERROR);
+        return $this->pointsList->getAllPointsListsAndUpdatesAsJSONArray();
     }
 }

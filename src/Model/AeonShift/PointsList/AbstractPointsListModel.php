@@ -24,7 +24,7 @@ abstract class AbstractPointsListModel implements PointsListModelInterface, Stri
     abstract public function generateCSVResponseForList(PointsListInterface $pointsList): StreamedResponse;
 
     #[Override]
-    abstract public function processCSVString(string $csvSourceString, PointsListInterface $pointsList): array;
+    abstract public function processCSVString(string $csvSourceString, PointsListInterface $pointsList, string $filename = ''): array;
 
     #[Override]
     public static function getName(): string
@@ -46,8 +46,6 @@ abstract class AbstractPointsListModel implements PointsListModelInterface, Stri
         // Remove any whitespace that's not a space character
         $finalString = new UnicodeString((string)$UTF8String)
             ->collapseWhitespace()
-            ->lower()
-            ->title(allWords: true)
             ->trim();
 
         // Return the sanitized string

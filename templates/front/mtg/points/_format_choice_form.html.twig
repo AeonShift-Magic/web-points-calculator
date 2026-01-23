@@ -1,0 +1,426 @@
+<details class="w-full mb-2">
+    <summary>{{ 'front.mtg.form.title'|trans }}</summary>
+
+    <div class="w-full border-t border-t-gray-500 border-t-solid details-content">
+
+        {# Number of players #}
+        <div class="mb-6 form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full">{{ 'front.mtg.quiz.question1.label'|trans }}</div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question1.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <input type="radio" name="players" value="duel" id="players-duel" data-name-part="Duel" checked>
+                        <label for="players-duel">
+                            {{ 'front.mtg.quiz.question1.answer1.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question1.answer1.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        {#
+                        <input type="radio" name="players" value="2hg" id="players-2hg" data-name-part="Two-Headed-Giant" disabled="disabled">
+                        <label for="players-2hg">
+                            {{ 'front.mtg.quiz.question1.answer2.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question1.answer2.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        #}
+                        <input type="radio" name="players" value="multiffa" id="players-multiffa" data-name-part="Free-For-All" disabled="disabled">
+                        <label for="players-multiffa">
+                            {{ 'front.mtg.quiz.question1.answer3.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question1.answer3.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="players" value="teamtrio" id="players-teamtrio" data-name-part="Team Trio" disabled="disabled">
+                        <label for="players-teamtrio">
+                            {{ 'front.mtg.quiz.question1.answer4.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question1.answer4.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Number of copies of a card in a deck #}
+        <div class="mb-6 form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full">{{ 'front.mtg.quiz.question2.label'|trans }}</div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question2.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <input type="radio" name="copies" value="singleton" id="copies-singleton" data-name-part="Singleton" checked>
+                        <label for="copies-singleton">
+                            {{ 'front.mtg.quiz.question2.answer1.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question2.answer1.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="copies" value="quadruples" id="copies-quadruples" data-name-part="Quadruples" disabled="disabled">
+                        <label for="copies-quadruples">
+                            {{ 'front.mtg.quiz.question2.answer2.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question2.answer2.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Deck structure #}
+        <div class="mb-6 form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full">{{ 'front.mtg.quiz.question3.label'|trans }}</div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question3.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <input type="radio" name="structure" value="highlander" id="structure-highlander" data-name-part="Highlander" checked>
+                        <label for="structure-highlander">
+                            {{ 'front.mtg.quiz.question3.answer1.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question3.answer1.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="structure" value="mtg" id="structure-mtg" data-name-part="Constructed" disabled="disabled">
+                        <label for="structure-mtg">
+                            {{ 'front.mtg.quiz.question3.answer2.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question3.answer2.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Commanders/Command Zones #}
+        <div class="mb-6 form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full">{{ 'front.mtg.quiz.question4.label'|trans }}</div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question4.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <input type="radio" name="commander" value="no" id="commander-no" data-name-part="" disabled="disabled">
+                        <label for="commander-no">
+                            {{ 'front.mtg.quiz.question4.answer1.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question4.answer1.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="commander" value="yes" id="commander-yes" data-name-part="Commander" checked>
+                        <label for="commander-yes">
+                            {{ 'front.mtg.quiz.question4.answer2.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question4.answer2.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Maximum Legality Timeline #}
+        <div class="mb-6 form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full">{{ 'front.mtg.quiz.question5.label'|trans }}</div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question5.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <input type="radio" name="timeline" value="printed" id="timeline-printed" data-name-part="All-Time">
+                        <label for="timeline-printed">
+                            {{ 'front.mtg.quiz.question5.answer1.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question5.answer1.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="timeline" value="funny" id="timeline-funny" data-name-part="Funny">
+                        <label for="timeline-funny">
+                            {{ 'front.mtg.quiz.question5.answer2.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question5.answer2.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="timeline" value="eternal" id="timeline-eternal" data-name-part="Eternal" checked>
+                        <label for="timeline-eternal">
+                            {{ 'front.mtg.quiz.question5.answer3.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question5.answer3.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="timeline" value="modern" id="timeline-modern" data-name-part="Modern" disabled="disabled">
+                        <label for="timeline-modern">
+                            {{ 'front.mtg.quiz.question5.answer4.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question5.answer4.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="timeline" value="pioneer" id="timeline-pioneer" data-name-part="Pioneer" disabled="disabled">
+                        <label for="timeline-pioneer">
+                            {{ 'front.mtg.quiz.question5.answer5.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question5.answer5.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="timeline" value="standard" id="timeline-standard" data-name-part="Standard" disabled="disabled">
+                        <label for="timeline-standard">
+                            {{ 'front.mtg.quiz.question5.answer6.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question5.answer6.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# P-value #}
+        <div class="mb-6 form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full">{{ 'front.mtg.quiz.question6.label'|trans }}</div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question6.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <input type="radio" name="pvalue" value="standard" id="pvalue-standard" data-name-part="Standard Play" checked>
+                        <label for="pvalue-standard">
+                            {{ 'front.mtg.quiz.question6.answer1.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question6.answer1.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="pvalue" value="lite" id="pvalue-lite" data-name-part="Lite Play" disabled="disabled">
+                        <label for="pvalue-lite">
+                            {{ 'front.mtg.quiz.question6.answer2.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question6.answer2.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="pvalue" value="power" id="pvalue-power" data-name-part="Power Play" disabled="disabled">
+                        <label for="pvalue-power">
+                            {{ 'front.mtg.quiz.question6.answer3.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question6.answer3.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# M-value #}
+        <div class="form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full">{{ 'front.mtg.quiz.question7.label'|trans }}</div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question7.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <input type="radio" name="mvalue" value="no" id="mvalue-no" data-name-part="" checked>
+                        <label for="mvalue-no">
+                            {{ 'front.mtg.quiz.question7.answer1.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question7.answer1.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                        <input type="radio" name="mvalue" value="yes" id="mvalue-yes" data-name-part="" disabled="disabled">
+                        <label for="mvalue-yes">
+                            {{ 'front.mtg.quiz.question7.answer2.label'|trans }}
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.quiz.question7.answer2.help'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Points list update #}
+        <div class="form-split">
+            <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="label w-full"><label for="update">{{ 'front.mtg.quiz.question8.label'|trans }}</label></div>
+                    <div class="help-text w-full">{{ 'front.mtg.quiz.question8.text'|trans }}</div>
+                </div>
+                <div class="w-full lg:w-2/3">
+                    <div class="switch-field">
+                        <select name="update" id="update">
+                            {% if updates is defined and updates is iterable %}
+                                {% for title_and_date, id in updates %}
+                                    <option value="{{ id }}" {% if loop.first %}selected="selected"{% endif %}>{{ title_and_date }}</option>
+                                {% else %}
+                                    <option value="" disabled="disabled">{{ 'global.none.label'|trans }}</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="" disabled="disabled">{{ 'global.none.label'|trans }}</option>>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</details>

@@ -1,6 +1,5 @@
-<div class="spaceless-row theme2 quiz-choice-row my-4" id="quiz">
-    <div class="main-column no-shadow lg:pt-4 min-h-screen">
-
+<div class="spaceless-row theme2 shadow-lg inset-shadow-sm relative z-40" id="quiz">
+    <div class="main-column no-shadow py-2">
         <div class="w-full text-center flex flex-col justify-center items-center my-3">
 
             <div class="flex flex-col lg:flex-row w-full justify-around items-center">
@@ -14,6 +13,7 @@
                     <span class="bottom-left"></span>
                     <span class="bottom-right"></span>
                 </a>
+                <img src="{{ asset('images/aeonshift-logo-transparent-format.png') }}" alt="Aeonshift logo" class="w-auto h-10 m-4">
                 <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.choose.links.gotoform.title'|trans|striptags }}" data-turbo="false">
                     <span class="top-left"></span>
                     <span class="top-right"></span>
@@ -24,20 +24,397 @@
                     <span class="bottom-left"></span>
                     <span class="bottom-right"></span>
                 </a>
-                <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.choose.links.freeform.title'|trans|striptags }}" data-turbo="false">
-                    <span class="top-left"></span>
-                    <span class="top-right"></span>
-                    <span class="title">
-                        <span class="icon-cancel"></span>
-                        {{ 'front.mtg.choose.links.freeform.text'|trans }}
-                    </span>
-                    <span class="bottom-left"></span>
-                    <span class="bottom-right"></span>
-                </a>
             </div>
         </div>
 
-        <div class="w-full text-center flex flex-col justify-center items-center">
+    </div>
+</div>
+
+<div class="spaceless-row theme1 bg-row-1 quiz-choice-row relative z-10 min-h-[1200px]">
+    <div class="main-column no-shadow py-2 flex flex-col items-center justify-center overflow-hidden relative h-[1200px]">
+
+        {# Number of players #}
+        <div class="multistep-form-part-container w-full h-full text-center flex flex-col justify-center items-center flex-1 multistep-form-part-container-visible" id="quiz-question-1">
+            <div class="quiz-question-container format-incentive p-8">
+                <h2 class="mt-0 mb-2">{{ 'front.mtg.quiz.help.text1'|trans }}</h2>
+                <h3 class="mt-0 mb-6 text-base">{{ 'front.mtg.quiz.help.text2'|trans }}</h3>
+                <p class="w-full my-0 text-2xl font-bold">
+                    <span class="blue-text">[1/6]</span> {{ 'front.mtg.quiz.question1.label'|trans }}
+                    <br>
+                    <small class="green-text">{{ 'front.mtg.quiz.question1.text'|trans }}</small>
+                </p>
+                <div class="quiz-answer-container w-full flex flex-col lg:flex-row items-stretch flex-1 lg:min-h-[15em]">
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-blue btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-2" data-form-change="players" data-form-value="duel" title="{{ 'front.mtg.quiz.question1.answer1.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question1.answer1.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question1.answer1.help'|trans|raw }}</span>
+                    </div>
+                    {#
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-2" data-form-change="players" data-form-value="2hg" title="{{ 'front.mtg.quiz.question1.answer2.label'|trans|raw }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question1.answer2.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6 gray-text">{{ 'front.mtg.quiz.question1.answer2.help'|trans|raw }}</span>
+                    </div>
+                    #}
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-2" data-form-change="players" data-form-value="multiffa" title="{{ 'front.mtg.quiz.question1.answer3.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question1.answer3.label'|trans }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6 gray-text">{{ 'front.mtg.quiz.question1.answer3.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-2" data-form-change="players" data-form-value="teamtrio" title="{{ 'front.mtg.quiz.question1.answer4.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question1.answer4.label'|trans }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6 gray-text">{{ 'front.mtg.quiz.question1.answer4.help'|trans|raw }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Number of copies of a card in a deck #}
+        <div class="multistep-form-part-container w-full h-full text-center flex flex-col justify-center items-center flex-1" id="quiz-question-2">
+            <div class="quiz-question-container format-incentive p-8">
+                <h3 class="w-full mb-8">
+                    <span class="blue-text">[2/6]</span> {{ 'front.mtg.quiz.question2.label'|trans }}
+                    <br>
+                    <small class="green-text">{{ 'front.mtg.quiz.question2.text'|trans }}</small>
+                </h3>
+                <div class="quiz-answer-container w-full flex flex-col lg:flex-row items-stretch flex-1 lg:min-h-[15em]">
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-blue btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-3" data-form-change="copies" data-form-value="singleton" title="{{ 'front.mtg.quiz.question2.answer1.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question2.answer1.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question2.answer1.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-3" data-form-change="copies" data-form-value="quadruples" title="{{ 'front.mtg.quiz.question2.answer2.label'|trans|raw }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question2.answer2.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6 gray-text">{{ 'front.mtg.quiz.question2.answer2.help'|trans|raw }}</span>
+                    </div>
+                </div>
+                <div class="w-full flex flex-1 px-8">
+                    <a class="btn btn-star btn-blue btn-big w-full cursor-pointer" data-quiz-target="quiz-question-1" title="{{ 'front.mtg.quiz.previous.text'|trans }}" data-turbo="false">
+                        <span class="top-left"></span>
+                        <span class="top-right"></span>
+                        <span class="title">
+                            {{ 'front.mtg.quiz.previous.text'|trans }}
+                        </span>
+                        <span class="bottom-left"></span>
+                        <span class="bottom-right"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# Deck structure #}
+        <div class="multistep-form-part-container w-full h-full text-center flex flex-col justify-center items-center flex-1" id="quiz-question-3">
+            <div class="quiz-question-container format-incentive p-8">
+                <h3 class="w-full mb-8">
+                    <span class="blue-text">[3/6]</span> {{ 'front.mtg.quiz.question3.label'|trans }}
+                    <br>
+                    <small class="green-text">{{ 'front.mtg.quiz.question3.text'|trans }}</small>
+                </h3>
+                <div class="quiz-answer-container w-full flex flex-col lg:flex-row items-stretch flex-1 lg:min-h-[15em]">
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-blue btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-4" data-form-change="structure" data-form-value="highlander" title="{{ 'front.mtg.quiz.question3.answer1.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question3.answer1.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question3.answer1.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-4" data-form-change="structure" data-form-value="mtg" title="{{ 'front.mtg.quiz.question3.answer2.label'|trans|raw }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question3.answer2.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6 gray-text">{{ 'front.mtg.quiz.question3.answer2.help'|trans|raw }}</span>
+                    </div>
+                </div>
+                <div class="w-full flex flex-1 px-8">
+                    <a class="btn btn-star btn-blue btn-big w-full cursor-pointer" data-quiz-target="quiz-question-2" title="{{ 'front.mtg.quiz.previous.text'|trans }}" data-turbo="false">
+                        <span class="top-left"></span>
+                        <span class="top-right"></span>
+                        <span class="title">
+                            {{ 'front.mtg.quiz.previous.text'|trans }}
+                        </span>
+                        <span class="bottom-left"></span>
+                        <span class="bottom-right"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# Commanders/Command Zones #}
+        <div class="multistep-form-part-container w-full h-full text-center flex flex-col justify-center items-center flex-1" id="quiz-question-4">
+            <div class="quiz-question-container format-incentive p-8">
+                <h3 class="w-full mb-8">
+                    <span class="blue-text">[4/6]</span> {{ 'front.mtg.quiz.question4.label'|trans }}
+                    <br>
+                    <small class="green-text">{{ 'front.mtg.quiz.question4.text'|trans }}</small>
+                </h3>
+                <div class="quiz-answer-container w-full flex flex-col lg:flex-row items-stretch flex-1 lg:min-h-[15em]">
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-big btn-disabled m-2 cursor-pointer" data-quiz-target="quiz-question-5" data-form-change="commander" data-form-value="no" title="{{ 'front.mtg.quiz.question4.answer1.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question4.answer1.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question4.answer1.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[15em]">
+                        <a class="btn btn-star btn-big btn-blue m-2 cursor-pointer" data-quiz-target="quiz-question-5" data-form-change="commander" data-form-value="yes" title="{{ 'front.mtg.quiz.question4.answer2.label'|trans|raw }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question4.answer2.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6 gray-text">{{ 'front.mtg.quiz.question4.answer2.help'|trans|raw }}</span>
+                    </div>
+                </div>
+                <div class="w-full flex flex-1 px-8">
+                    <a class="btn btn-star btn-blue btn-big w-full cursor-pointer" data-quiz-target="quiz-question-3" title="{{ 'front.mtg.quiz.previous.text'|trans }}" data-turbo="false">
+                        <span class="top-left"></span>
+                        <span class="top-right"></span>
+                        <span class="title">
+                            {{ 'front.mtg.quiz.previous.text'|trans }}
+                        </span>
+                        <span class="bottom-left"></span>
+                        <span class="bottom-right"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# Maximum Legality Timeline #}
+        <div class="multistep-form-part-container w-full h-full text-center flex flex-col justify-center items-center flex-1" id="quiz-question-5">
+            <div class="quiz-question-container format-incentive p-8">
+                <h3 class="w-full mb-8">
+                    <span class="blue-text">[5/6]</span> {{ 'front.mtg.quiz.question5.label'|trans }}
+                    <br>
+                    <small class="green-text">{{ 'front.mtg.quiz.question5.text'|trans }}</small>
+                </h3>
+                <div class="quiz-answer-container w-full flex flex-col lg:flex-row items-stretch flex-1 lg:min-h-[15em] flex-wrap">
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-6" data-form-change="timeline" data-form-value="printed" title="{{ 'front.mtg.quiz.question5.answer1.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question5.answer1.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question5.answer1.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-6" data-form-change="timeline" data-form-value="funny" title="{{ 'front.mtg.quiz.question5.answer2.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question5.answer2.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question5.answer2.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-6" data-form-change="timeline" data-form-value="eternal" title="{{ 'front.mtg.quiz.question5.answer3.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question5.answer3.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question5.answer3.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-6" data-form-change="timeline" data-form-value="modern" title="{{ 'front.mtg.quiz.question5.answer4.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question5.answer4.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question5.answer4.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-6" data-form-change="timeline" data-form-value="pioneer" title="{{ 'front.mtg.quiz.question5.answer5.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question5.answer5.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question5.answer5.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-disabled btn-big m-2 cursor-pointer" data-quiz-target="quiz-question-6" data-form-change="timeline" data-form-value="standard" title="{{ 'front.mtg.quiz.question5.answer6.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question5.answer6.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question5.answer6.help'|trans|raw }}</span>
+                    </div>
+                </div>
+                <div class="w-full flex flex-1 px-8">
+                    <a class="btn btn-star btn-blue btn-big w-full cursor-pointer" data-quiz-target="quiz-question-4" title="{{ 'front.mtg.quiz.previous.text'|trans }}" data-turbo="false">
+                        <span class="top-left"></span>
+                        <span class="top-right"></span>
+                        <span class="title">
+                            {{ 'front.mtg.quiz.previous.text'|trans }}
+                        </span>
+                        <span class="bottom-left"></span>
+                        <span class="bottom-right"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# P-value #}
+        <div class="multistep-form-part-container w-full h-full text-center flex flex-col justify-center items-center flex-1" id="quiz-question-6">
+            <div class="quiz-question-container format-incentive p-8">
+                <h3 class="w-full mb-8">
+                    <span class="blue-text">[6/6]</span> {{ 'front.mtg.quiz.question6.label'|trans }}
+                    <br>
+                    <small class="green-text">{{ 'front.mtg.quiz.question6.text'|trans }}</small>
+                </h3>
+                <div class="quiz-answer-container w-full flex flex-col lg:flex-row items-stretch flex-1 lg:min-h-[15em] flex-wrap">
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-big m-2 cursor-pointer" data-quiz-target="calculator" data-form-change="pvalue" data-form-value="standard" title="{{ 'front.mtg.quiz.question6.answer1.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question6.answer1.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question6.answer1.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-big btn-disabled m-2 cursor-pointer" data-quiz-target="calculator" data-form-change="pvalue" data-form-value="lite" title="{{ 'front.mtg.quiz.question6.answer2.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question6.answer2.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question6.answer2.help'|trans|raw }}</span>
+                    </div>
+                    <div class="quiz-answer flex-1 flex flex-col h-full lg:min-h-[12em] lg:basis-[calc(100%/3-4%)]">
+                        <a class="btn btn-star btn-blue btn-big btn-disabled m-2 cursor-pointer" data-quiz-target="calculator" data-form-change="pvalue" data-form-value="power" title="{{ 'front.mtg.quiz.question6.answer3.label'|trans }}" data-turbo="false">
+                            <span class="top-left"></span>
+                            <span class="top-right"></span>
+                            <span class="title">
+                                <span class="icon-ok"></span>
+                                {{ 'front.mtg.quiz.question6.answer3.label'|trans|raw }}
+                            </span>
+                            <span class="bottom-left"></span>
+                            <span class="bottom-right"></span>
+                        </a>
+                        <span class="w-full mt-6">{{ 'front.mtg.quiz.question6.answer3.help'|trans|raw }}</span>
+                    </div>
+                </div>
+                <div class="w-full flex flex-1 px-8">
+                    <a class="btn btn-star btn-blue btn-big w-full cursor-pointer" data-quiz-target="quiz-question-5" title="{{ 'front.mtg.quiz.previous.text'|trans }}" data-turbo="false">
+                        <span class="top-left"></span>
+                        <span class="top-right"></span>
+                        <span class="title">
+                            {{ 'front.mtg.quiz.previous.text'|trans }}
+                        </span>
+                        <span class="bottom-left"></span>
+                        <span class="bottom-right"></span>
+                    </a>
+                </div>
+            </div>
         </div>
 
     </div>

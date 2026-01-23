@@ -109,6 +109,8 @@ admin:
                         label: 'MTG - Importer les Points pour la Liste "{name}"'
                         title: 'MTG - Importer les Points pour la Liste "{name}"'
                 import:
+                    columnsright:
+                        text:
                     label: >
                         📥 Importer/mettre à jour la liste des points (fichier CSV)
                     help: >
@@ -126,7 +128,7 @@ admin:
                         <br>
                         Les points (6 colonnes) sont des entiers ou des nombres décimaux (les valeurs telles que "10" ou "10,5" sont acceptées).
                     help4: >
-                        Le fichier doit contenir exactement 5 lignes en haut, qui seront ignorées, et la sixième ligne DOIT avoir une carte nommée "((unranked))" et définit les points pour les cartes non classées (unranked).
+                        Le fichier doit contenir exactement 5 lignes en haut, qui seront ignorées, puis les lignes de P-Values dans l'ordre (Standard Play, Lite Play, Power Play) et la neuvième ligne DOIT avoir une carte nommée "((unranked))" et définit les points pour les cartes non classées (unranked).
                     help5: >
                         <strong>Ne modifiez pas les colonnes, leur ordre, n'ajoutez pas de colonnes supplémentaires à gauche.</strong>
                     help6: >
@@ -222,7 +224,7 @@ admin:
                         label: 'Légal en points du mode multijoueur Chacun pour soi (spécial)'
                         help: 'Vérifier si la carte est légale en multijoueur chacun pour soi (points spéciaux, comme «En tant que commandant»)'
                     firstline:
-                        label: 'Le premier nom en anglais DOIT toujours être <code class="inline">((unranked))</code> (et définit les points pour les cartes non rankées)'
+                        label: 'Le premier nom en anglais après les P-values DOIT toujours être <code class="inline">((unranked))</code> (et définit les points pour les cartes non rankées)'
                     pointshighlander:
                         label: 'Points en Highlander'
                         help: 'Les points pour cette carte en Highlander.'
@@ -650,7 +652,7 @@ global:
         label: ❌ Supprimer
         title: Supprimer cet élément
     editbutton:
-        label: ✏️ Modifier l'élément
+        label: ✏️ Modifier
         title: Modifier
     email:
         responsibility: AeonShift n'envoie que des emails pour ses fonctionnalités essentielles, et ne communiquera jamais avec vous pour d'autre raison. Si vous recevez un email suspect, ne cliquez sur aucun lien et contactez notre équipe.

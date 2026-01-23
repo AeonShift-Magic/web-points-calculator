@@ -7,18 +7,12 @@ namespace App\Model\MTG\Source\DataTransformer\Scryfall\V1;
 use App\Entity\MTG\MTGSourceCard;
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\MTG\Source\Factory\SourceActivityHistoryFactory;
-use function count;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
-use const DIRECTORY_SEPARATOR;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use function in_array;
-use function is_array;
-use function is_string;
-use const JSON_THROW_ON_ERROR;
 use JsonException;
 use JsonMachine\Items;
 use JsonMachine\JsonDecoder\ExtJsonDecoder;
@@ -31,6 +25,12 @@ use Symfony\Component\Lock\Exception\LockAcquiringException;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\SharedLockInterface;
 use Throwable;
+use function count;
+use function in_array;
+use function is_array;
+use function is_string;
+use const DIRECTORY_SEPARATOR;
+use const JSON_THROW_ON_ERROR;
 
 /**
  * This model transforms Scryfall JSON data from their "Default Cards" set (all versions only in English,
@@ -104,7 +104,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      *
      * @throws Exception|RuntimeException
      *
-     * @return array{processed: int, inserted: int, updated: int, skipped: int, errors: int}
+     * @return array{processed: int, inserted: int, updated: int, skipped: int, prices: int, errors: int}
      */
     public function parseAndImport(?callable $progressCallback = null, string $startedFrom = 'cli'): array
     {
@@ -122,6 +122,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             $insertedCardsCount = 0;
             $updatedCardsCount = 0;
             $skippedCardsCount = 0;
+            $pricesCount = 0;
             $errorCount = 0;
             $startTime = new DateTimeImmutable();
 
@@ -137,6 +138,15 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
             /** @var array<int, array<string, mixed>> $batchSliceOfCards an array containing the current BATCH_SIZE cards to be processed */
             $batchSliceOfCards = [];
+
+            /**
+             * Temporary array: lowest avg price (50/50 USD/EUR) per card name (Scryfall "name").
+             *
+             * @var array<string, array{tix: numeric-string, usd: numeric-string, eur: numeric-string, avg: float}> $lowestAveragePricesByName
+             */
+            $lowestAveragePricesByName = [];
+
+            $this->getLogger()->debug('[PRICES] Start collecting lowest average (50/50 USD/EUR) price per card name from JSON...');
 
             try {
                 // Load all existing cards into memory cache for fast lookups
@@ -155,6 +165,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                             continue;
                         }
 
+                        $this->collectLowestAveragePriceByNameFromRawScryfallCard($lowestAveragePricesByName, $card);
+
                         $transformedCard = $this->mapScryfallSourceCardDataToArray($card, $startTime);
 
                         if ($transformedCard !== null) {
@@ -165,6 +177,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                                 $insertedCardsCount += $result['inserted'];
                                 $updatedCardsCount += $result['updated'];
                                 $skippedCardsCount += $result['skipped'];
+                                $pricesCount += $result['prices'];
+                                $errorCount += $result['errors'];
                                 $batchSliceOfCards = [];
                             }
                         }
@@ -172,7 +186,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                         ++$processedCardsCount;
 
                         if ($progressCallback !== null && $processedCardsCount % 100 === 0) {
-                            $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount);
+                            $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount);
                         }
                     } catch (Throwable $e) {
                         ++$errorCount;
@@ -186,39 +200,60 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                     }
                 }
 
+                $this->getLogger()->debug(sprintf(
+                    '[PRICES] Finished collecting lowest average prices per name. Names: %d',
+                    count($lowestAveragePricesByName)
+                ));
+
                 // Process remaining batch if any left below BATCH_SIZE total
                 if (count($batchSliceOfCards) > 0) {
                     $result = $this->processCardsUpdateBatchSlice($batchSliceOfCards, $startTime);
                     $insertedCardsCount += $result['inserted'];
                     $updatedCardsCount += $result['updated'];
                     $skippedCardsCount += $result['skipped'];
+                    $pricesCount += $result['prices'];
+                    $errorCount += $result['errors'];
                 }
+
+                // Now that all cards are updated/inserted in DB, apply prices in batches.
+                $updatedPricesCount = $this->applyLowestAveragePricesToCards(
+                    $lowestAveragePricesByName,
+                    $progressCallback,
+                    $processedCardsCount,
+                    $insertedCardsCount,
+                    $updatedCardsCount,
+                    $skippedCardsCount,
+                    $pricesCount,
+                    $errorCount
+                );
 
                 // Final callback
                 if ($progressCallback !== null) {
-                    $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount);
+                    $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount);
                 }
 
                 // Finalize source activity history in both logs and DB
                 $this->sourceActivityHistory->setEndedAt(new DateTime());
                 $this->sourceActivityHistory->setSuccessSummary(sprintf(
-                    'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d',
+                    'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d, Prices updated: %d',
                     $processedCardsCount,
                     $insertedCardsCount,
                     $updatedCardsCount,
                     $skippedCardsCount,
-                    $errorCount
+                    $errorCount,
+                    $updatedPricesCount
                 ));
                 $this->entityManager->persist($this->sourceActivityHistory);
                 $this->entityManager->flush();
                 $this->getLogger()->info(
                     sprintf(
-                        'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d',
+                        'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d, Prices updated: %d',
                         $processedCardsCount,
                         $insertedCardsCount,
                         $updatedCardsCount,
                         $skippedCardsCount,
-                        $errorCount
+                        $errorCount,
+                        $updatedPricesCount
                     )
                 );
 
@@ -246,6 +281,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                 'updated'   => $updatedCardsCount,
                 'skipped'   => $skippedCardsCount,
                 'errors'    => $errorCount,
+                'prices'    => $updatedPricesCount,
             ];
         } finally {
             // Release the lock
@@ -254,12 +290,112 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     }
 
     /**
+     * Apply the collected lowest prices to MTGSourceCard entities, in batches of BATCH_SIZE.
+     *
+     * Rules:
+     * - group by card name (entity nameEN)
+     * - only update when avg != 0
+     * - call updateMValueWithNewPrices(eur, usd)
+     *
+     * @param array<string, array{usd: numeric-string, eur: numeric-string, avg: float, tix: numeric-string}> $lowestAveragePricesByName
+     *
+     * @return int Number of card prices updated (i.e., entities for which updateMValueWithNewPrices() was called)
+     */
+    private function applyLowestAveragePricesToCards(
+        array $lowestAveragePricesByName,
+        ?callable $progressCallback = null,
+        int $processedCardsCount = 0,
+        int $insertedCardsCount = 0,
+        int $updatedCardsCount = 0,
+        int $skippedCardsCount = 0,
+        int &$pricesCount = 0,
+        int $errorCount = 0
+    ): int
+    {
+        $this->getLogger()->debug(sprintf(
+            '[PRICES] Starting DB prices update from collected map (names=%d), persisting in batches of %d...',
+            count($lowestAveragePricesByName),
+            self::BATCH_SIZE
+        ));
+
+        if (count($lowestAveragePricesByName) === 0) {
+            $this->getLogger()->debug('[PRICES] No prices found in JSON: skipping DB prices update.');
+
+            return 0;
+        }
+
+        $names = array_keys($lowestAveragePricesByName);
+
+        $persisted = 0;
+        $processed = 0;
+
+        for ($offset = 0, $offsetMax = count($names); $offset < $offsetMax; $offset += self::BATCH_SIZE) {
+            $chunkNames = array_slice($names, $offset, self::BATCH_SIZE);
+
+            /** @var list<MTGSourceCard> $cards */
+            $cards = $this->entityManager
+                ->getRepository(MTGSourceCard::class)
+                ->createQueryBuilder('c')
+                ->where('c.nameEN IN (:names)')
+                ->setParameter('names', $chunkNames)
+                ->getQuery()
+                ->getResult();
+
+            foreach ($cards as $card) {
+                $name = $card->getNameEN();
+                ++$processed;
+
+                if (! isset($lowestAveragePricesByName[$name])) {
+                    continue;
+                }
+
+                $usd = $lowestAveragePricesByName[$name]['usd'];
+                $eur = $lowestAveragePricesByName[$name]['eur'];
+                $avg = $lowestAveragePricesByName[$name]['avg'];
+
+                if ($avg !== 0.0) {
+                    $card->updateMValueWithNewPrices($eur, $usd);
+                    $card->setMTGOPrice($lowestAveragePricesByName[$name]['tix']);
+                    $this->entityManager->persist($card);
+                    ++$persisted;
+
+                    // Keep the same counters the CLI already prints (pricesCount is the one that should move now)
+                    ++$pricesCount;
+
+                    if ($progressCallback !== null && $processed % 100 === 0) {
+                        $progressCallback(
+                            $processedCardsCount,
+                            $insertedCardsCount,
+                            $updatedCardsCount,
+                            $skippedCardsCount,
+                            $pricesCount,
+                            $errorCount
+                        );
+                    }
+
+                }
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+        }
+
+        $this->getLogger()->debug(sprintf(
+            '[PRICES] Finished DB prices update. Processed entities=%d, updated=%d',
+            $processed,
+            $persisted
+        ));
+
+        return $persisted;
+    }
+
+    /**
      * Calculate legality flags based on card properties.
      *
      * @param array<string, mixed> $card A JSON card source converted into a PHP array
      * @param DateTimeImmutable $currentDate The exact date at which the model was instanciated
      *
-     * @return array{isLegalDuelCommander: bool, isLegalCommander: bool, isLegal2HG: bool}
+     * @return array{is_legal_duel_commander: bool, is_legal_commander: bool, is_legal_2hg: bool}
      */
     private function calculateASCardVariantsLegality(array $card, DateTimeImmutable $currentDate): array
     {
@@ -278,9 +414,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         // Special case: Shahrazad is always legal
         if ($nameEN === 'Shahrazad') {
             return [
-                'isLegalDuelCommander'  => true,
-                'isLegalCommander'      => true,
-                'isLegal2HG'            => true,
+                'is_legal_duel_commander' => true,
+                'is_legal_commander'      => true,
+                'is_legal_2hg'            => true,
             ];
         }
 
@@ -342,9 +478,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         }
 
         return [
-            'isLegalDuelCommander'  => $isLegal,
-            'isLegalCommander'      => $isLegal,
-            'isLegal2HG'            => $isLegal,
+            'is_legal_duel_commander' => $isLegal,
+            'is_legal_commander'      => $isLegal,
+            'is_legal_2hg'            => $isLegal,
         ];
     }
 
@@ -381,6 +517,44 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         }
 
         return false;
+    }
+
+    /**
+     * Update the in-memory map of lowest average (50/50 USD/EUR) prices per card name.
+     *
+     * @param array<string, array{usd: numeric-string, eur: numeric-string, avg: float, tix: numeric-string}> $lowestAveragePricesByName
+     * @param array<string, mixed> $card Raw Scryfall card JSON decoded as array
+     */
+    private function collectLowestAveragePriceByNameFromRawScryfallCard(array &$lowestAveragePricesByName, array $card): void
+    {
+        if (! isset($card['name']) || ! is_string($card['name']) || $card['name'] === '') {
+            return;
+        }
+
+        $prices = (isset($card['prices']) && is_array($card['prices'])) ? $card['prices'] : [];
+
+        $usd = $this->normalizePriceToNumericString($prices['usd'] ?? null);
+        $eur = $this->normalizePriceToNumericString($prices['eur'] ?? null);
+        $tix = $this->normalizePriceToNumericString($prices['tix'] ?? null);
+
+        $avg = (((float)$usd) + ((float)$eur)) / 2.0;
+
+        // Do not collect / store any price candidate if the average is 0.
+        if ($avg === 0.0) {
+            return;
+        }
+
+        $name = $card['name'];
+
+        if (! isset($lowestAveragePricesByName[$name])) {
+            $lowestAveragePricesByName[$name] = ['usd' => $usd, 'eur' => $eur, 'avg' => $avg, 'tix' => $tix];
+
+            return;
+        }
+
+        if ($avg < $lowestAveragePricesByName[$name]['avg']) {
+            $lowestAveragePricesByName[$name] = ['usd' => $usd, 'eur' => $eur, 'avg' => $avg, 'tix' => $tix];
+        }
     }
 
     /**
@@ -487,7 +661,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      * @param bool $isLegalMulti
      * @param bool $isCommandZoneEligible
      *
-     * @return array{isLegal2HGSpecial: bool, isLegalDuelCommanderSpecial: bool, isLegalCommanderSpecial: bool} An array of legality flags
+     * @return array{is_legal_2hg_special: bool, is_legal_duel_commander_special: bool, is_legal_commander_special: bool} An array of legality flags
      *
      * @see MTGScryfallDefaultCardsSourceDataTransformerModelV1::canCardBeACommander()
      */
@@ -499,9 +673,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     ): array
     {
         return [
-            'isLegal2HGSpecial'            => $isLegal2HG && $isCommandZoneEligible,
-            'isLegalDuelCommanderSpecial'  => $isLegalDuel && $isCommandZoneEligible,
-            'isLegalCommanderSpecial'      => $isLegalMulti && $isCommandZoneEligible,
+            'is_legal_2hg_special'            => $isLegal2HG && $isCommandZoneEligible,
+            'is_legal_duel_commander_special' => $isLegalDuel && $isCommandZoneEligible,
+            'is_legal_commander_special'      => $isLegalMulti && $isCommandZoneEligible,
         ];
     }
 
@@ -695,8 +869,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             ! isset(
                 $currentSourceCard['first_printed_at'],
                 $existingDBCard['first_printed_at'],
-                $currentSourceCard['is_legal_duel'],
-                $currentSourceCard['is_legal_multi'],
+                $currentSourceCard['is_legal_duel_commander'],
+                $currentSourceCard['is_legal_commander'],
                 $currentSourceCard['is_legal_2hg']
             )
             || ! is_string($currentSourceCard['first_printed_at'])
@@ -706,8 +880,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             return $updateData;
         }
 
-        $cardIsLegalNowhere = ! $currentSourceCard['is_legal_duel'] &&
-            ! $currentSourceCard['is_legal_multi'] &&
+        $cardIsLegalNowhere = ! $currentSourceCard['is_legal_duel_commander'] &&
+            ! $currentSourceCard['is_legal_commander'] &&
             ! $currentSourceCard['is_legal_2hg'];
 
         if (! $cardIsLegalNowhere) {
@@ -726,12 +900,12 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         // Update legalities if new card is legal and existing is not
         $possibleLegalityFields = [
-            'is_legal_duel'          => 'is_legal_duel',
-            'is_legal_multi'         => 'is_legal_multi',
-            'is_legal_2hg'           => 'is_legal_2hg',
-            'is_legal_duel_special'  => 'is_legal_duel_special',
-            'is_legal_multi_special' => 'is_legal_multi_special',
-            'is_legal_2hg_special'   => 'is_legal_2hg_special',
+            'is_legal_duel_commander'         => 'is_legal_duel_commander',
+            'is_legal_commander'              => 'is_legal_commander',
+            'is_legal_2hg'                    => 'is_legal_2hg',
+            'is_legal_duel_commander_special' => 'is_legal_duel_commander_special',
+            'is_legal_commander_special'      => 'is_legal_commander_special',
+            'is_legal_2hg_special'            => 'is_legal_2hg_special',
         ];
 
         // Only update if new legality is higher than existing one, i.e., from 0 to 1 (for now in this model)
@@ -754,11 +928,13 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         // and should only be updated when first_printed_at is updated
         $fieldsToCheck = [
             'name_en',
+            'flavor_of_name_en',
             'mana_value',
             'color_identity',
             'is_command_zone_eligible',
             'is_multiple_command_zone_eligible',
             'multi_cz_type',
+            'max_copies',
             'is_black',
             'is_blue',
             'is_colorless',
@@ -872,6 +1048,10 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             return 'friends_forever';
         }
 
+        if (mb_stripos($oracleText, 'Partner with') !== false) {
+            return 'partner_with';
+        }
+
         if (mb_stripos($oracleText, 'Partner') !== false) {
             return 'partner';
         }
@@ -960,8 +1140,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $result = $this->connection->executeQuery('SELECT * FROM ' . $this->tablePrefix . 'mtgsource_card');
 
         while ($row = $result->fetchAssociative()) {
-            if (isset($row['oracle_id']) && is_string($row['oracle_id'])) {
-                $this->existingCardsCache[$row['oracle_id']] = $row;
+            if (isset($row['name_en']) && is_string($row['name_en'])) {
+                $this->existingCardsCache[$row['name_en']] = $row;
             }
         }
     }
@@ -979,14 +1159,15 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     private function mapScryfallSourceCardDataToArray(array $card, DateTimeImmutable $currentDate): ?array
     {
         // Skip cards without oracle_id, as the reference identifier cannot be trusted otherwise
-        if (! isset($card['oracle_id']) || ! is_string($card['oracle_id'])) {
+        if (! isset($card['oracle_id'], $card['name']) || ! is_string($card['oracle_id']) || ! is_string($card['name'])) {
             return null;
         }
 
         // Extract basic fields
         $oracleId = $card['oracle_id'];
         $scryfallId = $card['id'] ?? null;
-        $name = $card['name'] ?? '';
+        $nameEN = $card['flavor_name'] ?? $card['name'];
+        $flavorOfNameEN = ! empty($card['flavor_name']) ? $card['name'] : '';
         $manaValue = (float)(isset($card['cmc']) && is_numeric($card['cmc']) ? $card['cmc'] : 0.0);
         $colorIdentity = $card['color_identity'] ?? [];
         $scryfallUri = $card['scryfall_uri'] ?? '';
@@ -1012,9 +1193,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         // Calculate special legalities
         $specialLegality = $this->getCardSpecialLegalityFromFlags(
-            $legality['isLegal2HG'],
-            $legality['isLegalDuelCommander'],
-            $legality['isLegalCommander'],
+            $legality['is_legal_2hg'],
+            $legality['is_legal_duel_commander'],
+            $legality['is_legal_commander'],
             $isCommandZoneEligible
         );
 
@@ -1040,31 +1221,42 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             $firstPrintedYear = (int)$currentDate->format('Y');
         }
 
+        // Calculate maximum copies of a card on the fly
+        $maxCopies = $this->getMaxCopiesForCard($card);
+
         return [
             'oracle_id'                         => $oracleId,
             'scryfall_id'                       => $scryfallId,
-            'name_en'                           => $name,
+            'name_en'                           => $nameEN,
+            'flavor_of_name_en'                 => $flavorOfNameEN,
             'mana_value'                        => $manaValue,
             'color_identity'                    => json_encode($colorIdentity, JSON_THROW_ON_ERROR),
             'scryfall_uri'                      => $scryfallUri,
             'first_printed_at'                  => $firstPrintedAt,
             'first_printed_set_code'            => $set,
             'first_printed_year'                => $firstPrintedYear,
-            'is_legal_duel'                     => (int)$legality['isLegalDuelCommander'],
-            'is_legal_multi'                    => (int)$legality['isLegalCommander'],
-            'is_legal_2hg'                      => (int)$legality['isLegal2HG'],
-            'is_legal_duel_special'             => (int)$specialLegality['isLegalDuelCommanderSpecial'],
-            'is_legal_multi_special'            => (int)$specialLegality['isLegalCommanderSpecial'],
-            'is_legal_2hg_special'              => (int)$specialLegality['isLegal2HGSpecial'],
+            'is_legal_duel_commander'           => (int)$legality['is_legal_duel_commander'],
+            'is_legal_commander'                => (int)$legality['is_legal_commander'],
+            'is_legal_2hg'                      => (int)$legality['is_legal_2hg'],
+            'is_legal_duel_commander_special'   => (int)$specialLegality['is_legal_duel_commander_special'],
+            'is_legal_commander_special'        => (int)$specialLegality['is_legal_commander_special'],
+            'is_legal_2hg_special'              => (int)$specialLegality['is_legal_2hg_special'],
             'is_command_zone_eligible'          => (int)$isCommandZoneEligible,
             'is_multiple_command_zone_eligible' => (int)$isMultipleCommandZoneEligibility,
             'multi_cz_type'                     => $multiCZType,
-            'points_duel'                       => 0.0,
-            'points_multi'                      => 0.0,
+            'max_copies'                        => $maxCopies,
+            'points_base_quadruples'            => 0.0,
+            'points_base_singleton'             => 0.0,
+            'points_duel_commander'             => 0.0,
+            'points_duel_commander_special'     => 0.0,
+            'points_commander'                  => 0.0,
+            'points_commander_special'          => 0.0,
             'points_2hg'                        => 0.0,
-            'points_duel_special'               => 0.0,
-            'points_multi_special'              => 0.0,
             'points_2hg_special'                => 0.0,
+            'points_highlander'                 => 0.0,
+            'points_modern'                     => 0.0,
+            'points_pioneer'                    => 0.0,
+            'points_standard'                   => 0.0,
             'is_black'                          => (int)$colorFlags['isBlack'],
             'is_blue'                           => (int)$colorFlags['isBlue'],
             'is_colorless'                      => (int)$colorFlags['isColorless'],
@@ -1072,7 +1264,27 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'is_red'                            => (int)$colorFlags['isRed'],
             'is_white'                          => (int)$colorFlags['isWhite'],
             'maximum_timeline_legality'         => $maximumTimelineLegality,
+            'mtgoprice'                         => 0.0,
+            'mvalue_trend'                      => 0.0,
+            'mvalue_count'                      => 0,
+            'latest_mvalue'                     => 0.0,
         ];
+    }
+
+    /**
+     * Normalize Scryfall price input to a numeric-string with 2 decimals.
+     *
+     * @param mixed $value
+     *
+     * @return numeric-string
+     */
+    private function normalizePriceToNumericString(mixed $value): string
+    {
+        if (! is_string($value) || $value === '' || ! is_numeric($value)) {
+            return '0.00';
+        }
+
+        return bcadd($value, '0', 2);
     }
 
     /**
@@ -1084,28 +1296,18 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      *
      * @throws DateMalformedStringException|Exception|JsonException
      *
-     * @return array{inserted: int, updated: int, skipped: int}
+     * @return array{inserted: int, updated: int, skipped: int, prices: int, errors: int}
      */
     private function processCardsUpdateBatchSlice(array $batchSliceOfCards, DateTimeImmutable $batchStartedAtDate): array
     {
         $insertedCount = 0;
         $updatedCount = 0;
         $skippedCount = 0;
+        $pricesCount = 0;
+        $errorCount = 0;
 
         // @var array<string, mixed> $cardData
         foreach ($batchSliceOfCards as $currentSourceCard) {
-
-            if (empty($currentSourceCard['oracle_id'])) {
-                $this->getLogger()->warning(
-                    '[SKIP] Card with missing oracle_id - skipping',
-                    [
-                        'card_data' => $currentSourceCard,
-                    ]
-                );
-                ++$skippedCount;
-
-                continue;
-            }
 
             if (empty($currentSourceCard['name_en'])) {
                 $this->getLogger()->warning(
@@ -1153,7 +1355,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             $firstPrintedSetCode = $currentSourceCard['first_printed_set_code'];
 
             // Check cache instead of querying database
-            if (! isset($this->existingCardsCache[$oracleId])) {
+            if (! isset($this->existingCardsCache[$cardName])) {
                 // Insert new card with timestamps
                 $currentSourceCard['created_at'] = $batchStartedAtDate->format('Y-m-d H:i:s');
                 $currentSourceCard['updated_at'] = $batchStartedAtDate->format('Y-m-d H:i:s');
@@ -1161,7 +1363,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                 $this->connection->insert($this->tablePrefix . 'mtgsource_card', $currentSourceCard);
 
                 // Add to cache for future lookups
-                $this->existingCardsCache[$oracleId] = $currentSourceCard;
+                $this->existingCardsCache[$cardName] = $currentSourceCard;
 
                 $this->getLogger()->info(
                     sprintf(
@@ -1178,7 +1380,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                 ++$insertedCount;
             } else {
                 // Update existing card
-                $existingDBCard = $this->existingCardsCache[$oracleId];
+                $existingDBCard = $this->existingCardsCache[$cardName];
                 $fieldsToUpdate = $this->getSourceCardFieldsToUpdateAsArray($currentSourceCard, $existingDBCard, $batchStartedAtDate);
 
                 if (count($fieldsToUpdate) > 0) {
@@ -1206,11 +1408,11 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                     $this->connection->update(
                         $this->tablePrefix . 'mtgsource_card',
                         $fieldsToUpdate,
-                        ['oracle_id' => $oracleId]
+                        ['name_en' => $cardName]
                     );
 
                     // Update cache with new data
-                    $this->existingCardsCache[$oracleId] = array_merge($existingDBCard, $fieldsToUpdate);
+                    $this->existingCardsCache[$cardName] = array_merge($existingDBCard, $fieldsToUpdate);
 
                     $this->getLogger()->info(
                         sprintf(
@@ -1244,6 +1446,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'inserted' => $insertedCount,
             'updated'  => $updatedCount,
             'skipped'  => $skippedCount,
+            'prices'   => $pricesCount,
+            'errors'   => $errorCount,
         ];
     }
 
@@ -1266,5 +1470,89 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
             throw new RuntimeException('Failed to reset maximum_timeline_legality: ' . $e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * Get the maximum copies of a card, based on Oracle text.
+     *
+     * Rules:
+     * - Default: 1
+     * - -1 means unlimited
+     * - Basic cards: unlimited
+     * - "any number of cards named": unlimited
+     * - "up to N cards named": N (1–20)
+     *
+     * @param array<string, mixed> $card A JSON card source converted into a PHP array
+     *
+     * @return int
+     */
+    private function getMaxCopiesForCard(array $card): int
+    {
+        if (
+            empty($card['type_line'])
+            || empty($card['oracle_text'])
+            || ! is_string($card['type_line'])
+            || ! is_string($card['oracle_text'])
+        ) {
+            return 1;
+        }
+
+        // 1. Basic cards → unlimited
+        if (mb_stristr($card['type_line'], 'Basic') !== false) {
+            return -1;
+        }
+
+        $oracleText = $card['oracle_text'];
+
+        // 2. Any number of cards named → unlimited
+        if (
+            mb_stristr(
+                $oracleText,
+                'A deck can have any number of cards named'
+            ) !== false
+        ) {
+            return -1;
+        }
+
+        // 3. Up to N cards named (1–20)
+        if (
+            preg_match(
+                '/A deck can have up to (\w+) cards named/iu',
+                $oracleText,
+                $matches
+            )
+        ) {
+            $numberMap = [
+                'one'       => 1,
+                'two'       => 2,
+                'three'     => 3,
+                'four'      => 4,
+                'five'      => 5,
+                'six'       => 6,
+                'seven'     => 7,
+                'eight'     => 8,
+                'nine'      => 9,
+                'ten'       => 10,
+                'eleven'    => 11,
+                'twelve'    => 12,
+                'thirteen'  => 13,
+                'fourteen'  => 14,
+                'fifteen'   => 15,
+                'sixteen'   => 16,
+                'seventeen' => 17,
+                'eighteen'  => 18,
+                'nineteen'  => 19,
+                'twenty'    => 20,
+            ];
+
+            $word = strtolower($matches[1]);
+
+            if (isset($numberMap[$word])) {
+                return $numberMap[$word];
+            }
+        }
+
+        // 4. Default MTG rule
+        return 1;
     }
 }

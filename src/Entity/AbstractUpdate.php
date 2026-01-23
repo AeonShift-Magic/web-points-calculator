@@ -86,9 +86,16 @@ class AbstractUpdate implements UpdateInterface
         return $this->startingAt;
     }
 
+    #[Override]
     public function getTitleEN(): string
     {
         return $this->titleEN;
+    }
+
+    #[Override]
+    public function getTitleForForms(): string
+    {
+        return $this->titleEN . ' (' . $this->startingAt->format('Y-m-d H:i') . ' > ' . $this->endingAt->format('Y-m-d H:i') . ')';
     }
 
     public function isPublic(): bool
