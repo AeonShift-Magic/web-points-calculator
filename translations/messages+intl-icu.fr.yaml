@@ -598,8 +598,9 @@ front:
             label: Accueil
             title: Retour à l'accueil
         mtg:
-            title: 'Magic: The Gathering'
-            label: 'Magic: The Gathering'
+            calculator:
+                title: 'Calculateur Magic: The Gathering™'
+                label: 'Calculateur Magic: The Gathering™'
         resetpassword:
             label: 🛡️ Réinitialiser
             title: Réinitialiser votre mot de passe

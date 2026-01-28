@@ -63,9 +63,9 @@ admin:
                         label: 'Title (EN)'
                         placeholder: 'My new announcement'
                     pointslist:
-                        help: 'Which points list to use'
-                        label: 'Points list to use'
-                        placeholder: 'Please select a points list'
+                        help: 'Which Point List to use'
+                        label: 'Point List to use'
+                        placeholder: 'Please select a Point List'
                     startingat:
                         help: 'When does this update start being effective?'
                         label: 'Start date'
@@ -109,9 +109,9 @@ admin:
                     uploadnbcards:
                         label: 'Number of cards in the initial file'
                     title:
-                        help: 'The title of your points list'
+                        help: 'The title of your Point List'
                         label: 'Title'
-                        placeholder: 'My XX/XX/XXXX points list'
+                        placeholder: 'My XX/XX/XXXX Point List'
                     lastuploadedat:
                         label: 'Last uploaded at'
                     currentnbcards:
@@ -190,11 +190,11 @@ admin:
                             standard:
                                 text: 'Standard P-Value (Power Play)'
                     label: >
-                        📥 Import/update points list (CSV file)
+                        📥 Import/update Point List (CSV file)
                     help: >
-                        Use this form to update points list from the provided CSV template, one card per line. 
+                        Use this form to update Point List from the provided CSV template, one card per line. 
                         <br>
-                        <strong>Warning: this will overwrite all current points list and is irreversible.</strong>
+                        <strong>Warning: this will overwrite all current Point List and is irreversible.</strong>
                     help2: >
                         Note: our tool checks a minimum of the file integrity before overwriting and normalizes cell contents (case, length, numeric data...), but it is <strong>your responsibility</strong> to care about the content and any lost data.
                     help3: >
@@ -216,15 +216,15 @@ admin:
                     help8: >
                         The table below shows an example of expected content in your CSV file:
                     confirm:
-                        label: 'I confirm I have read and understood the instructions above and wish to import/update the points list.'
+                        label: 'I confirm I have read and understood the instructions above and wish to import/update the Point List.'
                     file:
                         button:
-                            label: '📥 Import/update points list (CSV file)'
-                            title: 'Import/update points list (CSV file)'
+                            label: '📥 Import/update Point List (CSV file)'
+                            title: 'Import/update Point List (CSV file)'
                         error: 'Please select a valid CSV file.'
-                        label: '📥 Import/update points list (CSV file)'
+                        label: '📥 Import/update Point List (CSV file)'
                         help: >
-                            Import points list from the provided CSV template, one result per line. Maximum size: 4 MB. <br><strong>Warning: this will overwrite all points list cards and is irreversible.</strong>
+                            Import Point List from the provided CSV template, one result per line. Maximum size: 4 MB. <br><strong>Warning: this will overwrite all Point List cards and is irreversible.</strong>
                         unreadable: 'File is unreadable or empty. Check that it can be opened, is CSV UTF-8 format, commas as separators, Unix line endings.'
                     updated:
                         success: 'Points successfully updated: {number} line(s) processed.'
@@ -240,13 +240,13 @@ admin:
                         notfoundinsources: 'Card unknown in source cards: "{name}"'
                     info: 'Points Import'
                 legends:
-                    info: 'Points list details'
+                    info: 'Point List details'
             pointslistcard:
                 create:
                     pointslist:
-                        label: 'Points list'
-                        help: 'Which points list to associate this card with'
-                        placeholder: 'Please choose a Points List'
+                        label: 'Point List'
+                        help: 'Which Point List to associate this card with'
+                        placeholder: 'Please choose a Point List'
                     nameen:
                         label: 'Name (EN)'
                         help: 'The name of the card, in English. Must be character-precise similar to a card in database.'
@@ -324,7 +324,7 @@ admin:
                         label: 'Base Quadruples points'
                         help: 'The Base points for this card in Quadruples.'
                 legends:
-                    info: 'Points List Card details'
+                    info: 'Point List Card details'
             update:
                 create:
                     titleen:
@@ -332,9 +332,9 @@ admin:
                         label: 'Title (EN)'
                         placeholder: 'My new announcement'
                     pointslist:
-                        help: 'Which Points List to use'
-                        label: 'Points List to use'
-                        placeholder: 'Choose a points list'
+                        help: 'Which Point List to use'
+                        label: 'Point List to use'
+                        placeholder: 'Choose a Point List'
                     start:
                         help: 'When does this update become effective?'
                         label: 'Start date'
@@ -354,7 +354,7 @@ admin:
                         label: 'Rules Template'
                         help: 'The rules template to apply when using this list'
                     relatedpointslist:
-                        label: 'Related Points List(s)'
+                        label: 'Related Point List(s)'
             sourcecard:
                 create:
                     nameen:
@@ -365,6 +365,10 @@ admin:
                         label: 'Flavor Name Of (EN)'
                         help: 'The flavor name / skinned card name of the card ("Minas Morgul" for "Cabal Coffers"...), in English. Must be character-precise.'
                         placeholder: 'Minas Morgul...'
+                    alternatenameen:
+                        label: 'Alternative Name (EN)'
+                        help: 'Alternative names for the card, in English. Must be character-precise.'
+                        placeholder: 'Cabal Coffers...'
                     firstprintsetcode:
                         label: 'First Print Set Code'
                     iscommandzoneeligible:
@@ -459,33 +463,33 @@ admin:
                     title: 'MTG - Card Source Activity History'
             pointslist:
                 index:
-                    label: 'MTG - Points Lists'
-                    title: 'MTG - Points Lists'
+                    label: 'MTG - Point Lists'
+                    title: 'MTG - Point Lists'
                 new:
-                    label: '➕ Create an MTG Points List'
-                    title: 'Create an MTG Points List'
+                    label: '➕ Create an MTG Point List'
+                    title: 'Create an MTG Point List'
                 edit:
-                    label: 'MTG - Edit Points List "{name}"'
-                    title: 'MTG - Edit Points List "{name}"'
+                    label: 'MTG - Edit Point List "{name}"'
+                    title: 'MTG - Edit Point List "{name}"'
                 show:
-                    label: 'MTG - Points List "{name}" details'
-                    title: 'MTG - Points List "{name}" details'
+                    label: 'MTG - Point List "{name}" details'
+                    title: 'MTG - Point List "{name}" details'
                 import:
                     label: 'MTG - Import Points for List "{name}"'
                     title: 'MTG - Import Points for List "{name}"'
             pointslistcard:
                 index:
-                    label: 'MTG - Points List Cards'
-                    title: 'MTG - Points List Cards'
+                    label: 'MTG - Point List Cards'
+                    title: 'MTG - Point List Cards'
                 new:
-                    label: '➕ Create an MTG Points List Card'
-                    title: 'Create an MTG Points List Card'
+                    label: '➕ Create an MTG Point List Card'
+                    title: 'Create an MTG Point List Card'
                 edit:
-                    label: 'MTG - Edit Points List Card "{name}"'
-                    title: 'MTG - Edit Points List Card "{name}"'
+                    label: 'MTG - Edit Point List Card "{name}"'
+                    title: 'MTG - Edit Point List Card "{name}"'
                 show:
-                    title: 'MTG - Details on Points List Card "{name}"'
-                    label: 'MTG - Details on Points List Card "{name}"'
+                    title: 'MTG - Details on Point List Card "{name}"'
+                    label: 'MTG - Details on Point List Card "{name}"'
             update:
                 index:
                     label: 'MTG - Updates'
@@ -658,8 +662,9 @@ front:
             label: Home
             title: Go back home
         mtg:
-            title: 'Magic: The Gathering'
-            label: 'Magic: The Gathering'
+            calculator:
+                title: 'Magic: The Gathering™ Calculator'
+                label: 'Magic: The Gathering™ Calculator'
         resetpassword:
             label: 🛡️ Reset
             title: Reset your password
@@ -697,11 +702,14 @@ front:
                     text: 'Help me choose a format'
                     title: 'Help me choose a format to play AeonShift Magic The Gathering™ via <strong>a quiz</strong>.'
         form:
-            title: 'Configure your format'
+            title: 'Customize your format'
             formtitle: 'You''re playing:'
             decklist1:
                 label: 'Decklist (Player 1 Decklist if using teams)'
-                help: 'Paste your deck here (your Player 1 decklist here if using teams). Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA. <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>'
+                help: >
+                    Paste your deck here (your Player 1 decklist here if using teams). 
+                    Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield's Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
+                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -709,7 +717,10 @@ front:
                     ...
             decklist2:
                 label: 'Decklist - Player 2'
-                help: 'Paste your Player 2 decklist here if using teams. Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA. <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>'
+                help: >
+                    Paste your Player 2 decklist here if using teams. 
+                    Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
+                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -717,7 +728,10 @@ front:
                     ...
             decklist3:
                 label: 'Decklist - Player 3'
-                help: 'Paste your Player 3 decklist here if using teams. Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA. <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>'
+                help: >
+                    Paste your Player 3 decklist here if using teams. 
+                    Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
+                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -729,9 +743,14 @@ front:
                     basepoints:
                         text: 'Base Points (P-Value):'
                         help: 'This is your P-Value, the base points as determined by your format choices in the form above.'
+                    cards:
+                        text: 'Card found in your list:'
+                        help: 'These are all the cards we identified in your list, please double-check this list.'
+                        viewmore: 'View all the cards found'
                     modulations:
                         text: 'Modulations:'
                         help: 'These are possible modulations of your P-Value, based on the format and card choices you made.'
+                        viewmore: 'View your modulation details'
                     cardzones:
                         text: 'Card Zone Totals:'
                         maindeck: 'Main Deck:'
@@ -745,12 +764,14 @@ front:
                     usage:
                         text: 'Points Usage:'
                         help: 'These are the points you used in your deck, sorted from most consuming to least consuming.'
+                        unranked: '(Unranked/unknown card)'
                     budget:
                         text: 'Budget Points:'
                         help: 'These are the points you can spend in your deck, based on your format choices (and Commanders, if any).'
                     remaining:
-                        text: 'Remaining, Unused Points:'
+                        text: 'Remaining, Unspent Points:'
                         help: 'These are the remaning points you have left. Feel free to keep using them if that helps.'
+                        exceeding: 'exceeding: '
                 decklist1:
                     label: 'Results for decklist 1:'
                 decklist2:
@@ -785,6 +806,19 @@ front:
                         label: 'Your deck is <strong>NOT LEGAL</strong> within your format choices.'
                     yes:
                         label: 'Your deck is <strong>LEGAL</strong> within your format choices.'
+                modulations:
+                    firstprint:
+                        text: 'Your most recently edited Commander was first edited prior to the current year.'
+                        help: '+2% of format points per year below current year.'
+                    multiplecommanders:
+                        text: 'You use more than one Commander.'
+                        help: '-20% of format points if using a Background-typed card, -40% of format points otherwise.'
+                    manavalue:
+                        text: 'For each of your Commanders, its mana value is lower than 4.'
+                        help: '"-10% of format P-Value if mana value 3, -20% of format P-Value if mana value 2, -30% of format P-Value if mana value 1 or 0.'
+                    rankedcommander:
+                        text: 'Your Commander is ranked.'
+                        help: 'Your commander is ranked in the current Point List.'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'
@@ -882,8 +916,8 @@ front:
                     label: 'Yes'
                     help: 'You''playing original cards only, but you have a money constraint on decks, and want to use our M-value for that. <em class="comingsoon">Coming Soon!</em>'
             question8:
-                label: 'Points List Update to use:'
-                text: 'Which points list update should be used? Always use the latest one unless checking past decklists.'
+                label: 'Point List Update to use:'
+                text: 'Which Point List update should be used? Always use the latest one unless checking past decklists.'
             previous:
                 text: '⬅️ Previous question'
 global:
@@ -915,7 +949,7 @@ global:
             text: Oops! The page you requested could not be found. Perhaps you should use the menu above to start finding what you were looking for, or simply go back in your history...
             title: 404 - Not Found 😔
         500:
-            text: Oops! The server, like the winner of a points list, has reached its point limits. If this error persists, please contact our team.
+            text: Oops! The server, like a Point List, has reached its point limits. If this error persists, please contact our team.
             title: 500 - Server Error 😔
     id:
         label: ID
@@ -986,8 +1020,8 @@ global:
         label: '📥 Import/update'
         title: '📥 Import/update cards/points (CSV file)'
     export:
-        label: '📤 Export Points List CSV file'
-        title: 'Export this Points List with current values in CSV format to use in a spreadsheet or elsewhere and re-import later.'
+        label: '📤 Export Point List CSV file'
+        title: 'Export this Point List with current values in CSV format to use in a spreadsheet or elsewhere and re-import later.'
     filter:
         label: Filter results
         title: 'Click here to filter results based on your selection'

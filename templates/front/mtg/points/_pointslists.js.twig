@@ -1,2 +1,7 @@
 const updates = {{ get_updates_and_points_lists_as_json()|raw }};
 
+{% if model_files_to_include is defined and model_files_to_include is iterable %}
+{% for model_file_to_include in model_files_to_include %}
+{{ include('front/mtg/points/' ~ model_file_to_include) }}
+{% endfor %}
+{% endif %}

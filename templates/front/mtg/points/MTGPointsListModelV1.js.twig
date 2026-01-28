@@ -1,11 +1,1199 @@
+/***************************************************************************************************
+ * MTGPointsListModelV1 Points Calculator                                                          *
+ ***************************************************************************************************/
+
+// Bind this to a global variable to avoid multiple fetching
+let MTGPointsListModelV1UnrankedListCardPoints = null;
+
+// What to look for, even with partner abilities, at best, among a decklist
+const MTGPOINTSLISTMODELV1_MAX_COMMAND_ZONES = 2;
+
+// Regex to identify a card in a decklist
+const MTGPOINTSLISTMODELV1_DECKLIST_CARD_LINE_REGEX = /^(\d+)[xX]?\s+(.+?)(?=\s+\([A-Za-z0-9]+\)\s+\d|\s*$)/;
+
+const MTGPOINTSLISTMODELV1_MODEL_MESSAGES = {
+    containsinvalidtimelinecards: '{{ 'front.mtg.form.results.errors.containsinvalidtimelinecards.text'|trans|raw }}',
+    copies: '{{ 'front.mtg.form.results.errors.copies.text'|trans|raw }}',
+    exceeding: '{{ 'front.mtg.form.results.breakdown.remaining.exceeding'|trans|raw }}',
+    failedparsing: '{{ 'front.mtg.form.results.errors.failedparsing.text'|trans|raw }}',
+    impossibletofindacommander: '{{ 'front.mtg.form.results.errors.impossibletofindacommander.text'|trans|raw }}',
+    invalidnumberofcards: '{{ 'front.mtg.form.results.errors.invalidnumberofcards.text'|trans|raw }}',
+    invalidsideboard: '{{ 'front.mtg.form.results.errors.invalidsideboard.text'|trans|raw }}',
+    invalidcommandzone: '{{ 'front.mtg.form.results.errors.invalidcommandzone.text'|trans|raw }}',
+    tooexpensive: '{{ 'front.mtg.form.results.errors.tooexpensive.text'|trans|raw }}',
+    toomanypoints: '{{ 'front.mtg.form.results.errors.toomanypoints.text'|trans|raw }}'
+};
+
+/**
+ * Fatal parsing failure
+ */
+function MTGPointsListModelV1FailParsing(deckListStructure) {
+    deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.failedparsing);
+    return deckListStructure;
+}
+
+/**
+ * Parses a decklist string into a structure that can be used by the calculator,
+ * splitting the cards decklist parts.
+ *
+ * @param {string} deckListAsString
+ * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+ * @param {number} pvalue
+ *
+ * @returns {Object}
+ */
+function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoiceValues, pvalue) {
+    const deckListStructure = {
+        total: 0,
+        maindeck: [],
+        commandzone: [],
+        sideboard: [],
+        companions: [],
+        attractions: [],
+        contraptions: [],
+        stickers: [],
+        modulations: [],
+        breakdown: [],
+        errors: [],
+        budget: 0,
+        remaining: 0,
+        mvalue: 0.0,
+        pvalue: pvalue
+    };
+
+    /**
+     * Tests if a decklist has exactly one line with "Commander" (case insensitive).
+     *
+     * @param {string} deckListAsString
+     *
+     * @returns {boolean}
+     */
+    function MTGPointsListModelV1HasExactlyOneCommanderLine(deckListAsString) {
+        const matches = deckListAsString.match(/^Commander$/gim);
+        return matches !== null && matches.length === 1;
+    }
+
+    /**
+     * Tests if a decklist has no blank line.
+     *
+     * @param {string} deckListAsString
+     *
+     * @returns {boolean}
+     */
+    function MTGPointsListModelV1HasNoBlankLines(deckListAsString) {
+        return deckListAsString
+            .trim()
+            .split(/\r?\n/)
+            .every(line => line.trim() !== '');
+    }
+
+    /**
+     * Tests if a decklist has commander lines at the bottom, separated from the rest
+     *
+     * @param deckListAsString
+     * @returns {boolean}
+     */
+    function MTGPointsListModelV1HasNoBlankLinesHasValidCommandZoneBlockAtTheBottom(deckListAsString) {
+        const lines = deckListAsString.replace(/\r\n?/g, '\n').split('\n');
+
+        let i = lines.length - 1;
+
+        // 1. Collect matching command lines from the bottom
+        const commandLines = [];
+        while (i >= 0 && MTGPOINTSLISTMODELV1_DECKLIST_CARD_LINE_REGEX.test(lines[i])) {
+            commandLines.unshift(lines[i]);
+            i--;
+        }
+
+        if (
+            commandLines.length < 1 ||
+            commandLines.length > MTGPOINTSLISTMODELV1_MAX_COMMAND_ZONES
+        ) {
+            return false;
+        }
+
+        // 2. Require one or more empty lines before them
+        let emptyLineCount = 0;
+        while (i >= 0 && lines[i].trim() === '') {
+            emptyLineCount++;
+            i--;
+        }
+
+        if (emptyLineCount === 0) {
+            return false;
+        }
+
+        // 3. Require one or more non-empty lines before that
+        let nonEmptyLineCount = 0;
+        while (i >= 0 && lines[i].trim() !== '') {
+            nonEmptyLineCount++;
+            i--;
+        }
+
+        return nonEmptyLineCount > 0;
+    }
+
+    /**
+     * Tries to move commanders from maindeck to command zones.
+     *
+     * @param direction
+     * @param deckListStructure
+     * @param currentFormatChoiceValues
+     * @param {boolean} expectCommanderLine
+     */
+    function MTGPointsListModelV1MoveCommanders(
+        {
+            direction,
+            deckListStructure,
+            currentFormatChoiceValues,
+            expectCommanderLine = false
+        }
+    ) {
+        const source = deckListStructure.maindeck;
+        const target = deckListStructure.commandzone;
+
+        let movedCount = 0;
+
+        // Decide iteration strategy
+        const getIndex = (i) =>
+            direction === 'top' ? i : source.length - 1 - i;
+
+        for (let i = 0; i < source.length; i++) {
+            if (movedCount >= MTGPOINTSLISTMODELV1_MAX_COMMAND_ZONES) {
+                break;
+            }
+
+            const index = getIndex(i);
+            const currentAnalyzedCard = source[index];
+
+            const currentAnalyzedCardInfo = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
+                currentAnalyzedCard.name,
+                currentFormatChoiceValues
+            );
+
+            if (!currentAnalyzedCardInfo) {
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.impossibletofindacommander);
+                return;
+            }
+
+            if (expectCommanderLine === false) {
+                // 1. First tested card is not commander-eligible → error
+                if (i === 0 && currentAnalyzedCardInfo.czeligible === false) {
+                    deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.impossibletofindacommander);
+                    return;
+                }
+            }
+
+            // 2. Single commander
+            if (currentAnalyzedCardInfo.czeligible === true && currentAnalyzedCardInfo.multiczeligible === false) {
+                target.push(currentAnalyzedCard);
+                source.splice(index, 1);
+                return;
+            }
+
+            // 3. Multi-commander (partners, etc.)
+            if (
+                currentAnalyzedCardInfo.czeligible === true &&
+                currentAnalyzedCardInfo.multiczeligible === true &&
+                i < MTGPOINTSLISTMODELV1_MAX_COMMAND_ZONES
+            ) {
+                target.push(currentAnalyzedCard);
+                source.splice(index, 1);
+                movedCount++;
+                i--; // adjust because we removed one element
+                continue;
+            }
+
+            // Anything else → stop scanning
+            break;
+        }
+
+        // If nothing was moved, it is an invalid commander configuration
+        if (movedCount === 0) {
+            deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.impossibletofindacommander);
+        }
+    }
+
+    /**
+     * Adds modulations. So far, only Commander is concerned!
+     *
+     * @param deckListStructure
+     * @param currentFormatChoiceValues
+     * @param {number} pvalue
+     */
+    function MTGPointsListModelV1AddModulations(deckListStructure, currentFormatChoiceValues, pvalue) {
+        if (
+            !['maindeck', 'companions', 'commandzone', 'sideboard', 'attractions', 'stickers', 'contraptions', 'modulations', 'breakdown'].every(key => Object.hasOwn(deckListStructure, key))
+            || !['players', 'copies', 'structure', 'commander', 'timeline', 'pvalue', 'mvalue', 'update'].every(key => key in currentFormatChoiceValues)
+        ) {
+            MTGPointsListModelV1FailParsing(deckListStructure);
+            return;
+        }
+
+        var foundCardData;
+        if (currentFormatChoiceValues.commander === 'yes') {
+            for (let i = 0; i < deckListStructure.commandzone.length; i++) {
+                const commanderCard = deckListStructure.commandzone[i];
+                foundCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(commanderCard.name, currentFormatChoiceValues);
+
+                if (foundCardData) {
+                    deckListStructure.commandzone[i] = {
+                        ...commanderCard,
+                        ...foundCardData
+                    };
+                }
+            }
+
+            // Then apply modulations from current rules, according to the update points list
+            MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatChoiceValues, pvalue);
+        }
+    }
+
+    /**
+     * Checks decklist cards integrity in zones
+     *
+     * @param deckListStructure
+     * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+     */
+    function MTGPointsListModelV1PreFlightDeckChecks(deckListStructure, currentFormatChoiceValues) {
+        const zones = ['maindeck', 'companions', 'commandzone', 'sideboard', 'attractions', 'stickers', 'contraptions'];
+
+        if (!zones.every(key => Object.hasOwn(deckListStructure, key))) {
+            MTGPointsListModelV1FailParsing(deckListStructure);
+            return;
+        }
+
+        // Helper function to sum copies in a zone
+        function sumCopies(cards) {
+            return cards.reduce((total, card) => total + (card.copies || 0), 0);
+        }
+
+        // Count total copies per zone
+        const maindeckCount = sumCopies(deckListStructure.maindeck);
+        const sideboardCount = sumCopies(deckListStructure.sideboard);
+        const commandzoneCount = sumCopies(deckListStructure.commandzone);
+
+        // Main deck and sideboard validation
+        if (currentFormatChoiceValues.structure === 'highlander') {
+            // Using highlander, maindeck + commandzone should always be 100
+            if (maindeckCount + commandzoneCount !== 100) {
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidnumberofcards + ' (V1I001)');
+            }
+            // With no sideboard
+            if (sideboardCount !== 0) {
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidsideboard + ' (V1I002)');
+            }
+        } else if (currentFormatChoiceValues.structure === 'mtg') {
+            // Using MTG rules, maindeck always should be 60+
+            if (maindeckCount < 60) {
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidnumberofcards + ' (V1I003)');
+            }
+            // Sideboard should be maximum 15
+            if (sideboardCount > 15) {
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidsideboard + ' (V1I003)');
+            }
+        }
+    }
+
+    /**
+     * Checks decklist integrity post cards details gathering.
+     * Those require a full decklist structure and found cards.
+     *
+     * @param deckListStructure
+     * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+     */
+    function MTGPointsListModelV1postFlightDeckChecks(deckListStructure, currentFormatChoiceValues) {
+        if (!['maindeck', 'companions', 'commandzone', 'sideboard', 'attractions', 'stickers', 'contraptions'].every(key => Object.hasOwn(deckListStructure, key))) {
+            MTGPointsListModelV1FailParsing(deckListStructure);
+            return;
+        }
+
+        // Using Commanders: check the minimum and maximum quantities of them, 1-2
+        if (currentFormatChoiceValues.commander === 'yes') {
+            if (deckListStructure.commandzone.length === 0 || deckListStructure.commandzone.length > MTGPOINTSLISTMODELV1_MAX_COMMAND_ZONES) {
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidcommandzone);
+            }
+        }
+
+        // Then, let's check the number of copies of each card, individually
+
+
+        // Attractions, Contraptions and Stickers must be unique, all the time.
+
+
+        // In singleton, there should be only one copy of each card in all zones, execpt for those for which maxcopies is not 1
+
+        // In quadruples, there should be between 1 and 4 copies of each card in all zones, execpt for those for which maxcopies is not 1
+    }
+
+    /**
+     * Strict card line parser: scans a line, regardless of the structure, and returrs a strucure with:
+     * - name: the card name
+     * - copies: the copies of the card in the decklist
+     * - points: the points value of the card in the decklist, calculated later
+     *
+     * @param {string} deckListLine
+     * @param {string} zone
+     * @returns boolean
+     */
+    function MTGPointsListModelV1ParseCardLine(deckListLine, zone) {
+        const match = deckListLine.match(MTGPOINTSLISTMODELV1_DECKLIST_CARD_LINE_REGEX);
+        if (!match) {
+            return false;
+        }
+
+        if (!['maindeck', 'companions', 'commandzone', 'sideboard', 'attractions', 'stickers', 'contraptions'].includes(zone) || !['maindeck', 'companions', 'commandzone', 'sideboard', 'attractions', 'stickers', 'contraptions'].every(key => Object.hasOwn(deckListStructure, key))) {
+            return false;
+        }
+
+        let [, copies, cardName] = match;
+
+        // Normalize split cards
+        cardName = cardName
+            .replace(/\s*\/\/\s*/g, ' // ')
+            .replace(/\s*\/\s*/g, ' // ')
+            .trim();
+
+        deckListStructure[zone].push({
+            copies: Number(copies),
+            name: cardName,
+            points: null
+        });
+        deckListStructure.total += Number(copies);
+
+        return true;
+    }
+
+    if (typeof deckListAsString !== 'string') {
+        MTGPointsListModelV1FailParsing(deckListStructure);
+    }
+
+    const deckListLines = deckListAsString
+        .split('\n')
+        .map(l => l.trim());
+
+    const unrankedCard = MTGPointsListModelV1FindUnrankedCardInUpdatePointsList(currentFormatChoiceValues);
+    if (unrankedCard === null) {
+        deckListStructure.errors.push(MESSAGES.internalerror);
+        return deckListStructure;
+    }
+
+    // Do not push commanders yet, that's done right after that part.
+    let parsingDecklistZone = 'maindeck';
+    for (const deckList1Line of deckListLines) {
+
+        if (typeof deckList1Line === 'string') {
+
+            if (deckList1Line.toLowerCase() === 'commander') {
+                parsingDecklistZone = 'commandzone';
+            }
+
+            if (deckList1Line.toLowerCase() === 'companion') {
+                parsingDecklistZone = 'companions';
+            }
+
+            if ((deckList1Line.toLowerCase() === 'deck' || deckList1Line.toLowerCase().includes('maindeck') || deckList1Line.toLowerCase().includes('mainboard'))) {
+                parsingDecklistZone = 'maindeck';
+            }
+
+            if (deckList1Line.toLowerCase().startsWith('sb:') || deckList1Line.toLowerCase().includes('sideboard')) {
+                if (currentFormatChoiceValues.commander === 'yes') {
+                    parsingDecklistZone = 'commandzone';
+                } else {
+                    parsingDecklistZone = 'sideboard';
+                }
+            }
+
+            if (deckList1Line.toLowerCase().startsWith('attraction') || deckList1Line.toLowerCase().includes('attractions:')) {
+                parsingDecklistZone = 'attractions';
+            }
+
+            if (deckList1Line.toLowerCase().startsWith('contraption') || deckList1Line.toLowerCase().includes('contraptions:')) {
+                parsingDecklistZone = 'contraptions';
+            }
+
+            if (deckList1Line.toLowerCase().startsWith('sticker') || deckList1Line.toLowerCase().includes('stickers:')) {
+                parsingDecklistZone = 'stickers';
+            }
+        }
+
+        MTGPointsListModelV1ParseCardLine(deckList1Line, parsingDecklistZone);
+    }
+
+    // Then do pre-flight decklist integrity checks
+    deckListStructure.budget = pvalue;
+    deckListStructure.remaining = pvalue;
+    MTGPointsListModelV1PreFlightDeckChecks(deckListStructure, currentFormatChoiceValues);
+
+    // Then, if Command Zones are active, move the cards to the appropriate zone
+    if (currentFormatChoiceValues.commander === 'yes' && deckListStructure.commandzone.length === 0) {
+        // The commanders can be either on top or on bottom of the maindeck
+        if (deckListStructure.maindeck.length >= 1) {
+            if (MTGPointsListModelV1HasExactlyOneCommanderLine(deckListAsString) === true) {
+                // If there is a line containing "Commander" (mostly MTGA), start from the top
+                MTGPointsListModelV1MoveCommanders({
+                    direction: 'top',
+                    deckListStructure: deckListStructure,
+                    currentFormatChoiceValues: currentFormatChoiceValues,
+                    expectCommanderLine: true
+                });
+            } else if (MTGPointsListModelV1HasNoBlankLines(deckListAsString) === true) {
+                // Else, if there is no blank line in the list, start from the top of the decklist
+                MTGPointsListModelV1MoveCommanders({
+                    direction: 'top',
+                    deckListStructure: deckListStructure,
+                    currentFormatChoiceValues: currentFormatChoiceValues,
+                    expectCommanderLine: false
+                });
+            } else if (MTGPointsListModelV1HasNoBlankLinesHasValidCommandZoneBlockAtTheBottom(deckListAsString) === true) {
+                // Third case, if there are line breaks at the end of the decklist, before only eligible commanders
+                MTGPointsListModelV1MoveCommanders({
+                    direction: 'bottom',
+                    deckListStructure: deckListStructure,
+                    currentFormatChoiceValues: currentFormatChoiceValues,
+                    expectCommanderLine: false
+                });
+            } else {
+                // Otherwise, it might just be another crap, unnormalized website export
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.impossibletofindacommander);
+            }
+        }
+    }
+
+    // First, we need to determine the modulations
+    MTGPointsListModelV1AddModulations(deckListStructure, currentFormatChoiceValues, pvalue);
+
+    // Then, calculate the points, and M-Value for each card in the decklist and the deck itself.
+    MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceValues, pvalue);
+
+    // Then do post-flight decklist integrity checks
+    MTGPointsListModelV1postFlightDeckChecks(deckListStructure, currentFormatChoiceValues);
+
+    return deckListStructure;
+}
+
 /**
  * Apply MTGPointsListModelV1 Modulations
  *
  * @param deckListStructure
- * @param currentFormatChoiceValues
- *
- * @constructor
+ * @param currentFormatChoiceValues *
+ * @param pvalue
  */
-function ApplyMTGPointsListModelV1Modulations(deckListStructure, currentFormatChoiceValues) {
+function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatChoiceValues, pvalue) {
+    // MODEL_MESSAGES, localized
+    const MODULATIONS_MESSAGES = {
+        firstprinttext: '{{ 'front.mtg.form.results.modulations.firstprint.help'|trans|raw }}',
+        firstprinthelp: '{{ 'front.mtg.form.results.modulations.firstprint.help'|trans|raw }}',
+        manavaluetext: '{{ 'front.mtg.form.results.modulations.manavalue.text'|trans|raw }}',
+        manavaluehelp: '{{ 'front.mtg.form.results.modulations.manavalue.help'|trans|raw }}',
+        multiplecommanderstext: '{{ 'front.mtg.form.results.modulations.multiplecommanders.text'|trans|raw }}',
+        multiplecommandershelp: '{{ 'front.mtg.form.results.modulations.multiplecommanders.help'|trans|raw }}'
+    };
 
+    if (!['maindeck', 'companions', 'commandzone', 'sideboard', 'attractions', 'stickers', 'contraptions', 'modulations', 'breakdown', 'pvalue'].every(key => Object.hasOwn(deckListStructure, key))) {
+        MTGPointsListModelV1FailParsing(deckListStructure);
+        return;
+    }
+
+    if (
+        !updates
+        || updates?.updates === undefined
+        || updates.updates[currentFormatChoiceValues.update] === undefined
+        || updates?.updates?.[currentFormatChoiceValues.update]?.pointsList === undefined
+        || updates?.updates?.[currentFormatChoiceValues.update]?.pointsList?.cards === undefined
+        || !['players', 'copies', 'structure', 'commander', 'timeline', 'pvalue', 'mvalue', 'update'].every(
+            key => key in currentFormatChoiceValues
+        )
+    ) {
+        MTGPointsListModelV1FailParsing(deckListStructure);
+        return;
+    }
+
+    // First, find the most recent first print among commanders and applu bonus to it
+
+    let currentYear = new Date().getFullYear();
+    let mostRecentFirstPrintYear = 0;
+    const cards = updates?.updates?.[currentFormatChoiceValues.update]?.pointsList?.cards;
+    let budgetChanges = [];
+
+    if (!cards || typeof cards !== 'object') {
+        MTGPointsListModelV1FailParsing(deckListStructure);
+        return null;
+    }
+
+    for (let i = 0; i < deckListStructure.commandzone.length; i++) {
+        if (deckListStructure.commandzone[i].name in cards) {
+            const commanderCard = deckListStructure.commandzone[i];
+            let foundCardData = cards[deckListStructure.commandzone[i].name];
+
+            // Dont forget to check for flavour names / skinned cards
+            if ('flavorofnameen' in foundCardData && foundCardData.flavorofnameen !== '' && foundCardData.flavorofnameen !== null && foundCardData.flavorofnameen in cards) {
+                foundCardData = cards[foundCardData.flavorofnameen];
+            }
+
+            deckListStructure.commandzone[i] = {
+                ...foundCardData,
+                ...commanderCard
+            };
+            if ('firstprintedyear' in foundCardData && foundCardData.firstprintedyear > mostRecentFirstPrintYear && foundCardData.firstprintedyear < 10000) {
+                mostRecentFirstPrintYear = foundCardData.firstprintedyear;
+            }
+        }
+    }
+
+    for (let i = 0; i < deckListStructure.commandzone.length; i++) {
+        if (mostRecentFirstPrintYear < currentYear && mostRecentFirstPrintYear) {
+            const budgetChange = Number((0.02 * (currentYear - mostRecentFirstPrintYear) * pvalue).toFixed(0));
+            deckListStructure.modulations.push(`<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[i].name) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[i].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`);
+            budgetChanges.push(budgetChange);
+        }
+    }
+
+    // Second, get the multiple commander malus
+    let partner1type = '';
+    let partner2type = '';
+    for (let i = 0; i < deckListStructure.commandzone.length; i++) {
+        if (deckListStructure.commandzone.length > 1) {
+            if (deckListStructure.commandzone[i].multiczeligible === true && 'multicztype' in deckListStructure.commandzone[i]) {
+                if (i === 0) {
+                    partner1type = deckListStructure.commandzone[i].multicztype;
+                } else if (i === 1) {
+                    partner2type = deckListStructure.commandzone[i].multicztype;
+                }
+            }
+        }
+    }
+
+    if (partner1type !== '' && partner2type !== '' && partner1type === partner2type) {
+        let PARTNER_TYPES = {
+            choose_a_background: 'Choose a Background + Background',
+            doctors_companion: 'The Doctor + Doctor\'s Companion',
+            partner: 'Generic Partner',
+            partner_with: 'Partner With',
+            default: 'Partner Ability'
+        };
+
+        if (partner1type === 'choose_a_background') {
+            const budgetChange = Number((-0.2 * pvalue).toFixed(0));
+            deckListStructure.modulations.push(`<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ PARTNER_TYPES.choose_a_background })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`);
+            budgetChanges.push(budgetChange);
+        } else {
+            const budgetChange = Number((-0.4 * pvalue).toFixed(0));
+            deckListStructure.modulations.push(`<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ (partner1type in PARTNER_TYPES) ? PARTNER_TYPES[partner1type] : PARTNER_TYPES.default })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`);
+            budgetChanges.push(budgetChange);
+        }
+    }
+
+    // Third, get the mana value malus
+    for (let i = 0; i < deckListStructure.commandzone.length; i++) {
+        if ('mv' in deckListStructure.commandzone[i] && deckListStructure.commandzone[i].mv < 4) {
+            let budgetChange = 0;
+            switch (deckListStructure.commandzone[i].mv) {
+                case 3:
+                    budgetChange = Number((-0.1 * pvalue).toFixed(0));
+                    break;
+                case 2:
+                    budgetChange = Number((-0.2 * pvalue).toFixed(0));
+                    break;
+                case 1:
+                case 0:
+                    budgetChange = Number((-0.3 * pvalue).toFixed(0));
+                    break;
+            }
+
+            deckListStructure.modulations.push(`<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[i].name) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[i].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ deckListStructure.commandzone[i].mv })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.manavaluetext })</help>`);
+            budgetChanges.push(budgetChange);
+        }
+    }
+
+    // Finally, apply all budget changes in addition or subtraction
+    budgetChanges.forEach(budgetChange => {
+        deckListStructure.budget += budgetChange;
+        deckListStructure.remaining += budgetChange;
+    });
+}
+
+/**
+ * Apply MTGPointsListModelV1 Points
+ *
+ * @param deckListStructure
+ * @param currentFormatChoiceValues
+ */
+function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceValues) {
+    // MODEL_MESSAGES, localized
+    const POINTS_MESSAGES = {
+        overflow: '{{ 'front.mtg.form.results.errors.toomanypoints.text'|trans|raw }}',
+        unranked: '{{ 'front.mtg.form.results.breakdown.usage.unranked'|trans|raw }}',
+        rankedcommander: '{{ 'front.mtg.form.results.modulations.rankedcommander.help'|trans|raw }}'
+    };
+
+    if (!['maindeck', 'companions', 'commandzone', 'sideboard', 'attractions', 'stickers', 'contraptions', 'modulations', 'breakdown', 'pvalue'].every(key => Object.hasOwn(deckListStructure, key))) {
+        MTGPointsListModelV1FailParsing(deckListStructure);
+        return;
+    }
+
+    if (
+        !updates
+        || updates?.updates === undefined
+        || updates.updates[currentFormatChoiceValues.update] === undefined
+        || updates?.updates?.[currentFormatChoiceValues.update]?.pointsList === undefined
+        || updates?.updates?.[currentFormatChoiceValues.update]?.pointsList?.cards === undefined
+        || !['players', 'copies', 'structure', 'commander', 'timeline', 'pvalue', 'mvalue', 'update'].every(
+            key => key in currentFormatChoiceValues
+        )
+    ) {
+        MTGPointsListModelV1FailParsing(deckListStructure);
+        return;
+    }
+
+    let budgetChanges = [0];
+    const breakdownEntries = [];
+
+    const zones = ['commandzone', 'maindeck', 'sideboard', 'companions', 'attractions', 'stickers', 'contraptions'];
+
+    for (const zone of zones) {
+        for (let i = 0; i < deckListStructure[zone].length; i++) {
+            const card = deckListStructure[zone][i];
+            const cardPoints = MTGPointsListModelV1CalculatePointsForCardInPointsList(
+                card.name,
+                updates?.updates?.[currentFormatChoiceValues.update]?.pointsList,
+                currentFormatChoiceValues,
+                zone
+            );
+
+            let finalCardName = deckListStructure[zone][i].name ? deckListStructure[zone][i].name : ('name' in cardPoints && typeof cardPoints.name !== 'undefined') ? cardPoints.name : '';
+
+            if ('points' in cardPoints && 'copies' in card && cardPoints.points !== 0 && typeof cardPoints.points === 'number') {
+
+                budgetChanges.push(cardPoints.points * card.copies);
+
+                // Commander point changes from the Points List go to budget, not to the points breakdown
+                if (deckListStructure.commandzone.some(card => card.name === finalCardName)) {
+                    deckListStructure.budget -= cardPoints.points * card.copies;
+                    deckListStructure.modulations.push(`
+                        <strong class="unranked">
+                            <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" title="Scryfall Search" target="_blank">
+                                <span class="icon-search"></span> ${ finalCardName }
+                            </a>
+                        </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> points <br><em class="help-text">(${ POINTS_MESSAGES.rankedcommander })</help>`
+                        + (
+                            cardPoints.status === 'unranked'
+                                ? ` <br><em class="help-text">${ POINTS_MESSAGES.unranked }</em>`
+                                : ''
+                        )
+                    );
+                } else {
+                    breakdownEntries.push({
+                        points: cardPoints.points * card.copies,
+                        zone,
+                        html:
+                            `<strong class="unranked">
+                            <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" title="Scryfall Search" target="_blank">
+                                <span class="icon-search"></span> ${ finalCardName }
+                            </a>
+                        </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> points`
+                            + (
+                                cardPoints.status === 'unranked'
+                                    ? ` <br><em class="help-text">${ POINTS_MESSAGES.unranked }</em>`
+                                    : ''
+                            )
+                    });
+                }
+            }
+        }
+    }
+
+    budgetChanges.forEach(budgetChange => {
+        deckListStructure.remaining -= budgetChange;
+    });
+
+    // Sort the breakdown entries by points, descending order
+    breakdownEntries.sort((a, b) => b.points - a.points);
+    for (const entry of breakdownEntries) {
+        deckListStructure.breakdown.push(entry.html);
+    }
+
+    if (deckListStructure.remaining < 0) {
+        deckListStructure.errors.push(POINTS_MESSAGES.overflow);
+    }
+}
+
+
+/**
+ * Get the points for a given update points list card.
+ *
+ * @param {string} cardName
+ * @param {Object} pointsList
+ * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+ * @param {string} deckZone
+ *
+ * @returns {Object}
+ */
+function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, pointsList, currentFormatChoiceValues, deckZone) {
+    let points = '0';
+    const pointsListCard = MTGPointsListModelV1FindCardByNameInUpdatePointsList(cardName, currentFormatChoiceValues);
+
+    // First, let's check context integrity against the current update from the form, or: is this card impossible to find?
+    if (
+        pointsListCard === null
+        || !['players', 'copies', 'structure', 'commander', 'timeline', 'pvalue', 'mvalue', 'update'].every(
+            key => key in currentFormatChoiceValues
+        )
+    ) {
+        return {
+            points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
+            status: 'unranked'
+        };
+    }
+
+    // Second: the card is explicitely unranked in the list
+    if ('name' in pointsListCard && pointsListCard.name === '((unranked))') {
+        return {
+            points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
+            name: pointsListCard.name,
+            status: 'unranked'
+        };
+    }
+
+    // Third: was this card released at the date of the update?
+    if (
+        !updates
+        || updates?.updates === undefined
+        || updates.updates[currentFormatChoiceValues.update] === undefined
+        || updates?.updates?.[currentFormatChoiceValues.update]?.pointsList === undefined
+        || typeof updates?.updates?.[currentFormatChoiceValues.update]?.pointsList.cards[pointsListCard.name ? pointsListCard.name : cardName] !== 'object'
+        || !'firstprintedon' in updates?.updates?.[currentFormatChoiceValues.update]?.pointsList.cards[pointsListCard.name ? pointsListCard.name : cardName]
+        || !'startingAtTimestamp' in updates?.updates?.[currentFormatChoiceValues.update]
+        || !['players', 'copies', 'structure', 'commander', 'timeline', 'pvalue', 'mvalue', 'update'].every(
+            key => key in currentFormatChoiceValues
+        )
+    ) {
+        return {
+            points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
+            name: pointsListCard.name ? pointsListCard.name : cardName,
+            status: 'unranked'
+        };
+    }
+
+    if (updates?.updates?.[currentFormatChoiceValues.update]?.pointsList.cards[pointsListCard.name ? pointsListCard.name : cardName].firstprintedon > updates?.updates?.[currentFormatChoiceValues.update].startingAtTimestamp) {
+        return {
+            points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
+            name: pointsListCard.name ? pointsListCard.name : cardName,
+            status: 'unranked'
+        };
+    }
+
+    // Fourth: regular case for a card that's found in the list and already released
+    if (currentFormatChoiceValues.copies === 'singleton') {
+        // Singleton Points
+
+        // Default
+        if ('pointsBaseSingleton' in pointsListCard && pointsListCard.pointsBaseSingleton !== null && pointsListCard.pointsBaseSingleton !== '') {
+            points = pointsListCard.pointsBaseSingleton;
+        }
+
+        if (currentFormatChoiceValues.commander === 'yes') {
+            // Overload if using Command Zones
+            if (currentFormatChoiceValues.players === 'duel' || currentFormatChoiceValues.players === 'teamtrio') {
+                // Duel Commander P-Values if duel or team trio
+                // Additional check for Command Zones: is the card listed as a Commander?
+                if (deckZone === 'commandzone') {
+                    if ('pointsDuelCommanderSpecial' in pointsListCard && pointsListCard.pointsDuelCommanderSpecial !== null && pointsListCard.pointsDuelCommanderSpecial !== '') {
+                        points = pointsListCard.pointsDuelCommanderSpecial;
+                    }
+                } else {
+                    if ('pointsDuelCommander' in pointsListCard && pointsListCard.pointsDuelCommander !== null && pointsListCard.pointsDuelCommander !== '') {
+                        points = pointsListCard.pointsDuelCommander;
+                    }
+                }
+            } else if (currentFormatChoiceValues.players === 'multiffa') {
+                // Commander / CEDH
+                // Additional check for Command Zones: is the card listed as a Commander?
+                if (deckZone === 'commandzone') {
+                    if ('pointsCommanderSpecial' in pointsListCard && pointsListCard.pointsCommanderSpecial !== null && pointsListCard.pointsCommanderSpecial !== '') {
+                        points = pointsListCard.pointsCommanderSpecial;
+                    }
+                } else {
+                    if ('pointsCommander' in pointsListCard && pointsListCard.pointsCommander !== null && pointsListCard.pointsCommander !== '') {
+                        points = pointsListCard.pointsCommander;
+                    }
+                }
+            }
+        } else if (currentFormatChoiceValues.commander === 'no') {
+            // Singleton without Command Zones
+            if (currentFormatChoiceValues.players === 'duel' || currentFormatChoiceValues.players === 'teamtrio') {
+                // Highlander P-Values if duel or team trio
+                if ('pointsHighlander' in pointsListCard && pointsListCard.pointsHighlander !== null && pointsListCard.pointsHighlander !== '') {
+                    points = pointsListCard.pointsHighlander;
+                }
+            } else if (currentFormatChoiceValues.players === 'multiffa') {
+                // Commander / CEDH values for multiplayer without Command Zones
+                if ('pointsCommander' in pointsListCard && pointsListCard.pointsCommander !== null && pointsListCard.pointsCommander !== '') {
+                    points = pointsListCard.pointsCommander;
+                }
+            }
+        }
+
+    } else if (currentFormatChoiceValues.copies === 'quadruples') {
+        // Quadruples P-Values
+
+        // Default
+        if ('pointsBaseQuadruples' in pointsListCard && pointsListCard.pointsBaseQuadruples !== null && pointsListCard.pointsBaseQuadruples !== '') {
+            points = pointsListCard.pointsBaseQuadruples;
+        }
+
+        // Overload if modern, pioneer, or standard
+        if (currentFormatChoiceValues.timeline === 'modern') {
+            if ('pointsModern' in pointsListCard && pointsListCard.pointsModern !== null && pointsListCard.pointsModern !== '') {
+                points = pointsListCard.pointsModern;
+            }
+        } else if (currentFormatChoiceValues.timeline === 'pioneer') {
+            if ('pointsPioneer' in pointsListCard && pointsListCard.pointsPioneer !== null && pointsListCard.pointsPioneer !== '') {
+                points = pointsListCard.pointsPioneer;
+            }
+        } else if (currentFormatChoiceValues.timeline === 'standard') {
+            if ('pointsStandard' in pointsListCard && pointsListCard.pointsStandard !== null && pointsListCard.pointsStandard !== '') {
+                points = pointsListCard.pointsStandard;
+            }
+        }
+    }
+
+    return {
+        points: Number.parseInt(points),
+        name: pointsListCard.name ? pointsListCard.name : cardName,
+        status: 'found'
+    };
+}
+
+/**
+ * Returns the adequate P-Value, based on format parameters and current form values.
+ *
+ * @param {Object} updates
+ * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+ *
+ * @returns {int}
+ */
+function MTGPointsListModelV1GetPValueFromFormFields(updates, currentFormatChoiceValues) {
+    let pvalue = '0';
+
+    // First, let's check integrity against the current update from the form
+    if (
+        updates
+        && updates?.updates !== undefined
+        && updates.updates[currentFormatChoiceValues.update] !== undefined
+        && updates?.updates?.[currentFormatChoiceValues.update]?.pointsList !== undefined
+        && ['players', 'copies', 'structure', 'commander', 'timeline', 'pvalue', 'mvalue', 'update'].every(
+            key => key in currentFormatChoiceValues
+        )
+    ) {
+        // Now let's change the P-Value according to the chosen format parameters
+        const pvalues = updates.updates[currentFormatChoiceValues.update].pointsList.pvalues;
+
+        if (currentFormatChoiceValues.copies === 'singleton') {
+            // Singleton P-Values
+
+            // Default
+            if (currentFormatChoiceValues.pvalue === 'standard' && 'baseSingletonStandardPlay' in pvalues) {
+                pvalue = pvalues.baseSingletonStandardPlay;
+            } else if (currentFormatChoiceValues.pvalue === 'lite' && 'baseSingletonLitePlay' in pvalues) {
+                pvalue = pvalues.baseSingletonLitePlay;
+            } else if (currentFormatChoiceValues.pvalue === 'power' && 'baseSingletonPowerPlay' in pvalues) {
+                pvalue = pvalues.baseSingletonPowerPlay;
+            }
+
+            if (currentFormatChoiceValues.commander === 'yes') {
+                // Overload if using Command Zones
+                if (currentFormatChoiceValues.players === 'duel' || currentFormatChoiceValues.players === 'teamtrio') {
+                    // Duel Commander P-Values if duel or team trio
+                    if (currentFormatChoiceValues.pvalue === 'standard' && 'duelCommanderStandardPlay' in pvalues) {
+                        pvalue = pvalues.duelCommanderStandardPlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'lite' && 'duelCommanderLitePlay' in pvalues) {
+                        pvalue = pvalues.duelCommanderLitePlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'power' && 'duelCommanderPowerPlay' in pvalues) {
+                        pvalue = pvalues.duelCommanderPowerPlay;
+                    }
+                } else if (currentFormatChoiceValues.players === 'multiffa') {
+                    // Commander / CEDH
+                    if (currentFormatChoiceValues.pvalue === 'standard' && 'commanderStandardPlay' in pvalues) {
+                        pvalue = pvalues.commanderStandardPlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'lite' && 'commanderLitePlay' in pvalues) {
+                        pvalue = pvalues.commanderLitePlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'power' && 'commanderPowerPlay' in pvalues) {
+                        pvalue = pvalues.commanderPowerPlay;
+                    }
+                }
+            } else if (currentFormatChoiceValues.commander === 'no') {
+                // Singleton without Command Zones
+                if (currentFormatChoiceValues.players === 'duel' || currentFormatChoiceValues.players === 'teamtrio') {
+                    // Highlander P-Values if duel or team trio
+                    if (currentFormatChoiceValues.pvalue === 'standard' && 'highlanderStandardPlay' in pvalues) {
+                        pvalue = pvalues.highlanderStandardPlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'lite' && 'highlanderLitePlay' in pvalues) {
+                        pvalue = pvalues.highlanderLitePlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'power' && 'highlanderPowerPlay' in pvalues) {
+                        pvalue = pvalues.highlanderPowerPlay;
+                    }
+                } else if (currentFormatChoiceValues.players === 'multiffa') {
+                    // Commander / CEDH values for multiplayer without Command Zones
+                    if (currentFormatChoiceValues.pvalue === 'standard' && 'commanderStandardPlay' in pvalues) {
+                        pvalue = pvalues.commanderStandardPlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'lite' && 'commanderLitePlay' in pvalues) {
+                        pvalue = pvalues.commanderLitePlay;
+                    } else if (currentFormatChoiceValues.pvalue === 'power' && 'commanderPowerPlay' in pvalues) {
+                        pvalue = pvalues.commanderPowerPlay;
+                    }
+                }
+            }
+
+        } else if (currentFormatChoiceValues.copies === 'quadruples') {
+            // Quadruples P-Values
+
+            // Default
+            if (currentFormatChoiceValues.pvalue === 'standard' && 'baseQuadruplesStandardPlay' in pvalues) {
+                pvalue = pvalues.baseQuadruplesStandardPlay;
+            } else if (currentFormatChoiceValues.pvalue === 'lite' && 'baseQuadruplesLitePlay' in pvalues) {
+                pvalue = pvalues.baseQuadruplesLitePlay;
+            } else if (currentFormatChoiceValues.pvalue === 'power' && 'baseQuadruplesPowerPlay' in pvalues) {
+                pvalue = pvalues.baseQuadruplesPowerPlay;
+            }
+
+            // Overload if modern, pioneer, or standard
+            if (currentFormatChoiceValues.timeline === 'modern') {
+                if (currentFormatChoiceValues.pvalue === 'standard' && 'modernStandardPlay' in pvalues) {
+                    pvalue = pvalues.modernStandardPlay;
+                } else if (currentFormatChoiceValues.pvalue === 'lite' && 'modernLitePlay' in pvalues) {
+                    pvalue = pvalues.modernLitePlay;
+                } else if (currentFormatChoiceValues.pvalue === 'power' && 'modernPowerPlay' in pvalues) {
+                    pvalue = pvalues.modernPowerPlay;
+                }
+            } else if (currentFormatChoiceValues.timeline === 'pioneer') {
+                if (currentFormatChoiceValues.pvalue === 'standard' && 'pioneerStandardPlay' in pvalues) {
+                    pvalue = pvalues.pioneerStandardPlay;
+                } else if (currentFormatChoiceValues.pvalue === 'lite' && 'pioneerLitePlay' in pvalues) {
+                    pvalue = pvalues.pioneerLitePlay;
+                } else if (currentFormatChoiceValues.pvalue === 'power' && 'pioneerPowerPlay' in pvalues) {
+                    pvalue = pvalues.pioneerPowerPlay;
+                }
+            } else if (currentFormatChoiceValues.timeline === 'standard') {
+                if (currentFormatChoiceValues.pvalue === 'standard' && 'standardStandardPlay' in pvalues) {
+                    pvalue = pvalues.standardStandardPlay;
+                } else if (currentFormatChoiceValues.pvalue === 'lite' && 'standardLitePlay' in pvalues) {
+                    pvalue = pvalues.standardLitePlay;
+                } else if (currentFormatChoiceValues.pvalue === 'power' && 'standardPowerPlay' in pvalues) {
+                    pvalue = pvalues.standardPowerPlay;
+                }
+            }
+        }
+    }
+
+    return Number.parseInt(pvalue);
+}
+
+/**
+ * Finds a card by name in the current update points list.
+ * Resolution order:
+ * 1. Exact match
+ * 2. Flavor-of resolution
+ * 3. Alternate-name resolution (reverse lookup)
+ * 4. Unranked fallback
+ *
+ * @param {string} name
+ * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+ * @returns {Object|null}
+ */
+function MTGPointsListModelV1FindCardByNameInUpdatePointsList(name, currentFormatChoiceValues) {
+    if (
+        typeof name !== 'string' ||
+        !name ||
+        !currentFormatChoiceValues ||
+        typeof currentFormatChoiceValues.update === 'undefined'
+    ) {
+        return null;
+    }
+
+    const cards =
+        updates?.updates?.[currentFormatChoiceValues.update]
+            ?.pointsList?.cards;
+
+    if (!cards || typeof cards !== 'object') {
+        return null;
+    }
+
+    const normalizedName = name.normalize('NFC');
+
+    // Exact match
+    if (normalizedName in cards) {
+        const card = cards[normalizedName];
+
+        // Flavor-of resolution
+        if (
+            typeof card.flavorofnameen === 'string' &&
+            card.flavorofnameen in cards
+        ) {
+            const baseCard = cards[card.flavorofnameen];
+
+            return {
+                name: card.flavorofnameen,
+                ...baseCard
+            };
+        }
+
+        return {
+            name: normalizedName,
+            ...card
+        };
+    }
+
+    // Alternate-name reverse lookup
+    for (const cardKey in cards) {
+        if (!Object.hasOwn(cards, cardKey)) continue;
+        if (cards[cardKey].alternatenameen === normalizedName) {
+
+            return {
+                name: cardKey,
+                ...cards[cardKey]
+            };
+        }
+    }
+
+    // Unranked fallback
+    const unrankedCard =
+        MTGPointsListModelV1FindUnrankedCardInUpdatePointsList(
+            currentFormatChoiceValues
+        );
+
+    if (unrankedCard !== null) {
+        return {
+            name: '((unranked))',
+            ...unrankedCard
+        };
+    }
+
+    return null;
+}
+
+/**
+ * Finds a card by name in the current update points list.
+ *
+ * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+ *
+ * @returns {Object|null}
+ */
+function MTGPointsListModelV1FindUnrankedCardInUpdatePointsList(currentFormatChoiceValues) {
+    if (
+        !currentFormatChoiceValues ||
+        typeof currentFormatChoiceValues.update === 'undefined'
+    ) {
+        return null;
+    }
+
+    const unranked =
+        updates?.updates?.[currentFormatChoiceValues.update]
+            ?.pointsList?.unranked;
+
+    if (!unranked || typeof unranked !== 'object') {
+        return null;
+    }
+
+    return unranked;
+}
+
+/**
+ * Returns the points for an unranked card in the chosen update points list and format parameters.
+ *
+ * @param {Object} pointsList
+ * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
+ * @param {string} deckZone
+ * @returns {Number}
+ */
+function MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone) {
+    if (MTGPointsListModelV1UnrankedListCardPoints !== null && typeof MTGPointsListModelV1UnrankedListCardPoints === 'number') {
+        return MTGPointsListModelV1UnrankedListCardPoints;
+    }
+
+    // First, let's check integrity against the current update from the form
+    if (
+        typeof pointsList === 'object'
+        && 'unranked' in pointsList
+        && ['players', 'copies', 'structure', 'commander', 'timeline', 'pvalue', 'mvalue', 'update'].every(
+            key => key in currentFormatChoiceValues
+        )
+    ) {
+        let unranked = pointsList.unranked;
+        if (currentFormatChoiceValues.copies === 'singleton') {
+            // Singleton Points
+
+            // Default
+            if ('pointsBaseSingleton' in unranked && unranked.pointsBaseSingleton !== null && unranked.pointsBaseSingleton !== '') {
+                MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsBaseSingleton;
+            }
+
+            if (currentFormatChoiceValues.commander === 'yes') {
+                // Overload if using Command Zones
+                if (currentFormatChoiceValues.players === 'duel' || currentFormatChoiceValues.players === 'teamtrio') {
+                    // Duel Commander P-Values if duel or team trio
+                    // Additional check for Command Zones: is the card listed as a Commander?
+                    if (deckZone === 'commandzone') {
+                        if ('pointsDuelCommanderSpecial' in unranked && unranked.pointsDuelCommanderSpecial !== null && unranked.pointsDuelCommanderSpecial !== '') {
+                            MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsDuelCommanderSpecial;
+                        }
+                    } else {
+                        if ('pointsDuelCommander' in unranked && unranked.pointsDuelCommander !== null && unranked.pointsDuelCommander !== '') {
+                            MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsDuelCommander;
+                        }
+                    }
+                } else if (currentFormatChoiceValues.players === 'multiffa') {
+                    // Commander / CEDH
+                    // Additional check for Command Zones: is the card listed as a Commander?
+                    if (deckZone === 'commandzone') {
+                        if ('pointsCommanderSpecial' in unranked && unranked.pointsCommanderSpecial !== null && unranked.pointsCommanderSpecial !== '') {
+                            MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsCommanderSpecial;
+                        }
+                    } else {
+                        if ('pointsCommander' in unranked && unranked.pointsCommander !== null && unranked.pointsCommander !== '') {
+                            MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsCommander;
+                        }
+                    }
+                }
+            } else if (currentFormatChoiceValues.commander === 'no') {
+                // Singleton without Command Zones
+                if (currentFormatChoiceValues.players === 'duel' || currentFormatChoiceValues.players === 'teamtrio') {
+                    // Highlander P-Values if duel or team trio
+                    if ('pointsHighlander' in unranked && unranked.pointsHighlander !== null && unranked.pointsHighlander !== '') {
+                        MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsHighlander;
+                    }
+                } else if (currentFormatChoiceValues.players === 'multiffa') {
+                    // Commander / CEDH values for multiplayer without Command Zones
+                    if ('pointsCommander' in unranked && unranked.pointsCommander !== null && unranked.pointsCommander !== '') {
+                        MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsCommander;
+                    }
+                }
+            }
+
+        } else if (currentFormatChoiceValues.copies === 'quadruples') {
+            // Quadruples P-Values
+
+            // Default
+            if ('pointsBaseQuadruples' in unranked && unranked.pointsBaseQuadruples !== null && unranked.pointsBaseQuadruples !== '') {
+                MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsBaseQuadruples;
+            }
+
+            // Overload if modern, pioneer, or standard
+            if (currentFormatChoiceValues.timeline === 'modern') {
+                if ('pointsModern' in unranked && unranked.pointsModern !== null && unranked.pointsModern !== '') {
+                    MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsModern;
+                }
+            } else if (currentFormatChoiceValues.timeline === 'pioneer') {
+                if ('pointsPioneer' in unranked && unranked.pointsPioneer !== null && unranked.pointsPioneer !== '') {
+                    MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsPioneer;
+                }
+            } else if (currentFormatChoiceValues.timeline === 'standard') {
+                if ('pointsStandard' in unranked && unranked.pointsStandard !== null && unranked.pointsStandard !== '') {
+                    MTGPointsListModelV1UnrankedListCardPoints = unranked.pointsStandard;
+                }
+            }
+        }
+    }
+
+    return Number.parseInt(MTGPointsListModelV1UnrankedListCardPoints);
 }

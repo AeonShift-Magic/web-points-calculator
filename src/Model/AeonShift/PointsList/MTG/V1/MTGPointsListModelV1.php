@@ -16,7 +16,6 @@ use App\Repository\MTG\MTGUpdateRepository;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use const JSON_THROW_ON_ERROR;
 use JsonException;
 use Override;
 use Psr\Cache\InvalidArgumentException;
@@ -26,12 +25,14 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_UNICODE;
 
 final class MTGPointsListModelV1 extends AbstractPointsListModel
 {
     public const string CALCULATOR_JS_FILE = 'MTGPointsListModelV1.js.twig';
 
-    public const string CALCULATOR_JS_MODULATIONS_FUNCTION = 'ApplyMTGPointsListModelV1Modulations';
+    public const string CALCULATOR_JS_FUNCTION_PREFIX = 'MTGPointsListModelV1';
 
     public const string LABEL = 'Initial Points List Model';
 
@@ -264,6 +265,8 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                             'endingAtSimplified'   => $count === 1 ? null : $MTGUpdate->getEndingAt()->format('Y-m-d'),
                             'startingAtDate'       => $MTGUpdate->getStartingAt()->format('Y-m-d\TH:i:s\Z'),
                             'endingAtDate'         => $MTGUpdate->getEndingAt()->format('Y-m-d\TH:i:s\Z'),
+                            'startingAtTimestamp'  => $MTGUpdate->getStartingAt()->getTimestamp(),
+                            'endingAtTimestamp'    => $count === 1 ? null : $MTGUpdate->getEndingAt()->getTimestamp(),
                             'pointsList'           => $this->mergeMTGSourceAndPointsListAsArray($this->MTGSourceCardRepository, $MTGUpdate->getPointsList()),
                         ],
                     ];
@@ -271,7 +274,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 ++$count;
             }
 
-            return (string)json_encode($outputArray, JSON_THROW_ON_ERROR);
+            return (string)json_encode($outputArray, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
         });
     }
 
@@ -287,7 +290,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
     {
         $mergedCards = $this->mergeMTGSourceAndPointsList($entityRepository, $pointsList);
 
-        return json_encode($mergedCards, JSON_THROW_ON_ERROR);
+        return json_encode($mergedCards, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -308,6 +311,8 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             if (mb_strtolower($pointListCard->getNameEN()) === self::UNRANKED_CARD_NAME) {
                 $sourceCards[] = new MTGSourceCard()
                     ->setNameEN($pointListCard->getNameEN())
+                    ->setFlavorOfNameEN($pointListCard->getFlavorOfNameEN())
+                    ->setAlternateNameEN($pointListCard->getAlternateNameEN())
                     ->setIsLegalDuelCommander(true)
                     ->setIsLegalDuelCommanderSpecial(true)
                     ->setIsLegal2HG(true)
@@ -358,12 +363,16 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
      * @return array{
      *     cards: array{
      *         string, array{
+     *              flavorofnameen: string|null,
+     *              alternatenameen: string|null,
      *              mv: float,
      *              multicztype: string,
      *              ci: string[],
      *              timeline: string,
      *              mvalue: float,
      *              tix: float,
+     *              firstprintedyear: int,
+     *              firstprintedon: int,
      *              legal2HG: bool,
      *              legal2HGSpecial: bool,
      *              legalDC: bool,
@@ -391,12 +400,16 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
      *         }
      *     },
      *     unranked: array{
+     *          flavorofnameen: null,
+     *          alternatenameen: string|null,
      *          mv: float,
      *          multicztype: string,
      *          ci: string[],
      *          timeline: string,
      *          mvalue: float,
      *          tix: float,
+     *          firstprintedyear: int,
+     *          firstprintedon: int,
      *          legal2HG: bool,
      *          legal2HGSpecial: bool,
      *          legalDC: bool,
@@ -448,7 +461,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
      *         pioneerPowerPlay: float|null,
      *         standardPowerPlay: float|null
      *     },
-     *     calculatorJsFunction: string
+     *     calculatorJsFunctionPrefix: string
      * }
      */
     public function mergeMTGSourceAndPointsListAsArray(SourceItemsRepositoryInterface $entityRepository, PointsListInterface $pointsList): array
@@ -459,10 +472,10 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
         $pointListCards = $pointsList->getItems();
 
         $pointsListCardsArray = [
-            'cards'                => [],
-            'unranked'             => [],
-            'calculatorJsFunction' => self::CALCULATOR_JS_MODULATIONS_FUNCTION,
-            'pvalues'              => [
+            'cards'                      => [],
+            'unranked'                   => [],
+            'calculatorJsFunctionPrefix' => self::CALCULATOR_JS_FUNCTION_PREFIX,
+            'pvalues'                    => [
                 'baseSingletonStandardPlay'  => $pointsList->getPValueBaseSingletonStandardPlay(),
                 'baseQuadruplesStandardPlay' => $pointsList->getPValueBaseQuadruplesStandardPlay(),
                 'duelCommanderStandardPlay'  => $pointsList->getPValueDuelCommanderStandardPlay(),
@@ -493,12 +506,16 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
         // First, transform all source cards into an array for serialization
         foreach ($sourceCards as $sourceCard) {
             $pointsListCardsArray['cards'][$sourceCard->getNameEN()] = [
+                'flavorofnameen'   => $sourceCard->getFlavorOfNameEN(),
+                'alternatenameen'  => $sourceCard->getAlternateNameEN(),
                 'mv'               => $sourceCard->getManaValue(),
                 'multicztype'      => $sourceCard->getMultiCZType(),
                 'ci'               => $sourceCard->getColorIdentity(),
                 'timeline'         => $sourceCard->getMaximumTimelineLegality(),
                 'mvalue'           => $sourceCard->getMValueAsFloat(),
                 'tix'              => $sourceCard->getMTGOPriceAsFloat(),
+                'firstprintedyear' => $sourceCard->getFirstPrintedYear(),
+                'firstprintedon'   => $sourceCard->getFirstPrintedAt()->getTimestamp(),
                 'legal2HG'         => $sourceCard->isLegal2HG(),
                 'legal2HGSpecial'  => $sourceCard->isLegal2HGSpecial(),
                 'legalDC'          => $sourceCard->isLegalDuelCommander(),
@@ -521,12 +538,16 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
 
             if ($pointListCard->getNameEN() === self::UNRANKED_CARD_NAME) {
                 $pointsListCardsArray['unranked'] = [
+                    'flavorofnameen'             => null,
+                    'alternatenameen'            => '',
                     'mv'                         => 0.0,
                     'multicztype'                => '',
                     'ci'                         => [],
                     'timeline'                   => 'printed',
                     'mvalue'                     => 0.0,
                     'tix'                        => 0.0,
+                    'firstprintedyear'           => 10000,
+                    'firstprintedon'             => 10000000000000,
                     'legal2HG'                   => true,
                     'legal2HGSpecial'            => true,
                     'legalDC'                    => true,
@@ -939,5 +960,15 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             'status'  => 'success',
             'message' => $this->translator->trans('admin.form.mtg.pointslist.import.updated.success', ['number' => ($processingLine - 5)]),
         ];
+    }
+
+    /**
+     * Returns a structure that contains all the command zone
+     *
+     * @return void
+     */
+    public function getAllUpdatesAndCommanderPoints()
+    {
+
     }
 }

@@ -237,7 +237,7 @@ summary {
     font-weight: 600;
     justify-content: space-between;
     margin-bottom: 0;
-    padding: 1em 2em;
+    padding: 0.6em 2em;
     position: relative;
     transition: background-color .4s ease-out;
     will-change: background-color;
@@ -261,8 +261,8 @@ summary::after {
     padding: .75rem;
     place-content: center;
     position: absolute;
-    right: 0.4rem;
-    top: 1.2rem;
+    right: 0.25rem;
+    top: 0.65rem;
 }
 
 summary:hover, details[open] summary {
@@ -371,6 +371,9 @@ textarea::placeholder {
 .decklist-cards {
     resize: vertical;
     max-width: 525px;
+    font-size: 1em;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
 }
 
 input[type="file"] {
@@ -467,6 +470,13 @@ select option:checked {
     transition: all 0.1s ease-in-out;
     user-select: none;
     will-change: transition, color, background-color;
+}
+
+@media (max-width: 1024px) {
+    .switch-field label {
+        padding: 8px 5px;
+        font-size: 11px;
+    }
 }
 
 .switch-field input:disabled + label {
@@ -701,6 +711,10 @@ main {
     top: 50%;
     transform: translate(-50%, -50%);
     width: auto;
+}
+
+.video-replacement-image {
+    background: transparent url('../images/eld.jpg') center center / cover no-repeat;
 }
 
 .btn img, .btn svg {
@@ -1489,7 +1503,7 @@ hr::before {
 .tooltip-item {
     cursor: pointer;
     display: inline-block;
-    line-height: 1em;
+    line-height: 1.1em;
     vertical-align: text-bottom;
 }
 
@@ -2059,6 +2073,16 @@ iframe {
     padding: 0.5em 1em;
 }
 
+.cke_editable ol {
+    list-style: inside decimal;
+    padding-left: 1em;
+}
+
+.cke_editable ul {
+    list-style: inside circle;
+    padding-left: 1em;
+}
+
 /*noinspection CssUnusedSymbol*/
 .cke_top, .cke_bottom, .cke_dialog_body {
     background-color: var(--theme-neutral-light-alt-hover) !important;
@@ -2446,6 +2470,83 @@ iframe {
     font-style: italic;
 }
 
+.decklist-modulations li, .decklist-breakdown li, .decklist-card-list li {
+    margin-bottom: 0.3em;
+    line-height: 1.2em;
+}
+
+.decklist-modulations li:last-of-type, .decklist-breakdown li:last-of-type, .decklist-card-list li:last-of-type {
+    margin-bottom: 0;
+}
+
+.decklist-modulations .help-text {
+    margin-top: 0.1em;
+    font-size: 0.8em;
+}
+
+.decklist-modulations a, .decklist-breakdown a, .decklist-card-list a {
+    color: var(--theme-blue-blind) !important;
+}
+
+.decklist-modulations a:hover, .decklist-breakdown a:hover, .decklist-card-list a:hover {
+    color: var(--theme-white) !important;
+}
+
+.decklist-errors li {
+    list-style-position: inside;
+    padding-left: 1em;
+    font-size: 0.8em;
+}
+
+.decklist-modulations, .decklist-breakdown, .decklist-card-list {
+    font-size: 0.85em;
+    line-height: 1.05em;
+}
+
+.decklist-zone:first-of-type {
+    margin-top: 0.25em;
+}
+
+.decklist-zone {
+    margin-top: 0.95em;
+    margin-bottom: 0.25em;
+}
+
+.cards-list {
+    margin: 0;
+    background-color: var(--theme-blue-dark);
+}
+
+@media (max-width: 1024px) {
+    .cards-list {
+        margin-top: 1em;
+    }
+}
+
+.cards-list summary {
+    padding: 0.2em 1.2em;
+    margin: 0;
+    font-size: 0.9em;
+}
+
+.cards-list summary::after {
+    font-size: 1em;
+    padding: 0.35em;
+    top: 0.35em;
+    color: var(--theme-white);
+    right: 0.1em;
+    margin-right: 0.4em;
+}
+
+.cards-list .details-content {
+    background-color: var(--theme-neutral-dark-translucent);
+    padding: 0.4em 0.75em;
+}
+
+.unranked {
+    color: var(--theme-neutral-light);
+}
+
 @keyframes StarBackground {
     10% {
         background-color: rgba(255, 255, 255, 0.1);
@@ -2727,7 +2828,7 @@ iframe {
     }
 
     .spacer-row {
-        height: 6em;
+        height: 4em;
     }
 
     /*noinspection CssUnusedSymbol*/

@@ -36,6 +36,11 @@ abstract class MTGAbstractCard implements MTGCardInterface
     #[Assert\Length(max: 255)]
     #[Assert\NotNull]
     #[ORM\Column(length: 255)]
+    private string $alternateNameEN = '';
+
+    #[Assert\Length(max: 255)]
+    #[Assert\NotNull]
+    #[ORM\Column(length: 255)]
     private string $flavorOfNameEN = '';
 
     #[Assert\NotNull]
@@ -139,6 +144,11 @@ abstract class MTGAbstractCard implements MTGCardInterface
     public function __construct()
     {
         $this->__traitConstruct();
+    }
+
+    public function getAlternateNameEN(): string
+    {
+        return $this->alternateNameEN;
     }
 
     /**
@@ -354,6 +364,13 @@ abstract class MTGAbstractCard implements MTGCardInterface
     public function isLegalDuelCommanderSpecial(): bool
     {
         return $this->isLegalDuelCommanderSpecial;
+    }
+
+    public function setAlternateNameEN(string $alternateNameEN): self
+    {
+        $this->alternateNameEN = $alternateNameEN;
+
+        return $this;
     }
 
     public function setFlavorOfNameEN(string $flavorOfNameEN): self

@@ -7,12 +7,18 @@ namespace App\Model\MTG\Source\DataTransformer\Scryfall\V1;
 use App\Entity\MTG\MTGSourceCard;
 use App\Entity\SourceActivityHistoryInterface;
 use App\Model\MTG\Source\Factory\SourceActivityHistoryFactory;
+use function count;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
+use const DIRECTORY_SEPARATOR;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use function in_array;
+use function is_array;
+use function is_string;
+use const JSON_THROW_ON_ERROR;
 use JsonException;
 use JsonMachine\Items;
 use JsonMachine\JsonDecoder\ExtJsonDecoder;
@@ -25,12 +31,6 @@ use Symfony\Component\Lock\Exception\LockAcquiringException;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\SharedLockInterface;
 use Throwable;
-use function count;
-use function in_array;
-use function is_array;
-use function is_string;
-use const DIRECTORY_SEPARATOR;
-use const JSON_THROW_ON_ERROR;
 
 /**
  * This model transforms Scryfall JSON data from their "Default Cards" set (all versions only in English,
@@ -721,6 +721,90 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     }
 
     /**
+     * Get the maximum copies of a card, based on Oracle text.
+     *
+     * Rules:
+     * - Default: 1
+     * - -1 means unlimited
+     * - Basic cards: unlimited
+     * - "any number of cards named": unlimited
+     * - "up to N cards named": N (1–20)
+     *
+     * @param array<string, mixed> $card A JSON card source converted into a PHP array
+     *
+     * @return int
+     */
+    private function getMaxCopiesForCard(array $card): int
+    {
+        if (
+            empty($card['type_line'])
+            || empty($card['oracle_text'])
+            || ! is_string($card['type_line'])
+            || ! is_string($card['oracle_text'])
+        ) {
+            return 1;
+        }
+
+        // 1. Basic cards → unlimited
+        if (mb_stristr($card['type_line'], 'Basic') !== false) {
+            return -1;
+        }
+
+        $oracleText = $card['oracle_text'];
+
+        // 2. Any number of cards named → unlimited
+        if (
+            mb_stristr(
+                $oracleText,
+                'A deck can have any number of cards named'
+            ) !== false
+        ) {
+            return -1;
+        }
+
+        // 3. Up to N cards named (1–20)
+        if (
+            preg_match(
+                '/A deck can have up to (\w+) cards named/iu',
+                $oracleText,
+                $matches
+            )
+        ) {
+            $numberMap = [
+                'one'       => 1,
+                'two'       => 2,
+                'three'     => 3,
+                'four'      => 4,
+                'five'      => 5,
+                'six'       => 6,
+                'seven'     => 7,
+                'eight'     => 8,
+                'nine'      => 9,
+                'ten'       => 10,
+                'eleven'    => 11,
+                'twelve'    => 12,
+                'thirteen'  => 13,
+                'fourteen'  => 14,
+                'fifteen'   => 15,
+                'sixteen'   => 16,
+                'seventeen' => 17,
+                'eighteen'  => 18,
+                'nineteen'  => 19,
+                'twenty'    => 20,
+            ];
+
+            $word = mb_strtolower($matches[1]);
+
+            if (isset($numberMap[$word])) {
+                return $numberMap[$word];
+            }
+        }
+
+        // 4. Default MTG rule
+        return 1;
+    }
+
+    /**
      * This method determines the maximum timeline legality of a card.
      * The maximum timeline legality is based on the card's legalities in various formats.
      *
@@ -929,6 +1013,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $fieldsToCheck = [
             'name_en',
             'flavor_of_name_en',
+            'alternate_name_en',
             'mana_value',
             'color_identity',
             'is_command_zone_eligible',
@@ -1052,6 +1137,19 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             return 'partner_with';
         }
 
+        // Handle 'Partner—[Type]' dynamically
+        if (preg_match('/Partner\s*—\s*(.+)/ui', $oracleText, $matches)) {
+            $typeText = $matches[1];
+
+            // Remove punctuation
+            $typeText = preg_replace('/[^\p{L}\p{N}\s]+/u', '', $typeText);
+
+            // Replace spaces with underscores and lowercase
+            $slug = mb_strtolower(str_replace(' ', '_', mb_trim($typeText)));
+
+            return 'partner_type_' . $slug;
+        }
+
         if (mb_stripos($oracleText, 'Partner') !== false) {
             return 'partner';
         }
@@ -1166,8 +1264,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         // Extract basic fields
         $oracleId = $card['oracle_id'];
         $scryfallId = $card['id'] ?? null;
-        $nameEN = $card['flavor_name'] ?? $card['name'];
-        $flavorOfNameEN = ! empty($card['flavor_name']) ? $card['name'] : '';
+        $nameEN = ! empty($card['card_faces'][0]['flavor_name']) ? $card['card_faces'][0]['flavor_name'] : $card['flavor_name'] ?? $card['name'];
+        $flavorOfNameEN = ! empty($card['card_faces'][0]['flavor_name']) || ! empty($card['flavor_name']) ? $card['name'] : '';
+        $alternateNameEN = ! empty($card['card_faces'][0]['name']) ? $card['card_faces'][0]['name'] : '';
         $manaValue = (float)(isset($card['cmc']) && is_numeric($card['cmc']) ? $card['cmc'] : 0.0);
         $colorIdentity = $card['color_identity'] ?? [];
         $scryfallUri = $card['scryfall_uri'] ?? '';
@@ -1229,6 +1328,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'scryfall_id'                       => $scryfallId,
             'name_en'                           => $nameEN,
             'flavor_of_name_en'                 => $flavorOfNameEN,
+            'alternate_name_en'                 => $alternateNameEN,
             'mana_value'                        => $manaValue,
             'color_identity'                    => json_encode($colorIdentity, JSON_THROW_ON_ERROR),
             'scryfall_uri'                      => $scryfallUri,
@@ -1470,89 +1570,5 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
             throw new RuntimeException('Failed to reset maximum_timeline_legality: ' . $e->getMessage(), 0, $e);
         }
-    }
-
-    /**
-     * Get the maximum copies of a card, based on Oracle text.
-     *
-     * Rules:
-     * - Default: 1
-     * - -1 means unlimited
-     * - Basic cards: unlimited
-     * - "any number of cards named": unlimited
-     * - "up to N cards named": N (1–20)
-     *
-     * @param array<string, mixed> $card A JSON card source converted into a PHP array
-     *
-     * @return int
-     */
-    private function getMaxCopiesForCard(array $card): int
-    {
-        if (
-            empty($card['type_line'])
-            || empty($card['oracle_text'])
-            || ! is_string($card['type_line'])
-            || ! is_string($card['oracle_text'])
-        ) {
-            return 1;
-        }
-
-        // 1. Basic cards → unlimited
-        if (mb_stristr($card['type_line'], 'Basic') !== false) {
-            return -1;
-        }
-
-        $oracleText = $card['oracle_text'];
-
-        // 2. Any number of cards named → unlimited
-        if (
-            mb_stristr(
-                $oracleText,
-                'A deck can have any number of cards named'
-            ) !== false
-        ) {
-            return -1;
-        }
-
-        // 3. Up to N cards named (1–20)
-        if (
-            preg_match(
-                '/A deck can have up to (\w+) cards named/iu',
-                $oracleText,
-                $matches
-            )
-        ) {
-            $numberMap = [
-                'one'       => 1,
-                'two'       => 2,
-                'three'     => 3,
-                'four'      => 4,
-                'five'      => 5,
-                'six'       => 6,
-                'seven'     => 7,
-                'eight'     => 8,
-                'nine'      => 9,
-                'ten'       => 10,
-                'eleven'    => 11,
-                'twelve'    => 12,
-                'thirteen'  => 13,
-                'fourteen'  => 14,
-                'fifteen'   => 15,
-                'sixteen'   => 16,
-                'seventeen' => 17,
-                'eighteen'  => 18,
-                'nineteen'  => 19,
-                'twenty'    => 20,
-            ];
-
-            $word = strtolower($matches[1]);
-
-            if (isset($numberMap[$word])) {
-                return $numberMap[$word];
-            }
-        }
-
-        // 4. Default MTG rule
-        return 1;
     }
 }
