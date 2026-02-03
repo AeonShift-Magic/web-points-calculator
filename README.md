@@ -270,7 +270,6 @@ Then, run the following SQL query to insert your admin user into the `as_user` t
 INSERT INTO as_user (
     email, 
     password, 
-    is_verified, 
     registered_at, 
     roles, 
     username, 
@@ -280,7 +279,6 @@ INSERT INTO as_user (
 VALUES (
     'admin@example.com',
     'YOUR_HASHED_PASSWORD',
-    1,
     NOW(),
     '["ROLE_ADMIN"]',
     'admin',
