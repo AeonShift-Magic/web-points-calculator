@@ -5,15 +5,53 @@
     <div class="flex flex-col lg:flex-row w-full justify-around items-start mt-4" id="decklist-container-1">
         <div class="w-full lg:w-1/3 py-4">
             <div class="mb-8 lg:pr-4 flex flex-col items-center justify center">
-                <label for="decklist1 ">{{ 'front.mtg.form.decklist1.label'|trans }}</label>
-                <textarea class="decklist-cards" rows="30" cols="30" id="decklist1" placeholder="{{ 'front.mtg.form.decklist1.placeholder'|trans|raw }}"></textarea>
+                <label for="decklist1">{{ 'front.mtg.form.decklist1.label'|trans }}</label>
+                <span id="decklist1-fixed" class="text-sm green-text hidden">
+                    <span class="icon-info"></span> {{ 'front.mtg.form.fixeddecklist'|trans|raw }}
+                </span>
+                <form id="decklist1-add-card" class="w-full card-add-form">
+                    <fieldset class="flex flex-col mb-2">
+                        <legend class="uppercase text-sm">Add a card</legend>
+                        <div class="w-full flex flex-row items-end mb-2">
+                            <div class="inline-form-item flex-grow min-w-0">
+                                <label for="decklist1-name">{{ 'mtg.name.label'|trans }}</label>
+                                <input type="text" name="decklist1-name" id="decklist1-name" value="" placeholder="{{ 'mtg.name.placeholder'|trans }}"/>
+                            </div>
+                        </div>
+                        <div class="w-full flex flex-row items-center gap-2">
+                            <div class="inline-form-item flex grow min-w-0">
+                                <label for="decklist1-cardzone">{{ 'mtg.cardzones.choose'|trans }}</label>
+                                <select required="required" name="decklist1-cardzone" id="decklist1-cardzone" class="w-full">
+                                    <option value="commandzone">{{ 'mtg.cardzones.commandzone'|trans }}</option>
+                                    <option value="maindeck">{{ 'mtg.cardzones.maindeck'|trans }}</option>
+                                    <option value="sideboard">{{ 'mtg.cardzones.sideboard'|trans }}</option>
+                                    <option value="companion">{{ 'mtg.cardzones.companion'|trans }}</option>
+                                    <option value="attractions">{{ 'mtg.cardzones.attractions'|trans }}</option>
+                                    <option value="contraptions">{{ 'mtg.cardzones.contraptions'|trans }}</option>
+                                    <option value="stickers">{{ 'mtg.cardzones.stickers'|trans }}</option>
+                                </select>
+                            </div>
+                            <div class="inline-form-item shrink-0 min-w-24">
+                                <label for="decklist1-copies">{{ 'mtg.copies.text'|trans }}</label>
+                                <input type="number" step="1" min="0" max="100" required="required" name="decklist1-copies" id="decklist1-copies" value="1" class="w-full"/>
+                            </div>
+                            <div class="inline-form-item shrink-0 min-w-32">
+                                <button type="submit" class="btn btn-green w-full" id="decklist1-add">
+                                    {{ 'mtg.add.label'|trans }}
+                                    <span class="icon-plus"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <textarea class="decklist-cards" rows="30" cols="30" id="decklist1" placeholder="{{ 'front.mtg.form.decklist1.placeholder'|trans|raw }}" data-update-format></textarea>
                 <div class="mt-2 help-text text-justify">{{ 'front.mtg.form.decklist1.help'|trans|raw }}</div>
             </div>
         </div>
         <div class="w-full lg:w-2/3 py-4">
             <div class="lg:pl-4">
                 <div class="text-3xl inline-block w-full mb-4 blue-text uppercase" id="total1">
-                    <span class="icon-bullseye mr-2"></span>{{ 'front.mtg.form.results.decklist1.label'|trans }}</div>
+                    <span class="icon-chart-bar mr-2"></span>{{ 'front.mtg.form.results.decklist1.label'|trans }}</div>
                 <div class="text-xl w-full mt-3 green-text hidden" id="decklist1-legal">
                     <span class="icon-ok m-0"></span> {{ 'front.mtg.form.results.legal.yes.label'|trans|raw }}
                 </div>
@@ -129,6 +167,33 @@
                             </span>
                             <span class="tooltip-content clearfix">
                                 <span class="tooltip-text">
+                                    {{ 'front.mtg.form.results.breakdown.mvalue.help'|trans|raw }}
+                                </span>
+                            </span>
+                        </span>
+                        {{ 'front.mtg.form.results.breakdown.mvalue.text'|trans|raw }}
+                    </span>
+                    <div class="lg:w-1/2">
+                        <span class="inline-block blue-text font-bold mb-2" id="decklist1-mvalue">{{ 'global.none.label'|trans }}</span>
+                        <details class="w-full mb-2 mt-2 lg:mt-0 blue-text cards-list">
+                            <summary>&darr; {{ 'front.mtg.form.results.breakdown.mvalue.viewmore'|trans }}</summary>
+                            <div class="w-full border-t border-t-gray-500 border-t-solid details-content">
+                                <ul class="inline-block decklist-card-list" id="decklist1-mvalues">
+                                    <li>{{ 'global.none.label'|trans }}</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="dark-alt-background my-2 text-lg w-full inline-flex flex-row flex-wrap justify-between rounded-lg p-3">
+                    <span class="inline-block w-full lg:w-1/2">
+                        <span class="tooltip">
+                            <span class="tooltip-item">
+                                <span class="icon-info mr-2"></span>
+                            </span>
+                            <span class="tooltip-content clearfix">
+                                <span class="tooltip-text">
                                     {{ 'front.mtg.form.results.breakdown.cards.help'|trans|raw }}
                                 </span>
                             </span>
@@ -155,14 +220,52 @@
         <div class="w-full lg:w-1/3 py-4">
             <div class="mb-8 lg:pr-4 flex flex-col items-center justify center">
                 <label for="decklist2">{{ 'front.mtg.form.decklist2.label'|trans }}</label>
-                <textarea class="decklist-cards" rows="30" cols="30" id="decklist2" placeholder="{{ 'front.mtg.form.decklist2.placeholder'|trans|raw }}"></textarea>
+                <span id="decklist2-fixed" class="text-sm green-text hidden">
+                    <span class="icon-info"></span> {{ 'front.mtg.form.fixeddecklist'|trans|raw }}
+                </span>
+                <form id="decklist2-add-card" class="w-full card-add-form">
+                    <fieldset class="flex flex-col mb-2">
+                        <legend class="uppercase text-sm">Add a card</legend>
+                        <div class="w-full flex flex-row items-end mb-2">
+                            <div class="inline-form-item flex-grow min-w-0">
+                                <label for="decklist2-name">{{ 'mtg.name.label'|trans }}</label>
+                                <input type="text" name="decklist2-name" id="decklist2-name" value="" placeholder="{{ 'mtg.name.placeholder'|trans }}"/>
+                            </div>
+                        </div>
+                        <div class="w-full flex flex-row items-center gap-2">
+                            <div class="inline-form-item flex grow min-w-0">
+                                <label for="decklist2-cardzone">{{ 'mtg.cardzones.choose'|trans }}</label>
+                                <select required="required" name="decklist2-cardzone" id="decklist2-cardzone" class="w-full">
+                                    <option value="commandzone">{{ 'mtg.cardzones.commandzone'|trans }}</option>
+                                    <option value="maindeck">{{ 'mtg.cardzones.maindeck'|trans }}</option>
+                                    <option value="sideboard">{{ 'mtg.cardzones.sideboard'|trans }}</option>
+                                    <option value="companion">{{ 'mtg.cardzones.companion'|trans }}</option>
+                                    <option value="attractions">{{ 'mtg.cardzones.attractions'|trans }}</option>
+                                    <option value="contraptions">{{ 'mtg.cardzones.contraptions'|trans }}</option>
+                                    <option value="stickers">{{ 'mtg.cardzones.stickers'|trans }}</option>
+                                </select>
+                            </div>
+                            <div class="inline-form-item shrink-0 min-w-24">
+                                <label for="decklist2-copies">{{ 'mtg.copies.text'|trans }}</label>
+                                <input type="number" step="1" min="0" max="100" required="required" name="decklist2-copies" id="decklist2-copies" value="1" class="w-full"/>
+                            </div>
+                            <div class="inline-form-item shrink-0 min-w-32">
+                                <button type="submit" class="btn btn-green w-full" id="decklist2-add">
+                                    {{ 'mtg.add.label'|trans }}
+                                    <span class="icon-plus"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <textarea class="decklist-cards" rows="30" cols="30" id="decklist2" placeholder="{{ 'front.mtg.form.decklist2.placeholder'|trans|raw }}" data-update-format></textarea>
                 <div class="mt-2 help-text text-justify">{{ 'front.mtg.form.decklist2.help'|trans|raw }}</div>
             </div>
         </div>
         <div class="w-full lg:w-2/3 py-4">
             <div class="lg:pl-4">
                 <div class="text-3xl inline-block w-full mb-4 blue-text uppercase" id="total2">
-                    <span class="icon-bullseye mr-2"></span>{{ 'front.mtg.form.results.decklist2.label'|trans }}</div>
+                    <span class="icon-chart-bar mr-2"></span>{{ 'front.mtg.form.results.decklist2.label'|trans }}</div>
                 <div class="text-xl w-full mt-3 green-text hidden" id="decklist2-legal">
                     <span class="icon-ok m-0"></span> {{ 'front.mtg.form.results.legal.yes.label'|trans|raw }}
                 </div>
@@ -278,6 +381,33 @@
                             </span>
                             <span class="tooltip-content clearfix">
                                 <span class="tooltip-text">
+                                    {{ 'front.mtg.form.results.breakdown.mvalue.help'|trans|raw }}
+                                </span>
+                            </span>
+                        </span>
+                        {{ 'front.mtg.form.results.breakdown.mvalue.text'|trans|raw }}
+                    </span>
+                    <div class="lg:w-1/2">
+                        <span class="inline-block blue-text font-bold mb-2" id="decklist2-mvalue">{{ 'global.none.label'|trans }}</span>
+                        <details class="w-full mb-2 mt-2 lg:mt-0 blue-text cards-list">
+                            <summary>&darr; {{ 'front.mtg.form.results.breakdown.mvalue.viewmore'|trans }}</summary>
+                            <div class="w-full border-t border-t-gray-500 border-t-solid details-content">
+                                <ul class="inline-block decklist-card-list" id="decklist2-mvalues">
+                                    <li>{{ 'global.none.label'|trans }}</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="dark-alt-background my-2 text-lg w-full inline-flex flex-row flex-wrap justify-between rounded-lg p-3">
+                    <span class="inline-block w-full lg:w-1/2">
+                        <span class="tooltip">
+                            <span class="tooltip-item">
+                                <span class="icon-info mr-2"></span>
+                            </span>
+                            <span class="tooltip-content clearfix">
+                                <span class="tooltip-text">
                                     {{ 'front.mtg.form.results.breakdown.cards.help'|trans|raw }}
                                 </span>
                             </span>
@@ -304,14 +434,52 @@
         <div class="w-full lg:w-1/3 py-4">
             <div class="mb-8 lg:pr-4 flex flex-col items-center justify center">
                 <label for="decklist3">{{ 'front.mtg.form.decklist3.label'|trans }}</label>
-                <textarea class="decklist-cards" rows="30" cols="30" id="decklist3" placeholder="{{ 'front.mtg.form.decklist3.placeholder'|trans|raw }}"></textarea>
+                <span id="decklist1-fixed" class="text-sm green-text hidden">
+                    <span class="icon-info"></span> {{ 'front.mtg.form.fixeddecklist'|trans|raw }}
+                </span>
+                <form id="decklist3-add-card" class="w-full card-add-form">
+                    <fieldset class="flex flex-col mb-2">
+                        <legend class="uppercase text-sm">Add a card</legend>
+                        <div class="w-full flex flex-row items-end mb-2">
+                            <div class="inline-form-item flex-grow min-w-0">
+                                <label for="decklist3-name">{{ 'mtg.name.label'|trans }}</label>
+                                <input type="text" name="decklist3-name" id="decklist3-name" value="" placeholder="{{ 'mtg.name.placeholder'|trans }}"/>
+                            </div>
+                        </div>
+                        <div class="w-full flex flex-row items-center gap-2">
+                            <div class="inline-form-item flex grow min-w-0">
+                                <label for="decklist3-cardzone">{{ 'mtg.cardzones.choose'|trans }}</label>
+                                <select required="required" name="decklist3-cardzone" id="decklist3-cardzone" class="w-full">
+                                    <option value="commandzone">{{ 'mtg.cardzones.commandzone'|trans }}</option>
+                                    <option value="maindeck">{{ 'mtg.cardzones.maindeck'|trans }}</option>
+                                    <option value="sideboard">{{ 'mtg.cardzones.sideboard'|trans }}</option>
+                                    <option value="companion">{{ 'mtg.cardzones.companion'|trans }}</option>
+                                    <option value="attractions">{{ 'mtg.cardzones.attractions'|trans }}</option>
+                                    <option value="contraptions">{{ 'mtg.cardzones.contraptions'|trans }}</option>
+                                    <option value="stickers">{{ 'mtg.cardzones.stickers'|trans }}</option>
+                                </select>
+                            </div>
+                            <div class="inline-form-item shrink-0 min-w-24">
+                                <label for="decklist3-copies">{{ 'mtg.copies.text'|trans }}</label>
+                                <input type="number" step="1" min="0" max="100" required="required" name="decklist3-copies" id="decklist3-copies" value="1" class="w-full"/>
+                            </div>
+                            <div class="inline-form-item shrink-0 min-w-32">
+                                <button type="submit" class="btn btn-green w-full" id="decklist3-add">
+                                    {{ 'mtg.add.label'|trans }}
+                                    <span class="icon-plus"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <textarea class="decklist-cards" rows="30" cols="30" id="decklist3" placeholder="{{ 'front.mtg.form.decklist3.placeholder'|trans|raw }}" data-update-format></textarea>
                 <div class="mt-2 help-text text-justify">{{ 'front.mtg.form.decklist3.help'|trans|raw }}</div>
             </div>
         </div>
         <div class="w-full lg:w-2/3 py-4">
             <div class="lg:pl-4">
                 <div class="text-3xl inline-block w-full mb-4 blue-text uppercase" id="total3">
-                    <span class="icon-bullseye mr-2"></span>{{ 'front.mtg.form.results.decklist3.label'|trans }}</div>
+                    <span class="icon-chart-bar mr-2"></span>{{ 'front.mtg.form.results.decklist3.label'|trans }}</div>
                 <div class="text-xl w-full mt-3 green-text hidden" id="decklist3-legal">
                     <span class="icon-ok m-0"></span> {{ 'front.mtg.form.results.legal.yes.label'|trans|raw }}
                 </div>
@@ -417,6 +585,33 @@
                     <ul class="blue-text inline-block w-full lg:w-1/2 mt-2 lg:mt-0 decklist-breakdown" id="decklist3-points-usage">
                         <li>{{ 'global.none.label'|trans }}</li>
                     </ul>
+                </div>
+
+                <div class="dark-alt-background my-2 text-lg w-full inline-flex flex-row flex-wrap justify-between rounded-lg p-3">
+                    <span class="inline-block w-full lg:w-1/2">
+                        <span class="tooltip">
+                            <span class="tooltip-item">
+                                <span class="icon-info mr-2"></span>
+                            </span>
+                            <span class="tooltip-content clearfix">
+                                <span class="tooltip-text">
+                                    {{ 'front.mtg.form.results.breakdown.mvalue.help'|trans|raw }}
+                                </span>
+                            </span>
+                        </span>
+                        {{ 'front.mtg.form.results.breakdown.mvalue.text'|trans|raw }}
+                    </span>
+                    <div class="lg:w-1/2">
+                        <span class="inline-block blue-text font-bold mb-2" id="decklist3-mvalue">{{ 'global.none.label'|trans }}</span>
+                        <details class="w-full mb-2 mt-2 lg:mt-0 blue-text cards-list">
+                            <summary>&darr; {{ 'front.mtg.form.results.breakdown.mvalue.viewmore'|trans }}</summary>
+                            <div class="w-full border-t border-t-gray-500 border-t-solid details-content">
+                                <ul class="inline-block decklist-card-list" id="decklist3-mvalues">
+                                    <li>{{ 'global.none.label'|trans }}</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
                 </div>
 
                 <div class="dark-alt-background my-2 text-lg w-full inline-flex flex-row flex-wrap justify-between rounded-lg p-3">

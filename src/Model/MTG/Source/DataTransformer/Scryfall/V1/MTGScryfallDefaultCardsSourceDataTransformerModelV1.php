@@ -1014,6 +1014,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'name_en',
             'flavor_of_name_en',
             'alternate_name_en',
+            'image_url',
             'mana_value',
             'color_identity',
             'is_command_zone_eligible',
@@ -1145,7 +1146,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             $typeText = preg_replace('/[^\p{L}\p{N}\s]+/u', '', $typeText);
 
             // Replace spaces with underscores and lowercase
-            $slug = mb_strtolower(str_replace(' ', '_', mb_trim($typeText)));
+            $slug = mb_strtolower(str_replace(' ', '_', mb_trim((string)$typeText)));
 
             return 'partner_type_' . $slug;
         }
@@ -1264,14 +1265,26 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         // Extract basic fields
         $oracleId = $card['oracle_id'];
         $scryfallId = $card['id'] ?? null;
-        $nameEN = ! empty($card['card_faces'][0]['flavor_name']) ? $card['card_faces'][0]['flavor_name'] : $card['flavor_name'] ?? $card['name'];
-        $flavorOfNameEN = ! empty($card['card_faces'][0]['flavor_name']) || ! empty($card['flavor_name']) ? $card['name'] : '';
-        $alternateNameEN = ! empty($card['card_faces'][0]['name']) ? $card['card_faces'][0]['name'] : '';
+        // Name EN uses the first face flavour name if defined, otherwise the card flavour name if defined, otherwise the card name
+        $nameEN = (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && ! empty($card['card_faces'][0]['flavor_name'])) ? $card['card_faces'][0]['flavor_name'] : $card['flavor_name'] ?? $card['name']; // @phpstan-ignore-line
+        // Flavor name of uses the card name if a flavor name is defined as main flavor name or first face flavor name
+        $flavorOfNameEN = (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && ! empty($card['card_faces'][0]['flavor_name'])) || ! empty($card['flavor_name']) ? $card['name'] : ''; // @phpstan-ignore-line
+        // Alternate name EN uses the card's first face name if a flavor name defined or a first face name is defined
+        $alternateNameEN = (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && (! empty($card['card_faces'][0]['flavor_name']) || ! empty($card['card_faces'][0]['name']))) // @phpstan-ignore-line
+            ? $card['card_faces'][0]['name'] ?? '' : '';
         $manaValue = (float)(isset($card['cmc']) && is_numeric($card['cmc']) ? $card['cmc'] : 0.0);
         $colorIdentity = $card['color_identity'] ?? [];
         $scryfallUri = $card['scryfall_uri'] ?? '';
         $set = $card['set'] ?? '';
         $releasedAt = $card['released_at'] ?? '';
+        // The image URL is the main image from Scryfall (normal size), otherwise the first face image if defined
+        $imageURL = (array_key_exists('image_uris', $card) && is_array($card['image_uris']) && ! empty($card['image_uris']['normal']))
+            ? $card['image_uris']['normal']
+            : (
+                (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && array_key_exists('image_uris', $card['card_faces'][0]) && is_array($card['card_faces'][0]['image_uris']) && ! empty($card['card_faces'][0]['image_uris']['normal'])) // @phpstan-ignore-line
+                ? $card['card_faces'][0]['image_uris']['normal']
+                : ''
+            );
 
         // Ensure color identity is an array
         if (! is_array($colorIdentity)) {
@@ -1332,6 +1345,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'mana_value'                        => $manaValue,
             'color_identity'                    => json_encode($colorIdentity, JSON_THROW_ON_ERROR),
             'scryfall_uri'                      => $scryfallUri,
+            'image_url'                         => $imageURL,
             'first_printed_at'                  => $firstPrintedAt,
             'first_printed_set_code'            => $set,
             'first_printed_year'                => $firstPrintedYear,
@@ -1406,7 +1420,6 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $pricesCount = 0;
         $errorCount = 0;
 
-        // @var array<string, mixed> $cardData
         foreach ($batchSliceOfCards as $currentSourceCard) {
 
             if (empty($currentSourceCard['name_en'])) {
@@ -1446,7 +1459,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             }
 
             /** @var string $oracleId */
-            $oracleId = $currentSourceCard['oracle_id'];
+            $oracleId = $currentSourceCard['oracle_id'] ?? '';
             /** @var string $cardName */
             $cardName = $currentSourceCard['name_en'];
             /** @var string $scryfallId */

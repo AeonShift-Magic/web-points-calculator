@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Twig;
 
 use App\Model\AeonShift\PointsList\MTG\V1\MTGPointsListModelV1;
-use JsonException;
 use Override;
 use Psr\Cache\InvalidArgumentException;
 use Twig\Extension\AbstractExtension;

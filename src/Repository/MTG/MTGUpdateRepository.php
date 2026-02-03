@@ -39,13 +39,18 @@ final class MTGUpdateRepository extends ServiceEntityRepository
         return $result;
     }
 
+    /**
+     * @return array<string, int>
+     */
     public function getAllPublishedMTGUpdatesByStartingDateForForms(): array
     {
         $updates = $this->getAllPublishedMTGUpdatesByStartingDate();
         $formEntries = [];
 
         foreach ($updates as $update) {
-            $formEntries[$update->getTitleForForms()] = $update->id;
+            if ($update->id !== null) {
+                $formEntries[$update->getTitleForForms()] = $update->id;
+            }
         }
 
         return $formEntries;

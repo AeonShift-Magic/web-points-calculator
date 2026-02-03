@@ -5,3 +5,7 @@ const updates = {{ get_updates_and_points_lists_as_json()|raw }};
 {{ include('front/mtg/points/' ~ model_file_to_include) }}
 {% endfor %}
 {% endif %}
+
+{% if card_names is defined %}
+const CARD_NAMES = {{ card_names|raw }};
+{% endif %}

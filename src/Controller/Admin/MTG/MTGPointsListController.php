@@ -8,7 +8,6 @@ use App\Entity\MTG\MTGPointsList;
 use App\Entity\User;
 use App\Form\Admin\MTG\AdminMTGPointsListImportType;
 use App\Form\Admin\MTG\AdminMTGPointsListType;
-use App\Model\AeonShift\PointsList\AbstractPointsListModel;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
 use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;

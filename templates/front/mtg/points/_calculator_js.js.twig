@@ -47,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
         total: '{{ 'front.mtg.form.results.breakdown.cardzones.total'|trans|raw }}'
     };
 
+    // Shared datalist for all decklist "add card" inputs
+    const CARD_NAMES_DATALIST_ID = 'card-names-datalist';
+    /** @type {HTMLDataListElement|null} */
+    let sharedCardNamesDatalistEl = null;
+    let sharedCardNamesDatalistPopulated = false;
+
     /**
      * The form keys that are allowed to be set by the user.
      *
@@ -65,6 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
         'deckList2',
         'deckList3'
     ]);
+
+    // This doesn't need i18n
+    const zonesAsText = {
+        commandzone: 'Commander',
+        companions: 'Companion',
+        maindeck: 'Maindeck',
+        sideboard: 'Sideboard',
+        attractions: 'Attractions',
+        stickers: 'Stickers',
+        contraptions: 'Contraptions'
+    };
 
     /**
      * Canonical order for the displayed "full name"
@@ -112,6 +129,92 @@ document.addEventListener('DOMContentLoaded', () => {
     const deckList1TotalEl = root.querySelector('#decklist1-total');
     const deckList2TotalEl = root.querySelector('#decklist2-total');
     const deckList3TotalEl = root.querySelector('#decklist3-total');
+    const deckList1FixedEl = root.querySelector('#decklist1-fixed');
+    const deckList2FixedEl = root.querySelector('#decklist2-fixed');
+    const deckList3FixedEl = root.querySelector('#decklist3-fixed');
+    const deckList1NameEl = root.querySelector('#decklist1-name');
+    const deckList2NameEl = root.querySelector('#decklist2-name');
+    const deckList3NameEl = root.querySelector('#decklist3-name');
+    const deckList1AddEl = root.querySelector('#decklist1-add');
+    const deckList2AddEl = root.querySelector('#decklist2-add');
+    const deckList3AddEl = root.querySelector('#decklist3-add');
+    const deckList1CardZoneEl = root.querySelector('#decklist1-cardzone');
+    const deckList2CardZoneEl = root.querySelector('#decklist2-cardzone');
+    const deckList3CardZoneEl = root.querySelector('#decklist3-cardzone');
+    const deckList1CopiesEl = root.querySelector('#decklist1-copies');
+    const deckList2CopiesEl = root.querySelector('#decklist2-copies');
+    const deckList3CopiesEl = root.querySelector('#decklist3-copies');
+    const deckList1AddFormEl = deckList1AddEl ? deckList1AddEl.closest('form') : null;
+    const deckList2AddFormEl = deckList2AddEl ? deckList2AddEl.closest('form') : null;
+    const deckList3AddFormEl = deckList3AddEl ? deckList3AddEl.closest('form') : null;
+    const deckList1MvalueEl = root.querySelector('#decklist1-mvalue');
+    const deckList2MvalueEl = root.querySelector('#decklist2-mvalue');
+    const deckList3MvalueEl = root.querySelector('#decklist3-mvalue');
+    const deckList1MvaluesEl = root.querySelector('#decklist1-mvalues');
+    const deckList2MvaluesEl = root.querySelector('#decklist2-mvalues');
+    const deckList3MvaluesEl = root.querySelector('#decklist3-mvalues');
+
+    // Also cache non-root selectors once
+    const calculatorEl = document.getElementById('calculator');
+    const quizEl = document.getElementById('quiz');
+    const multistepContainersEls = document.querySelectorAll('.multistep-form-part-container');
+    const quizQuestionEls = document.querySelectorAll('[id^="quiz-question-"]');
+
+    /** @type {Record<string, HTMLElement>} */
+    const quizQuestionById = (() => {
+        const map = Object.create(null);
+        for (const el of quizQuestionEls) {
+            if (el instanceof HTMLElement && el.id) {
+                map[el.id] = el;
+            }
+        }
+        return map;
+    })();
+
+    /** @type {Record<string, Element>} */
+    const rootById = (() => {
+        const map = Object.create(null);
+        const els = root.querySelectorAll('[id]');
+        for (const el of els) {
+            const id = el.getAttribute('id');
+            if (!id) continue;
+            map[id] = el;
+        }
+        return map;
+    })();
+
+    /** @type {Record<string, Record<string, HTMLInputElement>>} */
+    const radioByNameThenValue = (() => {
+        const map = Object.create(null);
+        const radios = root.querySelectorAll('input[type="radio"][name][value]');
+        for (const el of radios) {
+            if (!(el instanceof HTMLInputElement)) continue;
+
+            const name = el.getAttribute('name');
+            const value = el.getAttribute('value');
+            if (!name || value === null) continue;
+
+            if (!map[name]) map[name] = Object.create(null);
+            map[name][value] = el;
+        }
+        return map;
+    })();
+
+    /** @type {Record<string, Element[]>} */
+    const fieldsByName = (() => {
+        const map = Object.create(null);
+        const els = root.querySelectorAll('[name]');
+        for (const el of els) {
+            const name = el.getAttribute('name');
+            if (!name) continue;
+
+            if (!map[name]) map[name] = [];
+            map[name].push(el);
+        }
+        return map;
+    })();
+
+    const formFieldsEls = root.querySelectorAll('input, textarea, select');
 
     /**
      * Presets: single source of truth for detection + slug shortcut application
@@ -270,7 +373,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cache the current "checked" element per group once, then keep it updated via events
     const checkedByGroup = Object.create(null);
     for (const groupName of namePartGroupsInOrder) {
-        checkedByGroup[groupName] = root.querySelector(`input[name="${ CSS.escape(groupName) }"]:checked`);
+        checkedByGroup[groupName] = null;
+    }
+    for (const el of Object.values(radioByNameThenValue).flatMap(values => Object.values(values))) {
+        if (el.checked && el.name in checkedByGroup) {
+            checkedByGroup[el.name] = el;
+        }
     }
 
     /**
@@ -371,9 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} value
      */
     const setRadio = (name, value) => {
-        const match = root.querySelector(
-            `input[type="radio"][name="${ CSS.escape(name) }"][value="${ CSS.escape(value) }"]`
-        );
+        const match = radioByNameThenValue?.[name]?.[value] ?? null;
         if (match) {
             match.checked = true;
             if (name in checkedByGroup) {
@@ -389,10 +495,110 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} value
      */
     const setValueById = (id, value) => {
-        const el = root.querySelector(`#${ CSS.escape(id) }`);
+        const el = rootById?.[id] ?? null;
         if (el && 'value' in el) {
             el.value = value;
         }
+    };
+
+    /**
+     * Adds a native HTML datalist autocomplete to an <input>.
+     * Uses ONE shared datalist for all inputs (no per-input datalist creation).
+     *
+     * @param {HTMLInputElement|null} inputEl
+     * @param {string[]} options
+     */
+    const attachDatalistAutocomplete = (inputEl, options) => {
+        if (!inputEl) return;
+        if (!Array.isArray(options) || options.length === 0) return;
+
+        // Avoid double-binding on the same input
+        if (inputEl.dataset.autocompleteAttached === '1') return;
+        inputEl.dataset.autocompleteAttached = '1';
+
+        // Ensure the shared datalist exists once
+        if (!sharedCardNamesDatalistEl) {
+            const existingCardsDatalist = document.getElementById(CARD_NAMES_DATALIST_ID);
+            if (existingCardsDatalist instanceof HTMLDataListElement) {
+                sharedCardNamesDatalistEl = existingCardsDatalist;
+            } else {
+                sharedCardNamesDatalistEl = document.createElement('datalist');
+                sharedCardNamesDatalistEl.id = CARD_NAMES_DATALIST_ID;
+                document.body.appendChild(sharedCardNamesDatalistEl);
+            }
+        }
+
+        // Populate options once (shared)
+        if (!sharedCardNamesDatalistPopulated) {
+            sharedCardNamesDatalistEl.innerHTML = '';
+            for (const name of options) {
+                if (typeof name !== 'string') continue;
+                const trimmed = name.trim();
+                if (!trimmed) continue;
+
+                const opt = document.createElement('option');
+                opt.value = trimmed;
+                sharedCardNamesDatalistEl.appendChild(opt);
+            }
+            sharedCardNamesDatalistPopulated = true;
+        }
+
+        inputEl.setAttribute('list', CARD_NAMES_DATALIST_ID);
+        inputEl.setAttribute('autocomplete', 'off');
+    };
+
+    // Attach to decklistX-add-card "name" fields (all share the same datalist)
+    attachDatalistAutocomplete(deckList1NameEl, CARD_NAMES);
+    attachDatalistAutocomplete(deckList2NameEl, CARD_NAMES);
+    attachDatalistAutocomplete(deckList3NameEl, CARD_NAMES);
+
+    /**
+     * Insert a card line into a decklist textarea under the requested zone heading.
+     *
+     * Rules:
+     * - If the zone heading exists, insert the card line immediately after it.
+     * - If not, append the zone heading then the card line.
+     * - Card line format: `${copies} ${name}` (copies comes from "X ", requirement).
+     *
+     * @param {HTMLTextAreaElement|null} textareaEl
+     * @param {string} zoneKey
+     * @param {number} copies
+     * @param {string} name
+     */
+    const insertCardIntoTextareaByZone = (textareaEl, zoneKey, copies, name) => {
+        if (!textareaEl) return;
+
+        const zoneLabel = zonesAsText[zoneKey];
+        if (!zoneLabel) return;
+
+        const safeCopies = Number.isFinite(copies) && copies > 0 ? Math.floor(copies) : 1;
+        const safeName = String(name ?? '').trim();
+        if (!safeName) return;
+
+        const cardLine = `${ safeCopies } ${ safeName }`;
+
+        const raw = String(textareaEl.value ?? '');
+        const normalized = raw.replace(/\r\n/g, '\n');
+        const lines = normalized.split('\n');
+
+        const headerIndex = lines.findIndex(l => l.trim() === zoneLabel);
+
+        if (headerIndex >= 0) {
+            lines.splice(headerIndex + 1, 0, cardLine);
+        } else {
+            // Ensure a clean separation when appending a new zone
+            while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
+                lines.pop();
+            }
+            if (lines.length > 0) {
+                lines.push('');
+                lines.push('');
+            }
+            lines.push(zoneLabel);
+            lines.push(cardLine);
+        }
+
+        textareaEl.value = lines.join('\n').replace(/\s*$/, '') + '\n';
     };
 
     /**
@@ -406,6 +612,65 @@ document.addEventListener('DOMContentLoaded', () => {
         const calculationInput = {
             currentValues: currentFormatChoiceValues,
             decklists: { deckList1, deckList2, deckList3 }
+        };
+
+        /**
+         * Build an MTGA-inspired, zone-grouped decklist string from parsed deck data.
+         *
+         * Format:
+         * Zone
+         * 1 Card Name
+         * 2 Another Card
+         *
+         * Zone
+         * 1 ...
+         *
+         * @param {Object<string, *>} deckListData
+         * @returns {string}
+         */
+        const buildMTGOLikeDeckText = (deckListData) => {
+            const zones = ['commandzone', 'companions', 'maindeck', 'sideboard', 'attractions', 'stickers', 'contraptions'];
+
+            const parts = [];
+
+            for (const zone of zones) {
+                const cards = deckListData?.[zone];
+                if (!Array.isArray(cards) || cards.length === 0) continue;
+
+                const lines = [];
+                lines.push(zonesAsText[zone] ?? zone);
+
+                for (const card of cards) {
+                    const copies = Number(card?.copies ?? 0);
+                    const name = String(card?.name ?? '').trim();
+                    if (!name || !Number.isFinite(copies) || copies <= 0) continue;
+
+                    lines.push(`${ copies } ${ name }`);
+                }
+
+                if (lines.length > 1) {
+                    parts.push(lines.join('\n'));
+                }
+            }
+
+            return parts.join('\n\n').trim();
+        };
+
+        /**
+         * Rewrite a textarea with a normalized MTGA-inspired decklist, but only when parsing succeeded.
+         * (Avoids overwriting the user's raw input when there are parse errors.)
+         *
+         * @param {HTMLTextAreaElement|null} textareaEl
+         * @param {Object<string, *>} deckListData
+         */
+        const rewriteTextareaIfParsable = (textareaEl, deckListData) => {
+            if (!textareaEl) return;
+            if (deckListData?.errors?.length > 0) return;
+
+            const formatted = buildMTGOLikeDeckText(deckListData);
+            if (!formatted) return;
+
+            textareaEl.value = formatted + '\n';
         };
 
         // First, identify the form chosen model
@@ -427,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
             budget: 0,
             remaining: 0,
             mvalue: 0.0,
+            mvalues: [],
             pvalue: pvalue
         };
 
@@ -445,6 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
             budget: 0,
             remaining: 0,
             mvalue: 0.0,
+            mvalues: [],
             pvalue: pvalue
         };
 
@@ -463,9 +730,11 @@ document.addEventListener('DOMContentLoaded', () => {
             budget: 0,
             remaining: 0,
             mvalue: 0.0,
+            mvalues: [],
             pvalue: pvalue
         };
 
+        // Dynamically call the decklist parsing from the appropriate announcement script
         if (
             !updates
             || updates?.updates === undefined
@@ -495,6 +764,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+
+        // Rewrite decklist textareas with normalized, MTGA-inspired, zone-grouped lists (only on successful parse)
+        [
+            { deckListData: deckList1Data, targetDOMElement: deckList1El, successDOMElement: deckList1FixedEl },
+            { deckListData: deckList2Data, targetDOMElement: deckList2El, successDOMElement: deckList2FixedEl },
+            { deckListData: deckList3Data, targetDOMElement: deckList3El, successDOMElement: deckList3FixedEl }
+        ].forEach(({ deckListData, targetDOMElement, successDOMElement }) => {
+            if (!targetDOMElement || !successDOMElement) return;
+            rewriteTextareaIfParsable(deckList1El, deckListData);
+            if (deckListData.total > 0 && deckListData.errors.length === 0) {
+                successDOMElement.classList.remove('hidden');
+            } else {
+                successDOMElement.classList.add('hidden');
+            }
+        });
 
         // Update the P-Value base points fields
         if (deckList1BasepointsEl && deckList2BasepointsEl && deckList3BasepointsEl) {
@@ -548,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update the bduget and remaining points
+        // Update the budget and remaining points
         [
             { deckListData: deckList1Data, targetDOMElement: deckList1BudgetPointsEl },
             { deckListData: deckList2Data, targetDOMElement: deckList2BudgetPointsEl },
@@ -570,6 +854,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="green-text">${ deckListData?.remaining } <span class="icon-ok"></span></span>`);
             } else {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ MTGPOINTSLISTMODELV1_MODEL_MESSAGES.exceeding } ${ deckListData?.remaining } )<span class="icon-cancel"></span></span>`);
+            }
+        });
+
+        // Update the M-values found
+        [
+            { deckListData: deckList1Data, targetDOMElement: deckList1MvaluesEl },
+            { deckListData: deckList2Data, targetDOMElement: deckList2MvaluesEl },
+            { deckListData: deckList3Data, targetDOMElement: deckList3MvaluesEl }
+        ].forEach(({ deckListData, targetDOMElement }) => {
+            if (!targetDOMElement) return;
+            targetDOMElement.innerHTML = '';
+            if (Array.isArray(deckListData.mvalues) && deckListData.mvalues.length > 0) {
+                deckListData?.mvalues?.forEach(breakdown => targetDOMElement.insertAdjacentHTML('beforeend', `<li>${ breakdown }</li>`));
+            }
+        });
+
+        // Update the total M-value found span
+        [
+            { deckListData: deckList1Data, targetDOMElement: deckList1MvalueEl },
+            { deckListData: deckList2Data, targetDOMElement: deckList2MvalueEl },
+            { deckListData: deckList3Data, targetDOMElement: deckList3MvalueEl }
+        ].forEach(({ deckListData, targetDOMElement }) => {
+            if (!targetDOMElement) return;
+            targetDOMElement.innerHTML = '';
+            if(typeof deckList1Data.mvalue === 'number' && deckList1Data.mvalue > 0) {
+                targetDOMElement.insertAdjacentHTML('beforeend', `${ Math.round(deckListData?.mvalue * 100) / 100 }`);
             }
         });
 
@@ -604,9 +914,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     );
                     for (const card of cards) {
                         ++total;
+                        const imageUrl = (typeof card.imageurl === 'string' && card.imageurl)
+                            ? card.imageurl
+                            : MTGPointsListModelV1UnrankedImageUrl;
                         targetDOMElement.insertAdjacentHTML(
                             'beforeend',
-                            `<li><a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ card.name }</a> <span class="help-text">(x${ card.copies })</span></li>`
+                            `<li><a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ card.name }</a> <span class="help-text">(x${ card.copies })</span></li>`
                         );
                     }
                 }
@@ -650,6 +963,52 @@ document.addEventListener('DOMContentLoaded', () => {
         // Allow other scripts to plug in without tight coupling
         root.dispatchEvent(new CustomEvent('aeonshift:points-calculator:update', { detail: calculationInput }));
     }
+
+    /**
+     * Shared handler: add the card to textarea + recalc.
+     *
+     * @param {HTMLInputElement|null} nameEl
+     * @param {HTMLSelectElement|null} zoneEl
+     * @param {HTMLInputElement|null} copiesEl
+     * @param {HTMLTextAreaElement|null} textareaEl
+     */
+    const handleDecklistAdd = (nameEl, zoneEl, copiesEl, textareaEl) => {
+        if (!nameEl || !zoneEl || !copiesEl || !textareaEl) return;
+
+        const name = String(nameEl.value ?? '').trim();
+        const zoneKey = String(zoneEl.value ?? '').trim();
+        const copies = Number(copiesEl.value ?? 1);
+
+        insertCardIntoTextareaByZone(textareaEl, zoneKey, copies, name);
+
+        // Optional: clear and refocus
+        nameEl.value = '';
+        nameEl.focus();
+
+        updatePointsResultsAndSummaries();
+    };
+
+    /**
+     * Make both clicking "Add" and submitting the form behave the same.
+     */
+    const bindDecklistAdd = (addEl, formEl, nameEl, zoneEl, copiesEl, textareaEl) => {
+        if (addEl) {
+            addEl.addEventListener('click', () => {
+                handleDecklistAdd(nameEl, zoneEl, copiesEl, textareaEl);
+            });
+        }
+
+        if (formEl) {
+            formEl.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleDecklistAdd(nameEl, zoneEl, copiesEl, textareaEl);
+            });
+        }
+    };
+
+    bindDecklistAdd(deckList1AddEl, deckList1AddFormEl, deckList1NameEl, deckList1CardZoneEl, deckList1CopiesEl, deckList1El);
+    bindDecklistAdd(deckList2AddEl, deckList2AddFormEl, deckList2NameEl, deckList2CardZoneEl, deckList2CopiesEl, deckList2El);
+    bindDecklistAdd(deckList3AddEl, deckList3AddFormEl, deckList3NameEl, deckList3CardZoneEl, deckList3CopiesEl, deckList3El);
 
     /**
      * Throttle: ensures the function runs at most once per `waitMs` (leading + trailing).
@@ -722,7 +1081,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateFormatNames();
 
-            const calculatorEl = document.getElementById('calculator');
             if (calculatorEl) {
                 calculatorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
@@ -737,9 +1095,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formValue = link.getAttribute('data-form-value');
 
             if (formChangeName && formValue !== null) {
-                const nameEsc = CSS.escape(formChangeName);
-
-                const fields = root.querySelectorAll(`[name="${ nameEsc }"]`);
+                const fields = fieldsByName[formChangeName] ?? [];
                 if (fields.length > 0) {
                     for (const field of fields) {
                         const tag = field.tagName.toLowerCase();
@@ -747,6 +1103,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (tag === 'input' && type === 'radio') {
                             field.checked = field.value === formValue;
+                            if (field.checked && formChangeName in checkedByGroup) {
+                                checkedByGroup[formChangeName] = field;
+                            }
                             continue;
                         }
 
@@ -761,7 +1120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     // Trigger existing listeners so format names etc. refresh
-                    const checkedRadio = root.querySelector(`input[type="radio"][name="${ nameEsc }"]:checked`);
+                    const checkedRadio = (checkedByGroup[formChangeName] instanceof Element) ? checkedByGroup[formChangeName] : null;
                     const eventTarget = checkedRadio || fields[0];
                     eventTarget.dispatchEvent(new Event('input', { bubbles: true }));
                     eventTarget.dispatchEvent(new Event('change', { bubbles: true }));
@@ -769,22 +1128,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (quizTarget.includes('quiz-question')) {
-                for (const el of document.querySelectorAll('.multistep-form-part-container')) {
+                for (const el of multistepContainersEls) {
                     el.classList.remove('multistep-form-part-container-visible');
                 }
-                document.getElementById(quizTarget).classList.add('multistep-form-part-container-visible');
+                const targetEl = quizQuestionById[quizTarget];
+                if (targetEl) {
+                    targetEl.classList.add('multistep-form-part-container-visible');
+                }
             }
 
-
             if (quizTarget === 'calculator') {
-                const targetEl = document.getElementById(quizTarget);
-                if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (calculatorEl) {
+                    calculatorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             } else if (quizTarget === 'quiz-question-1') {
-                const targetEl = document.getElementById('quiz');
-                if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (quizEl) {
+                    quizEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             }
         }
@@ -798,6 +1157,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const onControlChange = (e) => {
         const target = e.target;
         if (!(target instanceof Element)) {
+            return;
+        }
+
+        if (!target.hasAttribute('data-update-format')) {
             return;
         }
 
@@ -839,9 +1202,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get URL query parameters
     const params = new URLSearchParams(window.location.search);
 
-    const fields = root.querySelectorAll('input, textarea, select');
-
-    for (const el of fields) {
+    for (const el of formFieldsEls) {
         const tag = el.tagName.toLowerCase();
         const type = (el.getAttribute('type') || '').toLowerCase();
 

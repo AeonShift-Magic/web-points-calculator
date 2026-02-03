@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace App\Controller\Front\MTG;
 
 use App\Entity\MTG\MTGUpdate;
+use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,10 +18,16 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/mtg')]
 final class PointsController extends AbstractController
 {
+    public function __construct(private readonly MTGSourceCardRepository $MTGSourceCardRepository)
+    {
+    }
+
     /**
      * Home route - choose between assistance, shortcuts and calculator.
      *
      * @param MTGUpdateRepository $MTGUpdateRepository
+     *
+     * @throws InvalidArgumentException
      *
      * @return Response
      */
@@ -34,7 +42,7 @@ final class PointsController extends AbstractController
         foreach ($MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate() as $update) {
             if (
                 $update->getPointsList() !== null
-                && $update->getPointsList()->getRulesModel() !== null
+                && ! empty($update->getPointsList()->getRulesModel())
                 && class_exists($update->getPointsList()->getRulesModel())
                 && defined($update->getPointsList()->getRulesModel() . '::CALCULATOR_JS_FILE')
             ) {
@@ -46,6 +54,7 @@ final class PointsController extends AbstractController
             'front/mtg/points/index.html.twig',
             [
                 'updates'                => $updates,
+                'card_names'             => $this->MTGSourceCardRepository->getAllCardNamesCached(),
                 'model_files_to_include' => $modelFilesToInclude,
             ]
         );

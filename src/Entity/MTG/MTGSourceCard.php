@@ -72,6 +72,10 @@ class MTGSourceCard extends MTGAbstractCard
     private int $firstPrintedYear = 0;
 
     #[Assert\NotNull]
+    #[ORM\Column(length: 255)]
+    private string $imageURL = '';
+
+    #[Assert\NotNull]
     #[ORM\Column]
     private bool $isBlack = false;
 
@@ -150,6 +154,11 @@ class MTGSourceCard extends MTGAbstractCard
     public function getFirstPrintedYear(): int
     {
         return $this->firstPrintedYear;
+    }
+
+    public function getImageURL(): string
+    {
+        return $this->imageURL;
     }
 
     /**
@@ -265,6 +274,13 @@ class MTGSourceCard extends MTGAbstractCard
     public function setFirstPrintedYear(int $firstPrintedYear): static
     {
         $this->firstPrintedYear = $firstPrintedYear;
+
+        return $this;
+    }
+
+    public function setImageURL(string $imageURL): self
+    {
+        $this->imageURL = $imageURL;
 
         return $this;
     }

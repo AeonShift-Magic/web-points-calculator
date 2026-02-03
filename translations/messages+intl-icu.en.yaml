@@ -250,6 +250,9 @@ admin:
                     nameen:
                         label: 'Name (EN)'
                         help: 'The name of the card, in English. Must be character-precise similar to a card in database.'
+                    imageurl:
+                        label: 'Card Image URL'
+                        help: 'The URL to find the image when used on the site.'
                     scryfallid:
                         label: 'Scryfall ID'
                         help: 'The Scryfall ID of the card, if needed'
@@ -369,6 +372,10 @@ admin:
                         label: 'Alternative Name (EN)'
                         help: 'Alternative names for the card, in English. Must be character-precise.'
                         placeholder: 'Cabal Coffers...'
+                    imageurl:
+                        label: 'Card Image URL'
+                        help: 'The URL to find the image when used on the site.'
+                        placeholder: 'https://...'
                     firstprintsetcode:
                         label: 'First Print Set Code'
                     iscommandzoneeligible:
@@ -704,6 +711,7 @@ front:
         form:
             title: 'Customize your format'
             formtitle: 'You''re playing:'
+            fixeddecklist: 'Your decklist was reformatted for readability'
             decklist1:
                 label: 'Decklist (Player 1 Decklist if using teams)'
                 help: >
@@ -744,7 +752,7 @@ front:
                         text: 'Base Points (P-Value):'
                         help: 'This is your P-Value, the base points as determined by your format choices in the form above.'
                     cards:
-                        text: 'Card found in your list:'
+                        text: 'Cards found in your list:'
                         help: 'These are all the cards we identified in your list, please double-check this list.'
                         viewmore: 'View all the cards found'
                     modulations:
@@ -761,6 +769,10 @@ front:
                         contraptions: 'Contraptions:'
                         stickers: 'Stickers:'
                         total: 'Total identified cards (all zones):'
+                    mvalue:
+                        text: 'M-Value:'
+                        help: 'This is your M-Value, the Money-Value of your deck, used for financial constraints.'
+                        viewmore: 'View your M-Value details'
                     usage:
                         text: 'Points Usage:'
                         help: 'These are the points you used in your deck, sorted from most consuming to least consuming.'
@@ -819,6 +831,9 @@ front:
                     rankedcommander:
                         text: 'Your Commander is ranked.'
                         help: 'Your commander is ranked in the current Point List.'
+            decklist:
+                addcard:
+                    label: 'Add a card'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'
@@ -1033,6 +1048,22 @@ global:
     choose:
         label: '↓ Please choose'
 mtg:
+    add:
+        label: 'Add'
+    copies:
+        text: 'X'
+    cardzones:
+        choose: 'Zone'
+        maindeck: 'Main Deck'
+        sideboard: 'Sideboard'
+        commandzone: 'Command Zone'
+        companion: 'Companion'
+        attractions: 'Attraction'
+        contraptions: 'Contraption'
+        stickers: 'Sticker'
+    name:
+        label: 'Name'
+        placeholder: 'Mox Sapphire'
     popular:
         comingsoon:
             text: '<em class="blue-text">Coming soon!</em> Stay tuned.'

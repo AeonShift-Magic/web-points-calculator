@@ -309,7 +309,7 @@ textarea,
 select,
 .dt-search input {
     background-color: var(--theme-neutral-dark-alt);
-    border-color: #9ca3af;
+    border-color: var(--theme-neutral-light);
     border-radius: 0.5rem;
     border-width: 2px;
     color: var(--theme-white);
@@ -374,6 +374,22 @@ textarea::placeholder {
     font-size: 1em;
     margin-top: 0.25em;
     margin-bottom: 0.25em;
+}
+
+datalist {
+    background-color: var(--theme-neutral-dark);
+    color: var(--theme-white-alt);
+}
+
+datalist option {
+    background-color: var(--theme-neutral-dark);
+    color: var(--theme-white-alt);
+}
+
+@media screen and (max-width: 1024px) {
+    .decklist-cards {
+        max-width: none;
+    }
 }
 
 input[type="file"] {
@@ -518,8 +534,40 @@ select option:checked {
     background-color: var(--theme-neutral-dark-translucent-alt);
 }
 
+.card-add-form {
+    margin-top: 0.3em;
+}
+
+.card-add-form fieldset {
+    padding: 0.75em;
+    border-color: var(--theme-neutral-light);
+    border-width: 2px;
+    margin: 0 0 5px 0;
+    border-radius: 0.5em;
+}
+
+.card-add-form .inline-form-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.card-add-form .inline-form-item label {
+    white-space: nowrap;
+    padding: 0 0.5em;
+}
+
+.card-add-form label {
+    display: none;
+}
+
 .dark-alt-background {
     background-color: var(--theme-neutral-dark-alt);
+}
+
+.mtg-card-hover-image {
+    border-radius: 13px;
+    box-shadow: 0 0 10px var(--theme-neutral-dark);
 }
 
 /*noinspection CssUnusedSymbol*/
@@ -947,6 +995,12 @@ table .btn {
     transition: all 0.1s ease-out;
     vertical-align: middle;
     width: 100%;
+}
+
+@media screen and (max-width: 1350px) {
+    .menu a, .menu a:visited {
+        padding: 0.5em 0.3em;
+    }
 }
 
 .menu a:hover {

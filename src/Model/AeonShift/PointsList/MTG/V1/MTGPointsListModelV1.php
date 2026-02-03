@@ -16,6 +16,8 @@ use App\Repository\MTG\MTGUpdateRepository;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_UNICODE;
 use JsonException;
 use Override;
 use Psr\Cache\InvalidArgumentException;
@@ -25,8 +27,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use const JSON_THROW_ON_ERROR;
-use const JSON_UNESCAPED_UNICODE;
 
 final class MTGPointsListModelV1 extends AbstractPointsListModel
 {
@@ -365,6 +365,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
      *         string, array{
      *              flavorofnameen: string|null,
      *              alternatenameen: string|null,
+     *              imageurl: string|null,
      *              mv: float,
      *              multicztype: string,
      *              ci: string[],
@@ -402,6 +403,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
      *     unranked: array{
      *          flavorofnameen: null,
      *          alternatenameen: string|null,
+     *          imageurl: string|null,
      *          mv: float,
      *          multicztype: string,
      *          ci: string[],
@@ -508,6 +510,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             $pointsListCardsArray['cards'][$sourceCard->getNameEN()] = [
                 'flavorofnameen'   => $sourceCard->getFlavorOfNameEN(),
                 'alternatenameen'  => $sourceCard->getAlternateNameEN(),
+                'imageurl'         => $sourceCard->getImageURL(),
                 'mv'               => $sourceCard->getManaValue(),
                 'multicztype'      => $sourceCard->getMultiCZType(),
                 'ci'               => $sourceCard->getColorIdentity(),
@@ -540,6 +543,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 $pointsListCardsArray['unranked'] = [
                     'flavorofnameen'             => null,
                     'alternatenameen'            => '',
+                    'imageurl'                   => '',
                     'mv'                         => 0.0,
                     'multicztype'                => '',
                     'ci'                         => [],
@@ -579,7 +583,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 continue;
             }
 
-            foreach ($pointsListCardsArray['cards'] as $sourceCardName => $sourceCardProperties) {
+            foreach (array_keys($pointsListCardsArray['cards']) as $sourceCardName) {
                 if ($sourceCardName === $pointListCard->getNameEN()) {
                     $pointsListCardsArray['cards'][$sourceCardName]['pointsBaseSingleton'] = $pointListCard->getPointsBaseSingleton();
                     $pointsListCardsArray['cards'][$sourceCardName]['pointsBaseQuadruples'] = $pointListCard->getPointsBaseQuadruples();
@@ -960,15 +964,5 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
             'status'  => 'success',
             'message' => $this->translator->trans('admin.form.mtg.pointslist.import.updated.success', ['number' => ($processingLine - 5)]),
         ];
-    }
-
-    /**
-     * Returns a structure that contains all the command zone
-     *
-     * @return void
-     */
-    public function getAllUpdatesAndCommanderPoints()
-    {
-
     }
 }
