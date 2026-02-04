@@ -22,7 +22,10 @@ const MTGPOINTSLISTMODELV1_MODEL_MESSAGES = {
     invalidsideboard: '{{ 'front.mtg.form.results.errors.invalidsideboard.text'|trans|raw }}',
     invalidcommandzone: '{{ 'front.mtg.form.results.errors.invalidcommandzone.text'|trans|raw }}',
     tooexpensive: '{{ 'front.mtg.form.results.errors.tooexpensive.text'|trans|raw }}',
-    toomanypoints: '{{ 'front.mtg.form.results.errors.toomanypoints.text'|trans|raw }}'
+    toomanypoints: '{{ 'front.mtg.form.results.errors.toomanypoints.text'|trans|raw }}',
+    singlecopiescardnotunique: '{{ 'front.mtg.form.results.errors.singlecopiescardnotunique.text'|trans|raw }}',
+    singletoncardnotunique: '{{ 'front.mtg.form.results.errors.singletoncardnotunique.text'|trans|raw }}',
+    numberofcardnotcorrectforquadruples: '{{ 'front.mtg.form.results.errors.numberofcardnotcorrectforquadruples.text'|trans|raw }}',
 };
 
 /**
@@ -332,15 +335,78 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
             }
         }
 
-        // Then, let's check the number of copies of each card, individually
-
-
+        // Then, let's check the number of copies of each card, individually       
         // Attractions, Contraptions and Stickers must be unique, all the time.
+        let cardTypesToCheckForUniqueness = ['attractions', 'contraptions', 'stickers'];
+        const hasDuplicateCards = cardTypesToCheckForUniqueness.some(cardType =>
+            deckListStructure[cardType].some(card => card.copies > 1)
+        );
+
+        if (hasDuplicateCards) {
+            deckListStructure.errors.push(
+                MTGPOINTSLISTMODELV1_MODEL_MESSAGES.singlecopiescardnotunique
+            );
+        }
+        
 
 
         // In singleton, there should be only one copy of each card in all zones, execpt for those for which maxcopies is not 1
+        if(currentFormatChoiceValues.copies === 'singleton') {
+            let listNotSingletonCards = [];
+            if(updates.updates[currentFormatChoiceValues.update].pointsList.cards !== undefined) {
+                deckListStructure.maindeck.forEach((card) => {
+                    if(card.copies <= 1) return; // skip cards with 1 or less copies
 
-        // In quadruples, there should be between 1 and 4 copies of each card in all zones, execpt for those for which maxcopies is not 1
+                    const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
+                        card.name,
+                        currentFormatChoiceValues
+                    );
+                    
+                    if(currentCardData.name === "((unranked))") {
+                        // if the card is unranked, the currentCardData will not have the maxcopies property.
+                        listNotSingletonCards.push(card.name);
+                    }
+                    else if(currentCardData.maxcopies !== -1) {
+                        listNotSingletonCards.push(card.name);
+                    }
+                });
+
+                if(listNotSingletonCards.length > 0) {
+                    deckListStructure.errors.push(
+                        MTGPOINTSLISTMODELV1_MODEL_MESSAGES.singletoncardnotunique + listNotSingletonCards.join(', ')
+                    );
+                }
+            }
+        }
+
+        // In quadruples, there should be between 1 and 4 copies of each card in all zones, except for those for which maxcopies is not 1
+        if (currentFormatChoiceValues.copies === 'quadruples') {
+            let listExceedingCards = [];
+            if (updates.updates[currentFormatChoiceValues.update].pointsList.cards !== undefined) {
+                deckListStructure.maindeck.forEach((card) => {
+                    const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
+                        card.name,
+                        currentFormatChoiceValues
+                    );
+
+                    if (currentCardData.name === "((unranked))") {
+                        // if the card is unranked, the currentCardData will not have the maxcopies property.
+                        // so the max value is 4 by default
+                        if(card.copies > 4) {
+                            listExceedingCards.push(card.name);
+                        }
+                    } else if (card.copies > currentCardData.maxcopies && currentCardData.maxcopies !== -1) {
+                        listExceedingCards.push(card.name);
+                    }
+                });
+
+                if (listExceedingCards.length > 0) {
+                    deckListStructure.errors.push(
+                        MTGPOINTSLISTMODELV1_MODEL_MESSAGES.numberofcardnotcorrectforquadruples + listExceedingCards.join(', ')
+                    );
+                }
+            }
+        }
     }
 
     /**

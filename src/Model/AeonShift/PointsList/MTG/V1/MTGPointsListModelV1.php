@@ -527,6 +527,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 'legalCEDHSpecial' => $sourceCard->isLegalCommanderSpecial(),
                 'czeligible'       => $sourceCard->isCommandZoneEligible(),
                 'multiczeligible'  => $sourceCard->isMultipleCommandZoneEligible(),
+                'maxcopies'        => $sourceCard->getMaxCopies(),
                 'b'                => $sourceCard->isBlack(),
                 'u'                => $sourceCard->isBlue(),
                 'r'                => $sourceCard->isRed(),
