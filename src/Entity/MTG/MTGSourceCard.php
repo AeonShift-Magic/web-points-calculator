@@ -18,22 +18,6 @@ class MTGSourceCard extends MTGAbstractCard
     /** The count of prices to retain for the average value calculation. */
     public const int PRICE_RETENTION_COUNT = 30;
 
-    /**
-     * Timeline legalities precedence values.
-     * Used at fast speed integer comparisons.
-     *
-     * @var array<string, int>
-     */
-    public const array TIMELINE_PRECEDENCES = [
-        'unranked' => -1,
-        'printed'  => 10,
-        'funny'    => 20,
-        'eternal'  => 30,
-        'modern'   => 40,
-        'pioneer'  => 50,
-        'standard' => 60,
-    ];
-
     #[Assert\NotNull]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private string $MTGOPrice = '0.00';

@@ -6,6 +6,7 @@ namespace App\Model\MTG\Source\DataTransformer\Scryfall\V1;
 
 use App\Entity\MTG\MTGSourceCard;
 use App\Entity\SourceActivityHistoryInterface;
+use App\Model\AeonShift\PointsList\MTG\V1\MTGPointsListModelV1;
 use App\Model\MTG\Source\Factory\SourceActivityHistoryFactory;
 use function count;
 use DateMalformedStringException;
@@ -1040,11 +1041,11 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             if (
                 ($field === 'maximum_timeline_legality')
                 && is_string($existingValue) && is_string($newValue)
-                && isset(MTGSourceCard::TIMELINE_PRECEDENCES[$existingValue], MTGSourceCard::TIMELINE_PRECEDENCES[$newValue])
+                && isset(MTGPointsListModelV1::TIMELINE_PRECEDENCES[$existingValue], MTGPointsListModelV1::TIMELINE_PRECEDENCES[$newValue])
             ) {
                 // Only update if new value has higher precedence than existing value
-                $existingPrecedence = MTGSourceCard::TIMELINE_PRECEDENCES[$existingValue];
-                $newPrecedence = MTGSourceCard::TIMELINE_PRECEDENCES[$newValue];
+                $existingPrecedence = MTGPointsListModelV1::TIMELINE_PRECEDENCES[$existingValue];
+                $newPrecedence = MTGPointsListModelV1::TIMELINE_PRECEDENCES[$newValue];
 
                 if ($newPrecedence <= $existingPrecedence) {
                     continue; // Skip update if new value doesn't have higher precedence

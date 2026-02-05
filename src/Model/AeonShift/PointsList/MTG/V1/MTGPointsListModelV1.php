@@ -38,6 +38,22 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
 
     public const string RELEASE_DATE = '2026-01-26';
 
+    /**
+     * Timeline legalities precedence values.
+     * Used at fast speed integer comparisons.
+     *
+     * @var array<string, int>
+     */
+    public const array TIMELINE_PRECEDENCES = [
+        'unranked' => -1,
+        'printed'  => 10,
+        'funny'    => 20,
+        'eternal'  => 30,
+        'modern'   => 40,
+        'pioneer'  => 50,
+        'standard' => 60,
+    ];
+
     public const string UNRANKED_CARD_NAME = '((unranked))';
 
     public const int VERSION = 1;
@@ -463,7 +479,10 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
      *         pioneerPowerPlay: float|null,
      *         standardPowerPlay: float|null
      *     },
-     *     calculatorJsFunctionPrefix: string
+     *     calculatorJsFunctionPrefix: string,
+     *     timelineprecedences: array {
+     *         string, int
+     *     }
      * }
      */
     public function mergeMTGSourceAndPointsListAsArray(SourceItemsRepositoryInterface $entityRepository, PointsListInterface $pointsList): array
@@ -476,6 +495,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
         $pointsListCardsArray = [
             'cards'                      => [],
             'unranked'                   => [],
+            'timelineprecedences'        => self::TIMELINE_PRECEDENCES,
             'calculatorJsFunctionPrefix' => self::CALCULATOR_JS_FUNCTION_PREFIX,
             'pvalues'                    => [
                 'baseSingletonStandardPlay'  => $pointsList->getPValueBaseSingletonStandardPlay(),
