@@ -70,7 +70,9 @@ echo -e "\e[32m###################### Deployment Step 8: Tailwind builder ######
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-APP_ENV=prod && php bin/console tailwind:build -n --env=prod
+export TMPDIR=$HOME/tmp
+mkdir -p "$TMPDIR"
+APP_ENV=prod TMPDIR=$HOME/tmp php bin/console tailwind:build -n --env=prod
 
 
 echo -e "\e[32m#####################################################################################"
