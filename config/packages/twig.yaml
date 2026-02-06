@@ -13,7 +13,7 @@ twig:
         globals_facebook_app_id: '%globals_facebook_app_id%'
         user_photos_http_path: '%user_photos_http_path%'
         user_pictures_directory: '%user_pictures_directory%'
-        website_title: 'Aeonshift Points Calculator'
+        website_title: 'AeonShiftPoints Calculator'
     paths:
         'assets/images': images
 when@test:

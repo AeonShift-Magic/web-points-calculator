@@ -69,9 +69,9 @@
 
 This codebase does several things:
 
-- set up a dynamic website with full management of Aeonshift points calculator rules and releases,
+- set up a dynamic website with full management of AeonShiftpoints calculator rules and releases,
 - import Magic The Gathering™ cards from Scryfall bulk data files into a local database,
-- provide dynamic a frontend interface to calculate Aeonshift points for decks of cards.
+- provide dynamic a frontend interface to calculate AeonShiftpoints for decks of cards.
 - provide a static export of the points calculator for offline use, as a standalone web page.
 - provide an executable standalone version with ElectronJS/ElectronForge for Windows 7-11, MacOS 10.15+, and Linux.
 

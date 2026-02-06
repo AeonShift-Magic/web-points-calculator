@@ -4,12 +4,12 @@ parameters:
     app.supported_locales: ['en', 'fr']
     app.supported_locales_route_requirement: 'en|fr'
     # ----
-    escaped_default_share_text: 'Aeonshift Points Calculator - %globals_website_subtitle%'
-    globals_website_subtitle: 'Automatic calculation of your Aeonshift deck points and validation'
-    globals_website_title_suffix: ' | Aeonshift Points Calculator'
+    escaped_default_share_text: 'AeonShiftPoints Calculator - %globals_website_subtitle%'
+    globals_website_subtitle: 'Automatic calculation of your AeonShift points and validation.'
+    globals_website_title_suffix: ' | AeonShift Points Calculator'
     globals_website_url: 'https://points.mtgdc.info'
-    globals_website_name: 'Aeonshift Points Calculator'
-    globals_website_description: 'Automatic calculation of your Aeonshift deck points and validation'
+    globals_website_name: 'AeonShiftPoints Calculator'
+    globals_website_description: 'Automatic calculation of your AeonShift points and validation.'
     globals_facebook_app_id: '160828815182734'
     # ----
     user_photos_http_path: '/uploads/users/pictures/'

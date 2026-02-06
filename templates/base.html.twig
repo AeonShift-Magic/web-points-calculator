@@ -37,12 +37,12 @@
         {% block og_specific %}
             <meta property="og:title" content="{{ website_title|default(globals_website_name)|escape }}">
             <meta property="og:description" content="{{ globals_website_description }}">
-            <meta property="og:image" content="{{ absolute_url(asset('images/aeonshift-logo-dark.jpg')) }}">
-            <meta property="og:image:width" content="888">
-            <meta property="og:image:height" content="672">
+            <meta property="og:image" content="{{ absolute_url(asset('images/aeonshift-social.jpg')) }}">
+            <meta property="og:image:width" content="1920">
+            <meta property="og:image:height" content="1080">
             <meta name="twitter:title" content="{{ website_title|default(globals_website_name)|escape }}">
             <meta property="twitter:description" content="{{ globals_website_description }}">
-            <meta property="twitter:image" content="{{ absolute_url(asset('images/aeonshift-logo-dark.jpg')) }}">
+            <meta property="twitter:image" content="{{ absolute_url(asset('images/aeonshift-social.jpg')) }}">
         {% endblock %}
         {% block schema_org -%}
             <script type="application/ld+json">
