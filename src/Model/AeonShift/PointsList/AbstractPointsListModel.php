@@ -51,4 +51,5 @@ abstract class AbstractPointsListModel implements PointsListModelInterface, Stri
         // Return the sanitized string
         return $finalString->toString();
     }
+    // TODO: public function getTimelinePrecedences(): array
 }
