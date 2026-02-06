@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/admin/mtg/points-list')]
@@ -105,7 +106,8 @@ final class MTGPointsListController extends AbstractController
         EntityManagerInterface $entityManager,
         MTGSourceCardRepository $MTGSourceCardRepository,
         MTGUpdateRepository $MTGUpdateRepository,
-        Security $security
+        Security $security,
+        CacheInterface $pool
     ): Response
     {
         $pointsListModelClass = $MTGPointsList->getRulesModel();
@@ -120,7 +122,8 @@ final class MTGPointsListController extends AbstractController
             $translator,
             $MTGSourceCardRepository,
             $security,
-            $MTGUpdateRepository
+            $MTGUpdateRepository,
+            $pool
         );
 
         $form = $this->createForm(AdminMTGPointsListImportType::class);
@@ -243,7 +246,8 @@ final class MTGPointsListController extends AbstractController
         MTGSourceCardRepository $MTGSourceCardRepository,
         Security $security,
         TranslatorInterface $translator,
-        MTGUpdateRepository $MTGUpdateRepository
+        MTGUpdateRepository $MTGUpdateRepository,
+        CacheInterface $pool
     ): Response
     {
         $pointsListModelClass = $MTGPointsList->getRulesModel();
@@ -259,6 +263,7 @@ final class MTGPointsListController extends AbstractController
             $MTGSourceCardRepository,
             $security,
             $MTGUpdateRepository,
+            $pool
         );
 
         return $pointsListModel->generateCSVResponseForList($MTGPointsList);
