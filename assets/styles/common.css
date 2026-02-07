@@ -2601,6 +2601,22 @@ iframe {
     color: var(--theme-neutral-light);
 }
 
+.beta {
+    position: relative;
+}
+
+.beta::before {
+    content: 'BETA';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.2em 0.5em;
+    background-color: var(--theme-yellow-light);
+    color: var(--theme-neutral-dark);
+    font-size: 0.7em;
+    border: var(--theme-red-dark) solid 3px;
+}
+
 @keyframes StarBackground {
     10% {
         background-color: rgba(255, 255, 255, 0.1);
