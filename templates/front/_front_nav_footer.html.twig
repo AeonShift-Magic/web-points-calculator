@@ -3,6 +3,9 @@
         <li class="first home-link">
             <a tabindex="0" href="{{ url('front_home') }}" title="{{ 'front.nav.home.title'|trans }}">{{ 'front.nav.home.label'|trans }}</a>
         </li>
+        <li>
+            <a tabindex="0" href="{{ url('api.swagger_ui') }}" title="API">API</a>
+        </li>
         {% if global_pages is defined %}
             {% for global_page in global_pages %}
                 <li>
@@ -26,7 +29,7 @@
                 </a>
             </li>
             <li>
-                <a tabindex="0" href="{{ url('front_logout') }}" data-turbo="false" title="{{ 'front.nav.logout.title'|trans }}">{{ 'front.nav.logout.label'|trans }}</a>
+                <a tabindex="0" href="{{ url('_logout_main') }}" data-turbo="false" title="{{ 'front.nav.logout.title'|trans }}">{{ 'front.nav.logout.label'|trans }}</a>
             </li>
             {% if is_granted('ROLE_ADMIN') %}
                 <li>

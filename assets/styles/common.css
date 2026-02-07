@@ -997,7 +997,7 @@ table .btn {
     width: 100%;
 }
 
-@media screen and (max-width: 1350px) {
+@media screen and (max-width: 1024px) {
     .menu a, .menu a:visited {
         padding: 0.5em 0.3em;
     }

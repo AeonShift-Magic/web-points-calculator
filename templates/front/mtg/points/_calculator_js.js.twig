@@ -47,6 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
         total: '{{ 'front.mtg.form.results.breakdown.cardzones.total'|trans|raw }}'
     };
 
+    const getExceedingLabel = () => {
+        if (typeof window.MTGPOINTSLISTMODELV1_MODEL_MESSAGES === 'undefined') {
+            return 'Exceeding';
+        }
+        const msg = window.MTGPOINTSLISTMODELV1_MODEL_MESSAGES;
+        return (msg && typeof msg.exceeding === 'string' && msg.exceeding.trim() !== '')
+            ? msg.exceeding
+            : 'Exceeding';
+    };
+
     // Shared datalist for all decklist "add card" inputs
     const CARD_NAMES_DATALIST_ID = 'card-names-datalist';
     /** @type {HTMLDataListElement|null} */
@@ -247,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         // Funny timeline
         {
-            key: 'eternal',
+            key: 'funny',
             title: '★ AeonShift Funny',
             values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'funny' },
             slugs: ['aeonshift-funny']
@@ -772,7 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3El, successDOMElement: deckList3FixedEl }
         ].forEach(({ deckListData, targetDOMElement, successDOMElement }) => {
             if (!targetDOMElement || !successDOMElement) return;
-            rewriteTextareaIfParsable(deckList1El, deckListData);
+            rewriteTextareaIfParsable(targetDOMElement, deckListData);
             if (deckListData.total > 0 && deckListData.errors.length === 0) {
                 successDOMElement.classList.remove('hidden');
             } else {
@@ -853,7 +863,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (deckListData?.remaining > 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="green-text">${ deckListData?.remaining } <span class="icon-ok"></span></span>`);
             } else {
-                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ MTGPOINTSLISTMODELV1_MODEL_MESSAGES.exceeding } ${ deckListData?.remaining } )<span class="icon-cancel"></span></span>`);
+                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ getExceedingLabel() } ${ deckListData?.remaining } )<span class="icon-cancel"></span></span>`);
             }
         });
 
@@ -878,7 +888,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
             targetDOMElement.innerHTML = '';
-            if(typeof deckList1Data.mvalue === 'number' && deckList1Data.mvalue > 0) {
+            if(typeof deckListData.mvalue === 'number' && deckListData.mvalue > 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `${ Math.round(deckListData?.mvalue * 100) / 100 }`);
             }
         });

@@ -12,7 +12,6 @@ use App\Entity\MTG\MTGSourceCard;
 use App\Entity\PointsListInterface;
 use App\Entity\User;
 use App\Model\AeonShift\PointsList\AbstractPointsListModel;
-use App\Repository\MTG\MTGUpdateRepository;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,12 +19,9 @@ use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_UNICODE;
 use JsonException;
 use Override;
-use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class MTGPointsListModelV1 extends AbstractPointsListModel
@@ -62,9 +58,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
         private EntityManagerInterface $entityManager,
         private TranslatorInterface $translator,
         private SourceItemsRepositoryInterface $MTGSourceCardRepository,
-        private Security $security,
-        private MTGUpdateRepository $MTGUpdateRepository,
-        private CacheInterface $pool
+        private Security $security
     )
     {
     }
@@ -252,46 +246,6 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 50
             )
             . '_Points.csv';
-    }
-
-    /**
-     * Outputs a JSON string containing all published MTG Updates and their Points Lists as JavaScript-compatible output.
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return string
-     */
-    public function getAllPointsListsAndUpdatesAsJSONArray(): string
-    {
-        return $this->pool->get(key: self::LICENSE . '_points_list_v' . self::VERSION, callback: function (ItemInterface $item): string {
-            $item->expiresAfter(3600);
-
-            $MTGUpdates = $this->MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
-            $outputArray = [
-                'updates' => [],
-            ];
-            $count = 1;
-
-            foreach ($MTGUpdates as $MTGUpdate) {
-                if ($MTGUpdate->getPointsList() !== null) {
-                    $outputArray['updates'] = [
-                        $MTGUpdate->id => [
-                            'title'                => $count === 1 ? $this->translator->trans('front.mtg.pointslist.latest.label', ['name' => $MTGUpdate->getTitleEN()]) : $this->translator->trans('front.mtg.pointslist.choice.label', ['name' => $MTGUpdate->getTitleEN(), 'datestart' => $MTGUpdate->getStartingAt()->format('Y-m-d h:i'), 'dateend' => $MTGUpdate->getEndingAt()->format('Y-m-d h:i')]),
-                            'startingAtSimplified' => $MTGUpdate->getStartingAt()->format('Y-m-d'),
-                            'endingAtSimplified'   => $count === 1 ? null : $MTGUpdate->getEndingAt()->format('Y-m-d'),
-                            'startingAtDate'       => $MTGUpdate->getStartingAt()->format('Y-m-d\TH:i:s\Z'),
-                            'endingAtDate'         => $MTGUpdate->getEndingAt()->format('Y-m-d\TH:i:s\Z'),
-                            'startingAtTimestamp'  => $MTGUpdate->getStartingAt()->getTimestamp(),
-                            'endingAtTimestamp'    => $count === 1 ? null : $MTGUpdate->getEndingAt()->getTimestamp(),
-                            'pointsList'           => $this->mergeMTGSourceAndPointsListAsArray($this->MTGSourceCardRepository, $MTGUpdate->getPointsList()),
-                        ],
-                    ];
-                }
-                ++$count;
-            }
-
-            return (string)json_encode($outputArray, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-        });
     }
 
     /**

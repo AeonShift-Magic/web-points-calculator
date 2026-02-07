@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Twig;
 
-use App\Model\AeonShift\PointsList\MTG\V1\MTGPointsListModelV1;
+use App\Model\AeonShift\PointsList\MTG\MTGPointsListManager;
 use Override;
 use Psr\Cache\InvalidArgumentException;
 use Twig\Extension\AbstractExtension;
@@ -12,7 +12,7 @@ use Twig\TwigFunction;
 
 final class MTGCalculatorExtension extends AbstractExtension
 {
-    public function __construct(private MTGPointsListModelV1 $pointsList)
+    public function __construct(private MTGPointsListManager $pointsList)
     {
     }
 

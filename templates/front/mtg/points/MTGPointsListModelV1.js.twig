@@ -654,23 +654,39 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 ...foundCardData,
                 ...commanderCard
             };
+            // 10000 = abritrary impossible date in the future, MTG won't survive this far, and so do we not ^^
             if ('firstprintedyear' in foundCardData && foundCardData.firstprintedyear > mostRecentFirstPrintYear && foundCardData.firstprintedyear < 10000) {
                 mostRecentFirstPrintYear = foundCardData.firstprintedyear;
             }
         }
     }
 
-    for (let i = 0; i < deckListStructure.commandzone.length; i++) {
-        if (mostRecentFirstPrintYear < currentYear && mostRecentFirstPrintYear) {
-            const budgetChange = Number((0.02 * (currentYear - mostRecentFirstPrintYear) * pvalue).toFixed(0));
-            const imageUrl = (typeof deckListStructure.commandzone[i].imageurl === 'string' && deckListStructure.commandzone[i].imageurl)
-                ? deckListStructure.commandzone[i].imageurl
+    if (mostRecentFirstPrintYear < currentYear && mostRecentFirstPrintYear) {
+        const budgetChange = Number((0.02 * (currentYear - mostRecentFirstPrintYear) * pvalue).toFixed(0));
+
+        // The bonus is applied only once, and based on the msot recent print.
+        if (deckListStructure.commandzone.length > 1) {
+            const imageUrl0 = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
+                ? deckListStructure.commandzone[0].imageurl
                 : MTGPointsListModelV1UnrankedImageUrl;
+            const imageUrl1 = (typeof deckListStructure.commandzone[1].imageurl === 'string' && deckListStructure.commandzone[1].imageurl)
+                ? deckListStructure.commandzone[1].imageurl
+                : MTGPointsListModelV1UnrankedImageUrl;
+
             deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[i].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[i].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange }</strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
             );
-            budgetChanges.push(budgetChange);
+        } else if (deckListStructure.commandzone.length === 1) {
+            const imageUrl = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
+                ? deckListStructure.commandzone[0].imageurl
+                : MTGPointsListModelV1UnrankedImageUrl;
+
+            deckListStructure.modulations.push(
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
+            );
         }
+
+        budgetChanges.push(budgetChange);
     }
 
     // Second, get the multiple commander malus

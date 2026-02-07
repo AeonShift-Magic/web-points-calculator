@@ -1,0 +1,104 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace App\Model\AeonShift\PointsList\MTG;
+
+use App\Model\AeonShift\PointsList\PointsListModelInterface;
+use App\Repository\MTG\MTGUpdateRepository;
+use App\Repository\SourceItemsRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_UNICODE;
+use JsonException;
+use Psr\Cache\InvalidArgumentException;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+final class MTGPointsListManager
+{
+    /** @var string self-identifier for model grouping per license */
+    public const string LICENSE = 'MTG';
+
+    public function __construct(
+        private MTGUpdateRepository $MTGUpdateRepository,
+        private SourceItemsRepositoryInterface $MTGSourceCardRepository,
+        private CacheInterface $pool,
+        private TranslatorInterface $translator,
+        private EntityManagerInterface $entityManager,
+        private Security $security
+    )
+    {
+    }
+
+    /**
+     * Outputs a JSON string containing all published MTG Updates and their Points Lists as JavaScript-compatible output.
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return array<mixed>
+     */
+    public function getAllPointsListsAndUpdatesAsArray(): array
+    {
+        return $this->pool->get(key: self::LICENSE . '_points_lists', callback: function (ItemInterface $item): array {
+            $item->expiresAfter(3600);
+
+            $MTGUpdates = $this->MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
+            $outputArray = [
+                'updates' => [],
+            ];
+            $count = 1;
+
+            foreach ($MTGUpdates as $MTGUpdate) {
+                /** @var class-string $className */
+                $className = $MTGUpdate->getPointsList()?->getRulesModel();
+
+                if (class_exists($className) && method_exists($className, 'getName')) {
+                    /** @var class-string $rulesModelClassString */
+                    $rulesModelClassString = $MTGUpdate->getPointsList()?->getRulesModel();
+
+                    if (class_exists($rulesModelClassString)) {
+                        $rulesModel = new $rulesModelClassString(
+                            $this->entityManager,
+                            $this->translator,
+                            $this->MTGSourceCardRepository,
+                            $this->security
+                        );
+
+                        if ($rulesModel instanceof PointsListModelInterface && method_exists($rulesModel, 'mergeMTGSourceAndPointsListAsArray')) {
+                            $outputArray['updates'] = [
+                                $MTGUpdate->id => [
+                                    'title'                => $count === 1 ? $this->translator->trans('front.mtg.pointslist.latest.label', ['name' => $MTGUpdate->getTitleEN()]) : $this->translator->trans('front.mtg.pointslist.choice.label', ['name' => $MTGUpdate->getTitleEN(), 'datestart' => $MTGUpdate->getStartingAt()->format('Y-m-d h:i'), 'dateend' => $MTGUpdate->getEndingAt()->format('Y-m-d h:i')]),
+                                    'startingAtSimplified' => $MTGUpdate->getStartingAt()->format('Y-m-d'),
+                                    'endingAtSimplified'   => $count === 1 ? null : $MTGUpdate->getEndingAt()->format('Y-m-d'),
+                                    'startingAtDate'       => $MTGUpdate->getStartingAt()->format('Y-m-d\TH:i:s\Z'),
+                                    'endingAtDate'         => $MTGUpdate->getEndingAt()->format('Y-m-d\TH:i:s\Z'),
+                                    'startingAtTimestamp'  => $MTGUpdate->getStartingAt()->getTimestamp(),
+                                    'endingAtTimestamp'    => $count === 1 ? null : $MTGUpdate->getEndingAt()->getTimestamp(),
+                                    'pointsList'           => $rulesModel->mergeMTGSourceAndPointsListAsArray($this->MTGSourceCardRepository, $MTGUpdate->getPointsList()),
+                                ],
+                            ];
+                        }
+                        ++$count;
+                    }
+                }
+            }
+
+            return $outputArray;
+        });
+    }
+
+    /**
+     * Outputs a JSON string containing all published MTG Updates and their Points Lists as JavaScript-compatible output.
+     *
+     * @throws InvalidArgumentException|JsonException
+     *
+     * @return string
+     */
+    public function getAllPointsListsAndUpdatesAsJSONArray(): string
+    {
+        return (string)json_encode($this->getAllPointsListsAndUpdatesAsArray(), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+    }
+}
