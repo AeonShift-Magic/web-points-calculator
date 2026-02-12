@@ -819,6 +819,8 @@ front:
                         text: 'Your decklist is not singleton (only one copy of each card allowed). Please check quantities for: '
                     numberofcardnotcorrectforquadruples:
                         text: 'Your decklist does not have the correct number of copy for each cards. (maximum 4 copies of each or less according to the max copies authorized by cards). For these cards: '
+                    wrongtimelineforcards:
+                        text: 'Your decklist have cards that are not legal in your current legality timeline for these cards: '
                 legal:
                     no:
                         label: 'Your deck is <strong>NOT LEGAL</strong> within your format choices.'

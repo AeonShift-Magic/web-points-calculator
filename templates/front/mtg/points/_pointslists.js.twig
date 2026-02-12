@@ -1,4 +1,4 @@
-const updates = {{ get_updates_and_points_lists_as_json()|raw }};
+window.updates = {{ get_updates_and_points_lists_as_json()|raw }};
 
 {% if model_files_to_include is defined and model_files_to_include is iterable %}
 {% for model_file_to_include in model_files_to_include %}
@@ -7,5 +7,5 @@ const updates = {{ get_updates_and_points_lists_as_json()|raw }};
 {% endif %}
 
 {% if card_names is defined %}
-const CARD_NAMES = {{ card_names|raw }};
+window.CARD_NAMES = {{ card_names|raw }};
 {% endif %}
