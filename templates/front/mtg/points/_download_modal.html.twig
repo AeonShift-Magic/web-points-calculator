@@ -1,0 +1,55 @@
+{# Decklist download modal (opened by links with data-class="decklist-download-link") #}
+<div
+    id="decklist-download-modal"
+    class="aeonshift-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-labelledby="decklist-download-modal-title"
+>
+    <div class="aeonshift-modal-backdrop" data-modal-close="1"></div>
+
+    <div class="aeonshift-modal-panel" role="document">
+        <div class="aeonshift-modal-header">
+            <h3 id="decklist-download-modal-title" class="title-h3 m-0">{{ 'front.mtg.form.results.legal.download.title'|trans }}</h3>
+            <button type="button" class="btn btn-gray btn-nowrap" data-modal-close="1" aria-label="Close"><span class="icon-cancel"></span></button>
+        </div>
+
+        <div class="aeonshift-modal-body">
+            <div class="aeonshift-modal-form">
+                <label for="decklist-download-player-name" class="label required">{{ 'front.mtg.form.results.legal.download.playername'|trans }}</label>
+                <input
+                    id="decklist-download-player-name"
+                    type="text"
+                    autocomplete="name"
+                    placeholder="Jace Beleren"
+                />
+                <div class="help-text">{{ 'front.mtg.form.results.legal.download.help'|trans }}</div>
+                <div class="help-text text-sm" id="decklist-download-error" aria-live="polite"></div>
+
+                <label for="decklist-download-comment" class="label mt-3">{{ 'front.mtg.form.results.legal.download.comment.label'|trans }}</label>
+                <input
+                    id="decklist-download-comment"
+                    type="text"
+                    placeholder=""
+                />
+                <div class="help-text">{{ 'front.mtg.form.results.legal.download.comment.help'|trans }}</div>
+            </div>
+
+            <div class="aeonshift-modal-actions">
+                <button type="button" title="{{ 'front.mtg.form.results.legal.download.label.print.title'|trans }}" class="btn btn-green" data-download-output-format="print">
+                    <span class="icon-share"></span> {{ 'front.mtg.form.results.legal.download.label.print.label'|trans }}
+                </button>
+                <button type="button" title="{{ 'front.mtg.form.results.legal.download.label.text.title'|trans }}" class="btn btn-blue" data-download-output-format="text">
+                    <span class="icon-docs"></span> {{ 'front.mtg.form.results.legal.download.label.text.label'|trans }}
+                </button>
+                <button type="button" title="{{ 'front.mtg.form.results.legal.download.label.csv.title'|trans }}" class="btn btn-blue" data-download-output-format="csv">
+                    <span class="icon-docs"></span> {{ 'front.mtg.form.results.legal.download.label.csv.label'|trans }}
+                </button>
+                <button type="button" title="{{ 'front.mtg.form.results.legal.download.label.pdf.title'|trans }}" class="btn btn-blue" data-download-output-format="pdf">
+                    <span class="icon-docs"></span> {{ 'front.mtg.form.results.legal.download.label.pdf.label'|trans }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

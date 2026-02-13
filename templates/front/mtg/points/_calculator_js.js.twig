@@ -163,12 +163,358 @@ document.addEventListener('DOMContentLoaded', () => {
     const deckList1MvaluesEl = root.querySelector('#decklist1-mvalues');
     const deckList2MvaluesEl = root.querySelector('#decklist2-mvalues');
     const deckList3MvaluesEl = root.querySelector('#decklist3-mvalues');
+    const downloadModalEl = document.getElementById('decklist-download-modal');
+    const downloadPlayerNameEl = document.getElementById('decklist-download-player-name');
+    const downloadCommentEl = document.getElementById('decklist-download-comment');
+    const downloadErrorEl = document.getElementById('decklist-download-error');
 
     // Also cache non-root selectors once
     const calculatorEl = document.getElementById('calculator');
     const quizEl = document.getElementById('quiz');
     const multistepContainersEls = document.querySelectorAll('.multistep-form-part-container');
     const quizQuestionEls = document.querySelectorAll('[id^="quiz-question-"]');
+    let currentDownloadTargetId = null;
+    const pad2 = (n) => String(n).padStart(2, '0');
+
+    /**
+     * Parse an MTGO-like decklist textarea into zone -> [{copies, name}]
+     *
+     * Expected input (as produced by this page):
+     * Zone name
+     * 1 Card Name
+     * 2 Another Card
+     *
+     * @param {string} raw
+     * @returns {Record<string, {zoneLabel: string, cards: Array<{copies: number, name: string}>}>}
+     */
+    const parseDecklistTextareaToZones = (raw) => {
+        const out = Object.create(null);
+
+        // Map of textarea headings (current UI) -> "canonical label" we will print
+        const knownZoneHeadings = new Map([
+            ['Commander', 'Commander'],
+            ['Companion', 'Companion'],
+            ['Maindeck', 'Maindeck'],
+            ['Sideboard', 'Sideboard'],
+            ['Attractions', 'Attractions'],
+            ['Stickers', 'Stickers'],
+            ['Contraptions', 'Contraptions']
+        ]);
+
+        const normalized = String(raw ?? '').replace(/\r\n/g, '\n');
+        const lines = normalized.split('\n').map(l => l.trim()).filter(l => l !== '');
+
+        /** @type {string|null} */
+        let currentZoneLabel = null;
+
+        const ensureZone = (zoneLabel) => {
+            if (!out[zoneLabel]) {
+                out[zoneLabel] = { zoneLabel, cards: [] };
+            }
+            return out[zoneLabel];
+        };
+
+        for (const line of lines) {
+            // Zone heading?
+            if (knownZoneHeadings.has(line)) {
+                currentZoneLabel = knownZoneHeadings.get(line);
+                ensureZone(currentZoneLabel);
+                continue;
+            }
+
+            // Card line?
+            // Accept: "N Name..." (N = integer)
+            const m = line.match(/^(\d+)\s+(.+)$/);
+            if (!m) {
+                continue;
+            }
+
+            const copies = Number(m[1]);
+            const name = String(m[2] ?? '').trim();
+
+            if (!Number.isFinite(copies) || copies <= 0) continue;
+            if (!name) continue;
+            if (!currentZoneLabel) continue; // ignore cards before first zone heading
+
+            ensureZone(currentZoneLabel).cards.push({ copies, name });
+        }
+
+        return out;
+    };
+
+    /**
+     * Build the requested downloadable text output:
+     * - player's name
+     * - (optional) comment
+     * - format short (full)
+     * - generation date
+     * - per non-empty zone: "Zone (N)" then each card "[___] q name"
+     *
+     * @param {string} playerName
+     * @param {string} comment
+     * @param {string} decklistRaw
+     * @returns {string}
+     */
+    const buildDecklistDownloadText = (playerName, comment, decklistRaw) => {
+        const safePlayer = String(playerName ?? '').trim();
+        const safeComment = String(comment ?? '').trim();
+
+        const shortName = String(formatNameEl?.textContent ?? '').trim();
+        const fullName = String(formatFullNameEl?.textContent ?? '').trim();
+
+        const shortPart = shortName || 'AeonShift';
+        const fullPart = fullName || shortPart;
+
+        const generatedAt = formatLocalDateTime(new Date());
+
+        const zones = parseDecklistTextareaToZones(decklistRaw);
+
+        // Canonical order
+        const zoneOrder = ['Commander', 'Companion', 'Maindeck', 'Sideboard', 'Attractions', 'Stickers', 'Contraptions'];
+
+        const lines = [];
+        lines.push('-------------------------------------------------------------------------------------------------');
+        lines.push(`Player: ${ safePlayer }`);
+        lines.push('-------------------------------------------------------------------------------------------------');
+        lines.push('');
+
+        if (safeComment !== '') {
+            lines.push('-------------------------------------------------------------------------------------------------');
+            lines.push(safeComment);
+            lines.push('-------------------------------------------------------------------------------------------------');
+            lines.push('');
+        }
+
+        lines.push('-------------------------------------------------------------------------------------------------');
+        lines.push(`Format: ${ shortPart } (${ fullPart })`);
+        lines.push('-------------------------------------------------------------------------------------------------');
+        lines.push('');
+        lines.push('-------------------------------------------------------------------------------------------------');
+        lines.push('{{ 'front.mtg.form.results.legal.download.generatedat'|trans }}' + generatedAt);
+        lines.push('-------------------------------------------------------------------------------------------------');
+        lines.push('');
+
+        for (const zoneLabel of zoneOrder) {
+            const z = zones[zoneLabel];
+            if (!z || !Array.isArray(z.cards) || z.cards.length === 0) continue;
+
+            const zoneCardCount = z.cards.reduce((sum, c) => sum + (Number.isFinite(c.copies) ? c.copies : 0), 0);
+            if (zoneCardCount <= 0) continue;
+
+            lines.push('');
+            lines.push(`${ zoneLabel } (${ zoneCardCount })`);
+
+            for (const c of z.cards) {
+                lines.push(`[___] ${ c.copies } ${ c.name }`);
+            }
+        }
+
+        return lines.join('\n').trim() + '\n';
+    };
+
+    /**
+     * @param {string} filename
+     * @param {string} mime
+     * @param {string} content
+     */
+    const downloadBlobText = (filename, mime, content) => {
+        const blob = new Blob([content], { type: mime });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.rel = 'noopener';
+
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        URL.revokeObjectURL(url);
+    };
+
+    /**
+     * One-column CSV (each line becomes a row).
+     *
+     * @param {string} text
+     * @returns {string}
+     */
+    const textToOneColumnCsv = (text) => {
+        const normalized = String(text ?? '').replace(/\r\n/g, '\n').replace(/\n$/, '');
+        const lines = normalized.split('\n');
+
+        const escapeCell = (cell) => {
+            const s = String(cell ?? '');
+            const escaped = s.replace(/"/g, '""');
+            return `"${ escaped }"`;
+        };
+
+        return lines.map(line => escapeCell(line)).join('\r\n') + '\r\n';
+    };
+
+    /**
+     * Print the decklist (opens a new window then triggers print dialog).
+     *
+     * @param {string} title
+     * @param {string} text
+     */
+    const printDecklist = (title, text) => {
+        const newWindow = window.open('', '_blank');
+        if (!newWindow) return;
+
+        const safeTitle = String(title ?? 'Decklist').replace(/[<>]/g, '');
+        const safeText = String(text ?? '');
+
+        newWindow.document.open();
+        newWindow.document.write(`<!doctype html>
+<html lang="{{ app.request.locale|default('en') }}">
+<head>
+    <meta charset="utf-8">
+    <title>${ safeTitle }</title>
+    <style>
+        body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; padding: 24px; }
+        pre { white-space: pre-wrap; word-break: break-word; }
+    </style>
+</head>
+<body>
+<pre>${ safeText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') }</pre>
+</body>
+</html>`);
+        newWindow.document.close();
+
+        // Wait for render
+        newWindow.onload = () => {
+            newWindow.focus();
+            setTimeout(() => {
+                newWindow.print();
+            }, 150);
+            newWindow.onafterprint = () => newWindow.close();
+        };
+    };
+
+    const openDownloadModal = (targetId) => {
+        if (!downloadModalEl || !downloadPlayerNameEl || !downloadErrorEl || !downloadCommentEl) return;
+
+        currentDownloadTargetId = String(targetId ?? '').trim() || null;
+        downloadErrorEl.textContent = '';
+
+        downloadModalEl.classList.remove('hidden');
+        downloadModalEl.setAttribute('aria-hidden', 'false');
+
+        // Focus the input for quick typing
+        window.setTimeout(() => downloadPlayerNameEl.focus(), 0);
+    };
+
+    const closeDownloadModal = () => {
+        if (!downloadModalEl || !downloadErrorEl) return;
+
+        currentDownloadTargetId = null;
+        downloadErrorEl.textContent = '';
+
+        downloadModalEl.classList.add('hidden');
+        downloadModalEl.setAttribute('aria-hidden', 'true');
+    };
+
+    const getCurrentDecklistRaw = () => {
+        if (!currentDownloadTargetId) return '';
+        const textarea = document.getElementById(currentDownloadTargetId);
+        if (textarea && 'value' in textarea) {
+            return String(textarea.value ?? '');
+        }
+        return '';
+    };
+
+    const getPlayerNameOrShowError = () => {
+        if (!downloadPlayerNameEl || !downloadErrorEl) return null;
+        const v = String(downloadPlayerNameEl.value ?? '').trim();
+        if (!v) {
+            downloadErrorEl.textContent = 'Player name is required.';
+            downloadPlayerNameEl.focus();
+            return null;
+        }
+        downloadErrorEl.textContent = '';
+        return v;
+    };
+
+    if (downloadModalEl) {
+        downloadModalEl.addEventListener('click', (e) => {
+            const target = e.target;
+            if (!(target instanceof Element)) return;
+
+            if (target.closest('[data-modal-close="1"]')) {
+                e.preventDefault();
+                closeDownloadModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!downloadModalEl || downloadModalEl.classList.contains('hidden')) return;
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeDownloadModal();
+            }
+        }, true);
+
+        /**
+         * Event handler for the "Download/print your decklist" button.
+         */
+        downloadModalEl.addEventListener('click', (e) => {
+            const target = e.target;
+            if (!(target instanceof Element)) return;
+
+            const btn = target.closest('button[data-download-output-format]');
+            if (!btn) return;
+
+            const outputFormat = String(btn.getAttribute('data-download-output-format') ?? '').trim();
+            const player = getPlayerNameOrShowError();
+            if (!player) return;
+
+            const comment = downloadCommentEl && 'value' in downloadCommentEl
+                ? String(downloadCommentEl.value ?? '').trim()
+                : '';
+
+            const decklistRaw = getCurrentDecklistRaw();
+            const text = buildDecklistDownloadText(player, comment, decklistRaw);
+
+            const stamp = formatLocalDateTime(new Date()).replace(/[:\s]/g, '-');
+            const baseName = `Decklist-${ player.replace(/[^\w.-]+/g, '_') }-${ stamp }`;
+
+            if (outputFormat === 'text') {
+                downloadBlobText(`${ baseName }.txt`, 'text/plain;charset=utf-8', text);
+                closeDownloadModal();
+                return;
+            }
+
+            if (outputFormat === 'csv') {
+                const csv = textToOneColumnCsv(text);
+                downloadBlobText(`${ baseName }.csv`, 'text/csv;charset=utf-8', csv);
+                closeDownloadModal();
+                return;
+            }
+
+            if (outputFormat === 'pdf') {
+                // Generate the PDF body
+
+                downloadBlobText(`${ baseName }.pdf`, 'application/pdf;charset=utf-8', pdf);
+                closeDownloadModal();
+                return;
+            }
+
+            if (outputFormat === 'print') {
+                printDecklist(baseName, text);
+                closeDownloadModal();
+            }
+        });
+    }
+
+    /**
+     * @param {Date} d
+     * @returns {string}
+     */
+    const formatLocalDateTime = (d) => {
+        // Local time, but unambiguous enough for humans.
+        return `${ d.getFullYear() }-${ pad2(d.getMonth() + 1) }-${ pad2(d.getDate()) } ${ pad2(d.getHours()) }:${ pad2(d.getMinutes()) }`;
+    };
 
     /** @type {Record<string, HTMLElement>} */
     const quizQuestionById = (() => {
@@ -227,9 +573,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const formFieldsEls = root.querySelectorAll('input, textarea, select');
 
     /**
-     * Presets: single source of truth for detection + slug shortcut application
+     * Star Formats: single source of truth for detection + slug shortcut application
      */
-    const PRESETS = [
+    const STAR_FORMATS = [
         // Printed timeline
         {
             key: 'printed',
@@ -372,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const presetBySlug = (() => {
         const map = Object.create(null);
-        for (const preset of PRESETS) {
+        for (const preset of STAR_FORMATS) {
             for (const s of preset.slugs) {
                 map[s] = preset;
             }
@@ -431,7 +777,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @returns {Object<string, *>}
      */
     const findMatchingPreset = () => {
-        for (const preset of PRESETS) {
+        for (const preset of STAR_FORMATS) {
             if (matchesPreset(preset.values)) {
                 return preset;
             }
@@ -860,10 +1206,12 @@ document.addEventListener('DOMContentLoaded', () => {
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
             targetDOMElement.innerHTML = '';
-            if (deckListData?.remaining > 0) {
+            if (deckListData?.remaining === 'N/A') {
+                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="gray-text">N/A</span>`);
+            } else if (deckListData?.remaining > 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="green-text">${ deckListData?.remaining } <span class="icon-ok"></span></span>`);
             } else {
-                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ getExceedingLabel() } ${ deckListData?.remaining } )<span class="icon-cancel"></span></span>`);
+                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ getExceedingLabel() } ${ deckListData?.remaining })<span class="icon-cancel"></span></span>`);
             }
         });
 
@@ -888,7 +1236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
             targetDOMElement.innerHTML = '';
-            if(typeof deckListData.mvalue === 'number' && deckListData.mvalue > 0) {
+            if (typeof deckListData.mvalue === 'number' && deckListData.mvalue > 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `${ Math.round(deckListData?.mvalue * 100) / 100 }`);
             }
         });
@@ -1070,6 +1418,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
         const target = e.target;
         if (!(target instanceof Element)) {
+            return;
+        }
+
+        const downloadLink = target.closest('[data-class="decklist-download-link"]');
+        if (downloadLink) {
+            e.preventDefault();
+            const deckTargetId = downloadLink.getAttribute('data-target');
+            openDownloadModal(deckTargetId);
             return;
         }
 

@@ -59,4 +59,17 @@ final class PointsController extends AbstractController
             ]
         );
     }
+
+    /**
+     * For each announcement, and for each Star Format that supports Command Zones,
+     *
+     * @param MTGUpdateRepository $MTGUpdateRepository
+     *
+     * @return Response
+     */
+    #[Route('/find-commander', name: 'front_mtg_find_a_commander', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
+    public function mtgFindACommander(MTGUpdateRepository $MTGUpdateRepository): Response
+    {
+
+    }
 }

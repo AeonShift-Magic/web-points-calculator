@@ -596,6 +596,11 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.dtr-expanded > th.dtr-control:
     color: var(--theme-white-alt);
 }
 
+.gradient-down-theme2 {
+    background: #303030;
+    background: linear-gradient(180deg, var(--theme-neutral-dark-alt) 0%, var(--theme-neutral-dark) 100%);
+}
+
 .green-text {
     color: var(--theme-green-light);
 }
@@ -1184,6 +1189,11 @@ button, [role="button"] {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
+.btn-nowrap {
+    white-space: nowrap;
+    text-wrap: nowrap;
+}
+
 .btn-gray {
     background-color: #4b5563;
     color: #fff !important;
@@ -1589,7 +1599,7 @@ hr::before {
     font-size: 0.765em;
     left: 50%;
     line-height: 1.4;
-    margin: 0 0 20px -180px;
+    margin: 0 0 12px -182px;
     opacity: 0;
     pointer-events: none;
     position: absolute;
@@ -1627,9 +1637,10 @@ hr::before {
 .tooltip-text {
     color: var(--theme-white);
     display: block;
-    font-size: 1em;
+    font-size: 13px;
     line-height: 1.6em;
     padding: 1em;
+    text-transform: none !important;
 }
 
 .navigation {
@@ -2599,6 +2610,57 @@ iframe {
 
 .unranked {
     color: var(--theme-neutral-light);
+}
+
+.aeonshift-modal {
+    inset: 0;
+    position: fixed;
+    z-index: 9999;
+}
+
+.aeonshift-modal-backdrop {
+    background: rgba(0, 0, 0, 0.72);
+    inset: 0;
+    position: absolute;
+}
+
+.aeonshift-modal-panel {
+    background-color: var(--theme-neutral-dark);
+    border: 1px solid var(--theme-neutral-medium);
+    border-radius: 5px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    left: 50%;
+    max-width: 900px;
+    position: absolute;
+    top: 12vh;
+    transform: translateX(-50%);
+    width: calc(100% - 2rem);
+}
+
+.aeonshift-modal-header {
+    align-items: center;
+    border-bottom: 1px solid var(--theme-neutral-medium);
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+}
+
+.aeonshift-modal-body {
+    padding: 1rem 1.25rem 1.25rem;
+}
+
+.aeonshift-modal-form {
+    margin-top: 0.75rem;
+}
+
+.aeonshift-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .beta {

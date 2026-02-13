@@ -692,6 +692,11 @@ front:
     mtg:
         calculator:
             title: 'AeonShift Magic The Gathering™ Points Calculator'
+            subtitle: '(if the calculator stops working, just refresh the page)'
+            starformat:
+                text: 'This is your Format Star Name, if any, or "Custom", if it doesn''t have a Star Name.'
+            fullnameformat:
+                text: 'This is your Format Full Name, which can also refer to.'
         choose:
             title: 'Pick an <strong class="green-text">AeonShift star format</strong> below'
             text: 'You''re playing <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
@@ -824,6 +829,29 @@ front:
                         label: 'Your deck is <strong>NOT LEGAL</strong> within your format choices.'
                     yes:
                         label: 'Your deck is <strong>LEGAL</strong> within your format choices.'
+                    download:
+                        title: 'Download or print your decklist'
+                        help: 'Enter the player''s name, then choose an option below to print or download.'
+                        playername: 'Player''s name:'
+                        generatedat: 'Document generated at: '
+                        label:
+                            link:
+                                label: 'Download or print your Deck Registration Sheet'
+                            csv:
+                                label: 'Deck Registration Sheet (CSV)'
+                                title: 'Download your Deck Registration Sheet (CSV)'
+                            pdf:
+                                label: 'Deck Registration Sheet (PDF)'
+                                title: 'Download your Deck Registration Sheet (PDF)'
+                            text:
+                                label: 'Deck Registration Sheet (Text)'
+                                title: 'Download your Deck Registration Sheet (Text)'
+                            print:
+                                label: 'Print now'
+                                title: 'Print your Deck Registration Sheet'
+                        comment:
+                            label: 'Comment (optional)'
+                            help: 'Add a comment to your decklist, if needed.'
                 modulations:
                     firstprint:
                         text: 'Your most recently edited Commander was first edited prior to the current year.'

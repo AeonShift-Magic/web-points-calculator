@@ -578,13 +578,11 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
     // Before points, we need to check that Command Zones are valid
     // TODO (isCzEligible and multiCzEligible (partner ...) and multiCzType)
 
-    if(deckListStructure.errors.length === 0) {
-        // First, we need to determine the modulations
-        MTGPointsListModelV1AddModulations(deckListStructure, currentFormatChoiceValues, pvalue);
+    // First, we need to determine the modulations
+    MTGPointsListModelV1AddModulations(deckListStructure, currentFormatChoiceValues, pvalue);
 
-        // Then, calculate the points, and M-Value for each card in the decklist and the deck itself.
-        MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceValues, pvalue);
-    }
+    // Then, calculate the points, and M-Value for each card in the decklist and the deck itself.
+    MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceValues, pvalue);
 
     // Then do post-flight decklist integrity checks
     MTGPointsListModelV1postFlightDeckChecks(deckListStructure, currentFormatChoiceValues);

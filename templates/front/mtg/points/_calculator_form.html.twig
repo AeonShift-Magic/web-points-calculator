@@ -1,4 +1,4 @@
-<div class="spaceless-row theme2 shadow-lg inset-shadow-sm relative z-40" id="calculator">
+<div class="spaceless-row gradient-down-theme2 relative z-40" id="calculator">
     <div class="main-column no-shadow py-2">
         <div class="w-full text-center flex flex-col justify-center items-center my-3">
 
@@ -34,6 +34,7 @@
     <div class="main-column no-shadow lg:pt-4 min-h-screen">
 
         <h2 class="w-full text-center mt-12 mb-4">{{ 'front.mtg.calculator.title'|trans }}</h2>
+        <h4 class="w-full text-center text-sm gray-text">{{ 'front.mtg.calculator.subtitle'|trans }}</h4>
 
         <div class="w-full">
             <div class="mb-6">
@@ -42,8 +43,32 @@
                         <p class="text-3xl text-center lg:text-right" id="total1">{{ 'front.mtg.form.formtitle'|trans }}</p>
                     </div>
                     <div class=" w-full lg:w-2/3 text-center lg:text-left">
-                        <span class="inline-block text-3xl green-text mr-6" id="format-name">AeonShift</span>
-                        <span id="format-full-name" class="inline-block text-xl blue-text"></span>
+                        <span class="inline-block text-3xl green-text mr-6">
+                            <span id="format-name">AeonShift</span>
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text text-sm">
+                                        {{ 'front.mtg.calculator.starformat.text'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                        <span class="inline-block text-xl blue-text">
+                            <span id="format-full-name"></span>
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text">
+                                        {{ 'front.mtg.calculator.fullnameformat.text'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -53,5 +78,6 @@
 
         {{ include('front/mtg/points/_decklists.html.twig') }}
 
+        {{ include('front/mtg/points/_download_modal.html.twig') }}
     </div>
 </div>
