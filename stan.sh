@@ -1,1 +1,1 @@
-php vendor/bin/phpstan -v
+symfony php vendor/bin/phpstan -v

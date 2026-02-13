@@ -1,1 +1,1 @@
-php vendor/bin/php-cs-fixer fix -vvv
+symfony php vendor/bin/php-cs-fixer fix -vvv
