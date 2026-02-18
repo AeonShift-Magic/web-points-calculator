@@ -1,1 +1,1 @@
-php vendor/bin/psalm
+symfony php vendor/bin/psalm
