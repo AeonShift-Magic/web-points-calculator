@@ -26,17 +26,17 @@ final class PointsController extends AbstractController
      * Home route - choose between assistance, shortcuts and calculator.
      *
      * @param MTGUpdateRepository $MTGUpdateRepository
+     * @param MTGSourceCardRepository $MTGSourceCardRepository
      *
      * @throws InvalidArgumentException
      *
      * @return Response
      */
     #[Route('/{slug?}', name: 'front_mtg_points_index', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
-    public function mtgPointsIndex(MTGUpdateRepository $MTGUpdateRepository): Response
+    public function mtgPointsIndex(MTGUpdateRepository $MTGUpdateRepository, MTGSourceCardRepository $MTGSourceCardRepository): Response
     {
         /** @var MTGUpdate[] $updates */
         $updates = $MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDateForForms();
-
         $modelFilesToInclude = [];
 
         foreach ($MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate() as $update) {
@@ -54,22 +54,11 @@ final class PointsController extends AbstractController
             'front/mtg/points/index.html.twig',
             [
                 'updates'                => $updates,
+                'ranking_totals'         => $MTGSourceCardRepository->getRankingTotals(),
+                'commanders'             => $MTGSourceCardRepository->getAllCommanders(),
                 'card_names'             => $this->MTGSourceCardRepository->getAllCardNamesCached(),
                 'model_files_to_include' => $modelFilesToInclude,
             ]
         );
-    }
-
-    /**
-     * For each announcement, and for each Star Format that supports Command Zones,
-     *
-     * @param MTGUpdateRepository $MTGUpdateRepository
-     *
-     * @return Response
-     */
-    #[Route('/find-commander', name: 'front_mtg_find_a_commander', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
-    public function mtgFindACommander(MTGUpdateRepository $MTGUpdateRepository): Response
-    {
-
     }
 }

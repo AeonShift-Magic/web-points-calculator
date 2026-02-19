@@ -33,14 +33,16 @@
 <div class="spaceless-row theme1 calculator-form-row min-h-screen" id="calculator-form">
     <div class="main-column no-shadow lg:pt-4 min-h-screen">
 
-        <h2 class="w-full text-center mt-12 mb-4">{{ 'front.mtg.calculator.title'|trans }}</h2>
-        <h4 class="w-full text-center text-sm gray-text">{{ 'front.mtg.calculator.subtitle'|trans }}</h4>
+        <div class="flex flex-col items-center align-center">
+            <h2 class="w-auto beta text-center pt-6 mt-6 mb-4">{{ 'front.mtg.calculator.title'|trans }}</h2>
+            <p class="w-full text-center text-sm gray-text my-1">{{ 'front.mtg.calculator.subtitle'|trans }}</p>
+        </div>
 
         <div class="w-full">
             <div class="mb-6">
                 <div class="flex flex-col lg:flex-row items-center justify-around text-left">
                     <div class="w-full lg:w-1/3 lg:pr-6">
-                        <p class="text-3xl text-center lg:text-right" id="total1">{{ 'front.mtg.form.formtitle'|trans }}</p>
+                        <p class="text-3xl text-center lg:text-right my-2" id="total1">{{ 'front.mtg.form.formtitle'|trans }}</p>
                     </div>
                     <div class=" w-full lg:w-2/3 text-center lg:text-left">
                         <span class="inline-block text-3xl green-text mr-6">

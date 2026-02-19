@@ -16,7 +16,7 @@
 
                     <form id="decklist{{ i }}-add-card" class="w-full card-add-form" data-decklist-add-card-form="{{ i }}">
                         <fieldset class="flex flex-col mb-2">
-                            <legend class="uppercase text-sm">Add a card</legend>
+                            <legend class="uppercase text-sm">{{ 'mtg.addform.title'|trans }}</legend>
 
                             <div class="w-full flex flex-row items-end mb-2">
                                 <div class="inline-form-item flex-grow min-w-0">
@@ -198,7 +198,7 @@
                             {{ 'front.mtg.form.results.breakdown.remaining.text'|trans|raw }}
                         </span>
                         <span class="inline-block w-1/2">
-                            <span class="inline-block blue-text font-bold text-xl" id="decklist{{ i }}-remaining-points">{{ 'global.none.label'|trans }}</span>
+                            <span class="inline-block blue-text font-bold text-2xl" id="decklist{{ i }}-remaining-points">{{ 'global.none.label'|trans }}</span>
                         </span>
                     </div>
 

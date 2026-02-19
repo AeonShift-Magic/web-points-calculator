@@ -1,0 +1,64 @@
+<div class="spaceless-row theme1 bg-row-2 quiz-choice-row relative z-10 min-h-[1200px]" id="choose-commander">
+    <div class="main-column no-shadow py-2 h-[1200px] format-incentive my-8">
+        <div class="w-full flex flex-col justify-around items-center p-px mb-4">
+            <h2>{{ 'front.mtg.choose.links.choosecommander.text'|trans }}</h2>
+            <p class="blue-text text-center">
+                <span class="icon-info"></span> {{ 'front.mtg.choose.links.choosecommander.description'|trans }}
+            </p>
+
+            <div class="table-wrapper my-4 p-0 overflow-scroll h-[800px] border-solid border-gray border w-full">
+                <table class="table center header-highlight-table w-full m-0 p-0" style="margin: 0 !important;">
+                    <thead class="top-0" style="top: 0 !important;">
+                        <tr>
+                            <th style="width: 270px;">{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans }}</th>
+                            <th style="width: 100px;">{{ 'front.mtg.choose.links.choosecommander.table.budget.label'|trans }}</th>
+                            <th style="width: 150px;">{{ 'front.mtg.choose.links.choosecommander.table.status.label'|trans }}</th>
+                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.duel.label'|trans }}</th>
+                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.cedh.label'|trans }}</th>
+                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.ffa.label'|trans }}</th>
+                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.coloridentity.label'|trans }}</th>
+                            <th style="width: 90px;">{{ 'front.mtg.choose.links.choosecommander.table.firstprintedyear.label'|trans }}</th>
+                            <th style="width: 70px;">{{ 'front.mtg.choose.links.choosecommander.table.mv.label'|trans }}</th>
+                            <th style="width: 200px;">{{ 'front.mtg.choose.links.choosecommander.table.multicztype.label'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if commanders is defined and commanders is iterable and ranking_totals is defined and ranking_totals is iterable %}
+                            {% for commander in commanders %}
+                                <tr
+                                    data-commander-id="{{ commander.id }}"
+                                    data-commander-name="{{ commander.nameEn }}"
+                                    data-ranking-duel-class="{{ ranking_class(commander.duelRank, ranking_totals.duel) }}"
+                                    data-ranking-cedh-class="{{ ranking_class(commander.cEDHRank, ranking_totals.cedh) }}"
+                                    data-ranking-ffa-class="{{ ranking_class(commander.fFARank, ranking_totals.ffa) }}"
+                                >
+                                    <td>
+                                        <a href="https://scryfall.com/search?q={{ commander.nameEn|e('url') }}" target="_blank" data-imageurl="{{ commander.imageUrl }}" title="Scryfall Search">
+                                            <span class="icon-search"></span>
+                                            <strong>{{ commander.nameEn }}</strong>
+                                        </a>
+                                    </td>
+                                    <td class="commander-budget font-bold text-lg" data-update="budget">0</td>
+                                    <td data-update="status"></td>
+                                    <td>{{ ranking_decorator(commander.duelRank, 750) }}</td>
+                                    <td>{{ ranking_decorator(commander.cEDHRank, 750) }}</td>
+                                    <td>{{ ranking_decorator(commander.fFARank, 50000) }}</td>
+                                    <td>
+                                        <span class="text-lg flex flex-row items-center justify-center w-full h-full">
+                                            {% if commander.colorIdentity is iterable %}
+                                                {{ color_identity_array_to_balls(commander.colorIdentity) }}
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>{{ commander.firstPrintedYear }}</td>
+                                    <td>{{ commander.manaValue }}</td>
+                                    <td class="pr-1">{{ partner_ability_format(commander.multiczType)|raw }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

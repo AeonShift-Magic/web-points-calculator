@@ -11,6 +11,7 @@ use Override;
 use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -90,27 +91,39 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
             }
 
             $result = $this->scryfallDefaultCardsSourceDataTransformerModel->parseAndImport(
-                static function (int $processedCount, int $insertedCount, int $updatedCount, int $skippedCount, int $pricesCount, int $errorCount) use ($io, &$progressBar): void {
+                static function (int $processedCardsCount, int $insertedCardsCount, int $updatedCardsCount, int $skippedCardsCount, int $pricesCount, int $errorCount, int $updatedMTGTop8RanksCount) use ($io, &$progressBar): void {
                     if ($progressBar === null) {
                         $progressBar = $io->createProgressBar();
+
+                        $progressBar->setMessage('0', 'duel_ranks');
+
+                        $progressBar->setPlaceholderFormatterDefinition(
+                            'duel_ranks',
+                            static function (ProgressBar $bar): string {
+                                return $bar->getMessage('duel_ranks') ?? '0';
+                            }
+                        );
+
                         $progressBar->setFormat(
                             ' %current% cards processed | %elapsed:6s% elapsed | Memory: %memory:6s%' . "\n" .
-                            ' Inserted: %inserted% | Updated: %updated% | Skipped: %skipped% | Prices Updated: %prices% | Errors: %errors%'
+                            ' Inserted: %inserted% | Updated: %updated% | Skipped: %skipped% | Prices Updated: %prices% | Errors: %errors% | MTGTop8 Ranks Found: %message%'
                         );
-                        $progressBar->setMessage((string)$insertedCount, 'inserted');
-                        $progressBar->setMessage((string)$updatedCount, 'updated');
-                        $progressBar->setMessage((string)$skippedCount, 'skipped');
+                        $progressBar->setMessage((string)$insertedCardsCount, 'inserted');
+                        $progressBar->setMessage((string)$updatedCardsCount, 'updated');
+                        $progressBar->setMessage((string)$skippedCardsCount, 'skipped');
                         $progressBar->setMessage((string)$pricesCount, 'prices');
                         $progressBar->setMessage((string)$errorCount, 'errors');
+                        $progressBar->setMessage((string)$updatedMTGTop8RanksCount);
                         $progressBar->start();
                     }
 
-                    $progressBar->setProgress($processedCount);
-                    $progressBar->setMessage((string)$insertedCount, 'inserted');
-                    $progressBar->setMessage((string)$updatedCount, 'updated');
-                    $progressBar->setMessage((string)$skippedCount, 'skipped');
+                    $progressBar->setProgress($processedCardsCount);
+                    $progressBar->setMessage((string)$insertedCardsCount, 'inserted');
+                    $progressBar->setMessage((string)$updatedCardsCount, 'updated');
+                    $progressBar->setMessage((string)$skippedCardsCount, 'skipped');
                     $progressBar->setMessage((string)$pricesCount, 'prices');
                     $progressBar->setMessage((string)$errorCount, 'errors');
+                    $progressBar->setMessage((string)$updatedMTGTop8RanksCount, 'duel_ranks');
                 },
                 $source
             );
@@ -131,6 +144,7 @@ final class MTGScryfallDefaultCardsSourceDBUpdateCommandV1 extends Command
                     ['Cards Skipped (no changes)', number_format($result['skipped'])],
                     ['Prices Updated', number_format($result['prices'])],
                     ['Errors', number_format($result['errors'])],
+                    ['MTGTop8 Ranks Updated', number_format($result['duel_ranks'])],
                 ]
             );
 

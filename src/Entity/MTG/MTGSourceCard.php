@@ -18,6 +18,20 @@ class MTGSourceCard extends MTGAbstractCard
     /** The count of prices to retain for the average value calculation. */
     public const int PRICE_RETENTION_COUNT = 30;
 
+    /**
+     * @var int $CEDHRank the rank on EDHREC (the lower the better)
+     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $CEDHRank = 0;
+
+    /**
+     * @var int $FFARank the rank on EDHREC (the lower the better)
+     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $FFARank = 0;
+
     #[Assert\NotNull]
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private string $MTGOPrice = '0.00';
@@ -42,6 +56,13 @@ class MTGSourceCard extends MTGAbstractCard
     #[Assert\NotNull]
     #[ORM\Column(type: Types::JSON)]
     private array $colorIdentity = [];
+
+    /**
+     * @var int $duelRank the rank on MTGTop8 (the lower the better)
+     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $duelRank = 0;
 
     #[Assert\NotNull]
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
@@ -74,6 +95,10 @@ class MTGSourceCard extends MTGAbstractCard
     #[Assert\NotNull]
     #[ORM\Column]
     private bool $isCommandZoneEligible = false;
+
+    #[Assert\NotNull]
+    #[ORM\Column]
+    private bool $isDigitalOnly = false;
 
     #[Assert\NotNull]
     #[ORM\Column]
@@ -117,12 +142,27 @@ class MTGSourceCard extends MTGAbstractCard
         $this->firstPrintedAt = new DateTimeImmutable();
     }
 
+    public function getCEDHRank(): int
+    {
+        return $this->CEDHRank;
+    }
+
     /**
      * @return list<string>
      */
     public function getColorIdentity(): array
     {
         return $this->colorIdentity;
+    }
+
+    public function getDuelRank(): int
+    {
+        return $this->duelRank;
+    }
+
+    public function getFFARank(): int
+    {
+        return $this->FFARank;
     }
 
     public function getFirstPrintedAt(): DateTimeImmutable
@@ -211,6 +251,11 @@ class MTGSourceCard extends MTGAbstractCard
         return $this->isCommandZoneEligible;
     }
 
+    public function isDigitalOnly(): bool
+    {
+        return $this->isDigitalOnly;
+    }
+
     public function isGreen(): bool
     {
         return $this->isGreen;
@@ -231,12 +276,33 @@ class MTGSourceCard extends MTGAbstractCard
         return $this->isWhite;
     }
 
+    public function setCEDHRank(int $CEDHRank): self
+    {
+        $this->CEDHRank = $CEDHRank;
+
+        return $this;
+    }
+
     /**
      * @param list<string> $colorIdentity
      */
     public function setColorIdentity(array $colorIdentity): static
     {
         $this->colorIdentity = $colorIdentity;
+
+        return $this;
+    }
+
+    public function setDuelRank(int $duelRank): self
+    {
+        $this->duelRank = $duelRank;
+
+        return $this;
+    }
+
+    public function setFFARank(int $FFARank): self
+    {
+        $this->FFARank = $FFARank;
 
         return $this;
     }
@@ -297,6 +363,13 @@ class MTGSourceCard extends MTGAbstractCard
         return $this;
     }
 
+    public function setIsDigitalOnly(bool $isDigitalOnly): self
+    {
+        $this->isDigitalOnly = $isDigitalOnly;
+
+        return $this;
+    }
+
     public function setIsGreen(bool $isGreen): static
     {
         $this->isGreen = $isGreen;
@@ -333,31 +406,6 @@ class MTGSourceCard extends MTGAbstractCard
     public function setLatestMValue(string $latestMValue): static
     {
         $this->latestMValue = $latestMValue;
-
-        return $this;
-    }
-
-    /**
-     * @param numeric-string ...$mixedPrices The new prices to take into account.
-     *
-     * @return static
-     */
-    public function setLatestMValueFromMixedPrices(string ...$mixedPrices): static
-    {
-        if (count($mixedPrices) === 0) {
-            $this->latestMValue = '0.00';
-
-            return $this;
-        }
-
-        $sum = '0.00';
-
-        foreach ($mixedPrices as $price) {
-            $sum = bcadd($sum, $price, 4); // extra precision during calc
-        }
-
-        $avg = bcdiv($sum, (string)count($mixedPrices), 4);
-        $this->latestMValue = bcadd($avg, '0', 2); // round to scale
 
         return $this;
     }
@@ -413,14 +461,14 @@ class MTGSourceCard extends MTGAbstractCard
      * - updates the MValueCount with the new count of prices, shifting it if necessary
      * - updates the MValueTrend with the new trend of the average
      *
-     * @param numeric-string ...$mixedPrices The new prices to take into account.
+     * @param numeric-string $newPriceAverage the new prices to take into account
      *
      * @return static
      */
-    public function updateMValueWithNewPrices(string ...$mixedPrices): static
+    public function updateMValueWithNewPrice(string $newPriceAverage): static
     {
         // First, save this latest value
-        $this->setLatestMValueFromMixedPrices(...$mixedPrices);
+        $this->setLatestMValue($newPriceAverage);
 
         // Only update the prices if the latest price found is > 0.0
         if ((float)$this->latestMValue > 0.0) {

@@ -9,6 +9,12 @@ use App\Entity\SourceActivityHistoryInterface;
 use App\Model\AeonShift\PointsList\MTG\V1\MTGPointsListModelV1;
 use App\Model\MTG\Source\Factory\SourceActivityHistoryFactory;
 use function count;
+use const CURLOPT_FOLLOWLOCATION;
+use const CURLOPT_HTTPHEADER;
+use const CURLOPT_MAXREDIRS;
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_TIMEOUT;
+use const CURLOPT_USERAGENT;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
@@ -16,6 +22,8 @@ use const DIRECTORY_SEPARATOR;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use const ENT_QUOTES;
+use const ENT_SUBSTITUTE;
 use function in_array;
 use function is_array;
 use function is_string;
@@ -105,7 +113,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      *
      * @throws Exception|RuntimeException
      *
-     * @return array{processed: int, inserted: int, updated: int, skipped: int, prices: int, errors: int}
+     * @return array{processed: int, inserted: int, updated: int, skipped: int, prices: int, errors: int, duel_ranks: int}
      */
     public function parseAndImport(?callable $progressCallback = null, string $startedFrom = 'cli'): array
     {
@@ -125,6 +133,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             $skippedCardsCount = 0;
             $pricesCount = 0;
             $errorCount = 0;
+            $updatedMTGTop8RanksCount = 0;
             $startTime = new DateTimeImmutable();
 
             $this->getLogger()->info(sprintf('Starting import from: %s - V' . self::VERSION . ', setting up database trace as well', $jsonFilePath));
@@ -143,7 +152,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             /**
              * Temporary array: lowest avg price (50/50 USD/EUR) per card name (Scryfall "name").
              *
-             * @var array<string, array{tix: numeric-string, usd: numeric-string, eur: numeric-string, avg: float}> $lowestAveragePricesByName
+             * @var array<string, array{tix: numeric-string, usd: numeric-string, eur: numeric-string, avg: numeric-string}> $lowestAveragePricesByName
              */
             $lowestAveragePricesByName = [];
 
@@ -180,6 +189,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                                 $skippedCardsCount += $result['skipped'];
                                 $pricesCount += $result['prices'];
                                 $errorCount += $result['errors'];
+                                $updatedMTGTop8RanksCount += $result['duel_ranks'];
                                 $batchSliceOfCards = [];
                             }
                         }
@@ -187,7 +197,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                         ++$processedCardsCount;
 
                         if ($progressCallback !== null && $processedCardsCount % 100 === 0) {
-                            $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount);
+                            $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount, $updatedMTGTop8RanksCount);
                         }
                     } catch (Throwable $e) {
                         ++$errorCount;
@@ -214,6 +224,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                     $skippedCardsCount += $result['skipped'];
                     $pricesCount += $result['prices'];
                     $errorCount += $result['errors'];
+                    $updatedMTGTop8RanksCount += $result['duel_ranks'];
                 }
 
                 // Now that all cards are updated/inserted in DB, apply prices in batches.
@@ -225,36 +236,42 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                     $updatedCardsCount,
                     $skippedCardsCount,
                     $pricesCount,
-                    $errorCount
+                    $errorCount,
+                    $updatedMTGTop8RanksCount
                 );
+
+                // Update MTGTop8 cEDH popularity ranks (duel_rank)
+                $updatedMTGTop8RanksCount = $this->updateMTGTop8RanksFromCedhMetaPopularity();
 
                 // Final callback
                 if ($progressCallback !== null) {
-                    $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount);
+                    $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount, $updatedMTGTop8RanksCount);
                 }
 
                 // Finalize source activity history in both logs and DB
                 $this->sourceActivityHistory->setEndedAt(new DateTime());
                 $this->sourceActivityHistory->setSuccessSummary(sprintf(
-                    'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d, Prices updated: %d',
+                    'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d, Prices updated: %d, MTGTop8 ranks updated: %d',
                     $processedCardsCount,
                     $insertedCardsCount,
                     $updatedCardsCount,
                     $skippedCardsCount,
                     $errorCount,
-                    $updatedPricesCount
+                    $updatedPricesCount,
+                    $updatedMTGTop8RanksCount
                 ));
                 $this->entityManager->persist($this->sourceActivityHistory);
                 $this->entityManager->flush();
                 $this->getLogger()->info(
                     sprintf(
-                        'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d, Prices updated: %d',
+                        'Import completed - Processed: %d, Inserted: %d, Updated: %d, Skipped: %d, Errors: %d, Prices updated: %d, MTGTop8 ranks updated: %d',
                         $processedCardsCount,
                         $insertedCardsCount,
                         $updatedCardsCount,
                         $skippedCardsCount,
                         $errorCount,
-                        $updatedPricesCount
+                        $updatedPricesCount,
+                        $updatedMTGTop8RanksCount
                     )
                 );
 
@@ -277,12 +294,13 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             }
 
             return [
-                'processed' => $processedCardsCount,
-                'inserted'  => $insertedCardsCount,
-                'updated'   => $updatedCardsCount,
-                'skipped'   => $skippedCardsCount,
-                'errors'    => $errorCount,
-                'prices'    => $updatedPricesCount,
+                'processed'  => $processedCardsCount,
+                'inserted'   => $insertedCardsCount,
+                'updated'    => $updatedCardsCount,
+                'skipped'    => $skippedCardsCount,
+                'errors'     => $errorCount,
+                'prices'     => $updatedPricesCount,
+                'duel_ranks' => $updatedMTGTop8RanksCount,
             ];
         } finally {
             // Release the lock
@@ -298,7 +316,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      * - only update when avg != 0
      * - call updateMValueWithNewPrices(eur, usd)
      *
-     * @param array<string, array{usd: numeric-string, eur: numeric-string, avg: float, tix: numeric-string}> $lowestAveragePricesByName
+     * @param array<string, array{usd: numeric-string, eur: numeric-string, avg: numeric-string, tix: numeric-string}> $lowestAveragePricesByName
      *
      * @return int Number of card prices updated (i.e., entities for which updateMValueWithNewPrices() was called)
      */
@@ -310,7 +328,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         int $updatedCardsCount = 0,
         int $skippedCardsCount = 0,
         int &$pricesCount = 0,
-        int $errorCount = 0
+        int $errorCount = 0,
+        int $updatedMTGTop8RanksCount = 0,
     ): int
     {
         $this->getLogger()->debug(sprintf(
@@ -343,37 +362,44 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                 ->getResult();
 
             foreach ($cards as $card) {
-                $name = $card->getNameEN();
+                $cardNameEN = $card->getNameEN();
                 ++$processed;
 
-                if (! isset($lowestAveragePricesByName[$name])) {
+                if (! isset($lowestAveragePricesByName[$cardNameEN])) {
                     continue;
                 }
 
-                $usd = $lowestAveragePricesByName[$name]['usd'];
-                $eur = $lowestAveragePricesByName[$name]['eur'];
-                $avg = $lowestAveragePricesByName[$name]['avg'];
+                $avg = $lowestAveragePricesByName[$cardNameEN]['avg'];
+                $modified = false;
 
-                if ($avg !== 0.0) {
-                    $card->updateMValueWithNewPrices($eur, $usd);
-                    $card->setMTGOPrice($lowestAveragePricesByName[$name]['tix']);
+                if ((float)$avg !== 0.0) {
+                    $card->setLatestMValue((string)$avg);
+                    $card->updateMValueWithNewPrice((string)$avg);
+                    $modified = true;
+                }
+
+                if ((float)$lowestAveragePricesByName[$cardNameEN]['tix'] !== 0.0) {
+                    $card->setMTGOPrice($lowestAveragePricesByName[$cardNameEN]['tix']);
+                    $modified = true;
+                }
+
+                if ($modified === true) {
                     $this->entityManager->persist($card);
                     ++$persisted;
-
                     // Keep the same counters the CLI already prints (pricesCount is the one that should move now)
                     ++$pricesCount;
+                }
 
-                    if ($progressCallback !== null && $processed % 100 === 0) {
-                        $progressCallback(
-                            $processedCardsCount,
-                            $insertedCardsCount,
-                            $updatedCardsCount,
-                            $skippedCardsCount,
-                            $pricesCount,
-                            $errorCount
-                        );
-                    }
-
+                if ($progressCallback !== null && $processed % 100 === 0) {
+                    $progressCallback(
+                        $processedCardsCount,
+                        $insertedCardsCount,
+                        $updatedCardsCount,
+                        $skippedCardsCount,
+                        $pricesCount,
+                        $errorCount,
+                        $updatedMTGTop8RanksCount
+                    );
                 }
             }
 
@@ -523,38 +549,130 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     /**
      * Update the in-memory map of lowest average (50/50 USD/EUR) prices per card name.
      *
-     * @param array<string, array{usd: numeric-string, eur: numeric-string, avg: float, tix: numeric-string}> $lowestAveragePricesByName
+     * @param array<string, array{usd: numeric-string, eur: numeric-string, avg: numeric-string, tix: numeric-string}> $lowestAveragePricesByName
      * @param array<string, mixed> $card Raw Scryfall card JSON decoded as array
      */
     private function collectLowestAveragePriceByNameFromRawScryfallCard(array &$lowestAveragePricesByName, array $card): void
     {
+        // Discard this card as a price candidate if it doesn't have a name or is a gold-bordered card (exception to prices, as they're all cheaper illegal versions of the same card)
         if (! isset($card['name']) || ! is_string($card['name']) || $card['name'] === '') {
             return;
         }
 
-        $prices = (isset($card['prices']) && is_array($card['prices'])) ? $card['prices'] : [];
+        // Each price should be compared against similar currency source, all finishes/treatments considered.
+        /** @var array{
+         *     tix?: float|string|null,
+         *     eur?: float|string|null,
+         *     usd?: float|string|null,
+         *     eur_foil?: float|string|null,
+         *     usd_foil?: float|string|null,
+         *     eur_etched?: float|string|null,
+         *     usd_etched?: float|string|null
+         * } $prices
+         */
+        $prices = is_array($card['prices'] ?? null) ? $card['prices'] : [];
 
-        $usd = $this->normalizePriceToNumericString($prices['usd'] ?? null);
-        $eur = $this->normalizePriceToNumericString($prices['eur'] ?? null);
+        $finalPriceEUR = (float)(
+            $prices['eur']
+            ?? $prices['eur_foil']
+            ?? $prices['eur_etched']
+            ?? 0.0
+        );
+
+        $finalPriceUSD = (float)(
+            $prices['usd']
+            ?? $prices['usd_foil']
+            ?? $prices['usd_etched']
+            ?? 0.0
+        );
+
+        if (isset($prices['eur_foil']) && $prices['eur_foil'] < $finalPriceEUR) {
+            $finalPriceEUR = $prices['eur_foil'];
+        }
+
+        if (isset($prices['eur_etched']) && $prices['eur_etched'] < $finalPriceEUR) {
+            $finalPriceEUR = $prices['eur_etched'];
+        }
+
+        if (isset($prices['usd_etched']) && $prices['usd_etched'] < $finalPriceUSD) {
+            $finalPriceUSD = $prices['usd_etched'];
+        }
+
+        $usd = $this->normalizePriceToNumericString($finalPriceUSD);
+        $eur = $this->normalizePriceToNumericString($finalPriceEUR);
         $tix = $this->normalizePriceToNumericString($prices['tix'] ?? null);
+        $usdVsZero = bccomp($usd, '0', 2);
+        $eurVsZero = bccomp($eur, '0', 2);
 
-        $avg = (((float)$usd) + ((float)$eur)) / 2.0;
-
-        // Do not collect / store any price candidate if the average is 0.
-        if ($avg === 0.0) {
+        // Do not collect / store any price candidate if prices are all 0.
+        if ($usdVsZero === 0 && $eurVsZero === 0 && (float)$tix === 0.0) {
             return;
+        }
+
+        if ($usdVsZero <= 0 && $eurVsZero > 0) {
+            $avg = $eur;
+        } elseif ($usdVsZero > 0 && $eurVsZero <= 0) {
+            $avg = $usd;
+        } else {
+            $sum = bcadd($usd, $eur, 2);
+            $avg = bcdiv($sum, '2', 2);
         }
 
         $name = $card['name'];
 
         if (! isset($lowestAveragePricesByName[$name])) {
-            $lowestAveragePricesByName[$name] = ['usd' => $usd, 'eur' => $eur, 'avg' => $avg, 'tix' => $tix];
-
-            return;
+            $lowestAveragePricesByName[$name] = [
+                'usd' => '0.00',
+                'eur' => '0.00',
+                'avg' => '0.00',
+                'tix' => '0.00',
+            ];
         }
 
-        if ($avg < $lowestAveragePricesByName[$name]['avg']) {
-            $lowestAveragePricesByName[$name] = ['usd' => $usd, 'eur' => $eur, 'avg' => $avg, 'tix' => $tix];
+        if (isset($card['border_color'], $card['set_type']) && $card['border_color'] !== 'gold' && ! in_array($card['set_type'], ['alchemy', 'token', 'memorabilia', 'minigame'], true)) {
+            // AVG
+            if (
+                bccomp($avg, '0.00', 2) === 1
+                && (
+                    bccomp($lowestAveragePricesByName[$name]['avg'], '0.00', 2) === 0
+                    || bccomp($avg, $lowestAveragePricesByName[$name]['avg'], 2) === -1
+                )
+            ) {
+                $lowestAveragePricesByName[$name]['avg'] = $avg;
+            }
+
+            // USD
+            if (
+                bccomp($usd, '0.00', 2) === 1
+                && (
+                    bccomp($lowestAveragePricesByName[$name]['usd'], '0.00', 2) === 0
+                    || bccomp($usd, $lowestAveragePricesByName[$name]['usd'], 2) === -1
+                )
+            ) {
+                $lowestAveragePricesByName[$name]['usd'] = $usd;
+            }
+
+            // EUR
+            if (
+                bccomp($eur, '0.00', 2) === 1
+                && (
+                    bccomp($lowestAveragePricesByName[$name]['eur'], '0.00', 2) === 0
+                    || bccomp($eur, $lowestAveragePricesByName[$name]['eur'], 2) === -1
+                )
+            ) {
+                $lowestAveragePricesByName[$name]['eur'] = $eur;
+            }
+        }
+
+        // TIX (independent of borders)
+        if (
+            bccomp($tix, '0.00', 2) === 1
+            && (
+                bccomp($lowestAveragePricesByName[$name]['tix'], '0.00', 2) === 0
+                || bccomp($tix, $lowestAveragePricesByName[$name]['tix'], 2) === -1
+            )
+        ) {
+            $lowestAveragePricesByName[$name]['tix'] = $tix;
         }
     }
 
@@ -584,6 +702,75 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $partnerTypes = ['Background', 'Time Lord Doctor'];
 
         return array_any($partnerTypes, static fn ($type) => mb_stripos($typeLine, $type) !== false);
+    }
+
+    /**
+     * @return string Raw HTML
+     */
+    private function fetchHtml(string $url): string
+    {
+        /**
+         * Pretend to be a Firefox browser, we are a bot, but a fair one, with one call only, not a rainfall of calls.
+         */
+        $context = stream_context_create([
+            'http'  => [
+                'method'  => 'GET',
+                'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                'Accept: text/html,application/xhtml+xml',
+                'Accept-Language: en-US,en;q=0.9',
+                'Connection: close',
+                'timeout' => 30,
+            ],
+            'https' => [
+                'method'  => 'GET',
+                'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                'Accept: text/html,application/xhtml+xml',
+                'Accept-Language: en-US,en;q=0.9',
+                'Connection: close',
+                'timeout' => 30,
+            ],
+            'ssl'   => [
+                'verify_peer'      => true,
+                'verify_peer_name' => true,
+            ],
+        ]);
+
+        $html = @file_get_contents($url, false, $context);
+
+        // Try CURL instead
+        if (! is_string($html) || $html === '') {
+
+            $ch = curl_init($url);
+
+            if ($ch === false) {
+                throw new RuntimeException(sprintf('Failed to fetch HTML from: %s', $url));
+            }
+
+            $setOptions = curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 30,
+                CURLOPT_USERAGENT      => 'Mozilla/5.0',
+                CURLOPT_HTTPHEADER     => [
+                    'Accept: text/html',
+                ],
+            ]);
+
+            if ($setOptions !== true) {
+                throw new RuntimeException(sprintf('Failed to fetch HTML from: %s (%s)', $url, curl_error($ch)));
+            }
+
+            $html = curl_exec($ch);
+
+            if ($html === false) {
+                throw new RuntimeException(sprintf('Failed to fetch HTML from: %s (%s)', $url, curl_error($ch)));
+            }
+
+            curl_close($ch);
+        }
+
+        return (string)$html;
     }
 
     /**
@@ -841,6 +1028,11 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $oracleText = isset($sourceCard['oracle_text']) && is_string($sourceCard['oracle_text']) ? $sourceCard['oracle_text'] : '';
         $nameEN = isset($sourceCard['name']) && is_string($sourceCard['name']) ? $sourceCard['name'] : '';
 
+        // Check for "printed" classification for gold-bordered cards
+        if ($borderColor === 'gold') {
+            return 'printed';
+        }
+
         // Check named exceptions
         if (in_array($nameEN, ['Chaos Orb', 'Falling Star'], true)) {
             return 'printed';
@@ -1029,6 +1221,10 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'is_red',
             'is_white',
             'maximum_timeline_legality',
+            'cedhrank',
+            'ffarank',
+            'duel_rank',
+            'is_digital_only',
         ];
 
         foreach ($fieldsToCheck as $field) {
@@ -1050,6 +1246,21 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                 if ($newPrecedence <= $existingPrecedence) {
                     continue; // Skip update if new value doesn't have higher precedence
                 }
+            }
+
+            // Special rule for is_digital_only:
+            // Once a card has been proven NOT digital-only (i.e. we parse a printing with digital=false),
+            // we must keep is_digital_only = 0 forever, as it exists at least on paper (never allow 0 -> 1).
+            if ($field === 'is_digital_only') {
+                $existingDigitalOnly = (int)(bool)$existingValue;
+                $newDigitalOnly = (int)(bool)$newValue;
+
+                if ($existingDigitalOnly === 0 && $newDigitalOnly === 1) {
+                    continue; // never set back to true
+                }
+
+                $existingValue = $existingDigitalOnly;
+                $newValue = $newDigitalOnly;
             }
 
             // Special handling for different data types
@@ -1131,16 +1342,12 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             return 'choose_a_background';
         }
 
-        if (mb_stripos($oracleText, 'Friends forever') !== false) {
-            return 'friends_forever';
-        }
-
         if (mb_stripos($oracleText, 'Partner with') !== false) {
             return 'partner_with';
         }
 
         // Handle 'Partner—[Type]' dynamically
-        if (preg_match('/Partner\s*—\s*(.+)/ui', $oracleText, $matches)) {
+        if (preg_match('/Partner\s*—\s*([^(]+)\(?/ui', $oracleText, $matches)) {
             $typeText = $matches[1];
 
             // Remove punctuation
@@ -1383,7 +1590,16 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'mvalue_trend'                      => 0.0,
             'mvalue_count'                      => 0,
             'latest_mvalue'                     => 0.0,
+            'ffarank'                           => $card['edhrec_rank'] ?? 0,
+            'duel_rank'                         => 0,
+            'cedhrank'                          => 0,
+            'is_digital_only'                   => (int)(isset($card['digital']) && $card['digital'] === true),
         ];
+    }
+
+    private function normalizeNameForLookup(string $name): string
+    {
+        return mb_strtolower(mb_trim($name), 'UTF-8');
     }
 
     /**
@@ -1403,6 +1619,39 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     }
 
     /**
+     * Parse commander names (anchor text) from MTGTop8 cEDH popularity HTML, top-to-bottom.
+     *
+     * Expected fragments like:
+     *   <div ... class=S14><a href=archetype?...>Aragorn, King Of Gondor</a></div>
+     *
+     * @return list<string>
+     */
+    private function parseMTGTop8CommanderNamesFromHtml(string $html): array
+    {
+        // Grab anchor text for archetype links in document order.
+        $pattern = '/<a[^>]*href\s*=\s*["\']?archetype\?[^>]*>\s*([^<]+)\s*<\/a>/ui';
+
+        if (! preg_match_all($pattern, $html, $matches)) {
+            return [];
+        }
+
+        $names = [];
+
+        foreach ($matches[1] as $raw) {
+            $text = html_entity_decode(strip_tags($raw), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $text = mb_trim($text);
+
+            if ($text === '') {
+                continue;
+            }
+
+            $names[] = $text;
+        }
+
+        return $names;
+    }
+
+    /**
      * Process a batch of BATCH_SIZE cards found in source JSON (upsert).
      * Determining whether to insert, update or skip each card.
      *
@@ -1411,7 +1660,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      *
      * @throws DateMalformedStringException|Exception|JsonException
      *
-     * @return array{inserted: int, updated: int, skipped: int, prices: int, errors: int}
+     * @return array{inserted: int, updated: int, skipped: int, prices: int, errors: int, duel_ranks: int}
      */
     private function processCardsUpdateBatchSlice(array $batchSliceOfCards, DateTimeImmutable $batchStartedAtDate): array
     {
@@ -1420,6 +1669,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $skippedCount = 0;
         $pricesCount = 0;
         $errorCount = 0;
+        $updatedMTGTop8RanksCount = 0;
 
         foreach ($batchSliceOfCards as $currentSourceCard) {
 
@@ -1557,11 +1807,12 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         }
 
         return [
-            'inserted' => $insertedCount,
-            'updated'  => $updatedCount,
-            'skipped'  => $skippedCount,
-            'prices'   => $pricesCount,
-            'errors'   => $errorCount,
+            'inserted'   => $insertedCount,
+            'updated'    => $updatedCount,
+            'skipped'    => $skippedCount,
+            'prices'     => $pricesCount,
+            'errors'     => $errorCount,
+            'duel_ranks' => $updatedMTGTop8RanksCount,
         ];
     }
 
@@ -1584,5 +1835,142 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
             throw new RuntimeException('Failed to reset maximum_timeline_legality: ' . $e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * Update duel_rank and cedhrank by fetching MTGTop8 "Duel Commander" and "cEDH decks" popularity page, parsing commander names top-to-bottom,
+     * and storing the 1-based index as rank.
+     *
+     * Matching rule:
+     * - compare commander/card name with DB cards using multibyte lowercase (UTF-8)
+     *
+     * @throws Exception
+     *
+     * @return int Number of DB rows updated (cards matched + changed)
+     */
+    private function updateMTGTop8RanksFromCedhMetaPopularity(): int
+    {
+        // First, Duel Commander
+        $duelCommanderMTGTop8URL = 'https://www.mtgtop8.com/cEDH_decks?f=EDH&show=pop&cid=&meta=56&gamerid1=&gamerid2=&cEDH_cp=1';
+
+        $this->getLogger()->info(sprintf('[MTGTOP8] Fetching DC ranks from: %s', $duelCommanderMTGTop8URL));
+
+        $html = $this->fetchHtml($duelCommanderMTGTop8URL);
+        $names = $this->parseMTGTop8CommanderNamesFromHtml($html);
+
+        $this->getLogger()->info(sprintf('[MTGTOP8] Parsed commander names: %d', count($names)));
+
+        if (count($names) === 0) {
+            $this->getLogger()->warning('[MTGTOP8] No commander names found in MTGTop8 DC HTML.');
+
+            return 0;
+        }
+
+        // Build case-insensitive lookup from the cache (must already be loaded by loadExistingCardsCache()).
+        $lowerToCanonicalName = [];
+        foreach (array_keys($this->existingCardsCache) as $dbName) {
+            if ($dbName === '') {
+                continue;
+            }
+
+            $lowerToCanonicalName[$this->normalizeNameForLookup($dbName)] = $dbName;
+        }
+
+        $updated = 0;
+        $rank = 0;
+
+        foreach ($names as $commanderName) {
+            ++$rank;
+
+            $key = $this->normalizeNameForLookup($commanderName);
+
+            if (! isset($lowerToCanonicalName[$key])) {
+                continue;
+            }
+
+            $canonicalName = $lowerToCanonicalName[$key];
+
+            // Only update when rank actually changes (avoid unnecessary writes)
+            $existing = $this->existingCardsCache[$canonicalName]['duel_rank'] ?? 0;
+            $existingInt = is_numeric($existing) ? (int)$existing : 0;
+
+            if ($existingInt === $rank) {
+                continue;
+            }
+
+            $this->connection->update(
+                $this->tablePrefix . 'mtgsource_card',
+                ['duel_rank' => $rank],
+                ['name_en'   => $canonicalName]
+            );
+
+            // Keep cache in sync (helps if this method is called again in the same run)
+            $this->existingCardsCache[$canonicalName]['duel_rank'] = $rank;
+
+            ++$updated;
+        }
+
+        // Then, CEDH
+        $CEDHMTGTop8URL = 'https://www.mtgtop8.com/cEDH_decks?f=cEDH&show=pop&cid=&meta=240&gamerid1=&gamerid2=&cEDH_cp=1';
+
+        $this->getLogger()->info(sprintf('[MTGTOP8] Fetching CEDH ranks from: %s', $CEDHMTGTop8URL));
+
+        $html = $this->fetchHtml($CEDHMTGTop8URL);
+        $names = $this->parseMTGTop8CommanderNamesFromHtml($html);
+
+        $this->getLogger()->info(sprintf('[MTGTOP8] Parsed commander names: %d', count($names)));
+
+        if (count($names) === 0) {
+            $this->getLogger()->warning('[MTGTOP8] No commander names found in MTGTop8 CEDH HTML.');
+
+            return 0;
+        }
+
+        // Build case-insensitive lookup from the cache (must already be loaded by loadExistingCardsCache()).
+        $lowerToCanonicalName = [];
+        foreach (array_keys($this->existingCardsCache) as $dbName) {
+            if ($dbName === '') {
+                continue;
+            }
+
+            $lowerToCanonicalName[$this->normalizeNameForLookup($dbName)] = $dbName;
+        }
+
+        $rank = 0;
+
+        foreach ($names as $commanderName) {
+            ++$rank;
+
+            $key = $this->normalizeNameForLookup($commanderName);
+
+            if (! isset($lowerToCanonicalName[$key])) {
+                continue;
+            }
+
+            $canonicalName = $lowerToCanonicalName[$key];
+
+            // Only update when rank actually changes (avoid unnecessary writes)
+            $existing = $this->existingCardsCache[$canonicalName]['cedhrank'] ?? 0;
+            $existingInt = is_numeric($existing) ? (int)$existing : 0;
+
+            if ($existingInt === $rank) {
+                continue;
+            }
+
+            $this->connection->update(
+                $this->tablePrefix . 'mtgsource_card',
+                ['cedhrank' => $rank],
+                ['name_en'  => $canonicalName]
+            );
+
+            // Keep cache in sync (helps if this method is called again in the same run)
+            $this->existingCardsCache[$canonicalName]['cedhrank'] = $rank;
+
+            ++$updated;
+        }
+
+        $this->getLogger()->info(sprintf('[MTGTOP8] Rank update completed. Updated cards: %d', $updated));
+
+        return $updated;
     }
 }

@@ -26,7 +26,7 @@ const MTGPOINTSLISTMODELV1_MODEL_MESSAGES = {
     singlecopiescardnotunique: '{{ 'front.mtg.form.results.errors.singlecopiescardnotunique.text'|trans|raw }}',
     singletoncardnotunique: '{{ 'front.mtg.form.results.errors.singletoncardnotunique.text'|trans|raw }}',
     numberofcardnotcorrectforquadruples: '{{ 'front.mtg.form.results.errors.numberofcardnotcorrectforquadruples.text'|trans|raw }}',
-    wrongtimelineforcards: '{{ 'front.mtg.form.results.errors.wrongtimelineforcards.text'|trans|raw }}',
+    wrongtimelineforcards: '{{ 'front.mtg.form.results.errors.wrongtimelineforcards.text'|trans|raw }}'
 };
 
 /**
@@ -357,6 +357,7 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
         ];
         // Merging same cards
         const map = new Map();
+
         for (const card of allCardsFromZonesDeckList) {
             const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
                 card.name,
@@ -435,15 +436,14 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
             }
         }
 
-
-        /// Check Timeline legality if (card.timeline < currentTimeline)
+        // Check Timeline legality if (card.timeline < currentTimeline)
         const LuTTimelines = updates.updates[currentFormatChoiceValues.update].pointsList.timelineprecedences;
         const currentTimeline = LuTTimelines[currentFormatChoiceValues.timeline];
-        
+
         let listWrongTimelineCards = [];
 
         allCardsFromZonesDeckList.forEach((card) => {
-            
+
             if(LuTTimelines[card.currentCardData.timeline] < currentTimeline){
                 listWrongTimelineCards.push({cardName: card.name, cardTimeline: card.currentCardData.timeline});
             }
@@ -451,7 +451,7 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
 
         if(listWrongTimelineCards.length > 0) {
             deckListStructure.errors.push(
-                MTGPOINTSLISTMODELV1_MODEL_MESSAGES.wrongtimelineforcards + 
+                MTGPOINTSLISTMODELV1_MODEL_MESSAGES.wrongtimelineforcards +
                 listWrongTimelineCards
                     .map(c => `${c.cardName} (${c.cardTimeline})`)
                     .join(', ')

@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller\API;
 
 use App\Model\AeonShift\PointsList\MTG\MTGPointsListManager;
-use App\Model\AeonShift\PointsList\MTG\V1\MtgPublishedAnnouncementsResponse;
+use App\Model\AeonShift\PointsList\MTG\V1\MTGPublishedAnnouncementsResponse;
 use Nelmio\ApiDocBundle\Attribute\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -70,7 +70,7 @@ final class APIController extends AbstractController
             new OA\Response(
                 response: 200,
                 description: 'Published announcements retrieved successfully',
-                content: new Model(type: MtgPublishedAnnouncementsResponse::class)
+                content: new Model(type: MTGPublishedAnnouncementsResponse::class)
             ),
         ]
     )]

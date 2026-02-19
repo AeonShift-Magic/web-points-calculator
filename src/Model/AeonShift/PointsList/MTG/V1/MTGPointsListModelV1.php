@@ -12,6 +12,7 @@ use App\Entity\MTG\MTGSourceCard;
 use App\Entity\PointsListInterface;
 use App\Entity\User;
 use App\Model\AeonShift\PointsList\AbstractPointsListModel;
+use App\Model\AeonShift\PointsList\MTGPointsListModelInterface;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +25,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class MTGPointsListModelV1 extends AbstractPointsListModel
+final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGPointsListModelInterface
 {
     public const string CALCULATOR_JS_FILE = 'MTGPointsListModelV1.js.twig';
 
@@ -324,121 +325,122 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
         return $sourceCards;
     }
 
-    /**
-     * Could use DTOs, but arrays are just as fast.
-     *
-     * @param SourceItemsRepositoryInterface $entityRepository
-     * @param MTGPointsList $pointsList
-     *
-     * @return array{
-     *     cards: array{
-     *         string, array{
-     *              flavorofnameen: string|null,
-     *              alternatenameen: string|null,
-     *              imageurl: string|null,
-     *              mv: float,
-     *              multicztype: string,
-     *              ci: string[],
-     *              timeline: string,
-     *              mvalue: float,
-     *              tix: float,
-     *              firstprintedyear: int,
-     *              firstprintedon: int,
-     *              legal2HG: bool,
-     *              legal2HGSpecial: bool,
-     *              legalDC: bool,
-     *              legalDCSpecial: bool,
-     *              legalCEDH: bool,
-     *              legalCEDHSpecial: bool,
-     *              czeligible: bool,
-     *              multiczeligible: bool,
-     *              b: bool,
-     *              u: bool,
-     *              r: bool,
-     *              g: bool,
-     *              w: bool,
-     *              c: bool,
-     *              pointsBaseSingleton: float|null,
-     *              pointsBaseQuadruples: float|null,
-     *              pointsDuelCommander: float|null,
-     *              pointsDuelCommanderSpecial: float|null,
-     *              pointsCommander: float|null,
-     *              pointsCommanderSpecial: float|null,
-     *              pointsHighlander: float|null,
-     *              pointsModern: float|null,
-     *              pointsPioneer: float|null,
-     *              pointsStandard: float|null
-     *         }
-     *     },
-     *     unranked: array{
-     *          flavorofnameen: null,
-     *          alternatenameen: string|null,
-     *          imageurl: string|null,
-     *          mv: float,
-     *          multicztype: string,
-     *          ci: string[],
-     *          timeline: string,
-     *          mvalue: float,
-     *          tix: float,
-     *          firstprintedyear: int,
-     *          firstprintedon: int,
-     *          legal2HG: bool,
-     *          legal2HGSpecial: bool,
-     *          legalDC: bool,
-     *          legalDCSpecial: bool,
-     *          legalCEDH: bool,
-     *          legalCEDHSpecial: bool,
-     *          czeligible: bool,
-     *          multiczeligible: bool,
-     *          b: bool,
-     *          u: bool,
-     *          r: bool,
-     *          g: bool,
-     *          w: bool,
-     *          c: bool,
-     *          pointsBaseSingleton: float|null,
-     *          pointsBaseQuadruples: float|null,
-     *          pointsDuelCommander: float|null,
-     *          pointsDuelCommanderSpecial: float|null,
-     *          pointsCommander: float|null,
-     *          pointsCommanderSpecial: float|null,
-     *          pointsHighlander: float|null,
-     *          pointsModern: float|null,
-     *          pointsPioneer: float|null,
-     *          pointsStandard: float|null
-     *     },
-     *     pvalues: array{
-     *         baseSingletonStandardPlay: float|null,
-     *         baseQuadruplesStandardPlay: float|null,
-     *         duelCommanderStandardPlay: float|null,
-     *         commanderStandardPlay: float|null,
-     *         highlanderStandardPlay: float|null,
-     *         modernStandardPlay: float|null,
-     *         pioneerStandardPlay: float|null,
-     *         standardStandardPlay: float|null,
-     *         baseSingletonLitePlay: float|null,
-     *         baseQuadruplesLitePlay: float|null,
-     *         duelCommanderLitePlay: float|null,
-     *         commanderLitePlay: float|null,
-     *         highlanderLitePlay: float|null,
-     *         modernLitePlay: float|null,
-     *         pioneerLitePlay: float|null,
-     *         standardLitePlay: float|null,
-     *         baseSingletonPowerPlay: float|null,
-     *         baseQuadruplesPowerPlay: float|null,
-     *         duelCommanderPowerPlay: float|null,
-     *         commanderPowerPlay: float|null,
-     *         highlanderPowerPlay: float|null,
-     *         modernPowerPlay: float|null,
-     *         pioneerPowerPlay: float|null,
-     *         standardPowerPlay: float|null
-     *     },
-     *     calculatorJsFunctionPrefix: string,
-     *     timelineprecedences: array {
-     *         string, int
-     *     }
-     * }
-     */
+     /**
+      * Could use DTOs, but arrays are just as fast.
+      *
+       * @param SourceItemsRepositoryInterface $entityRepository
+       * @param MTGPointsList $pointsList
+      *
+      * @return array{
+      *     cards: array{
+      *         string, array{
+      *              flavorofnameen: string|null,
+      *              alternatenameen: string|null,
+      *              imageurl: string|null,
+      *              mv: float,
+      *              multicztype: string,
+      *              ci: string[],
+      *              timeline: string,
+      *              mvalue: float,
+      *              tix: float,
+      *              firstprintedyear: int,
+      *              firstprintedon: int,
+      *              legal2HG: bool,
+      *              legal2HGSpecial: bool,
+      *              legalDC: bool,
+      *              legalDCSpecial: bool,
+      *              legalCEDH: bool,
+      *              legalCEDHSpecial: bool,
+      *              czeligible: bool,
+      *              multiczeligible: bool,
+      *              b: bool,
+      *              u: bool,
+      *              r: bool,
+      *              g: bool,
+      *              w: bool,
+      *              c: bool,
+      *              pointsBaseSingleton: float|null,
+      *              pointsBaseQuadruples: float|null,
+      *              pointsDuelCommander: float|null,
+      *              pointsDuelCommanderSpecial: float|null,
+      *              pointsCommander: float|null,
+      *              pointsCommanderSpecial: float|null,
+      *              pointsHighlander: float|null,
+      *              pointsModern: float|null,
+      *              pointsPioneer: float|null,
+      *              pointsStandard: float|null
+      *         }
+      *     },
+      *     unranked: array{
+      *          flavorofnameen: null,
+      *          alternatenameen: string|null,
+      *          imageurl: string|null,
+      *          mv: float,
+      *          multicztype: string,
+      *          ci: string[],
+      *          timeline: string,
+      *          mvalue: float,
+      *          tix: float,
+      *          firstprintedyear: int,
+      *          firstprintedon: int,
+      *          legal2HG: bool,
+      *          legal2HGSpecial: bool,
+      *          legalDC: bool,
+      *          legalDCSpecial: bool,
+      *          legalCEDH: bool,
+      *          legalCEDHSpecial: bool,
+      *          czeligible: bool,
+      *          multiczeligible: bool,
+      *          b: bool,
+      *          u: bool,
+      *          r: bool,
+      *          g: bool,
+      *          w: bool,
+      *          c: bool,
+      *          pointsBaseSingleton: float|null,
+      *          pointsBaseQuadruples: float|null,
+      *          pointsDuelCommander: float|null,
+      *          pointsDuelCommanderSpecial: float|null,
+      *          pointsCommander: float|null,
+      *          pointsCommanderSpecial: float|null,
+      *          pointsHighlander: float|null,
+      *          pointsModern: float|null,
+      *          pointsPioneer: float|null,
+      *          pointsStandard: float|null
+      *     },
+      *     pvalues: array{
+      *         baseSingletonStandardPlay: float|null,
+      *         baseQuadruplesStandardPlay: float|null,
+      *         duelCommanderStandardPlay: float|null,
+      *         commanderStandardPlay: float|null,
+      *         highlanderStandardPlay: float|null,
+      *         modernStandardPlay: float|null,
+      *         pioneerStandardPlay: float|null,
+      *         standardStandardPlay: float|null,
+      *         baseSingletonLitePlay: float|null,
+      *         baseQuadruplesLitePlay: float|null,
+      *         duelCommanderLitePlay: float|null,
+      *         commanderLitePlay: float|null,
+      *         highlanderLitePlay: float|null,
+      *         modernLitePlay: float|null,
+      *         pioneerLitePlay: float|null,
+      *         standardLitePlay: float|null,
+      *         baseSingletonPowerPlay: float|null,
+      *         baseQuadruplesPowerPlay: float|null,
+      *         duelCommanderPowerPlay: float|null,
+      *         commanderPowerPlay: float|null,
+      *         highlanderPowerPlay: float|null,
+      *         modernPowerPlay: float|null,
+      *         pioneerPowerPlay: float|null,
+      *         standardPowerPlay: float|null
+      *     },
+      *     calculatorJsFunctionPrefix: string,
+      *     timelineprecedences: array {
+      *         string, int
+      *     }
+      * }
+      */
+     #[Override]
     public function mergeMTGSourceAndPointsListAsArray(SourceItemsRepositoryInterface $entityRepository, PointsListInterface $pointsList): array
     {
         /** @var array<int, MTGSourceCard> $sourceCards */
@@ -508,6 +510,9 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel
                 'g'                => $sourceCard->isGreen(),
                 'w'                => $sourceCard->isWhite(),
                 'c'                => $sourceCard->isColorless(),
+                'mtgtop8rank'      => $sourceCard->getDuelRank(),
+                'ffarank'          => $sourceCard->getFFARank(),
+                'cedhrank'         => $sourceCard->getCEDHRank(),
             ];
         }
 

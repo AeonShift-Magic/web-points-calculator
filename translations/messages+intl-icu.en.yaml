@@ -405,8 +405,20 @@ admin:
                         label: 'MTGO price'
                         help: 'The MTGO price of this card.'
                     mvalue:
-                        label: 'M-Value'
+                        label: 'M-Value (trend)'
                         help: 'The M-Value of this card (mixed money value in EUR-USD).'
+                    duelrank:
+                        label: 'Duel Commander Rank'
+                    cedhrank:
+                        label: 'cEDH Rank'
+                    ffarank:
+                        label: 'FFA Rank'
+                    digitalonly:
+                        label: 'Is digital-only?'
+                    latestmvalue:
+                        label: 'Latest M-Value'
+                    mvaluecount:
+                        label: 'M-Value Count (number of prices used currently)'
         user:
             account:
                 roles:
@@ -701,6 +713,45 @@ front:
             title: 'Pick an <strong class="green-text">AeonShift star format</strong> below'
             text: 'You''re playing <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
             links:
+                choosecommander:
+                    text: 'Choose a Commander'
+                    title: 'Help me find a Commander.'
+                    description: 'This section is showing you possible Commanders, based on your format selection above. Please update your selection if you wish to find a Commander for another format.'
+                    form:
+                        nameen:
+                            label: 'Name (EN)'
+                        coloridentity:
+                            label: 'Color Identity'
+                        ranking:
+                            label: 'Ranking'
+                            top: 'Top Commanders Only'
+                            popular: 'Top and Popular Commanders'
+                            alltournamentranked: 'All Tournament Ranked Commanders'
+                            all: 'All Commanders'
+                    table:
+                        nameen:
+                            label: 'Name (EN)'
+                        budget:
+                            label: 'Budget 🧺'
+                        status:
+                            label: 'Release Status'
+                            unranked: 'Unranked'
+                            released: 'Released'
+                        rankingindex:
+                            duel:
+                                label: 'Duel Commander Ranking Index (The Lower The Better)'
+                            cedh:
+                                label: 'cEDH Ranking Index (The Lower The Better)'
+                            ffa:
+                                label: 'FFA Ranking Index (The Lower The Better)'
+                        coloridentity:
+                            label: 'Color Identity'
+                        firstprintedyear:
+                            label: 'First Printed Year'
+                        mv:
+                            label: 'Mana Value'
+                        multicztype:
+                            label: 'Possible Multiple Command Zone Type'
                 gotoform:
                     text: 'Go to the calculator'
                     title: 'Simply go to the <strong>calculator</strong> form, with all the options to choose from.'
@@ -811,7 +862,7 @@ front:
                     impossibletofindacommander:
                         text: 'Determining the Commander(s) in your decklist is impossible, please add more cards and check line breaks in the decklist.'
                     toomanypoints:
-                        text: 'Your decklist consumed too many points. You need to adjust your points to stay within your P-Value.'
+                        text: 'Your decklist consumed too many points. You need to adjust your points to stay within your Budget.'
                     tooexpensive:
                         text: 'Your decklist has a M-Value higher than the maximum allowed by your format.'
                     failedparsing:
@@ -1084,6 +1135,8 @@ global:
     choose:
         label: '↓ Please choose'
 mtg:
+    addform:
+        title: 'Add a card'
     add:
         label: 'Add'
     copies:

@@ -57,6 +57,10 @@
                     <td>{{ source_card.maximumTimelineLegality|title }}</td>
                 </tr>
                 <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.digitalonly.label'|trans }}</th>
+                    <td>{{ ('global.' ~ source_card.digitalOnly|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.coloridentity.label'|trans }}</th>
                     <td>{% if source_card.colorIdentity is defined and source_card.colorIdentity is iterable %}
                             {{ source_card.colorIdentity|join(', ') }}
@@ -129,11 +133,31 @@
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.mtgoprice.label'|trans }}</th>
-                    <td>{{ source_card.MTGOPrice|default(0.0) }}</td>
+                    <td>{{ source_card.mTGOPrice|default(0.0) }}</td>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.mvalue.label'|trans }}</th>
-                    <td>{{ source_card.MValueTrend|default(0.0) }}</td>
+                    <td>{{ source_card.mValueTrend|default(0.0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.latestmvalue.label'|trans }}</th>
+                    <td>{{ source_card.latestMValue|default(0.0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.mvaluecount.label'|trans }}</th>
+                    <td>{{ source_card.mValueCount|default(0.0) }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.duelrank.label'|trans }}</th>
+                    <td>{{ source_card.duelRank|title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.cedhrank.label'|trans }}</th>
+                    <td>{{ source_card.cEDHRank|title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.ffarank.label'|trans }}</th>
+                    <td>{{ source_card.fFARank|title }}</td>
                 </tr>
                 <tr>
                     <th>{{ 'global.dates.label'|trans }}</th>

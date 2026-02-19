@@ -7,7 +7,7 @@ namespace App\Model\AeonShift\PointsList\MTG\V1;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: 'MtgPublishedAnnouncementsResponse',
+    schema: 'MTGPublishedAnnouncementsResponse',
     required: ['updates'],
     properties: [
         new OA\Property(
@@ -232,6 +232,6 @@ use OpenApi\Attributes as OA;
     ],
     type: 'object'
 )]
-final class MtgPublishedAnnouncementsResponse
+final class MTGPublishedAnnouncementsResponse
 {
 }

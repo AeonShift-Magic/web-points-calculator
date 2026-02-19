@@ -175,6 +175,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizQuestionEls = document.querySelectorAll('[id^="quiz-question-"]');
     let currentDownloadTargetId = null;
     const pad2 = (n) => String(n).padStart(2, '0');
+    const commanderChoiceContainerEl = document.getElementById('choose-commander');
+    const commanderYesEl = document.getElementById('commander-yes');
+
+    /**
+     * Show the "Choose a Commander" block if Command Zones are used.
+     */
+    const updateChooseCommanderVisibility = () => {
+        if (!commanderChoiceContainerEl) return;
+
+        const shouldShow = !!(commanderYesEl && commanderYesEl.checked);
+        commanderChoiceContainerEl.classList.remove('hidden-form');
+
+        if (shouldShow === false) {
+            commanderChoiceContainerEl.classList.add('hidden-form');
+        }
+    };
 
     /**
      * Parse an MTGO-like decklist textarea into zone -> [{copies, name}]
@@ -826,6 +842,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         updateDecklistVisibility();
+        updateChooseCommanderVisibility();
+        updateChooseCommanderVisibility();
     };
 
     /**
@@ -1196,7 +1214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
             targetDOMElement.innerHTML = '';
-            targetDOMElement.insertAdjacentHTML('beforeend', `${ deckListData?.budget }`);
+            targetDOMElement.insertAdjacentHTML('beforeend', `${ deckListData?.budget } 🧺`);
         });
 
         [
@@ -1211,7 +1229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (deckListData?.remaining > 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="green-text">${ deckListData?.remaining } <span class="icon-ok"></span></span>`);
             } else {
-                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ getExceedingLabel() } ${ deckListData?.remaining })<span class="icon-cancel"></span></span>`);
+                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ getExceedingLabel() } ${ Math.abs(deckListData?.remaining) })<span class="icon-cancel"></span></span>`);
             }
         });
 
