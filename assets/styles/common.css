@@ -53,6 +53,7 @@
     --theme-neutral-dark-table: #202020;
     --theme-neutral-dark-translucent: rgba(15, 15, 15, 0.65);
     --theme-neutral-dark-translucent-alt: rgba(30, 30, 30, 0.68);
+    --theme-neutral-dark-translucent-faint: rgba(22, 22, 22, 0.93);
     --theme-neutral-light: #888888;
     --theme-neutral-light-alt: #A5A5A5;
 
@@ -565,6 +566,7 @@ select option:checked {
     background-color: var(--theme-neutral-dark-alt);
 }
 
+/*noinspection CssUnusedSymbol*/
 .mtg-card-hover-image {
     border-radius: 13px;
     box-shadow: 0 0 10px var(--theme-neutral-dark);
@@ -590,6 +592,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.dtr-expanded > th.dtr-control:
     color: var(--theme-white);
 }
 
+/*noinspection CssUnusedSymbol*/
 .theme2 {
     background-color: var(--theme-neutral-dark-hover);
     border-color: var(--theme-neutral-medium);
@@ -997,9 +1000,9 @@ table .btn {
     font-size: 1.2em;
     letter-spacing: 0.1em;
     line-height: 1.6rem;
-    padding: 1.3em 1.2em;
+    padding: 1em 1.1em;
     position: relative;
-    text-shadow: 1px 1px 1px var(--theme-neutral-dark), -1px -1px 1px var(--theme-neutral-light);
+    text-shadow: 1px 1px 1px var(--theme-neutral-dark), -1px -1px 1px var(--theme-neutral-dark-alt);
     text-wrap: balance;
     transition: all 0.1s ease-out;
     vertical-align: middle;
@@ -1014,25 +1017,30 @@ table .btn {
 
 .menu a:hover {
     color: var(--theme-blue-blind) !important;
-    text-shadow: 1px 1px 1px var(--theme-neutral-medium), -1px -1px 1px var(--theme-neutral-light);
+    text-shadow: 1px 1px 1px var(--theme-neutral-dark-alt), -1px -1px 1px var(--theme-blue-dark);
 }
 
 .menu a::after {
-    background-color: var(--theme-blue-light);
+    background-color: var(--theme-blue-light-translucent);
     bottom: 0;
     content: '';
-    height: 2px;
+    height: 1px;
     left: 1.2em;
     position: absolute;
     transform: scaleX(0);
     transform-origin: bottom right;
-    transition: transform 0.3s ease-out;
+    transition: transform 0.2s ease-out;
     width: calc(100% - 2.4em);
 }
 
 .menu a:hover:after {
     transform: scaleX(1);
     transform-origin: bottom left;
+}
+
+.menu ul li ul li a::after {
+    display: none;
+    content: '';
 }
 
 .menu a img, .menu a svg {
@@ -1103,6 +1111,13 @@ table .btn {
     width: 100%;
 }
 
+.header.menu nav > ul > li:hover ul {
+    background-color: var(--theme-neutral-dark-translucent-faint);
+    border-radius: 3px;
+    transition: all 0.15s ease-out;
+    box-shadow: 0 0 3px -1px var(--theme-neutral-dark);
+}
+
 .menu li {
     border-radius: 0 0 0 0;
     padding: 0;
@@ -1117,13 +1132,26 @@ table .btn {
     flex-direction: column;
     min-width: 12em;
     position: absolute;
+    padding-bottom: 0.5em;
 }
 
-.menu nav > ul > li:nth-last-child(-n+3) > ul {
+.menu nav > ul > li:nth-last-child(-n+2) > ul {
     right: 0;
 }
 
-.menu nav > ul > li:not(:nth-last-child(-n+3)) > ul {
+.menu nav > ul > li:nth-last-child(-n+2) > ul a {
+    text-align: right;
+}
+
+#locales ul {
+    min-width: 13em;
+}
+
+#locales ul a {
+    padding: 0.35em 1em;
+}
+
+.menu nav > ul > li:not(:nth-last-child(-n+2)) > ul {
     left: 0;
 }
 
@@ -1854,192 +1882,351 @@ iframe {
     content: '\e800';
 }
 
-/*noinspection CssUnusedSymbol*/
+/* '' */
 .icon-ok:before {
     content: '\e801';
 }
 
+/* '' */
 .icon-cancel:before {
     content: '\e802';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-plus:before {
+.icon-plus-circled:before {
     content: '\e803';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
 .icon-attention:before {
     content: '\e804';
 }
 
-.icon-info:before {
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-globe:before {
     content: '\e805';
 }
 
-.icon-question:before {
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-group:before {
     content: '\e806';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-globe:before {
+.icon-export:before {
     content: '\e807';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-user:before {
+.icon-th-list:before {
     content: '\e808';
 }
 
-/*noinspection CssUnusedSymbol*/
-.icon-group:before {
+/* '' */
+.icon-link:before {
     content: '\e809';
 }
 
-.icon-star:before {
+/* '' */
+.icon-cog:before {
     content: '\e80a';
 }
 
-/*noinspection CssUnusedSymbol*/
-.icon-share:before {
+/* '' */
+.icon-target:before {
     content: '\e80b';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-th-list:before {
+.icon-off:before {
     content: '\e80c';
 }
 
-/*noinspection CssUnusedSymbol*/
-.icon-link:before {
+/* '' */
+.icon-docs:before {
     content: '\e80d';
 }
 
-.icon-cog:before {
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-flag-filled:before {
     content: '\e80e';
 }
 
-.icon-target:before {
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-pencil:before {
     content: '\e80f';
 }
 
-/*noinspection CssUnusedSymbol*/
-.icon-globe-1:before {
+/* '' */
+.icon-target-1:before {
     content: '\e810';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-off:before {
+.icon-cloud-sun:before {
     content: '\e811';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-docs:before {
+.icon-calendar:before {
     content: '\e812';
 }
 
-/*noinspection CssUnusedSymbol*/
-.icon-flag-filled:before {
+/* '' */
+.icon-chart-bar:before {
     content: '\e813';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-pencil:before {
+.icon-basket:before {
     content: '\e814';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-target-1:before {
+.icon-th-large:before {
     content: '\e815';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-cloud-sun-inv:before {
+.icon-videocam:before {
     content: '\e816';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-calendar:before {
+.icon-mobile:before {
     content: '\e817';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-globe-inv:before {
-    content: '\f019';
-}
-
-/*noinspection CssUnusedSymbol*/
-.icon-food:before {
-    content: '\f0f5';
-}
-
-/*noinspection CssUnusedSymbol*/
-.icon-bullseye:before {
-    content: '\f140';
-}
-
-/*noinspection CssUnusedSymbol*/
-.icon-wheelchair:before {
-    content: '\f193';
-}
-
-/*noinspection CssUnusedSymbol*/
-.icon-trash:before {
-    content: '\f1f8';
-}
-
-/*noinspection CssUnusedSymbol*/
-.icon-clone:before {
-    content: '\f24d';
-}
-
-.icon-chart-bar:before {
+.icon-mail:before {
     content: '\e818';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-shop:before {
+.icon-heart:before {
     content: '\e819';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-th-large:before {
+.icon-tags:before {
     content: '\e81a';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-list-numbered:before {
+.icon-home:before {
     content: '\e81b';
 }
 
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-award:before {
+    content: '\e81c';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-credit-card:before {
+    content: '\e81d';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-keyboard:before {
+    content: '\e81e';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-camera-outline:before {
+    content: '\e81f';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-fire:before {
+    content: '\e820';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-code:before {
+    content: '\e821';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-location:before {
+    content: '\e822';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-arrows-cw:before {
+    content: '\e823';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-flash:before {
+    content: '\e824';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-lock:before {
+    content: '\e825';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-lock-open:before {
+    content: '\e826';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-install:before {
+    content: '\e827';
+}
+
+/* '' */
+.icon-question:before {
+    content: '\e828';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-bell:before {
+    content: '\f03f';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-move:before {
+    content: '\f047';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-info-circled:before {
+    content: '\f085';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-list-numbered:before {
+    content: '\f0cb';
+}
+
+/* '' */
 /*noinspection CssUnusedSymbol*/
 .icon-money:before {
     content: '\f0d6';
 }
 
-/*noinspection CssUnusedSymbol*/
-.icon-videocam:before {
-    content: '\e81c';
+/* '' */
+.icon-download-cloud:before {
+    content: '\f0ed';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-mobile:before {
-    content: '\e81d';
+.icon-food:before {
+    content: '\f0f5';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-mail:before {
-    content: '\e81e';
+.icon-desktop:before {
+    content: '\f108';
 }
 
-.icon-chart-bar:before {
-    content: '\e818';
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-bullseye:before {
+    content: '\f140';
 }
 
+/* '' */
 /*noinspection CssUnusedSymbol*/
-.icon-cloud-sun-inv:before {
-    content: '\e816';
+.icon-ellipsis:before {
+    content: '\f141';
 }
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-thumbs-up-alt:before {
+    content: '\f164';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-thumbs-down-alt:before {
+    content: '\f165';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-wheelchair:before {
+    content: '\f193';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-database:before {
+    content: '\f1c0';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-trash:before {
+    content: '\f1f8';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-chart-pie:before {
+    content: '\f200';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-diamond:before {
+    content: '\f219';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-clone:before {
+    content: '\f24d';
+}
+
+/* '' */
+/*noinspection CssUnusedSymbol*/
+.icon-user-circle-o:before {
+    content: '\f2be';
+}
+
+/* '' */
 
 /*noinspection CssUnusedSymbol*/
 .pulse, .pulse1 {
@@ -2110,11 +2297,13 @@ iframe {
     display: none !important;
 }
 
+/*noinspection CssUnusedSymbol*/
 .data-loading {
     opacity: 0.4;
     position: relative;
 }
 
+/*noinspection CssUnusedSymbol*/
 .data-loading::before {
     background: transparent url("../images/loading.gif") center top no-repeat scroll;
     background-size: cover;
@@ -2223,6 +2412,19 @@ iframe {
 
 .game-choice-image {
     border-bottom: 1px var(--theme-neutral-medium) solid;
+}
+
+.flashy-tag {
+    border-radius: 2px;
+    border: 1px var(--theme-green-dark) solid;
+    background-color: var(--theme-neutral-dark-alt);
+    color: var(--theme-green-light);
+    display: inline-block;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin: 0 0.2em;
+    padding: 0.25em 0.5em;
+    cursor: default;
 }
 
 .color-cycle {
@@ -2684,6 +2886,7 @@ iframe {
     align-items: center;
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity {
     font-size: 12px;
     color: transparent;
@@ -2701,63 +2904,75 @@ iframe {
     cursor: default;
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity:hover {
     box-shadow: 0 0 3px var(--theme-neutral-dark-hover);
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity-w {
     background: radial-gradient(circle at 30% 30%, #fbfafc 0%, #e0e0e0 30%, #a9a8ab 100%);
     border-color: #3f3f3f;
     box-shadow: 0 0 3px #3f3f3f;
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity-u {
     background: radial-gradient(circle at 30% 30%, #98beed 0%, #5e90cd 30%, #1f5da3 100%);
     border-color: #282861;
     box-shadow: 0 0 3px #282861;
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity-b {
     background: radial-gradient(circle at 30% 30%, #88827d 0%, #65615e 30%, #1d1d1b 100%);
     border-color: #202020;
     box-shadow: 0 0 3px #202020;
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity-r {
     background: radial-gradient(circle at 30% 30%, #ff7676 0%, #d96060 30%, #b94026 100%);
     border-color: #910909;
     box-shadow: 0 0 3px #910909;
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity-g {
     background: radial-gradient(circle at 30% 30%, #9cd597 0%, #73b76d 30%, #208551 100%);
     border-color: #013d1d;
     box-shadow: 0 0 3px #013d1d;
 }
 
+/*noinspection CssUnusedSymbol*/
 .color-identity-c {
     background: radial-gradient(circle at 30% 30%, #cac3c0 0%, #a9a7a7 30%, #9a9390 100%);
     border-color: #54514f;
     box-shadow: 0 0 3px #54514f;
 }
 
+/*noinspection CssUnusedSymbol*/
 .card-ranking {
     font-weight: bold;
     text-shadow: 0 0 2px var(--theme-neutral-dark-translucent);
 }
 
+/*noinspection CssUnusedSymbol*/
 .card-ranking-all {
     color: var(--theme-blue-dark);
 }
 
+/*noinspection CssUnusedSymbol*/
 .card-ranking-alltournamentranked {
     color: var(--theme-blue-medium);
 }
 
+/*noinspection CssUnusedSymbol*/
 .card-ranking-popular {
     color: var(--theme-green-dark);
 }
 
+/*noinspection CssUnusedSymbol*/
 .card-ranking-top {
     color: var(--theme-green-light);
 }

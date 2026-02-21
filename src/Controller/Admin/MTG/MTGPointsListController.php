@@ -94,6 +94,7 @@ final class MTGPointsListController extends AbstractController
      * @param MTGSourceCardRepository $MTGSourceCardRepository
      * @param MTGUpdateRepository $MTGUpdateRepository
      * @param Security $security
+     * @param CacheInterface $pool
      *
      * @return Response
      */
@@ -235,6 +236,7 @@ final class MTGPointsListController extends AbstractController
      * @param Security $security
      * @param TranslatorInterface $translator
      * @param MTGUpdateRepository $MTGUpdateRepository
+     * @param CacheInterface $pool
      *
      * @return Response
      */

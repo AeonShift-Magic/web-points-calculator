@@ -76,7 +76,7 @@ final class AdminPageType extends AbstractType
                     ],
                     'label'             => 'admin.form.page.create.language.label',
                     'help'              => 'admin.form.page.create.language.help',
-                    'preferred_choices' => ['fr', 'en'],
+                    'preferred_choices' => ['en', 'fr', 'de', 'it', 'es', 'pt', 'jp', 'zh', 'fil', 'cs'],
                 ]
             )
             ->add(

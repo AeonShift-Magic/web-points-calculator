@@ -1,8 +1,8 @@
 parameters:
     app.default_locale: 'en'
     app.table_prefix: 'as_'
-    app.supported_locales: ['en', 'fr']
-    app.supported_locales_route_requirement: 'en|fr'
+    app.supported_locales: ['en', 'fr', 'de', 'it', 'es', 'pt', 'ja', 'zh', 'fil', 'cs']
+    app.supported_locales_route_requirement: 'en|fr|de|it|es|pt|ja|zh|fil|cs'
     # ----
     escaped_default_share_text: 'AeonShiftPoints Calculator - %globals_website_subtitle%'
     globals_website_subtitle: 'Automatic calculation of your AeonShift points and validation.'

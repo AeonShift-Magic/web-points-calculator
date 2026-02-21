@@ -192,7 +192,7 @@ class MTGPointsList implements PointsListInterface, Stringable
     }
 
     #[Override]
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getTitle() . ' [' . $this->getValidityStartingAt()->format('Y-m-d H:i') . ']' . ' [' . $this->MTGPointListCards->count() . ' cards]';
     }

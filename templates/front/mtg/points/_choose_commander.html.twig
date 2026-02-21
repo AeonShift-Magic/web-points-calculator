@@ -7,7 +7,7 @@
             </p>
 
             <div class="table-wrapper my-4 p-0 overflow-scroll h-[800px] border-solid border-gray border w-full">
-                <table class="table center header-highlight-table w-full m-0 p-0" style="margin: 0 !important;">
+                <table class="table center header-highlight-table w-full m-0 p-0" style="margin: 0 !important;" id="choose-commander-table">
                     <thead class="top-0" style="top: 0 !important;">
                         <tr>
                             <th style="width: 270px;">{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans }}</th>
@@ -31,6 +31,13 @@
                                     data-ranking-duel-class="{{ ranking_class(commander.duelRank, ranking_totals.duel) }}"
                                     data-ranking-cedh-class="{{ ranking_class(commander.cEDHRank, ranking_totals.cedh) }}"
                                     data-ranking-ffa-class="{{ ranking_class(commander.fFARank, ranking_totals.ffa) }}"
+                                    data-color-identity="{{ commander.colorIdentity|join('') }}"
+                                    {% if commander.white is same as(true) %}data-color-w="true"{% endif %}
+                                    {% if commander.blue is same as(true) %}data-color-u="true"{% endif %}
+                                    {% if commander.black is same as(true) %}data-color-b="true"{% endif %}
+                                    {% if commander.red is same as(true) %}data-color-r="true"{% endif %}
+                                    {% if commander.green is same as(true) %}data-color-g="true"{% endif %}
+                                    {% if commander.colorless is same as(true) %}data-color-c="true"{% endif %}
                                 >
                                     <td>
                                         <a href="https://scryfall.com/search?q={{ commander.nameEn|e('url') }}" target="_blank" data-imageurl="{{ commander.imageUrl }}" title="Scryfall Search">
@@ -38,8 +45,8 @@
                                             <strong>{{ commander.nameEn }}</strong>
                                         </a>
                                     </td>
-                                    <td class="commander-budget font-bold text-lg" data-update="budget">0</td>
-                                    <td data-update="status"></td>
+                                    <td class="commander-budget font-bold text-lg" data-field="budget">0</td>
+                                    <td data-field="status"></td>
                                     <td>{{ ranking_decorator(commander.duelRank, 750) }}</td>
                                     <td>{{ ranking_decorator(commander.cEDHRank, 750) }}</td>
                                     <td>{{ ranking_decorator(commander.fFARank, 50000) }}</td>

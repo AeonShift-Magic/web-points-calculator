@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Twig;
 
 use App\Model\AeonShift\PointsList\MTG\MTGPointsListManager;
+use JsonException;
 use Override;
 use Psr\Cache\InvalidArgumentException;
 use Twig\Extension\AbstractExtension;
@@ -26,7 +27,7 @@ final class MTGCalculatorExtension extends AbstractExtension
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws InvalidArgumentException|JsonException
      *
      * @return string
      */

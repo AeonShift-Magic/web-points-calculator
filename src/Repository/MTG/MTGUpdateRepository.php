@@ -28,7 +28,7 @@ final class MTGUpdateRepository extends ServiceEntityRepository
             ->createQueryBuilder('u')
             ->andWhere('u.isPublic LIKE :isPublic')
             ->setParameter('isPublic', true)
-            ->join('u.pointsList', 'p')
+            ->innerJoin('u.pointsList', 'p')
             ->addSelect('p')
             ->join('p.MTGPointListCards', 'c')
             ->addSelect('c')

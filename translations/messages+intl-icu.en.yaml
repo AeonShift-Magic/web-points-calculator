@@ -684,6 +684,11 @@ front:
             calculator:
                 title: 'Magic: The Gathering™ Calculator'
                 label: 'Magic: The Gathering™ Calculator'
+            download:
+                title: 'Download Magic: The Gathering™ Point Lists'
+                label: 'Download Magic: The Gathering™ Point Lists'
+                updatelink: 'Download the Point List for this Update as a CSV file'
+                latest: 'Current'
         resetpassword:
             label: 🛡️ Reset
             title: Reset your password

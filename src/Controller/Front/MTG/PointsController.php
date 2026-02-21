@@ -5,12 +5,18 @@ declare(strict_types = 1);
 namespace App\Controller\Front\MTG;
 
 use App\Entity\MTG\MTGUpdate;
+use App\Model\AeonShift\PointsList\PointsListModelInterface;
 use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\InvalidArgumentException;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * AeonShift played on top of MTG License.
@@ -60,5 +66,57 @@ final class PointsController extends AbstractController
                 'model_files_to_include' => $modelFilesToInclude,
             ]
         );
+    }
+
+    #[Route('/pointslist/download', name: 'front_mtg_points_download', methods: ['GET'])]
+    public function mtgPointsListDownload(MTGUpdateRepository $MTGUpdateRepository): Response
+    {
+        $updates = $MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
+
+        if (count($updates) === 0) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render(
+            'front/mtg/points/download.html.twig',
+            [
+                'updates' => $updates,
+            ]
+        );
+    }
+
+    #[Route('/pointslist/download/{MTGUpdate}', name: 'front_mtg_points_download_update', requirements: ['MTGUpdate' => '\d+'], methods: ['GET'])]
+    public function mtgPointsListDownloadUpdate(
+        #[MapEntity(MTGUpdate::class)]
+        MTGUpdate $MTGUpdate,
+        EntityManagerInterface $entityManager,
+        MTGSourceCardRepository $MTGSourceCardRepository,
+        Security $security,
+        TranslatorInterface $translator,
+        MTGUpdateRepository $MTGUpdateRepository,
+        CacheInterface $pool
+    ): Response
+    {
+        if ($MTGUpdate->isPublic() === false || $MTGUpdate->getPointsList() === null) {
+            throw $this->createNotFoundException();
+        }
+
+        $pointsListModelClass = $MTGUpdate->getPointsList()->getRulesModel();
+
+        if (! class_exists($pointsListModelClass)) {
+            throw $this->createNotFoundException('Given Points List doesn\'have a valid Rules Model.');
+        }
+
+        /** @var PointsListModelInterface $pointsListModel */
+        $pointsListModel = new $pointsListModelClass(
+            $entityManager,
+            $translator,
+            $MTGSourceCardRepository,
+            $security,
+            $MTGUpdateRepository,
+            $pool
+        );
+
+        return $pointsListModel->generateCSVResponseForList($MTGUpdate->getPointsList());
     }
 }

@@ -4,22 +4,32 @@
             <a tabindex="0" href="{{ url('front_home') }}" title="{{ 'front.nav.home.title'|trans }}">{{ 'front.nav.home.label'|trans }}</a>
         </li>
         <li>
-            <a tabindex="0" href="{{ url('front_mtg_points_index') }}" title="{{ 'front.nav.mtg.calculator.title'|trans }}">{{ 'front.nav.mtg.calculator.label'|trans }}</a>
+            <a tabindex="0" href="{{ url('front_mtg_points_index') }}" title="{{ 'front.nav.mtg.calculator.title'|trans }}">
+                <span class="icon-docs"></span> {{ 'front.nav.mtg.calculator.label'|trans }}</a>
+            <ul class="">
+                <li>
+                    <a tabindex="0" href="{{ url('front_mtg_points_download') }}" title="{{ 'front.nav.mtg.download.title'|trans }}">
+                        <span class="icon-download-cloud"></span> {{ 'front.nav.mtg.download.label'|trans }}</a>
+                </li>
+            </ul>
         </li>
         <li>
-            <a tabindex="0" href="https://play.aeonshift.games" title="{{ 'front.nav.learnmore.title'|trans }}" target="_blank">{{ 'front.nav.learnmore.label'|trans }}</a>
+            <a tabindex="0" href="https://play.aeonshift.games" title="{{ 'front.nav.learnmore.title'|trans }}" target="_blank">
+                <span class="icon-question"></span> {{ 'front.nav.learnmore.label'|trans }}</a>
         </li>
         <li id="locales">
             {% if supported_locales is defined and supported_locales is iterable %}
-                <a tabindex="0" title="{{ 'language.' ~ app.request.locale }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a tabindex="0" title="{{ app.request.locale|locale_name(app.request.locale)|u.title }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     {{ ux_icon('flag:' ~ app.request.locale|replace({'en': 'gb'}) ~ '-4x3') }} {{ app.request.locale|locale_name(app.request.locale)|u.title }}</a>
                 <ul class="" aria-labelledby="locales">
                     {% for supported_locale in supported_locales %}
-                        <li>
-                            <a tabindex="0" href="{{ url(app.request.attributes.get('_route', 'index'), app.request.attributes.get('_route_params', [])|merge({_locale: supported_locale})) }}">
-                                {{ ux_icon('flag:' ~ supported_locale|replace({'en': 'gb'}) ~ '-4x3') }} {{ supported_locale|locale_name(supported_locale)|u.title }}
-                            </a>
-                        </li>
+                        {% if supported_locale !== app.request.locale %}
+                            <li>
+                                <a title="{{ supported_locale|locale_name(supported_locale)|u.title }}" tabindex="0" href="{{ url(app.request.attributes.get('_route', 'index'), app.request.attributes.get('_route_params', [])|merge({_locale: supported_locale})) }}">
+                                    {{ ux_icon('flag:' ~ supported_locale|replace({'en': 'gb', 'zh': 'cn', 'pt': 'br', 'fil': 'ph', 'cs': 'cz', 'ja': 'jp'}) ~ '-4x3') }} {{ supported_locale|locale_name(supported_locale)|u.title }}
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endfor %}
                 </ul>
             {% endif %}

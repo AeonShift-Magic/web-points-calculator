@@ -10,7 +10,7 @@
             {% if app.user %}
                 <div class="w-full">
                     <div class="mb-3">
-                        {{ 'user.login.alreadylogged'|trans({'user': app.user.userIdentifier, 'url': url('front_logout') }) }}
+                        {{ 'user.login.alreadylogged'|trans({'user': app.user.userIdentifier, 'url': url('_logout_main') }) }}
                     </div>
                 </div>
             {% endif %}

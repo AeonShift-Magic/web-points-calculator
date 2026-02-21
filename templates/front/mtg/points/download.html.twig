@@ -1,0 +1,67 @@
+{% extends 'front/front_layout.html.twig' %}
+
+{% block title %}{{ 'front.nav.mtg.download.title'|trans }}{% endblock %}
+
+{% block body %}
+    <section class="main-column main-content">
+        <h1 class="font-bold text-5xl w-full lg:w-3/4 leading-normal text-center py-2 lg:my-4 tracking-wide spark-title spot-title">
+            {{ 'front.nav.mtg.download.title'|trans }}
+        </h1>
+    </section>
+
+    {% if breadcrumb is defined %}
+        <div class="main-column">
+            {{ include('front/_breadcrumb.html.twig') }}
+        </div>
+    {% endif %}
+
+    <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full">
+        <img src="{{ asset('images/aeonshift-logo-transparent-format.png') }}" alt="AeonShiftlogo" class="w-auto h-10 m-4">
+        {% if updates is defined %}
+            <article class="page-content">
+                <div class="table-wrapper">
+                    <table class="table center header-highlight-table">
+                        <thead>
+                            <tr>
+                                <th>{{ 'admin.form.abstract.update.create.titleen.label'|trans }}</th>
+                                <th>{{ 'admin.form.abstract.update.create.startingat.label'|trans }}</th>
+                                <th>{{ 'admin.form.abstract.update.create.endingat.label'|trans }}</th>
+                                <th>{{ 'admin.form.abstract.update.create.descriptionen.label'|trans }}</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for update in updates %}
+                                <tr>
+                                    <td>
+                                        <h2 class="text-base">{{ update.titleEN }}</h2>
+                                        {% if loop.index == 1 %}
+                                            <span class="flashy-tag">{{ 'front.nav.mtg.download.latest'|trans }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ update.startingAt|date('Y-m-d H:i') }}
+                                    </td>
+                                    <td>
+                                        {{ update.endingAt|date('Y-m-d H:i') }}
+                                    </td>
+                                    <td>
+                                        {{ update.descriptionEN|striptags|slice(0, 200) }}[...]
+                                    </td>
+                                    <td>
+                                        <a title="{{ 'front.nav.mtg.download.updatelink'|trans|e('html_attr') }}" class="btn btn-green btn-contour" target="_blank" href="{{ url('front_mtg_points_download_update', {'MTGUpdate': update.id}) }}">
+                                            <span class="icon-download-cloud"></span>
+                                            {{ 'front.nav.mtg.download.updatelink'|trans }}
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        {% endif %}
+    </div>
+
+{% endblock %}
+

@@ -35,6 +35,7 @@ final class FrontMenuExtension extends AbstractExtension
     public function frontMenu(string $zone): string
     {
         $locale = $this->requestStack->getCurrentRequest()?->getLocale() ?? 'en';
+        $output = '';
 
         /** @var array<Page> $globalPages */
         $globalPages = $this->pool->get(key: 'as_header_menu_global_pages_' . $zone . '_' . $locale, callback: function (ItemInterface $item) use ($zone): array {
@@ -45,7 +46,7 @@ final class FrontMenuExtension extends AbstractExtension
 
         try {
             // Render a Twig template, too, in case of editing rights, to add a direct link to the edit page
-            $output = $this->twig->render(
+            $output .= $this->twig->render(
                 'front/_front_menu.html.twig',
                 [
                     'locale'                     => $this->requestStack->getCurrentRequest()?->getLocale(),
@@ -54,7 +55,6 @@ final class FrontMenuExtension extends AbstractExtension
                 ]
             );
         } catch (LoaderError|RuntimeError|SyntaxError) {
-            return '';
         }
 
         return $output;
