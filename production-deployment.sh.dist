@@ -25,7 +25,7 @@ echo -e "\e[0m"
 
 wget -O composer.phar https://getcomposer.org/composer-stable.phar
 
-php composer.phar update --no-scripts
+php composer.phar update --no-scripts --no-interaction --no-dev --prefer-dist --optimize-autoloader --classmap-authoritative
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m####################### Deployment Step 3: Clearing the cache #######################"

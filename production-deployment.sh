@@ -26,7 +26,7 @@ echo -e "\e[32m#################################################################
 echo -e "\e[0m"
 
 wget -O composer.phar https://getcomposer.org/composer-stable.phar
-APP_ENV=prod yes | php composer.phar install --no-scripts --no-interaction --no-dev
+APP_ENV=prod php composer.phar install --no-scripts --no-interaction --no-dev --prefer-dist --optimize-autoloader --classmap-authoritative
 
 
 echo -e "\e[32m#####################################################################################"
