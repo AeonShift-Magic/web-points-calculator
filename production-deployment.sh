@@ -1,4 +1,7 @@
 #!/bin/bash
+set -euo pipefail
+
+trap 'echo "❌ Deployment failed at line $LINENO"; exit 1' ERR
 
 ###################################################################################################
 # This Shell script (bash) is written to deploy Aeonshit project on [PRODUCTION]                  #
