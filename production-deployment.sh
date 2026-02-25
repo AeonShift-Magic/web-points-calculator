@@ -3,6 +3,8 @@ set -euo pipefail
 
 trap 'echo "❌ Deployment failed at line $LINENO"; exit 1' ERR
 
+export SYMFONY_DEPRECATIONS_HELPER=disabled
+
 ###################################################################################################
 # This Shell script (bash) is written to deploy Aeonshit project on [PRODUCTION]                  #
 ###################################################################################################
@@ -24,7 +26,7 @@ echo -e "\e[32m#################################################################
 echo -e "\e[0m"
 
 wget -O composer.phar https://getcomposer.org/composer-stable.phar
-APP_ENV=prod && yes | php composer.phar install --no-scripts --no-interaction --no-dev
+APP_ENV=prod yes | php composer.phar install --no-scripts --no-interaction --no-dev
 
 
 echo -e "\e[32m#####################################################################################"
@@ -32,7 +34,7 @@ echo -e "\e[32m####################### Deployment Step 3: Clearing the cache ###
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-APP_ENV=prod && php bin/console cache:clear --no-warmup --env=prod
+APP_ENV=prod php bin/console cache:clear --no-warmup --env=prod --no-debug
 
 
 echo -e "\e[32m#####################################################################################"
@@ -40,7 +42,7 @@ echo -e "\e[32m####################### Deployment Step 4: Doctrine ORM sync ####
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-APP_ENV=prod && php bin/console doctrine:schema:update --force --env=prod
+APP_ENV=prod php bin/console doctrine:schema:update --force --env=prod --no-debug
 
 
 echo -e "\e[32m#####################################################################################"
@@ -48,7 +50,7 @@ echo -e "\e[32m##################### Deployment Step 5: Hard copy importmap ####
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-APP_ENV=prod && php bin/console importmap:install -n --env=prod
+APP_ENV=prod php bin/console importmap:install -n --env=prod --no-debug
 
 
 echo -e "\e[32m#####################################################################################"
@@ -83,7 +85,7 @@ echo -e "\e[32m###################### Deployment Step 9: Assetmap Compile ######
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-APP_ENV=prod && php bin/console asset-map:compile -n --env=prod
+APP_ENV=prod php bin/console asset-map:compile -n --env=prod
 
 
 echo -e "\e[32m#####################################################################################"
@@ -91,7 +93,7 @@ echo -e "\e[32m###################### Deployment Step 10: Hard copy assets #####
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-APP_ENV=prod && php bin/console assets:install --env=prod
+APP_ENV=prod php bin/console assets:install --env=prod
 
 
 echo -e "\e[32m#####################################################################################"
@@ -99,8 +101,8 @@ echo -e "\e[32m################### Deployment Step 11: Bundles installation ####
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-APP_ENV=prod && php bin/console ckeditor:install --tag=4.22.1 -n --env=prod
-APP_ENV=prod && php bin/console elfinder:install -n --env=prod
+APP_ENV=prod php bin/console ckeditor:install --tag=4.22.1 -n --env=prod
+APP_ENV=prod php bin/console elfinder:install -n --env=prod
 
 
 echo -e "\e[32m#####################################################################################"
@@ -108,9 +110,8 @@ echo -e "\e[32m######################## Deployment Step 12: Cache warmup #######
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-rm -Rfv var/cache/prod
 # shellcheck disable=SC2034
-APP_ENV=prod && php bin/console cache:clear --env=prod
+APP_ENV=prod php bin/console cache:clear --env=prod
 
 
 echo -e "\e[32m#####################################################################################"

@@ -3,6 +3,8 @@ set -euo pipefail
 
 trap 'echo "❌ Deployment failed at line $LINENO"; exit 1' ERR
 
+export SYMFONY_DEPRECATIONS_HELPER=disabled
+
 ###################################################################################################
 # This Shell script (bash) is written to deploy AeonShift project on [PRODUCTION]                 #
 ###################################################################################################
@@ -30,14 +32,14 @@ echo -e "\e[32m####################### Deployment Step 3: Clearing the cache ###
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-php bin/console cache:clear --no-warmup --env=prod
+php bin/console cache:clear --no-warmup --env=prod --no-debug
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m####################### Deployment Step 4: Doctrine ORM Sync ########################"
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[0m"
 
-php bin/console doctrine:schema:update --force --env=prod
+php bin/console doctrine:schema:update --force --env=prod --no-debug
 
 echo -e "\e[32m#####################################################################################"
 echo -e "\e[32m##################### Deployment Step 5: PHP Caches clearing ########################"
