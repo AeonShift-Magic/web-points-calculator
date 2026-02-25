@@ -86,7 +86,7 @@
 
                     <textarea
                         class="decklist-cards"
-                        rows="30"
+                        rows="60"
                         cols="30"
                         id="decklist{{ i }}"
                         placeholder="{{ ('front.mtg.form.decklist' ~ i ~ '.placeholder')|trans|raw }}"
@@ -103,7 +103,7 @@
             <div class="w-full lg:w-2/3 py-4">
                 <div class="lg:pl-4">
                     <div class="text-3xl inline-block w-full mb-4 blue-text uppercase" id="total{{ i }}" data-decklist-total-title="{{ i }}">
-                        <span class="icon-chart-bar mr-2"></span>{{ ('front.mtg.form.results.decklist' ~ i ~ '.label')|trans }}
+                        <span class="icon-chart-bar mr-2"></span> {{ ('front.mtg.form.results.decklist' ~ i ~ '.label')|trans }}
                     </div>
 
                     <div class="text-xl w-full mt-3 green-text hidden" id="decklist{{ i }}-legal" data-decklist-legal="{{ i }}">

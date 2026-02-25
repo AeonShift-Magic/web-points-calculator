@@ -43,3 +43,5 @@ phpstan.neon
 
 ### ElectronForge target directory ###
 out/
+
+.htpasswd

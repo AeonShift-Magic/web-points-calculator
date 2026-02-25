@@ -1701,16 +1701,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type LiveComponentConfig = array{
  *     secret?: scalar|Param|null, // The secret used to compute fingerprints and checksums // Default: "%kernel.secret%"
  * }
- * @psalm-type TurboConfig = array{
- *     broadcast?: bool|array{
- *         enabled?: bool|Param, // Default: true
- *         entity_template_prefixes?: list<scalar|Param|null>,
- *         doctrine_orm?: bool|array{ // Enable the Doctrine ORM integration
- *             enabled?: bool|Param, // Default: true
- *         },
- *     },
- *     default_transport?: scalar|Param|null, // Default: "default"
- * }
  * @psalm-type WebProfilerConfig = array{
  *     toolbar?: bool|array{ // Profiler toolbar configuration
  *         enabled?: bool|Param, // Default: false
@@ -1943,7 +1933,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     ignore_not_found?: bool|Param, // Ignore error when an icon is not found. Set to 'true' to fail silently. // Default: false
  * }
  * @psalm-type NelmioApiDocConfig = array{
- *     type_info?: bool|Param, // Use the symfony/type-info component for determining types. // Default: false
+ *     type_info?: bool|Param, // Use the symfony/type-info component for determining types. // Default: true
  *     use_validation_groups?: bool|Param, // If true, `groups` passed to #[Model] attributes will be used to limit validation constraints // Default: false
  *     operation_id_generation?: \Nelmio\ApiDocBundle\Describer\OperationIdGeneration::ALWAYS_PREPEND|\Nelmio\ApiDocBundle\Describer\OperationIdGeneration::CONDITIONALLY_PREPEND|\Nelmio\ApiDocBundle\Describer\OperationIdGeneration::NO_PREPEND|"always_prepend"|"conditionally_prepend"|"no_prepend"|Param, // How to generate operation ids // Default: "always_prepend"
  *     cache?: array{
@@ -2008,7 +1998,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     twig_component?: TwigComponentConfig,
  *     stimulus?: StimulusConfig,
  *     live_component?: LiveComponentConfig,
- *     turbo?: TurboConfig,
  *     symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
  *     symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *     symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
@@ -2035,7 +2024,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_component?: TwigComponentConfig,
  *         stimulus?: StimulusConfig,
  *         live_component?: LiveComponentConfig,
- *         turbo?: TurboConfig,
  *         web_profiler?: WebProfilerConfig,
  *         symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
@@ -2062,7 +2050,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_component?: TwigComponentConfig,
  *         stimulus?: StimulusConfig,
  *         live_component?: LiveComponentConfig,
- *         turbo?: TurboConfig,
  *         symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
@@ -2088,7 +2075,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_component?: TwigComponentConfig,
  *         stimulus?: StimulusConfig,
  *         live_component?: LiveComponentConfig,
- *         turbo?: TurboConfig,
  *         web_profiler?: WebProfilerConfig,
  *         symfonycasts_reset_password?: SymfonycastsResetPasswordConfig,
  *         symfonycasts_tailwind?: SymfonycastsTailwindConfig,

@@ -722,12 +722,17 @@ front:
                     text: 'Choose a Commander'
                     title: 'Help me find a Commander.'
                     description: 'This section is showing you possible Commanders, based on your format selection above. Please update your selection if you wish to find a Commander for another format.'
+                    description2: 'Note: the values below are only for single-Commanders only. Partner abilities are excluded.'
                     form:
                         nameen:
-                            label: 'Name (EN)'
+                            label: 'Name'
                         coloridentity:
                             label: 'Color Identity'
                         ranking:
+                            players:
+                                duel: 'Duel Commander Rank'
+                                cedh: 'cEDH Rank'
+                                ffa: 'Free-For-All Global Rank'
                             label: 'Ranking'
                             top: 'Top Commanders Only'
                             popular: 'Top and Popular Commanders'
@@ -735,13 +740,15 @@ front:
                             all: 'All Commanders'
                     table:
                         nameen:
-                            label: 'Name (EN)'
+                            label: 'Name'
+                            placeholder: 'Ruhan of the Fomori'
                         budget:
                             label: 'Budget 🧺'
+                            placeholder: 'Minimum Budget'
                         status:
                             label: 'Release Status'
-                            unranked: 'Unranked'
-                            released: 'Released'
+                            unranked: '<span class="red-text">Unranked</span>'
+                            released: '<span class="green-text">Released</span>'
                         rankingindex:
                             duel:
                                 label: 'Duel Commander Ranking Index (The Lower The Better)'
@@ -757,6 +764,11 @@ front:
                             label: 'Mana Value'
                         multicztype:
                             label: 'Possible Multiple Command Zone Type'
+                        sort:
+                            label: 'Sort the table using this column (ascending or descending)'
+                        minimumbudget:
+                            label: 'Minimum Budget 🧺'
+                            placeholder: '80'
                 gotoform:
                     text: 'Go to the calculator'
                     title: 'Simply go to the <strong>calculator</strong> form, with all the options to choose from.'
@@ -1157,7 +1169,7 @@ mtg:
         stickers: 'Sticker'
     name:
         label: 'Name'
-        placeholder: 'Mox Sapphire'
+        placeholder: 'Ruhan of the Fomori'
     popular:
         comingsoon:
             text: '<em class="blue-text">Coming soon!</em> Stay tuned.'

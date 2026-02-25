@@ -1481,7 +1481,12 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $alternateNameEN = (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && (! empty($card['card_faces'][0]['flavor_name']) || ! empty($card['card_faces'][0]['name']))) // @phpstan-ignore-line
             ? $card['card_faces'][0]['name'] ?? '' : '';
         $manaValue = (float)(isset($card['cmc']) && is_numeric($card['cmc']) ? $card['cmc'] : 0.0);
-        $colorIdentity = $card['color_identity'] ?? [];
+        $colorIdentity = isset($card['color_identity']) && is_array($card['color_identity']) && $card['color_identity'] ? $card['color_identity'] : [];
+
+        if(count($colorIdentity) === 0) {
+            $colorIdentity = ['C'];
+        }
+
         $scryfallUri = $card['scryfall_uri'] ?? '';
         $set = $card['set'] ?? '';
         $releasedAt = $card['released_at'] ?? '';
@@ -1494,16 +1499,9 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                 : ''
             );
 
-        // Ensure color identity is an array
-        if (! is_array($colorIdentity)) {
-            $colorIdentity = [];
-        }
-
-        foreach ($colorIdentity as $identity) {
-            if (! is_string($identity)) {
-                // Invalid color identity entry, skip the card
-                return null;
-            }
+        // Invalid color identity entry, skip the card
+        if (array_any($colorIdentity, static fn ($identity) => ! is_string($identity))) {
+            return null;
         }
 
         // Calculate legalities

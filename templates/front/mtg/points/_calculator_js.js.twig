@@ -44,7 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
         internalerror: '{{ 'front.mtg.form.results.errors.internalerror.text'|trans|raw }}',
         nocommander: '{{ 'front.mtg.form.results.errors.nocommander.text'|trans|raw }}',
         none: '{{ 'global.none.label'|trans|raw }}',
-        total: '{{ 'front.mtg.form.results.breakdown.cardzones.total'|trans|raw }}'
+        total: '{{ 'front.mtg.form.results.breakdown.cardzones.total'|trans|raw }}',
+        unranked: '{{ 'front.mtg.choose.links.choosecommander.table.status.unranked'|trans|raw }}',
+        released: '{{ 'front.mtg.choose.links.choosecommander.table.status.released'|trans|raw }}'
     };
 
     const getExceedingLabel = () => {
@@ -177,6 +179,612 @@ document.addEventListener('DOMContentLoaded', () => {
     const pad2 = (n) => String(n).padStart(2, '0');
     const commanderChoiceContainerEl = document.getElementById('choose-commander');
     const commanderYesEl = document.getElementById('commander-yes');
+
+    /**
+     * Cache choose-commander table DOM once (static bindings).
+     */
+    const CHOOSE_COMMANDER_TABLE = (() => {
+        /** @type {HTMLTableElement|null} */
+        let tableEl = null;
+        /** @type {HTMLTableSectionElement|null} */
+        let tbodyEl = null;
+        /** @type {HTMLTableCellElement[]} */
+        let headerCells = [];
+        /**
+         * @type {Array<{rowEl: HTMLTableRowElement, commanderName: string, budgetCellEl: HTMLElement|null}>}
+         */
+        let rows = [];
+
+        const init = () => {
+            tableEl = document.getElementById('choose-commander-table');
+            if (!(tableEl instanceof HTMLTableElement)) {
+                tableEl = null;
+                tbodyEl = null;
+                headerCells = [];
+                rows = [];
+                return;
+            }
+
+            tbodyEl = tableEl.tBodies?.[0] ?? null;
+
+            const headerRow = tableEl.tHead?.rows?.[0] ?? null;
+            headerCells = headerRow ? Array.from(headerRow.cells) : [];
+
+            rows = [];
+            if (!tbodyEl) return;
+
+            const trEls = Array.from(tbodyEl.rows).filter(r => r instanceof HTMLTableRowElement);
+            for (const rowEl of trEls) {
+                const commanderName = String(rowEl.dataset.commanderName ?? '').trim();
+                const budgetCellEl = rowEl.querySelector('[data-field="budget"]');
+                rows.push({
+                    rowEl,
+                    commanderName,
+                    budgetCellEl: budgetCellEl instanceof HTMLElement ? budgetCellEl : null
+                });
+            }
+        };
+
+        const getTableEl = () => tableEl;
+        const getTbodyEl = () => tbodyEl;
+        const getHeaderCells = () => headerCells;
+        const getRows = () => rows;
+
+        return { init, getTableEl, getTbodyEl, getHeaderCells, getRows };
+    })();
+
+    /**
+     * Choose-commander table loader (shown during sorting / heavy table ops).
+     * NOTE: must be defined BEFORE initChooseCommanderTableSorting() uses it.
+     */
+    const CHOOSE_COMMANDER_TABLE_LOADER = (() => {
+        /** @type {HTMLDivElement|null} */
+        let loaderEl = null;
+
+        const ensure = (tableEl) => {
+            if (loaderEl) return loaderEl;
+
+            const host =
+                tableEl.closest('.table-wrapper')
+                || tableEl.parentElement
+                || tableEl;
+
+            if (host instanceof HTMLElement) {
+                const computed = window.getComputedStyle(host);
+                if (computed.position === 'static') {
+                    host.style.position = 'relative';
+                }
+            }
+
+            loaderEl = document.createElement('div');
+            loaderEl.setAttribute('aria-hidden', 'true');
+            loaderEl.style.position = 'absolute';
+            loaderEl.style.inset = '0';
+            loaderEl.style.zIndex = '50';
+            loaderEl.style.display = 'none';
+            loaderEl.style.alignItems = 'center';
+            loaderEl.style.justifyContent = 'center';
+            loaderEl.style.background = 'rgba(0, 0, 0, 0.35)';
+            loaderEl.style.pointerEvents = 'auto';
+
+            const img = document.createElement('img');
+            img.src = '{{ asset('images/loader.gif') }}';
+            img.alt = 'Loading';
+            img.style.width = '40px';
+            img.style.height = '40px';
+            img.style.display = 'flex';
+
+            loaderEl.appendChild(img);
+
+            if (host instanceof HTMLElement) {
+                host.appendChild(loaderEl);
+            } else {
+                tableEl.parentElement?.appendChild(loaderEl);
+            }
+
+            return loaderEl;
+        };
+
+        const show = (tableEl) => {
+            const el = ensure(tableEl);
+            el.style.display = 'flex';
+        };
+
+        const hide = () => {
+            if (!loaderEl) return;
+            loaderEl.style.display = 'none';
+        };
+
+        return { show, hide };
+    })();
+
+    /**
+     * Choose-commander sorting perf cache.
+     * NOTE: must be defined BEFORE any code calls CHOOSE_COMMANDER_SORT.invalidateKey(...)
+     */
+    const CHOOSE_COMMANDER_SORT = (() => {
+        /** @type {WeakMap<HTMLTableRowElement, Map<number, {type:'number'|'string', value:number|string}>>} */
+        const keyCacheByRow = new WeakMap();
+        const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+
+        const getRowCache = (rowEl) => {
+            let m = keyCacheByRow.get(rowEl);
+            if (!m) {
+                m = new Map();
+                keyCacheByRow.set(rowEl, m);
+            }
+            return m;
+        };
+
+        const parseComparable = (text) => {
+            const t = String(text ?? '').trim();
+
+            const numericCandidate = t.replace(/\s+/g, '').replace(/,/g, '.');
+            if (/^-?\d+(\.\d+)?$/.test(numericCandidate)) {
+                const n = Number(numericCandidate);
+                if (Number.isFinite(n)) return { type: 'number', value: n };
+            }
+
+            return { type: 'string', value: t.toLocaleLowerCase() };
+        };
+
+        const getKey = (rowEl, colIndex) => {
+            const cache = getRowCache(rowEl);
+            if (cache.has(colIndex)) return cache.get(colIndex);
+
+            const cell = rowEl.children?.[colIndex];
+            const key = parseComparable(cell?.textContent ?? '');
+            cache.set(colIndex, key);
+            return key;
+        };
+
+        const invalidateKey = (rowEl, colIndex) => {
+            const cache = keyCacheByRow.get(rowEl);
+            if (!cache) return;
+            cache.delete(colIndex);
+        };
+
+        const compareKeys = (ka, kb) => {
+            if (ka.type === 'number' && kb.type === 'number') {
+                if (ka.value === kb.value) return 0;
+                return ka.value < kb.value ? -1 : 1;
+            }
+            return collator.compare(String(ka.value), String(kb.value));
+        };
+
+        return { getKey, invalidateKey, compareKeys };
+    })();
+
+    /**
+     * Sort rows of #choose-commander-table by a column index and direction.
+     *
+     * @param {HTMLTableElement} tableEl
+     * @param {number} colIndex
+     * @param {'asc'|'desc'} direction
+     */
+    const sortChooseCommanderTable = (tableEl, colIndex, direction) => {
+        const tbody = tableEl.tBodies?.[0];
+        if (!tbody) return;
+
+        const dir = direction === 'desc' ? -1 : 1;
+
+        /** @type {HTMLTableRowElement[]} */
+        const rows = Array.from(tbody.rows).filter(r => r instanceof HTMLTableRowElement);
+        if (rows.length <= 1) return;
+
+        const decorated = rows.map((rowEl, idx) => ({
+            rowEl,
+            idx,
+            key: CHOOSE_COMMANDER_SORT.getKey(rowEl, colIndex)
+        }));
+
+        decorated.sort((a, b) => {
+            const r = CHOOSE_COMMANDER_SORT.compareKeys(a.key, b.key);
+            if (r === 0) return a.idx - b.idx;
+            return r * dir;
+        });
+
+        let changed = false;
+        for (let i = 0; i < decorated.length; i++) {
+            if (decorated[i].rowEl !== rows[i]) {
+                changed = true;
+                break;
+            }
+        }
+        if (!changed) {
+            tableEl.dataset.sortCol = String(colIndex);
+            tableEl.dataset.sortDir = direction;
+            return;
+        }
+
+        const frag = document.createDocumentFragment();
+        for (const item of decorated) frag.appendChild(item.rowEl);
+        tbody.appendChild(frag);
+
+        tableEl.dataset.sortCol = String(colIndex);
+        tableEl.dataset.sortDir = direction;
+    };
+
+    /**
+     * Make the #choose-commander-table headers clickable to sort ASC/DESC.
+     */
+    const initChooseCommanderTableSorting = () => {
+        const tableEl = CHOOSE_COMMANDER_TABLE.getTableEl();
+        if (!(tableEl instanceof HTMLTableElement)) return;
+
+        const headers = CHOOSE_COMMANDER_TABLE.getHeaderCells();
+        if (!Array.isArray(headers) || headers.length === 0) return;
+
+        headers.forEach((th, index) => {
+            th.style.cursor = 'pointer';
+            th.setAttribute('role', 'button');
+            th.setAttribute('tabindex', '0');
+
+            const activate = () => {
+                const currentCol = Number(tableEl.dataset.sortCol ?? -1);
+                const currentDir = String(tableEl.dataset.sortDir ?? 'asc');
+
+                const nextDir =
+                    currentCol === index
+                        ? (currentDir === 'asc' ? 'desc' : 'asc')
+                        : 'asc';
+
+                headers.forEach(h => h.removeAttribute('aria-sort'));
+                th.setAttribute('aria-sort', nextDir === 'asc' ? 'ascending' : 'descending');
+
+                CHOOSE_COMMANDER_TABLE_LOADER.show(tableEl);
+
+                // Force a reflow so the browser commits the "display:flex" before we block the thread.
+                const loaderHost = tableEl.closest('.table-wrapper') || tableEl.parentElement || tableEl;
+                if (loaderHost instanceof HTMLElement) {
+                    void loaderHost.offsetHeight;
+                }
+
+                // Yield to allow paint (GIF animates), then do the heavy synchronous sort.
+                window.setTimeout(() => {
+                    try {
+                        sortChooseCommanderTable(tableEl, index, nextDir);
+                    } finally {
+                        CHOOSE_COMMANDER_TABLE_LOADER.hide();
+                    }
+                }, 0);
+            };
+
+            th.addEventListener('click', activate);
+            th.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    activate();
+                }
+            });
+        });
+    };
+
+    /**
+     * Recalculate and update the "budget" cell for each row of #choose-commander-table,
+     * using the current update's calculatorJsFunctionPrefix ApplyModulations().
+     */
+    const recalculateChooseCommanderTableBudgets = () => {
+        const tableEl = document.getElementById('choose-commander-table');
+        if (!(tableEl instanceof HTMLTableElement)) return;
+
+        const tbody = tableEl.tBodies?.[0];
+        if (!tbody) return;
+
+        const currentFormatChoiceValues = getCurrentFormatChoiceValues();
+
+        const calculatorJsFunctionPrefix =
+            updates?.updates?.[currentFormatChoiceValues.update]?.pointsList?.calculatorJsFunctionPrefix ?? null;
+
+        if (typeof calculatorJsFunctionPrefix !== 'string' || calculatorJsFunctionPrefix.trim() === '') {
+            return;
+        }
+
+        const getPValueFn = window[calculatorJsFunctionPrefix + 'GetPValueFromFormFields'];
+        const applyModulationsFn = window[calculatorJsFunctionPrefix + 'ApplyModulations'];
+        const calculatePointsFn = window[calculatorJsFunctionPrefix + 'ApplyPoints'];
+
+        if (typeof getPValueFn !== 'function' || typeof applyModulationsFn !== 'function') {
+            return;
+        }
+
+        const pvalue = Number(getPValueFn(updates, currentFormatChoiceValues));
+        if (!Number.isFinite(pvalue)) return;
+
+        // Determine budget column index once (based on header count; budget is 2nd column in template)
+        const budgetColIndex = 1;
+        // Status is 3rd column in template (0=name, 1=budget, 2=status)
+        const statusColIndex = 2;
+
+        const selectedUpdateStartingAtTimestamp =
+            Number(updates?.updates?.[currentFormatChoiceValues.update]?.startingAtTimestamp ?? NaN);
+
+        /**
+         * Parse row's data-first-printed-at into a millisecond timestamp (best-effort).
+         *
+         * Accepts ISO-ish strings (e.g. 2025-11-21T00:00:00Z) and falls back to YYYY-MM-DD only.
+         *
+         * @param {string} raw
+         * @returns {number|null}
+         */
+        const parseFirstPrintedAtMs = (raw) => {
+            const s = String(raw ?? '').trim();
+            if (!s) return null;
+
+            const direct = Date.parse(s);
+            if (Number.isFinite(direct)) return direct;
+
+            // Fallback: take YYYY-MM-DD and interpret as UTC midnight
+            const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
+            if (!m) return null;
+
+            const d2 = Date.parse(m[1] + 'T00:00:00Z');
+            return Number.isFinite(d2) ? d2 : null;
+        };
+
+        /** @type {HTMLTableRowElement[]} */
+        const rows = Array.from(tbody.rows).filter(r => r instanceof HTMLTableRowElement);
+
+        for (const rowEl of rows) {
+            const commanderName = String(rowEl.dataset.commanderName ?? '').trim();
+            if (!commanderName) continue;
+
+            const deckListStructure = {
+                total: 1,
+                maindeck: [],
+                commandzone: [{ copies: 1, name: commanderName, points: null, imageurl: '' }],
+                sideboard: [],
+                companions: [],
+                attractions: [],
+                contraptions: [],
+                stickers: [],
+                modulations: [],
+                breakdown: [],
+                errors: [],
+                budget: pvalue,
+                remaining: pvalue,
+                mvalue: 0.0,
+                mvalues: [],
+                pvalue: pvalue
+            };
+
+            applyModulationsFn(deckListStructure, currentFormatChoiceValues, pvalue);
+            calculatePointsFn(deckListStructure, currentFormatChoiceValues, pvalue);
+
+            if (deckListStructure?.budget !== null && typeof deckListStructure?.budget !== 'undefined') {
+                const budgetCell = rowEl.querySelector('[data-field="budget"]');
+                if (budgetCell) {
+                    const nextBudgetText = String(deckListStructure.budget);
+                    if (budgetCell.textContent !== nextBudgetText) {
+                        budgetCell.textContent = nextBudgetText;
+                        // Budget changed -> invalidate sort cache for that cell only
+                        CHOOSE_COMMANDER_SORT.invalidateKey(rowEl, budgetColIndex);
+                    }
+                }
+            }
+
+            // Update "status" based on whether the current update predates the card's first print.
+            if (Number.isFinite(selectedUpdateStartingAtTimestamp)) {
+                const firstPrintedAtRaw = String(rowEl.dataset.firstPrintedAt ?? '').trim();
+                const firstPrintedAtMs = parseFirstPrintedAtMs(firstPrintedAtRaw);
+
+                if (firstPrintedAtMs !== null) {
+                    const updateMs = selectedUpdateStartingAtTimestamp * 1000;
+                    const nextStatusHtml = updateMs < firstPrintedAtMs ? MESSAGES.unranked : MESSAGES.released;
+
+                    const statusCell = rowEl.querySelector('[data-field="status"]');
+                    if (statusCell && statusCell.innerHTML !== nextStatusHtml) {
+                        statusCell.innerHTML = nextStatusHtml;
+                        // Status changed -> invalidate sort cache for that cell only
+                        CHOOSE_COMMANDER_SORT.invalidateKey(rowEl, statusColIndex);
+                    }
+                }
+            }
+        }
+
+        // If a sort is active, re-apply it (budgets may have changed)
+        const sortCol = Number(tableEl.dataset.sortCol ?? -1);
+        const sortDir = String(tableEl.dataset.sortDir ?? '');
+        if (Number.isFinite(sortCol) && sortCol >= 0 && (sortDir === 'asc' || sortDir === 'desc')) {
+            window.requestAnimationFrame(() => {
+                try {
+                    CHOOSE_COMMANDER_TABLE_LOADER.show(tableEl);
+                    sortChooseCommanderTable(tableEl, sortCol, sortDir);
+                } finally {
+                    CHOOSE_COMMANDER_TABLE_LOADER.hide();
+                }
+            });
+        }
+
+        // Budget changes can affect filtering -> re-apply filters.
+        applyChooseCommanderFilters();
+    };
+
+    /**
+     * Apply filters from the "#choose-commander-filter" form to rows of #choose-commander-table
+     * by toggling the "filtered-out" class on <tr>.
+     */
+    const applyChooseCommanderFilters = () => {
+        const tableEl = CHOOSE_COMMANDER_TABLE.getTableEl();
+        if (!(tableEl instanceof HTMLTableElement)) return;
+
+        const filterFormEl = document.getElementById('choose-commander-filter');
+        if (!(filterFormEl instanceof HTMLFormElement)) return;
+
+        const nameInputEl = /** @type {HTMLInputElement|null} */ (filterFormEl.querySelector('#choose-commander-name'));
+        const budgetInputEl = /** @type {HTMLInputElement|null} */ (filterFormEl.querySelector('#choose-commander-budget'));
+        const duelSelectEl = /** @type {HTMLSelectElement|null} */ (filterFormEl.querySelector('#choose-commander-duel-ranking'));
+        const cedhSelectEl = /** @type {HTMLSelectElement|null} */ (filterFormEl.querySelector('#choose-commander-cedh-ranking'));
+        const ffaSelectEl = /** @type {HTMLSelectElement|null} */ (filterFormEl.querySelector('#choose-commander-ffa-ranking'));
+
+        const selectedName = String(nameInputEl?.value ?? '').trim().toLocaleLowerCase();
+        const shouldFilterName = selectedName.length >= 2;
+
+        const rawBudget = String(budgetInputEl?.value ?? '').trim();
+        const budgetValue = rawBudget === '' ? null : Number(rawBudget);
+        const shouldFilterBudget = budgetValue !== null && Number.isFinite(budgetValue) && budgetValue >= 0;
+
+        const currentFormatChoiceValues = getCurrentFormatChoiceValues();
+
+        // Resolve precedences map once for this apply pass.
+        const updateKey = currentFormatChoiceValues?.update;
+        const precedences = updates?.updates?.[updateKey]?.pointsList?.timelineprecedences ?? null;
+
+        /**
+         * Resolve the currently selected timeline precedence integer from the updates config.
+         *
+         * timelineprecedences is expected to be a mapping:
+         *   { [timelineKey: string]: number, ... }
+         *
+         * @returns {number|null}
+         */
+        const getSelectedTimelinePrecedence = () => {
+            const timelineKey = String(currentFormatChoiceValues?.timeline ?? '').trim();
+            if (!timelineKey) return null;
+
+            if (!precedences || typeof precedences !== 'object' || Array.isArray(precedences)) {
+                return null;
+            }
+
+            if (!Object.prototype.hasOwnProperty.call(precedences, timelineKey)) {
+                return null;
+            }
+
+            const n = Number(precedences[timelineKey]);
+            return Number.isFinite(n) ? n : null;
+        };
+
+        const selectedTimelinePrecedence = getSelectedTimelinePrecedence();
+
+        const toRankScore = (v) => {
+            switch (String(v ?? '').trim()) {
+                case 'top':
+                    return 0;
+                case 'popular':
+                    return 1;
+                case 'alltournamentranked':
+                    return 2;
+                case 'all':
+                    return 3;
+                default:
+                    return 3;
+            }
+        };
+
+        const selectedDuelScore = toRankScore(duelSelectEl?.value);
+        const selectedCedhScore = toRankScore(cedhSelectEl?.value);
+        const selectedFfaScore = toRankScore(ffaSelectEl?.value);
+
+        const checkedColorAttrNames = Array
+            .from(filterFormEl.querySelectorAll('input[type="checkbox"][data-update-commanders][data-color]'))
+            .filter(el => el instanceof HTMLInputElement && el.checked)
+            .map(el => String(el.dataset.color ?? '').trim())
+            .filter(Boolean);
+
+        const rowMatchesRank = (rowEl, datasetKey, selectedScore) => {
+            if (selectedScore >= 3) return true; // "all" => no filtering
+            const rowScore = toRankScore(rowEl.dataset?.[datasetKey]);
+            return rowScore <= selectedScore; // keep selected OR better (top is best)
+        };
+
+        for (const r of CHOOSE_COMMANDER_TABLE.getRows()) {
+            const rowEl = r.rowEl;
+
+            let ok = true;
+
+            if (shouldFilterName) {
+                const rowName = String(r.commanderName ?? '').toLocaleLowerCase();
+                ok = ok && rowName.includes(selectedName);
+            }
+
+            if (shouldFilterBudget) {
+                const cellText = String(r.budgetCellEl?.textContent ?? '').trim();
+                const rowBudget = Number(cellText);
+                ok = ok && Number.isFinite(rowBudget) && rowBudget >= budgetValue;
+            }
+
+            ok = ok && rowMatchesRank(rowEl, 'rankingDuelClass', selectedDuelScore);
+            ok = ok && rowMatchesRank(rowEl, 'rankingCedhClass', selectedCedhScore);
+            ok = ok && rowMatchesRank(rowEl, 'rankingFfaClass', selectedFfaScore);
+
+            if (ok && checkedColorAttrNames.length > 0) {
+                for (const attrName of checkedColorAttrNames) {
+                    if (rowEl.getAttribute(attrName) === null) {
+                        ok = false;
+                        break;
+                    }
+                }
+            }
+
+            if (
+                ok
+                && selectedTimelinePrecedence !== null
+                && precedences
+                && typeof precedences === 'object'
+                && !Array.isArray(precedences)
+            ) {
+                // <tr data-maximum-timeline="funny"> -> dataset.maximumTimeline === "funny"
+                const rowMaximumTimelineKey = String(rowEl.dataset.maximumTimeline ?? '').trim();
+                if (rowMaximumTimelineKey !== '' && Object.prototype.hasOwnProperty.call(precedences, rowMaximumTimelineKey)) {
+                    const rowMaximumTimelinePrecedence = Number(precedences[rowMaximumTimelineKey]);
+                    if (Number.isFinite(rowMaximumTimelinePrecedence)) {
+                        // Filter OUT rows where max-timeline precedence is >= selected timeline precedence
+                        if (rowMaximumTimelinePrecedence < selectedTimelinePrecedence) {
+                            ok = false;
+                        }
+                    }
+                }
+            }
+
+            rowEl.classList.toggle('filtered-out', !ok);
+        }
+    };
+
+    /**
+     * Bind filtering to all [data-update-commanders] fields:
+     * - immediate update on change for selects/checkboxes/number
+     * - throttled typing for commander name (min 2 chars to trigger filtering)
+     */
+    const initChooseCommanderTableFiltering = () => {
+        const filterFormEl = document.getElementById('choose-commander-filter');
+        if (!(filterFormEl instanceof HTMLFormElement)) return;
+
+        const fields = Array.from(filterFormEl.querySelectorAll('[data-update-commanders]'));
+
+        const nameInputEl = filterFormEl.querySelector('#choose-commander-name');
+        let nameTimer = /** @type {number|null} */ (null);
+
+        const scheduleNameFilter = () => {
+            if (nameTimer !== null) {
+                window.clearTimeout(nameTimer);
+            }
+            nameTimer = window.setTimeout(() => {
+                nameTimer = null;
+                applyChooseCommanderFilters();
+            }, 200);
+        };
+
+        for (const el of fields) {
+            if (!(el instanceof HTMLElement)) continue;
+
+            if (el === nameInputEl) {
+                el.addEventListener('input', scheduleNameFilter);
+                el.addEventListener('change', scheduleNameFilter);
+                continue;
+            }
+
+            // Everything else: update immediately
+            el.addEventListener('change', applyChooseCommanderFilters);
+
+            // "number" inputs usually fire input events while dragging/spinning
+            if (el instanceof HTMLInputElement && el.type === 'number') {
+                el.addEventListener('input', applyChooseCommanderFilters);
+            }
+        }
+
+        // Initial pass (also covers default selected rankings, default budget, etc.)
+        applyChooseCommanderFilters();
+    };
 
     /**
      * Show the "Choose a Commander" block if Command Zones are used.
@@ -843,7 +1451,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateDecklistVisibility();
         updateChooseCommanderVisibility();
-        updateChooseCommanderVisibility();
+
+        // Re-apply commander table filters because timeline/update choices can change.
+        applyChooseCommanderFilters();
     };
 
     /**
@@ -1564,6 +2174,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateFormatNames();
             throttledUpdatePointsResultsAndSummaries();
 
+            if (target === updateSelectEl) {
+                recalculateChooseCommanderTableBudgets();
+            }
         }
     };
 
@@ -1621,5 +2234,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateFormatNames();
-    updatePointsResultsAndSummaries();
+
+    // Initialize static bindings once (fast, no heavy work)
+    CHOOSE_COMMANDER_TABLE.init();
+
+    window.requestAnimationFrame(() => {
+        updatePointsResultsAndSummaries();
+
+        if (CHOOSE_COMMANDER_TABLE.getTableEl()) {
+            initChooseCommanderTableSorting();
+            initChooseCommanderTableFiltering();
+        }
+
+        window.__chooseCommanderBudgetAbortController = new AbortController();
+        recalculateChooseCommanderTableBudgets({
+            signal: window.__chooseCommanderBudgetAbortController.signal
+        });
+    });
 });

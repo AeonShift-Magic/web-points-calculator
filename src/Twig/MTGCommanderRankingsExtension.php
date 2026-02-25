@@ -43,8 +43,8 @@ final class MTGCommanderRankingsExtension extends AbstractExtension
         }
 
         // Power-law cutoffs calibrated to your targets
-        $topCutoff = 4.3 * ($rankRange ** 0.376);
-        $popularCutoff = 17.2 * ($rankRange ** 0.322);
+        $topCutoff = 0.3768 * ($rankRange ** 0.7387);
+        $popularCutoff = 1.554 * ($rankRange ** 0.6901);
 
         if ($ranking <= $topCutoff) {
             return 'top';

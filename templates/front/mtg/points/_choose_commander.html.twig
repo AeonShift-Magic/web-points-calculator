@@ -4,22 +4,132 @@
             <h2>{{ 'front.mtg.choose.links.choosecommander.text'|trans }}</h2>
             <p class="blue-text text-center">
                 <span class="icon-info"></span> {{ 'front.mtg.choose.links.choosecommander.description'|trans }}
+                <br>
+                <span class="icon-info"></span> {{ 'front.mtg.choose.links.choosecommander.description2'|trans }}
             </p>
+            <div class="w-full flex justify-center">
+                <form id="choose-commander-filter" class="w-full">
+                    <fieldset class="flex flex-col mb-2">
+                        <div class="w-full flex flex-row flex-wrap items-center mb-2">
 
-            <div class="table-wrapper my-4 p-0 overflow-scroll h-[800px] border-solid border-gray border w-full">
-                <table class="table center header-highlight-table w-full m-0 p-0" style="margin: 0 !important;" id="choose-commander-table">
+                            <div class="inline-form-item flex-grow min-w-0 mx-2 my-1">
+                                <label for="choose-commander-name">{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans }} {{ ux_icon('flag:gb-4x3') }}</label>
+                                <input
+                                    type="text"
+                                    title="{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans|e('html_attr') }}"
+                                    name="choose-commander-name"
+                                    id="choose-commander-name"
+                                    value=""
+                                    placeholder="{{ 'front.mtg.choose.links.choosecommander.table.nameen.placeholder'|trans }}"
+                                    data-update-commanders
+                                />
+                            </div>
+
+                            <div class="inline-form-item flex-grow min-w-0 mx-2 my-1">
+                                <label for="choose-commander-budget">{{ 'front.mtg.choose.links.choosecommander.table.minimumbudget.label'|trans }}</label>
+                                <input
+                                    type="number"
+                                    step="1"
+                                    min="0"
+                                    max="200"
+                                    title="{{ 'front.mtg.choose.links.choosecommander.table.minimumbudget.label'|trans|e('html_attr') }}"
+                                    name="choose-commander-budget"
+                                    id="choose-commander-budget"
+                                    value="0"
+                                    placeholder="{{ 'front.mtg.choose.links.choosecommander.table.minimumbudget.placeholder'|trans }}"
+                                    data-update-commanders
+                                />
+                            </div>
+
+                            <div class="inline-form-item flex grow min-w-0 mx-2 my-1">
+                                <label for="choose-commander-duel-ranking">{{ 'front.mtg.choose.links.choosecommander.form.ranking.players.duel'|trans }}</label>
+                                <select
+                                    required="required"
+                                    name="choose-commander-duel-ranking"
+                                    id="choose-commander-duel-ranking"
+                                    class="w-full"
+                                    title="{{ 'front.mtg.choose.links.choosecommander.form.ranking.players.duel'|trans|e('html_attr') }}"
+                                    data-update-commanders
+                                >
+                                    <option value="top">{{ 'front.mtg.choose.links.choosecommander.form.ranking.top'|trans }}</option>
+                                    <option value="popular">{{ 'front.mtg.choose.links.choosecommander.form.ranking.popular'|trans }}</option>
+                                    <option value="alltournamentranked">{{ 'front.mtg.choose.links.choosecommander.form.ranking.alltournamentranked'|trans }}</option>
+                                    <option selected="selected" value="all">{{ 'front.mtg.choose.links.choosecommander.form.ranking.all'|trans }}</option>
+                                </select>
+                            </div>
+
+                            <div class="inline-form-item flex grow min-w-0 mx-2 my-1">
+                                <label for="choose-commander-cedh-ranking">{{ 'front.mtg.choose.links.choosecommander.form.ranking.players.cedh'|trans }}</label>
+                                <select
+                                    required="required"
+                                    name="choose-commander-cedh-ranking"
+                                    id="choose-commander-cedh-ranking"
+                                    class="w-full"
+                                    title="{{ 'front.mtg.choose.links.choosecommander.form.ranking.players.cedh'|trans|e('html_attr') }}"
+                                    data-update-commanders
+                                >
+                                    <option value="top">{{ 'front.mtg.choose.links.choosecommander.form.ranking.top'|trans }}</option>
+                                    <option value="popular">{{ 'front.mtg.choose.links.choosecommander.form.ranking.popular'|trans }}</option>
+                                    <option value="alltournamentranked">{{ 'front.mtg.choose.links.choosecommander.form.ranking.alltournamentranked'|trans }}</option>
+                                    <option selected="selected" value="all">{{ 'front.mtg.choose.links.choosecommander.form.ranking.all'|trans }}</option>
+                                </select>
+                            </div>
+
+                            <div class="inline-form-item flex grow min-w-0 mx-2 my-1">
+                                <label for="choose-commander-ffa-ranking">{{ 'front.mtg.choose.links.choosecommander.form.ranking.players.ffa'|trans }}</label>
+                                <select
+                                    required="required"
+                                    name="choose-commander-ffa-ranking"
+                                    id="choose-commander-ffa-ranking"
+                                    class="w-full"
+                                    title="{{ 'front.mtg.choose.links.choosecommander.form.ranking.players.ffa'|trans|e('html_attr') }}"
+                                    data-update-commanders
+                                >
+                                    <option value="top">{{ 'front.mtg.choose.links.choosecommander.form.ranking.top'|trans }}</option>
+                                    <option value="popular">{{ 'front.mtg.choose.links.choosecommander.form.ranking.popular'|trans }}</option>
+                                    <option value="alltournamentranked">{{ 'front.mtg.choose.links.choosecommander.form.ranking.alltournamentranked'|trans }}</option>
+                                    <option selected="selected" value="all">{{ 'front.mtg.choose.links.choosecommander.form.ranking.all'|trans }}</option>
+                                </select>
+                            </div>
+
+                            <div class="flex flex-col grow min-w-0 items-center justify-center mx-2 my-1">
+                                <label class="w-full" for="choose-commander-color-identity">{{ 'front.mtg.choose.links.choosecommander.table.coloridentity.label'|trans }}</label>
+                                <div class="w-full flex flex-row py-2">
+                                    {% for color in ['W', 'U', 'R', 'G', 'B', 'C'] %}
+                                        <div class="color-picker color-picker-{{ color|lower }} color-identity-{{ color|lower }}">
+                                            <label for="choose-commander-color-identity-{{ color|lower }}">{{ color|lower }}</label>
+                                            <input
+                                                type="checkbox"
+                                                name="choose-commander-color-identity[]"
+                                                id="choose-commander-color-identity-{{ color|lower }}"
+                                                data-color="data-color-{{ color|lower }}"
+                                                value="{{ color }}"
+                                                title="{ {{ color|lower }} }"
+                                                data-update-commanders
+                                            >
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="table-wrapper my-4 p-0 overflow-scroll max-h-[800px] border-solid border-gray border w-full">
+                <table class="table center header-highlight-table w-full m-0 p-0 sortable-table" style="margin: 0 !important;" id="choose-commander-table">
                     <thead class="top-0" style="top: 0 !important;">
                         <tr>
-                            <th style="width: 270px;">{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans }}</th>
-                            <th style="width: 100px;">{{ 'front.mtg.choose.links.choosecommander.table.budget.label'|trans }}</th>
-                            <th style="width: 150px;">{{ 'front.mtg.choose.links.choosecommander.table.status.label'|trans }}</th>
-                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.duel.label'|trans }}</th>
-                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.cedh.label'|trans }}</th>
-                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.ffa.label'|trans }}</th>
-                            <th style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.coloridentity.label'|trans }}</th>
-                            <th style="width: 90px;">{{ 'front.mtg.choose.links.choosecommander.table.firstprintedyear.label'|trans }}</th>
-                            <th style="width: 70px;">{{ 'front.mtg.choose.links.choosecommander.table.mv.label'|trans }}</th>
-                            <th style="width: 200px;">{{ 'front.mtg.choose.links.choosecommander.table.multicztype.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 270px;">{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans }} {{ ux_icon('flag:gb-4x3') }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 100px;">{{ 'front.mtg.choose.links.choosecommander.table.budget.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 150px;">{{ 'front.mtg.choose.links.choosecommander.table.status.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.duel.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.cedh.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.ffa.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.coloridentity.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 90px;">{{ 'front.mtg.choose.links.choosecommander.table.firstprintedyear.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 70px;">{{ 'front.mtg.choose.links.choosecommander.table.mv.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 200px;">{{ 'front.mtg.choose.links.choosecommander.table.multicztype.label'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,6 +142,9 @@
                                     data-ranking-cedh-class="{{ ranking_class(commander.cEDHRank, ranking_totals.cedh) }}"
                                     data-ranking-ffa-class="{{ ranking_class(commander.fFARank, ranking_totals.ffa) }}"
                                     data-color-identity="{{ commander.colorIdentity|join('') }}"
+                                    data-maximum-timeline="{{ commander.maximumTimelineLegality }}"
+                                    data-first-printed-at="{{ commander.firstPrintedAt|date('Y-m-d\TH:i:s\Z') }}"
+                                    data-budget=""
                                     {% if commander.white is same as(true) %}data-color-w="true"{% endif %}
                                     {% if commander.blue is same as(true) %}data-color-u="true"{% endif %}
                                     {% if commander.black is same as(true) %}data-color-b="true"{% endif %}
