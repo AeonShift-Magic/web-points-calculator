@@ -61,11 +61,11 @@
                 {% block body %}
                     <div class="w-full text-center flex flex-col justify-center items-center">
                         <img class="max-w-full lg:max-w-6xl color-cycle mb-8" src="{{ asset('images/aeonshift-logo-transparent.png') }}" alt="AeonShift Logo">
-                        <div class="w-full format-incentive flex flex-col justify-around items-center p-px mb-4">
+                        <div class="w-full format-incentive flex flex-col justify-around items-center p-px mb-4 max-w-[1400px]">
                             <div class="gradient-cycle">
                                 <img class="game-choice-image w-full" src="{{ asset('images/mtg-banner.jpg') }}" alt="Magic The Gathering cards: Black Lotus, Channel, Jeweled Lotus, The One Ring, Shahrazad">
                             </div>
-                            <p class="inline-block w-full text-4xl mt-10 mb-6">{{ 'front.mtg.choose.text'|trans|raw }}</p>
+                            <p class="inline-block w-full text-5xl mt-10 mb-6">{{ 'front.mtg.choose.text'|trans|raw }}</p>
                             <div class="mb-12">
                                 {{ include('front/_share_links.html.twig') }}
                             </div>
@@ -75,39 +75,36 @@
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
-                                            <span class="icon-target"></span>
-                                            {{ 'front.mtg.choose.links.choose.text'|trans }}
+                                            <span class="icon-target"></span> {{ 'front.mtg.choose.links.choose.text'|trans }}
                                         </span>
                                         <span class="bottom-left"></span>
                                         <span class="bottom-right"></span>
                                     </a>
-                                    <p class="format-help">{{ 'front.mtg.choose.links.choose.title'|trans|raw }}</p>
+                                    <p class="format-help text-lg">{{ 'front.mtg.choose.links.choose.title'|trans|raw }}</p>
                                 </div>
                                 <div class="flex flex-col justify-center items-center px-6">
                                     <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.choose.links.gotoform.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
-                                            <span class="icon-chart-bar"></span>
-                                            {{ 'front.mtg.choose.links.gotoform.text'|trans }}
+                                            <span class="icon-chart-bar"></span> {{ 'front.mtg.choose.links.gotoform.text'|trans }}
                                         </span>
                                         <span class="bottom-left"></span>
                                         <span class="bottom-right"></span>
                                     </a>
-                                    <p class="format-help">{{ 'front.mtg.choose.links.gotoform.title'|trans|raw }}</p>
+                                    <p class="format-help text-lg">{{ 'front.mtg.choose.links.gotoform.title'|trans|raw }}</p>
                                 </div>
                                 <div class="flex flex-col justify-center items-center px-6">
                                     <a class="btn btn-star btn-blue btn-big m-2" href="#quiz" title="{{ 'front.mtg.choose.links.quiz.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
-                                            <span class="icon-question"></span>
-                                            {{ 'front.mtg.choose.links.quiz.text'|trans }}
+                                            <span class="icon-question"></span> {{ 'front.mtg.choose.links.quiz.text'|trans }}
                                         </span>
                                         <span class="bottom-left"></span>
                                         <span class="bottom-right"></span>
                                     </a>
-                                    <p class="format-help">{{ 'front.mtg.choose.links.quiz.title'|trans|raw }}</p>
+                                    <p class="format-help text-lg">{{ 'front.mtg.choose.links.quiz.title'|trans|raw }}</p>
                                 </div>
                             </div>
                         </div>

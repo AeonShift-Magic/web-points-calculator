@@ -26,8 +26,48 @@ const MTGPOINTSLISTMODELV1_MODEL_MESSAGES = {
     singlecopiescardnotunique: '{{ 'front.mtg.form.results.errors.singlecopiescardnotunique.text'|trans|raw }}',
     singletoncardnotunique: '{{ 'front.mtg.form.results.errors.singletoncardnotunique.text'|trans|raw }}',
     numberofcardnotcorrectforquadruples: '{{ 'front.mtg.form.results.errors.numberofcardnotcorrectforquadruples.text'|trans|raw }}',
-    wrongtimelineforcards: '{{ 'front.mtg.form.results.errors.wrongtimelineforcards.text'|trans|raw }}'
+    wrongtimelineforcards: '{{ 'front.mtg.form.results.errors.wrongtimelineforcards.text'|trans|raw }}',
+    chooseabackgroundmessage: '{{ 'front.mtg.form.results.modulations.multiplecommanders.types.chooseabackground'|trans|raw }}',
+    otherpartnermessage: '{{ 'front.mtg.form.results.modulations.multiplecommanders.types.other'|trans|raw }}'
 };
+
+/**
+ * Returns the string for the given multi-cz type.
+ *
+ * @param {string} multiCZType
+ *
+ * @constructor
+ */
+function MTGPointsListModelV1GetMultiCzStringForType(multiCZType) {
+    if (multiCZType === 'choose_a_background') {
+        return MTGPOINTSLISTMODELV1_MODEL_MESSAGES.chooseabackgroundmessage;
+    }
+
+    return MTGPOINTSLISTMODELV1_MODEL_MESSAGES.otherpartnermessage;
+}
+
+/**
+ * Returns the string for the given multi-cz type.
+ *
+ * @param {string} manaValue
+ *
+ * @constructor
+ */
+function MTGPointsListModelV1GetManaValueClassesForValue(manaValue) {
+    const intManaValue = parseInt(manaValue);
+
+    switch (intManaValue) {
+        case 0:
+        case 1:
+            return 'dark-yellow-text';
+        case 2:
+            return 'medium-yellow-text';
+        case 3:
+            return 'light-yellow-text';
+        default:
+            return 'green-text';
+    }
+}
 
 /**
  * Fatal parsing failure
@@ -376,29 +416,27 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
         allCardsFromZonesDeckList = [...map.values()];
 
         // In singleton, there should be only one copy of each card in all zones, execpt for those for which maxcopies is not 1
-        if(currentFormatChoiceValues.copies === 'singleton') {
+        if (currentFormatChoiceValues.copies === 'singleton') {
             let listNotSingletonCards = [];
-            if(updates.updates[currentFormatChoiceValues.update].pointsList.cards !== undefined) {
+            if (updates.updates[currentFormatChoiceValues.update].pointsList.cards !== undefined) {
                 allCardsFromZonesDeckList.forEach((card) => {
-                    if(card.copies <= 1) return; // skip cards with 1 or less copies
+                    if (card.copies <= 1) return; // skip cards with 1 or less copies
                     const currentCardData = card.currentCardData;
-                    if(currentCardData.maxcopies === -1) return; // skip cards with no maxcopies defined
+                    if (currentCardData.maxcopies === -1) return; // skip cards with no maxcopies defined
 
-                    if(currentCardData.name === "((unranked))") {
+                    if (currentCardData.name === '((unranked))') {
                         // if the card is unranked, the currentCardData will not have the maxcopies property.
                         listNotSingletonCards.push(card.name);
-                    }
-                    else {
-                        if(currentCardData.maxcopies === 1) {
+                    } else {
+                        if (currentCardData.maxcopies === 1) {
                             listNotSingletonCards.push(card.name);
-                        }
-                        else if(card.copies > currentCardData.maxcopies) {
-                            listNotSingletonCards.push(card.name + "(max: " + currentCardData.maxcopies + ")");
+                        } else if (card.copies > currentCardData.maxcopies) {
+                            listNotSingletonCards.push(card.name + '(max: ' + currentCardData.maxcopies + ')');
                         }
                     }
                 });
 
-                if(listNotSingletonCards.length > 0) {
+                if (listNotSingletonCards.length > 0) {
                     deckListStructure.errors.push(
                         MTGPOINTSLISTMODELV1_MODEL_MESSAGES.singletoncardnotunique + listNotSingletonCards.join(', ')
                     );
@@ -411,20 +449,19 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
             let listExceedingCards = [];
             if (updates.updates[currentFormatChoiceValues.update].pointsList.cards !== undefined) {
                 allCardsFromZonesDeckList.forEach((card) => {
-                    if(card.copies <= 4) return; // skip cards with 4 or less copies
+                    if (card.copies <= 4) return; // skip cards with 4 or less copies
                     const currentCardData = card.currentCardData;
-                    if(currentCardData.maxcopies === -1) return; // skip cards with no maxcopies defined
+                    if (currentCardData.maxcopies === -1) return; // skip cards with no maxcopies defined
 
-                    if (currentCardData.name === "((unranked))") {
+                    if (currentCardData.name === '((unranked))') {
                         // if the card is unranked, the currentCardData will not have the maxcopies property.
                         // so the max value is 4 by default
                         listExceedingCards.push(card.name);
                     } else {
-                        if(currentCardData.maxcopies === 1) {
+                        if (currentCardData.maxcopies === 1) {
                             listExceedingCards.push(card.name);
-                        }
-                        else if(card.copies > currentCardData.maxcopies) {
-                            listExceedingCards.push(card.name + "(max: " + currentCardData.maxcopies + ")");
+                        } else if (card.copies > currentCardData.maxcopies) {
+                            listExceedingCards.push(card.name + '(max: ' + currentCardData.maxcopies + ')');
                         }
                     }
                 });
@@ -445,16 +482,16 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
 
         allCardsFromZonesDeckList.forEach((card) => {
 
-            if(LuTTimelines[card.currentCardData.timeline] < currentTimeline){
-                listWrongTimelineCards.push({cardName: card.name, cardTimeline: card.currentCardData.timeline});
+            if (LuTTimelines[card.currentCardData.timeline] < currentTimeline) {
+                listWrongTimelineCards.push({ cardName: card.name, cardTimeline: card.currentCardData.timeline });
             }
         });
 
-        if(listWrongTimelineCards.length > 0) {
+        if (listWrongTimelineCards.length > 0) {
             deckListStructure.errors.push(
                 MTGPOINTSLISTMODELV1_MODEL_MESSAGES.wrongtimelineforcards +
                 listWrongTimelineCards
-                    .map(c => `${c.cardName} (${c.cardTimeline})`)
+                    .map(c => `${ c.cardName } (${ c.cardTimeline })`)
                     .join(', ')
             );
         }

@@ -152,7 +152,20 @@ class MTGSourceCard extends MTGAbstractCard
      */
     public function getColorIdentity(): array
     {
-        return $this->colorIdentity;
+        $sourceIdentity = $this->colorIdentity;
+        $finalIdentity = [];
+
+        if (empty($sourceIdentity)) {
+            return ['C'];
+        }
+
+        foreach (['W', 'U', 'B', 'R', 'G', 'C'] as $color) {
+            if (in_array($color, $sourceIdentity, true)) {
+                $finalIdentity[] = $color;
+            }
+        }
+
+        return $finalIdentity;
     }
 
     public function getDuelRank(): int

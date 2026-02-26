@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadCommentEl = document.getElementById('decklist-download-comment');
     const downloadErrorEl = document.getElementById('decklist-download-error');
 
+
     // Also cache non-root selectors once
     const calculatorEl = document.getElementById('calculator');
     const quizEl = document.getElementById('quiz');
@@ -179,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pad2 = (n) => String(n).padStart(2, '0');
     const commanderChoiceContainerEl = document.getElementById('choose-commander');
     const commanderYesEl = document.getElementById('commander-yes');
+    const chooseCommanderIncentiveEls = document.querySelectorAll('[data-action="choose-commander-incentive"]');
 
     /**
      * Cache choose-commander table DOM once (static bindings).
@@ -372,13 +374,85 @@ document.addEventListener('DOMContentLoaded', () => {
         const rows = Array.from(tbody.rows).filter(r => r instanceof HTMLTableRowElement);
         if (rows.length <= 1) return;
 
-        const decorated = rows.map((rowEl, idx) => ({
-            rowEl,
-            idx,
-            key: CHOOSE_COMMANDER_SORT.getKey(rowEl, colIndex)
-        }));
+        // The "Color Identity" column is icons in the cell, but the sortable value is stored on the row.
+        const COLOR_IDENTITY_COL_INDEX = 6;
+
+        const filterFormEl = document.getElementById('choose-commander-filter');
+        const selectedIdentity = (() => {
+            if (!(filterFormEl instanceof HTMLFormElement)) return '';
+
+            const checked = Array
+                .from(filterFormEl.querySelectorAll('input[type="checkbox"][data-update-commanders][data-color]'))
+                .filter(el => el instanceof HTMLInputElement && el.checked)
+                .map(el => String(el.value ?? '').trim().toUpperCase())
+                .filter(Boolean);
+
+            if (checked.length === 0) return '';
+
+            const set = new Set(checked);
+            // Canonical order for identity strings
+            const order = ['W', 'U', 'B', 'R', 'G', 'C'];
+            return order.filter(c => set.has(c)).join('');
+        })();
+
+        const decorated = rows.map((rowEl, idx) => {
+            if (colIndex === COLOR_IDENTITY_COL_INDEX) {
+                const identity = String(rowEl.dataset.colorIdentity ?? '').trim().toUpperCase();
+                return {
+                    rowEl,
+                    idx,
+                    key: CHOOSE_COMMANDER_SORT.getKey(rowEl, colIndex),
+                    colorIdentity: identity
+                };
+            }
+
+            return {
+                rowEl,
+                idx,
+                key: CHOOSE_COMMANDER_SORT.getKey(rowEl, colIndex)
+            };
+        });
+
+        const isEmptyKey = (k) => {
+            if (!k) return true;
+            if (k.type === 'string') return String(k.value ?? '').trim() === '';
+            if (k.type === 'number') return !Number.isFinite(Number(k.value));
+            return true;
+        };
 
         decorated.sort((a, b) => {
+            // Special behavior for color identity:
+            // if the user selected colors (e.g. UW), put EXACT matches first, then sort the rest normally.
+            if (colIndex === COLOR_IDENTITY_COL_INDEX && selectedIdentity !== '') {
+                const aId = String(a.colorIdentity ?? '').toUpperCase();
+                const bId = String(b.colorIdentity ?? '').toUpperCase();
+
+                const aExact = aId === selectedIdentity;
+                const bExact = bId === selectedIdentity;
+
+                if (aExact !== bExact) return aExact ? -1 : 1;
+            }
+
+            // Always push empty cells to the bottom (regardless of ASC/DESC)
+            const aEmpty = isEmptyKey(a.key);
+            const bEmpty = isEmptyKey(b.key);
+            if (aEmpty !== bEmpty) return aEmpty ? 1 : -1;
+
+            // Fix color identity sorting: use <tr data-color-identity="...">, not the icon cell textContent
+            if (colIndex === COLOR_IDENTITY_COL_INDEX) {
+                const aId = String(a.colorIdentity ?? '').trim();
+                const bId = String(b.colorIdentity ?? '').trim();
+
+                const aLen = aId.length;
+                const bLen = bId.length;
+
+                // Sort by number of colors first (length), then by identity string.
+                if (aLen !== bLen) return (aLen < bLen ? -1 : 1) * dir;
+
+                if (aId === bId) return a.idx - b.idx;
+                return (aId < bId ? -1 : 1) * dir;
+            }
+
             const r = CHOOSE_COMMANDER_SORT.compareKeys(a.key, b.key);
             if (r === 0) return a.idx - b.idx;
             return r * dir;
@@ -795,8 +869,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const shouldShow = !!(commanderYesEl && commanderYesEl.checked);
         commanderChoiceContainerEl.classList.remove('hidden-form');
 
+        for (const el of chooseCommanderIncentiveEls) {
+            if (el instanceof HTMLElement) {
+                el.classList.remove('hidden-form');
+            }
+        }
+
         if (shouldShow === false) {
             commanderChoiceContainerEl.classList.add('hidden-form');
+
+            for (const el of chooseCommanderIncentiveEls) {
+                if (el instanceof HTMLElement) {
+                    el.classList.add('hidden-form');
+                }
+            }
         }
     };
 

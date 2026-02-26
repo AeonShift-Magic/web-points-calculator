@@ -34,17 +34,17 @@
     <div class="main-column no-shadow lg:pt-4 min-h-screen">
 
         <div class="flex flex-col items-center align-center">
-            <h2 class="w-auto beta text-center pt-6 mt-6 mb-4">{{ 'front.mtg.calculator.title'|trans }}</h2>
-            <p class="w-full text-center text-sm gray-text my-1">{{ 'front.mtg.calculator.subtitle'|trans }}</p>
+            <h2 class="w-auto beta text-center pt-6 mt-6 mb-1 text-4xl">{{ 'front.mtg.calculator.title'|trans }}</h2>
+            <p class="w-full text-center text-sm gray-text mt-1 mb-6">{{ 'front.mtg.calculator.subtitle'|trans }}</p>
         </div>
 
         <div class="w-full">
             <div class="mb-6">
                 <div class="flex flex-col lg:flex-row items-center justify-around text-left">
-                    <div class="w-full lg:w-1/3 lg:pr-6">
+                    <div class="w-full lg:w-1/2 lg:pr-6">
                         <p class="text-3xl text-center lg:text-right my-2" id="total1">{{ 'front.mtg.form.formtitle'|trans }}</p>
                     </div>
-                    <div class=" w-full lg:w-2/3 text-center lg:text-left">
+                    <div class="w-full lg:w-1/2 text-center lg:text-left flex flex-col">
                         <span class="inline-block text-3xl green-text mr-6">
                             <span id="format-name">AeonShift</span>
                             <span class="tooltip">
@@ -58,7 +58,7 @@
                                 </span>
                             </span>
                         </span>
-                        <span class="inline-block text-xl blue-text">
+                        <span class="inline-block text-base blue-text">
                             <span id="format-full-name"></span>
                             <span class="tooltip">
                                 <span class="tooltip-item">

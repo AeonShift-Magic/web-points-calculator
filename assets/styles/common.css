@@ -61,7 +61,7 @@
     --theme-neutral-light-hover: #979797;
     --theme-neutral-medium: #4E4E4E;
     --theme-red-dark: #753B3B;
-    --theme-red-light: #CD6666;
+    --theme-red-light: #e97777;
 
     --theme-red-medium: #B05858;
     --theme-white: #fefefe;
@@ -650,6 +650,18 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.dtr-expanded > th.dtr-control:
 
 .red-text {
     color: var(--theme-red-light);
+}
+
+.yellow-text {
+    color: var(--theme-yellow-light);
+}
+
+.medium-yellow-text {
+    color: var(--theme-yellow-medium);
+}
+
+.dark-yellow-text {
+    color: var(--theme-yellow-dark);
 }
 
 .white-text {
@@ -1277,7 +1289,7 @@ button, [role="button"] {
 
 .btn-big {
     border-radius: 0.75rem;
-    font-size: 1.45rem;
+    font-size: 1.75rem;
     line-height: 2rem;
     padding: 0.7em 1.45em;
     text-transform: uppercase;
@@ -2851,7 +2863,8 @@ iframe {
 .decklist-errors li {
     list-style-position: inside;
     padding-left: 1em;
-    font-size: 0.8em;
+    font-size: 0.85em;
+    list-style-type: disclosure-closed;
 }
 
 .decklist-modulations, .decklist-breakdown, .decklist-card-list {

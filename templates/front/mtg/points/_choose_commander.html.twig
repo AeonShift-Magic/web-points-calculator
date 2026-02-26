@@ -2,10 +2,14 @@
     <div class="main-column no-shadow py-2 h-[1200px] format-incentive my-8">
         <div class="w-full flex flex-col justify-around items-center p-px mb-4">
             <h2>{{ 'front.mtg.choose.links.choosecommander.text'|trans }}</h2>
-            <p class="blue-text text-center">
+            <p class="blue-text text-center my-1">
                 <span class="icon-info"></span> {{ 'front.mtg.choose.links.choosecommander.description'|trans }}
-                <br>
+            </p>
+            <p class="blue-text text-center my-1">
                 <span class="icon-info"></span> {{ 'front.mtg.choose.links.choosecommander.description2'|trans }}
+            </p>
+            <p class="blue-text text-center my-1 pb-2">
+                <span class="icon-info"></span> {{ 'front.mtg.choose.links.choosecommander.description3'|trans }}
             </p>
             <div class="w-full flex justify-center">
                 <form id="choose-commander-filter" class="w-full">
@@ -95,7 +99,7 @@
                             <div class="flex flex-col grow min-w-0 items-center justify-center mx-2 my-1">
                                 <label class="w-full" for="choose-commander-color-identity">{{ 'front.mtg.choose.links.choosecommander.table.coloridentity.label'|trans }}</label>
                                 <div class="w-full flex flex-row py-2">
-                                    {% for color in ['W', 'U', 'R', 'G', 'B', 'C'] %}
+                                    {% for color in ['W', 'U', 'B', 'R', 'G', 'C'] %}
                                         <div class="color-picker color-picker-{{ color|lower }} color-identity-{{ color|lower }}">
                                             <label for="choose-commander-color-identity-{{ color|lower }}">{{ color|lower }}</label>
                                             <input
@@ -145,6 +149,7 @@
                                     data-maximum-timeline="{{ commander.maximumTimelineLegality }}"
                                     data-first-printed-at="{{ commander.firstPrintedAt|date('Y-m-d\TH:i:s\Z') }}"
                                     data-budget=""
+                                    data-multicz-type="{{ commander.multiczType }}"
                                     {% if commander.white is same as(true) %}data-color-w="true"{% endif %}
                                     {% if commander.blue is same as(true) %}data-color-u="true"{% endif %}
                                     {% if commander.black is same as(true) %}data-color-b="true"{% endif %}
@@ -171,8 +176,13 @@
                                         </span>
                                     </td>
                                     <td>{{ commander.firstPrintedYear }}</td>
-                                    <td>{{ commander.manaValue }}</td>
-                                    <td class="pr-1">{{ partner_ability_format(commander.multiczType)|raw }}</td>
+                                    <td>
+                                        <span class="" data-mv>{{ commander.manaValue }}</span>
+                                    </td>
+                                    <td class="pr-1">
+                                        {{ partner_ability_format(commander.multiczType)|raw }}
+                                        <span data-multicztype></span>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         {% endif %}

@@ -719,10 +719,11 @@ front:
             text: 'You''re playing <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
             links:
                 choosecommander:
-                    text: 'Choose a Commander'
+                    text: 'Find a Commander'
                     title: 'Help me find a Commander.'
                     description: 'This section is showing you possible Commanders, based on your format selection above. Please update your selection if you wish to find a Commander for another format.'
                     description2: 'Note: the values below are only for single-Commanders only. Partner abilities are excluded.'
+                    description3: 'You can combine filters, and sort columns in sequence for multiple sorting.'
                     form:
                         nameen:
                             label: 'Name'
@@ -734,8 +735,8 @@ front:
                                 cedh: 'cEDH Rank'
                                 ffa: 'Free-For-All Global Rank'
                             label: 'Ranking'
-                            top: 'Top Commanders Only'
-                            popular: 'Top and Popular Commanders'
+                            top: '★★★  Top Commanders Only'
+                            popular: '★ Top and Popular Commanders'
                             alltournamentranked: 'All Tournament Ranked Commanders'
                             all: 'All Commanders'
                     table:
@@ -751,11 +752,11 @@ front:
                             released: '<span class="green-text">Released</span>'
                         rankingindex:
                             duel:
-                                label: 'Duel Commander Ranking Index (The Lower The Better)'
+                                label: 'Duel Commander Ranking (The Lower The Better)'
                             cedh:
-                                label: 'cEDH Ranking Index (The Lower The Better)'
+                                label: 'cEDH Ranking (The Lower The Better)'
                             ffa:
-                                label: 'FFA Ranking Index (The Lower The Better)'
+                                label: 'FFA Ranking (The Lower The Better)'
                         coloridentity:
                             label: 'Color Identity'
                         firstprintedyear:
@@ -770,7 +771,7 @@ front:
                             label: 'Minimum Budget 🧺'
                             placeholder: '80'
                 gotoform:
-                    text: 'Go to the calculator'
+                    text: 'Use our calculator'
                     title: 'Simply go to the <strong>calculator</strong> form, with all the options to choose from.'
                 freeform:
                     text: 'I don''t need a format'
@@ -782,11 +783,12 @@ front:
                     text: 'Help me choose a format'
                     title: 'Help me choose a format to play AeonShift Magic The Gathering™ via <strong>a quiz</strong>.'
         form:
-            title: 'Customize your format'
+            title: '🎛️ Customize your format'
             formtitle: 'You''re playing:'
             fixeddecklist: 'Your decklist was reformatted for readability'
             decklist1:
-                label: 'Decklist (Player 1 Decklist if using teams)'
+                label: 'Decklist <span class="gray-text">(Player 1 Decklist if using teams)</span>'
+                incentive: '↓ 📋 Paste your decklist here ↓'
                 help: >
                     Paste your deck here (your Player 1 decklist here if using teams). 
                     Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield's Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
@@ -794,10 +796,24 @@ front:
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
-                    1 Argothian Enchantress
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
                     ...
             decklist2:
                 label: 'Decklist - Player 2'
+                incentive: '↓ 📋 Paste your decklist here ↓'
                 help: >
                     Paste your Player 2 decklist here if using teams. 
                     Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
@@ -809,6 +825,7 @@ front:
                     ...
             decklist3:
                 label: 'Decklist - Player 3'
+                incentive: '↓ 📋 Paste your decklist here ↓'
                 help: >
                     Paste your Player 3 decklist here if using teams. 
                     Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
@@ -858,11 +875,11 @@ front:
                         help: 'These are the remaning points you have left. Feel free to keep using them if that helps.'
                         exceeding: 'exceeding: '
                 decklist1:
-                    label: 'Results for decklist 1:'
+                    label: 'Results for your decklist #1:'
                 decklist2:
-                    label: 'Results for decklist 2:'
+                    label: 'Results for your decklist #2:'
                 decklist3:
-                    label: 'Results for decklist 3:'
+                    label: 'Results for your decklist #3:'
                 errors:
                     containsinvalidtimelinecards:
                         text: 'The decklist contains cards that are not legal in the selected timeline.'
@@ -927,6 +944,9 @@ front:
                         text: 'Your most recently edited Commander was first edited prior to the current year.'
                         help: '+2% of format P-Value per year below current year for your most recent commander.'
                     multiplecommanders:
+                        types:
+                            chooseabackground: '-20% budget if Partner Ability is used'
+                            other: '-40% budget if Partner Ability is used'
                         text: 'You use more than one Commander.'
                         help: '-20% of format P-Value if using a Background-typed card, -40% of format points otherwise.'
                     manavalue:

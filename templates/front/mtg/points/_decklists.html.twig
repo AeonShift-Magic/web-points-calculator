@@ -9,10 +9,14 @@
              data-decklist-container="{{ i }}">
             <div class="w-full lg:w-1/3 py-4">
                 <div class="mb-8 lg:pr-4 flex flex-col items-center justify center">
-                    <label for="decklist{{ i }}">{{ ('front.mtg.form.decklist' ~ i ~ '.label')|trans }}</label>
+                    <label class="text-xl" for="decklist{{ i }}">{{ ('front.mtg.form.decklist' ~ i ~ '.label')|trans|raw }}</label>
                     <span id="decklist{{ i }}-fixed" class="text-sm green-text hidden" data-decklist-fixed="{{ i }}">
                         <span class="icon-info"></span> {{ 'front.mtg.form.fixeddecklist'|trans|raw }}
                     </span>
+
+                    <a data-action="choose-commander-incentive" class="btn btn-blue mb-2 mt-4 text-xl" href="#choose-commander">
+                        <span class="icon-diamond mr-3"></span> {{ 'front.mtg.choose.links.choosecommander.text'|trans }}
+                    </a>
 
                     <form id="decklist{{ i }}-add-card" class="w-full card-add-form" data-decklist-add-card-form="{{ i }}">
                         <fieldset class="flex flex-col mb-2">
@@ -84,6 +88,8 @@
                         </fieldset>
                     </form>
 
+                    <label for="decklist{{ i }}" class="text-xl">{{ ('front.mtg.form.decklist' ~ i ~ '.incentive')|trans|raw }}</label>
+
                     <textarea
                         class="decklist-cards"
                         rows="60"
@@ -106,21 +112,23 @@
                         <span class="icon-chart-bar mr-2"></span> {{ ('front.mtg.form.results.decklist' ~ i ~ '.label')|trans }}
                     </div>
 
-                    <div class="text-xl w-full mt-3 green-text hidden" id="decklist{{ i }}-legal" data-decklist-legal="{{ i }}">
-                        <span class="icon-ok m-0"></span> {{ 'front.mtg.form.results.legal.yes.label'|trans|raw }}
-                        <br>
-                        <a class="btn btn-green mt-3 cursor-pointer text-base" data-class="decklist-download-link" data-target="decklist{{ i }}" title="{{ 'front.mtg.form.results.legal.download.label.link.label'|trans|e('html_attr') }}">
-                            <span class="icon-share"></span> {{ 'front.mtg.form.results.legal.download.label.link.label'|trans }}
-                        </a>
+                    <div class="dark-alt-background flex flex-col my-2 text-lg w-full rounded-lg p-4">
+                        <div class="text-xl w-full green-text hidden" id="decklist{{ i }}-legal" data-decklist-legal="{{ i }}">
+                            <span class="icon-ok m-0"></span> {{ 'front.mtg.form.results.legal.yes.label'|trans|raw }}
+                            <br>
+                            <a class="btn btn-green cursor-pointer text-base mt-2" data-class="decklist-download-link" data-target="decklist{{ i }}" title="{{ 'front.mtg.form.results.legal.download.label.link.label'|trans|e('html_attr') }}">
+                                <span class="icon-share"></span> {{ 'front.mtg.form.results.legal.download.label.link.label'|trans }}
+                            </a>
+                        </div>
+
+                        <div class="text-2xl w-full red-text" id="decklist{{ i }}-illegal" data-decklist-illegal="{{ i }}">
+                            <span class="icon-cancel"></span> {{ 'front.mtg.form.results.legal.no.label'|trans|raw }}
+                        </div>
+
+                        <div class="text-2xl w-full mt-2 red-text decklist-errors hidden" id="decklist{{ i }}-errors" data-decklist-errors="{{ i }}"></div>
                     </div>
 
-                    <div class="text-xl w-full mt-3 red-text" id="decklist{{ i }}-illegal" data-decklist-illegal="{{ i }}">
-                        <span class="icon-cancel"></span> {{ 'front.mtg.form.results.legal.no.label'|trans|raw }}
-                    </div>
-
-                    <div class="text-xl w-full mt-2 red-text decklist-errors hidden" id="decklist{{ i }}-errors" data-decklist-errors="{{ i }}"></div>
-
-                    <div class="text-xl inline-flex w-full mt-6 mb-2 blue-text uppercase">
+                    <div class="text-2xl inline-flex w-full mt-6 mb-2 blue-text uppercase">
                         &darr; {{ 'front.mtg.form.results.breakdown.title'|trans|raw }}
                     </div>
 
