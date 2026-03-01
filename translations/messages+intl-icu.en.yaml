@@ -951,7 +951,7 @@ front:
                         help: '-20% of format P-Value if using a Background-typed card, -40% of format points otherwise.'
                     manavalue:
                         text: 'For each of your Commanders, its mana value is lower than 4.'
-                        help: '"-10% of format P-Value if mana value 3, -20% of format P-Value if mana value 2, -30% of format P-Value if mana value 1 or 0.'
+                        help: '"-10% of format P-Value if mana value 3, -20% of format P-Value if mana value 2, -30% of format P-Value if mana value 1 or 0. Half of those if using a non-Background Partner Ability.'
                     rankedcommander:
                         text: 'Your Commander is ranked.'
                         help: 'Your commander is ranked in the current Point List.'

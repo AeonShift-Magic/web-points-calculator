@@ -683,67 +683,10 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
         return;
     }
 
-    // First, find the most recent first print among commanders and apply bonus to it
-    let currentYear = new Date().getFullYear();
-    let mostRecentFirstPrintYear = 0;
-    const cards = updates?.updates?.[currentFormatChoiceValues.update]?.pointsList?.cards;
     let budgetChanges = [];
+    let manaValueFactor = 0.1;
 
-    if (!cards || typeof cards !== 'object') {
-        MTGPointsListModelV1FailParsing(deckListStructure);
-        return null;
-    }
-
-    for (let i = 0; i < deckListStructure.commandzone.length; i++) {
-        if (deckListStructure.commandzone[i].name in cards) {
-            const commanderCard = deckListStructure.commandzone[i];
-            let foundCardData = cards[deckListStructure.commandzone[i].name];
-
-            // Dont forget to check for flavour names / skinned cards
-            if ('flavorofnameen' in foundCardData && foundCardData.flavorofnameen !== '' && foundCardData.flavorofnameen !== null && foundCardData.flavorofnameen in cards) {
-                foundCardData = cards[foundCardData.flavorofnameen];
-            }
-
-            deckListStructure.commandzone[i] = {
-                ...foundCardData,
-                ...commanderCard
-            };
-            // 10000 = abritrary impossible date in the future, MTG won't survive this far, and so do we not ^^
-            if ('firstprintedyear' in foundCardData && foundCardData.firstprintedyear > mostRecentFirstPrintYear && foundCardData.firstprintedyear < 10000) {
-                mostRecentFirstPrintYear = foundCardData.firstprintedyear;
-            }
-        }
-    }
-
-    if (mostRecentFirstPrintYear < currentYear && mostRecentFirstPrintYear) {
-        const budgetChange = Number((0.02 * (currentYear - mostRecentFirstPrintYear) * pvalue).toFixed(0));
-
-        // The bonus is applied only once, and based on the msot recent print.
-        if (deckListStructure.commandzone.length > 1) {
-            const imageUrl0 = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
-                ? deckListStructure.commandzone[0].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
-            const imageUrl1 = (typeof deckListStructure.commandzone[1].imageurl === 'string' && deckListStructure.commandzone[1].imageurl)
-                ? deckListStructure.commandzone[1].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
-
-            deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange }</strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
-            );
-        } else if (deckListStructure.commandzone.length === 1) {
-            const imageUrl = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
-                ? deckListStructure.commandzone[0].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
-
-            deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
-            );
-        }
-
-        budgetChanges.push(budgetChange);
-    }
-
-    // Second, get the multiple commander malus
+    // First, get the multiple commander malus
     let partner1type = '';
     let partner2type = '';
     for (let i = 0; i < deckListStructure.commandzone.length; i++) {
@@ -780,6 +723,8 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ PARTNER_TYPES.choose_a_background })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
             );
             budgetChanges.push(budgetChange);
+            // Mana Value Factor is set to 0.1 for Choose a Background / Background (10% malus)
+            manaValueFactor = 0.1;
         } else {
             const budgetChange = Number((-0.4 * pvalue).toFixed(0));
             const imageUrl0 = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
@@ -793,7 +738,68 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ (partner1type in PARTNER_TYPES) ? PARTNER_TYPES[partner1type] : PARTNER_TYPES.default })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
             );
             budgetChanges.push(budgetChange);
+            // Mana Value Factor is set to 0.05 for all other Partner Abilities (5% malus)
+            manaValueFactor = 0.05;
         }
+    }
+
+    // Second, find the most recent first print among commanders and apply bonus to it
+    let currentYear = new Date().getFullYear();
+    let mostRecentFirstPrintYear = 0;
+    const cards = updates?.updates?.[currentFormatChoiceValues.update]?.pointsList?.cards;
+
+    if (!cards || typeof cards !== 'object') {
+        MTGPointsListModelV1FailParsing(deckListStructure);
+        return null;
+    }
+
+    for (let i = 0; i < deckListStructure.commandzone.length; i++) {
+        if (deckListStructure.commandzone[i].name in cards) {
+            const commanderCard = deckListStructure.commandzone[i];
+            let foundCardData = cards[deckListStructure.commandzone[i].name];
+
+            // Dont forget to check for flavour names / skinned cards
+            if ('flavorofnameen' in foundCardData && foundCardData.flavorofnameen !== '' && foundCardData.flavorofnameen !== null && foundCardData.flavorofnameen in cards) {
+                foundCardData = cards[foundCardData.flavorofnameen];
+            }
+
+            deckListStructure.commandzone[i] = {
+                ...foundCardData,
+                ...commanderCard
+            };
+            // 10000 = abritrary impossible date in the future, MTG won't survive this far, and so do we not, good luck, fellow humans from the future ^^
+            if ('firstprintedyear' in foundCardData && foundCardData.firstprintedyear > mostRecentFirstPrintYear && foundCardData.firstprintedyear < 10000) {
+                mostRecentFirstPrintYear = foundCardData.firstprintedyear;
+            }
+        }
+    }
+
+    if (mostRecentFirstPrintYear < currentYear && mostRecentFirstPrintYear) {
+        const budgetChange = Number((0.02 * (currentYear - mostRecentFirstPrintYear) * pvalue).toFixed(0));
+
+        // The bonus is applied only once, and based on the msot recent print.
+        if (deckListStructure.commandzone.length > 1) {
+            const imageUrl0 = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
+                ? deckListStructure.commandzone[0].imageurl
+                : MTGPointsListModelV1UnrankedImageUrl;
+            const imageUrl1 = (typeof deckListStructure.commandzone[1].imageurl === 'string' && deckListStructure.commandzone[1].imageurl)
+                ? deckListStructure.commandzone[1].imageurl
+                : MTGPointsListModelV1UnrankedImageUrl;
+
+            deckListStructure.modulations.push(
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange }</strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
+            );
+        } else if (deckListStructure.commandzone.length === 1) {
+            const imageUrl = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
+                ? deckListStructure.commandzone[0].imageurl
+                : MTGPointsListModelV1UnrankedImageUrl;
+
+            deckListStructure.modulations.push(
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
+            );
+        }
+
+        budgetChanges.push(budgetChange);
     }
 
     // Third, get the mana value malus
@@ -802,14 +808,14 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
             let budgetChange = 0;
             switch (deckListStructure.commandzone[i].mv) {
                 case 3:
-                    budgetChange = Number((-0.1 * pvalue).toFixed(0));
+                    budgetChange = Number((-1 * manaValueFactor * pvalue).toFixed(0));
                     break;
                 case 2:
-                    budgetChange = Number((-0.2 * pvalue).toFixed(0));
+                    budgetChange = Number((-2 * manaValueFactor * pvalue).toFixed(0));
                     break;
                 case 1:
                 case 0:
-                    budgetChange = Number((-0.3 * pvalue).toFixed(0));
+                    budgetChange = Number((-3 * manaValueFactor * pvalue).toFixed(0));
                     break;
             }
 
