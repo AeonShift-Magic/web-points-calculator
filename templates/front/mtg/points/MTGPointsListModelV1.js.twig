@@ -27,6 +27,10 @@ const MTGPOINTSLISTMODELV1_MODEL_MESSAGES = {
     singletoncardnotunique: '{{ 'front.mtg.form.results.errors.singletoncardnotunique.text'|trans|raw }}',
     numberofcardnotcorrectforquadruples: '{{ 'front.mtg.form.results.errors.numberofcardnotcorrectforquadruples.text'|trans|raw }}',
     wrongtimelineforcards: '{{ 'front.mtg.form.results.errors.wrongtimelineforcards.text'|trans|raw }}',
+    cznoteligibleonecommander: '{{ 'front.mtg.form.results.errors.cznoteligibleonecommander.text'|trans|raw }}',
+    cznoteligiblemulticommander: '{{ 'front.mtg.form.results.errors.cznoteligiblemulticommander.text'|trans|raw }}',
+    cznotvalidmulticztypenotthesame: '{{ 'front.mtg.form.results.errors.cznotvalidmulticztypenotthesame.text'|trans|raw }}',
+    coloridentitymissmatch: '{{ 'front.mtg.form.results.errors.coloridentitymissmatch.text'|trans|raw }}',
     chooseabackgroundmessage: '{{ 'front.mtg.form.results.modulations.multiplecommanders.types.chooseabackground'|trans|raw }}',
     otherpartnermessage: '{{ 'front.mtg.form.results.modulations.multiplecommanders.types.other'|trans|raw }}'
 };
@@ -495,6 +499,41 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
                     .join(', ')
             );
         }
+
+        /// Check color identity of the command zone with all cards in the deck.
+        if (currentFormatChoiceValues.commander === 'yes' && deckListStructure.commandzone.length > 0) {
+            // Check the current color identity for commander
+            const currentColorIdentityOfCZ = new Set();
+            currentColorIdentityOfCZ.add('C'); // The C is for colorless. Always in ColorIdentity in the CZ.
+            const czIsUnranked = deckListStructure.commandzone.every((c) => c.name === "((unranked))");
+            // If the CZ is unranked then we do not check the color identity.
+            if(!czIsUnranked) {
+                for (const card of deckListStructure.commandzone) {
+                    const currentCommanderData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
+                        card.name,
+                        currentFormatChoiceValues
+                    );
+                    currentCommanderData.ci.forEach(color => currentColorIdentityOfCZ.add(color));
+                }
+    
+                listMismatchColorIdentityCard = [];
+                allCardsFromZonesDeckList.forEach((card) => {
+                    const colorMatch = card.currentCardData.ci.every(color => currentColorIdentityOfCZ.has(color));
+                    if(!colorMatch) {
+                        listMismatchColorIdentityCard.push({cardName: card.name, colorIdentity: card.currentCardData.ci});
+                    }
+                });
+    
+                if(listMismatchColorIdentityCard.length > 0) {
+                    deckListStructure.errors.push(
+                        MTGPOINTSLISTMODELV1_MODEL_MESSAGES.coloridentitymissmatch +
+                        listMismatchColorIdentityCard
+                            .map(c => `${ c.cardName } (${ c.colorIdentity })`)
+                            .join(', ')
+                    );
+                }
+            }
+        }
     }
 
     /**
@@ -632,7 +671,52 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
     }
 
     // Before points, we need to check that Command Zones are valid
-    // TODO (isCzEligible and multiCzEligible (partner ...) and multiCzType)
+    if(currentFormatChoiceValues.commander === 'yes') {
+        // Check for only one commander
+        if(deckListStructure.commandzone.length === 1) {
+            const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
+                deckListStructure.commandzone[0].name,
+                currentFormatChoiceValues
+            );
+            if(!currentCardData.czeligible) {
+                deckListStructure.errors.push(
+                    MTGPOINTSLISTMODELV1_MODEL_MESSAGES.cznoteligibleonecommander
+                );
+                return deckListStructure;
+            }
+        }
+        else {
+            // Check for multiple commander
+            let listNotMultiCzEligible = [];
+            let listMultiCzType = [];
+            for(const commanderCard of deckListStructure.commandzone) {
+                const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
+                    commanderCard.name,
+                    currentFormatChoiceValues
+                );
+                
+                if(!currentCardData.multiczeligible) {
+                    listNotMultiCzEligible.push(currentCardData.name);
+                }
+                listMultiCzType.push(currentCardData.multicztype);
+            }
+
+            if(listNotMultiCzEligible.length !== 0) {
+                deckListStructure.errors.push(
+                    MTGPOINTSLISTMODELV1_MODEL_MESSAGES.cznoteligiblemulticommander + listNotMultiCzEligible.join(',')
+                );
+                return deckListStructure;
+            }
+
+            // Check multicztype, all the cards must be of the same type
+            if(!listMultiCzType.every(val => val === listMultiCzType[0])) {
+                deckListStructure.errors.push(
+                    MTGPOINTSLISTMODELV1_MODEL_MESSAGES.cznotvalidmulticztypenotthesame
+                );
+                return deckListStructure;
+            }
+        }
+    }
 
     // First, we need to determine the modulations
     MTGPointsListModelV1AddModulations(deckListStructure, currentFormatChoiceValues, pvalue);
