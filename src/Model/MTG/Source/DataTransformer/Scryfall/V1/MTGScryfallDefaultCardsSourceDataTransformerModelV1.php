@@ -1207,6 +1207,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'name_en',
             'flavor_of_name_en',
             'alternate_name_en',
+            'types',
+            'oracle_text',
             'image_url',
             'mana_value',
             'color_identity',
@@ -1472,6 +1474,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         // Extract basic fields
         $oracleId = $card['oracle_id'];
+        $set = isset($card['set']) && is_string($card['set']) ? $card['set'] : '';
         $scryfallId = $card['id'] ?? null;
         // Name EN uses the first face flavour name if defined, otherwise the card flavour name if defined, otherwise the card name
         $nameEN = (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && ! empty($card['card_faces'][0]['flavor_name'])) ? $card['card_faces'][0]['flavor_name'] : $card['flavor_name'] ?? $card['name']; // @phpstan-ignore-line
@@ -1480,15 +1483,32 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         // Alternate name EN uses the card's first face name if a flavor name defined or a first face name is defined
         $alternateNameEN = (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && (! empty($card['card_faces'][0]['flavor_name']) || ! empty($card['card_faces'][0]['name']))) // @phpstan-ignore-line
             ? $card['card_faces'][0]['name'] ?? '' : '';
+
+        // One exception for SLX cards - take the printed name as the alternate name
+        if (isset($card['printed_name'], $card['lang']) && $flavorOfNameEN === '' && $card['lang'] === 'en' && $card['printed_name'] !== $nameEN && mb_strtolower($set) === 'sld') {
+            $flavorOfNameEN = $card['printed_name'];
+        }
+
         $manaValue = (float)(isset($card['cmc']) && is_numeric($card['cmc']) ? $card['cmc'] : 0.0);
         $colorIdentity = isset($card['color_identity']) && is_array($card['color_identity']) && $card['color_identity'] ? $card['color_identity'] : [];
 
-        if(count($colorIdentity) === 0) {
+        if (count($colorIdentity) === 0) {
             $colorIdentity = ['C'];
         }
 
+        $types = isset($card['type_line']) && is_string($card['type_line']) ? $card['type_line'] : '';
+
+        $oracleTexts = [isset($card['oracle_text']) && is_string($card['oracle_text']) ? $card['oracle_text'] : ''];
+        if (isset($card['card_faces']) && is_array($card['card_faces'])) {
+            foreach ($card['card_faces'] as $cardFace) {
+                if (is_array($cardFace) && isset($cardFace['oracle_text']) && is_string($cardFace['oracle_text'])) {
+                    $oracleTexts[] = $cardFace['oracle_text'];
+                }
+            }
+        }
+        $oracleText = implode("\n", $oracleTexts);
+
         $scryfallUri = $card['scryfall_uri'] ?? '';
-        $set = $card['set'] ?? '';
         $releasedAt = $card['released_at'] ?? '';
         // The image URL is the main image from Scryfall (normal size), otherwise the first face image if defined
         $imageURL = (array_key_exists('image_uris', $card) && is_array($card['image_uris']) && ! empty($card['image_uris']['normal']))
@@ -1548,6 +1568,8 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             'name_en'                           => $nameEN,
             'flavor_of_name_en'                 => $flavorOfNameEN,
             'alternate_name_en'                 => $alternateNameEN,
+            'oracle_text'                       => $oracleText,
+            'types'                             => $types,
             'mana_value'                        => $manaValue,
             'color_identity'                    => json_encode($colorIdentity, JSON_THROW_ON_ERROR),
             'scryfall_uri'                      => $scryfallUri,

@@ -1,10 +1,12 @@
+// noinspection JSUnusedGlobalSymbols
+
 /***************************************************************************************************
  * MTGPointsListModelV1 Points Calculator                                                          *
  ***************************************************************************************************/
 
 // Bind this to a global variable to avoid multiple fetching
 let MTGPointsListModelV1UnrankedListCardPointsByContext = Object.create(null);
-let MTGPointsListModelV1UnrankedImageUrl = '{{ asset('images/unranked.jpg') }}';
+let MTGPointsListModelV1UnknownImageUrl = '{{ asset('images/unranked.jpg') }}';
 
 // What to look for, even with partner abilities, at best, among a decklist
 const MTGPOINTSLISTMODELV1_MAX_COMMAND_ZONES = 2;
@@ -32,7 +34,8 @@ const MTGPOINTSLISTMODELV1_MODEL_MESSAGES = {
     cznotvalidmulticztypenotthesame: '{{ 'front.mtg.form.results.errors.cznotvalidmulticztypenotthesame.text'|trans|raw }}',
     coloridentitymissmatch: '{{ 'front.mtg.form.results.errors.coloridentitymissmatch.text'|trans|raw }}',
     chooseabackgroundmessage: '{{ 'front.mtg.form.results.modulations.multiplecommanders.types.chooseabackground'|trans|raw }}',
-    otherpartnermessage: '{{ 'front.mtg.form.results.modulations.multiplecommanders.types.other'|trans|raw }}'
+    otherpartnermessage: '{{ 'front.mtg.form.results.modulations.multiplecommanders.types.other'|trans|raw }}',
+    unknown: '{{ 'front.mtg.form.results.errors.unknown.text'|trans|raw }}'
 };
 
 /**
@@ -343,7 +346,7 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
         if (currentFormatChoiceValues.structure === 'highlander') {
             // Using highlander, maindeck + commandzone should always be 100
             if (maindeckCount + commandzoneCount !== 100) {
-                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidnumberofcards);
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidnumberofcards + ' (' + (maindeckCount + commandzoneCount) + ')');
             }
             // With no sideboard
             if (sideboardCount !== 0) {
@@ -352,12 +355,40 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
         } else if (currentFormatChoiceValues.structure === 'mtg') {
             // Using MTG rules, maindeck always should be 60+
             if (maindeckCount < 60) {
-                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidnumberofcards);
+                deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidnumberofcards + ' (' + (maindeckCount + commandzoneCount) + ')');
             }
             // Sideboard should be maximum 15
             if (sideboardCount > 15) {
                 deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidsideboard);
             }
+        }
+
+        // First, let's detect whether the cards can be found, and propagate their statuses
+        const unknownCardNames = [];
+        const unknownCardNamesSet = new Set();
+
+        for (const zone of zones) {
+            for (let i = 0; i < deckListStructure[zone].length; i++) {
+                const card = deckListStructure[zone][i];
+                const pointListCard = MTGPointsListModelV1FindCardByNameInUpdatePointsList(card?.name, currentFormatChoiceValues);
+
+                if (pointListCard?.status === 'unknown') {
+                    const nameForError = String(card?.name || '').trim();
+                    if (nameForError && !unknownCardNamesSet.has(nameForError)) {
+                        unknownCardNamesSet.add(nameForError);
+                        unknownCardNames.push(nameForError);
+                    }
+                    deckListStructure[zone][i].status = pointListCard?.status ?? 'unknown';
+                    deckListStructure.total = Math.max(0, deckListStructure.total - (deckListStructure[zone][i].copies ?? 1));
+                }
+            }
+        }
+
+        // If one or more cards are unknown, push an error like the others
+        if (unknownCardNames.length > 0) {
+            deckListStructure.errors.push(
+                `${ MTGPOINTSLISTMODELV1_MODEL_MESSAGES.unknown } ${ unknownCardNames.join(', ') }.`
+            );
         }
     }
 
@@ -394,11 +425,15 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
             );
         }
 
-
         let allCardsFromZonesDeckList = [
             ...deckListStructure.maindeck,
             ...deckListStructure.commandzone,
-            ...deckListStructure.companions
+            ...deckListStructure.companions,
+            ...deckListStructure.sideboard,
+            ...deckListStructure.attractions,
+            ...deckListStructure.contraptions,
+            ...deckListStructure.stickers,
+            ...deckListStructure.contraptions
         ];
         // Merging same cards
         const map = new Map();
@@ -481,12 +516,10 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
         // Check Timeline legality if (card.timeline < currentTimeline)
         const LuTTimelines = updates.updates[currentFormatChoiceValues.update].pointsList.timelineprecedences;
         const currentTimeline = LuTTimelines[currentFormatChoiceValues.timeline];
-
         let listWrongTimelineCards = [];
 
         allCardsFromZonesDeckList.forEach((card) => {
-
-            if (LuTTimelines[card.currentCardData.timeline] < currentTimeline) {
+            if (LuTTimelines[card.currentCardData.timeline] < currentTimeline && card.currentCardData.name !== '((unknown))') {
                 listWrongTimelineCards.push({ cardName: card.name, cardTimeline: card.currentCardData.timeline });
             }
         });
@@ -500,14 +533,15 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
             );
         }
 
-        /// Check color identity of the command zone with all cards in the deck.
+        // Check color identity of the command zone with all cards in the deck.
+        var listMismatchColorIdentityCard;
         if (currentFormatChoiceValues.commander === 'yes' && deckListStructure.commandzone.length > 0) {
             // Check the current color identity for commander
             const currentColorIdentityOfCZ = new Set();
             currentColorIdentityOfCZ.add('C'); // The C is for colorless. Always in ColorIdentity in the CZ.
-            const czIsUnranked = deckListStructure.commandzone.every((c) => c.name === "((unranked))");
+            const czIsUnranked = deckListStructure.commandzone.every((c) => c.name === '((unranked))');
             // If the CZ is unranked then we do not check the color identity.
-            if(!czIsUnranked) {
+            if (!czIsUnranked) {
                 for (const card of deckListStructure.commandzone) {
                     const currentCommanderData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
                         card.name,
@@ -515,20 +549,20 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
                     );
                     currentCommanderData.ci.forEach(color => currentColorIdentityOfCZ.add(color));
                 }
-    
+
                 listMismatchColorIdentityCard = [];
                 allCardsFromZonesDeckList.forEach((card) => {
                     const colorMatch = card.currentCardData.ci.every(color => currentColorIdentityOfCZ.has(color));
-                    if(!colorMatch) {
-                        listMismatchColorIdentityCard.push({cardName: card.name, colorIdentity: card.currentCardData.ci});
+                    if (!colorMatch) {
+                        listMismatchColorIdentityCard.push({ cardName: card.name, colorIdentity: card.currentCardData.ci });
                     }
                 });
-    
-                if(listMismatchColorIdentityCard.length > 0) {
+
+                if (listMismatchColorIdentityCard.length > 0) {
                     deckListStructure.errors.push(
                         MTGPOINTSLISTMODELV1_MODEL_MESSAGES.coloridentitymissmatch +
                         listMismatchColorIdentityCard
-                            .map(c => `${ c.cardName } (${ c.colorIdentity })`)
+                            .map(c => `${ c.cardName } ({${ c.colorIdentity }})`)
                             .join(', ')
                     );
                 }
@@ -666,53 +700,105 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
             } else {
                 // Otherwise, it might just be another crap, unnormalized website export
                 deckListStructure.errors.push(MTGPOINTSLISTMODELV1_MODEL_MESSAGES.impossibletofindacommander);
+                deckListStructure.budget = '?';
+                deckListStructure.remaining = '?';
             }
         }
     }
 
     // Before points, we need to check that Command Zones are valid
-    if(currentFormatChoiceValues.commander === 'yes') {
+    if (currentFormatChoiceValues.commander === 'yes') {
         // Check for only one commander
-        if(deckListStructure.commandzone.length === 1) {
+        if (deckListStructure.commandzone.length === 1) {
             const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
                 deckListStructure.commandzone[0].name,
                 currentFormatChoiceValues
             );
-            if(!currentCardData.czeligible) {
+            if (!currentCardData.czeligible) {
                 deckListStructure.errors.push(
                     MTGPOINTSLISTMODELV1_MODEL_MESSAGES.cznoteligibleonecommander
                 );
+                deckListStructure.budget = '?';
+                deckListStructure.remaining = '?';
                 return deckListStructure;
             }
-        }
-        else {
+        } else {
             // Check for multiple commander
             let listNotMultiCzEligible = [];
             let listMultiCzType = [];
-            for(const commanderCard of deckListStructure.commandzone) {
+            for (const commanderCard of deckListStructure.commandzone) {
                 const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
                     commanderCard.name,
                     currentFormatChoiceValues
                 );
-                
-                if(!currentCardData.multiczeligible) {
+
+                if (!currentCardData.multiczeligible) {
                     listNotMultiCzEligible.push(currentCardData.name);
                 }
                 listMultiCzType.push(currentCardData.multicztype);
             }
 
-            if(listNotMultiCzEligible.length !== 0) {
+            if (listNotMultiCzEligible.length !== 0) {
                 deckListStructure.errors.push(
                     MTGPOINTSLISTMODELV1_MODEL_MESSAGES.cznoteligiblemulticommander + listNotMultiCzEligible.join(',')
                 );
+                deckListStructure.budget = '?';
+                deckListStructure.remaining = '?';
                 return deckListStructure;
             }
 
-            // Check multicztype, all the cards must be of the same type
-            if(!listMultiCzType.every(val => val === listMultiCzType[0])) {
+            // Wrong Partner Ability, check multicztype, all the cards must be of the same one
+            if (!listMultiCzType.every(multiCzType => multiCzType === listMultiCzType[0])) {
                 deckListStructure.errors.push(
                     MTGPOINTSLISTMODELV1_MODEL_MESSAGES.cznotvalidmulticztypenotthesame
                 );
+                deckListStructure.budget = '?';
+                deckListStructure.remaining = '?';
+                return deckListStructure;
+            }
+
+            // In case case we have multiple commanders, check that the Partner Ability condition is met within the good quantities
+            let countBG = 0;
+            let countHasBG = 0;
+            let countDoctor = 0;
+            let countHasDoctor = 0;
+
+            for (const commanderCard of deckListStructure.commandzone) {
+                const currentCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(
+                    commanderCard.name,
+                    currentFormatChoiceValues
+                );
+
+                if (typeof currentCardData?.isbg !== 'undefined' && currentCardData?.isbg === true) {
+                    countBG++;
+                }
+                if (typeof currentCardData?.hasbg !== 'undefined' && currentCardData?.hasbg === true) {
+                    countHasBG++;
+                }
+                if (typeof currentCardData?.isdoctor !== 'undefined' && currentCardData?.isdoctor === true) {
+                    countDoctor++;
+                }
+                if (typeof currentCardData?.hasdoctor !== 'undefined' && currentCardData?.hasdoctor === true) {
+                    countHasDoctor++;
+                }
+            }
+
+            // Wrong "Choose a background" configuration
+            if ((countBG > 0 || countHasBG > 0) && countBG !== countHasBG) {
+                deckListStructure.errors.push(
+                    MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidcommandzone
+                );
+                deckListStructure.budget = '?';
+                deckListStructure.remaining = '?';
+                return deckListStructure;
+            }
+            // Wrong "Doctor's Companiona" configuration
+            if ((countDoctor > 0 || countHasDoctor > 0) && countDoctor !== countHasDoctor) {
+                deckListStructure.errors.push(
+                    MTGPOINTSLISTMODELV1_MODEL_MESSAGES.invalidcommandzone
+                );
+                deckListStructure.budget = '?';
+                deckListStructure.remaining = '?';
                 return deckListStructure;
             }
         }
@@ -798,10 +884,10 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
             const budgetChange = Number((-0.2 * pvalue).toFixed(0));
             const imageUrl0 = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
                 ? deckListStructure.commandzone[0].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
             const imageUrl1 = (typeof deckListStructure.commandzone[1].imageurl === 'string' && deckListStructure.commandzone[1].imageurl)
                 ? deckListStructure.commandzone[1].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
 
             deckListStructure.modulations.push(
                 `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ PARTNER_TYPES.choose_a_background })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
@@ -813,10 +899,10 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
             const budgetChange = Number((-0.4 * pvalue).toFixed(0));
             const imageUrl0 = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
                 ? deckListStructure.commandzone[0].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
             const imageUrl1 = (typeof deckListStructure.commandzone[1].imageurl === 'string' && deckListStructure.commandzone[1].imageurl)
                 ? deckListStructure.commandzone[1].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
 
             deckListStructure.modulations.push(
                 `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ (partner1type in PARTNER_TYPES) ? PARTNER_TYPES[partner1type] : PARTNER_TYPES.default })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
@@ -865,10 +951,10 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
         if (deckListStructure.commandzone.length > 1) {
             const imageUrl0 = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
                 ? deckListStructure.commandzone[0].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
             const imageUrl1 = (typeof deckListStructure.commandzone[1].imageurl === 'string' && deckListStructure.commandzone[1].imageurl)
                 ? deckListStructure.commandzone[1].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
 
             deckListStructure.modulations.push(
                 `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange }</strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
@@ -876,7 +962,7 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
         } else if (deckListStructure.commandzone.length === 1) {
             const imageUrl = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
                 ? deckListStructure.commandzone[0].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
 
             deckListStructure.modulations.push(
                 `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
@@ -888,7 +974,16 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
 
     // Third, get the mana value malus
     for (let i = 0; i < deckListStructure.commandzone.length; i++) {
-        if ('mv' in deckListStructure.commandzone[i] && deckListStructure.commandzone[i].mv < 4) {
+        if (
+            'mv' in deckListStructure.commandzone[i]
+            && deckListStructure.commandzone[i].mv < 4
+            && (
+                (
+                    typeof deckListStructure.commandzone[i]?.types === 'string' && !deckListStructure.commandzone[i].types.toLowerCase().includes('background')
+                )
+                || typeof deckListStructure.commandzone[i]?.types === 'undefined'
+            )
+        ) {
             let budgetChange = 0;
             switch (deckListStructure.commandzone[i].mv) {
                 case 3:
@@ -905,7 +1000,7 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
 
             const imageUrl = (typeof deckListStructure.commandzone[i].imageurl === 'string' && deckListStructure.commandzone[i].imageurl)
                 ? deckListStructure.commandzone[i].imageurl
-                : MTGPointsListModelV1UnrankedImageUrl;
+                : MTGPointsListModelV1UnknownImageUrl;
 
             deckListStructure.modulations.push(
                 `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[i].name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[i].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ deckListStructure.commandzone[i].mv })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.manavaluetext })</help>`
@@ -932,6 +1027,7 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
     const POINTS_MESSAGES = {
         overflow: '{{ 'front.mtg.form.results.errors.toomanypoints.text'|trans|raw }}',
         unranked: '{{ 'front.mtg.form.results.breakdown.usage.unranked'|trans|raw }}',
+        unknown: '{{ 'front.mtg.form.results.breakdown.usage.unknown'|trans|raw }}',
         rankedcommander: '{{ 'front.mtg.form.results.modulations.rankedcommander.help'|trans|raw }}'
     };
 
@@ -974,14 +1070,16 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
 
             const foundCardData = MTGPointsListModelV1FindCardByNameInUpdatePointsList(finalCardName, currentFormatChoiceValues);
             const cardImageUrl = (
-                cardPoints?.status === 'unranked'
+                cardPoints?.status === 'unknown'
                 || !foundCardData
                 || typeof foundCardData.imageurl !== 'string'
                 || foundCardData.imageurl === ''
             )
-                ? MTGPointsListModelV1UnrankedImageUrl
+                ? MTGPointsListModelV1UnknownImageUrl
                 : foundCardData.imageurl;
             deckListStructure[zone][i].imageurl = cardImageUrl;
+            deckListStructure[zone][i].status = foundCardData?.status ?? 'unknown';
+            deckListStructure.total = Math.max(0, deckListStructure.total - (deckListStructure[zone][i].copies ?? 1));
 
             if ('points' in cardPoints && 'copies' in card && cardPoints.points !== 0 && typeof cardPoints.points === 'number') {
 
@@ -990,43 +1088,74 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
                 // Commander point changes from the Points List go to budget, not to the points breakdown
                 if (deckListStructure.commandzone.some(card => card.name === finalCardName)) {
                     deckListStructure.budget -= cardPoints.points * card.copies;
-                    deckListStructure.modulations.push(`
-                        <strong class="${ cardPoints.status === 'unranked' ? 'unranked' : '' }">
+
+                    if (cardPoints.status !== 'unknown') {
+                        // Known card modulation
+                        deckListStructure.modulations.push(`
+                        <strong class="${ cardPoints.status }">
                              <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
                                 <span class="icon-search"></span> ${ finalCardName }
                             </a>
                         </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> points <br><em class="help-text">(${ POINTS_MESSAGES.rankedcommander })</help>`
-                        + (
-                            cardPoints.status === 'unranked'
-                                ? ` <br><em class="help-text">${ POINTS_MESSAGES.unranked }</em>`
-                                : ''
-                        )
-                    );
-                } else {
-                    breakdownEntries.push({
-                        points: cardPoints.points * card.copies,
-                        zone,
-                        html:
-                            `<strong class="${ cardPoints.status === 'unranked' ? 'unranked' : '' }">
-                             <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
-                                <span class="icon-search"></span> ${ finalCardName }
-                            </a>
-                        </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> points`
                             + (
                                 cardPoints.status === 'unranked'
                                     ? ` <br><em class="help-text">${ POINTS_MESSAGES.unranked }</em>`
                                     : ''
                             )
-                    });
+                        );
+                    } else {
+                        // Unknown card modulation
+                        deckListStructure.modulations.push(`
+                        <strong class="${ cardPoints.status }">
+                             <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                                <span class="icon-search"></span> ${ finalCardName }
+                            </a>
+                        </strong>
+                        <br>
+                        <em class="help-text">${ POINTS_MESSAGES.unknown }</em>`);
+                    }
+                } else {
+                    if (cardPoints.status !== 'unknown') {
+                        // Known card breakdown entry
+                        breakdownEntries.push({
+                            points: cardPoints.points * card.copies,
+                            zone,
+                            html:
+                                `<strong class="${ cardPoints.status }">
+                                 <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                                    <span class="icon-search"></span> ${ finalCardName }
+                                </a>
+                            </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> points`
+                                + (
+                                    cardPoints.status === 'unranked'
+                                        ? ` <br><em class="help-text">${ POINTS_MESSAGES.unranked }</em>`
+                                        : ''
+                                )
+                        });
+                    } else {
+                        // Unknown card breakdown entry
+                        breakdownEntries.push({
+                            points: 0,
+                            zone,
+                            html:
+                                `<strong class="${ cardPoints.status }">
+                                 <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                                    <span class="icon-search"></span> ${ finalCardName }
+                                </a>
+                                </strong>
+                                <br>
+                                <em class="help-text">${ POINTS_MESSAGES.unknown }</em>`
+                        });
+                    }
                 }
             }
 
             // Regardless, push the M-value for this card to the list
-            if ('mvalue' in foundCardData && typeof foundCardData.mvalue === 'number') {
+            if ('mvalue' in foundCardData && typeof foundCardData.mvalue === 'number' && cardPoints.status !== 'unknown') {
                 mValueEntries.push({
                     mvalue: Number.parseFloat(foundCardData.mvalue),
                     html: `
-                    <strong class="${ cardPoints.status === 'unranked' ? 'unranked' : '' }">
+                    <strong class="${ cardPoints.status }">
                          <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
                             <span class="icon-search"></span> ${ finalCardName }
                         </a>
@@ -1081,19 +1210,19 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
         )
     ) {
         return {
-            points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
-            status: 'unranked',
-            imageurl: MTGPointsListModelV1UnrankedImageUrl
+            points: 0,
+            status: 'unknown',
+            imageurl: MTGPointsListModelV1UnknownImageUrl
         };
     }
 
-    // Second: the card is explicitely unranked in the list
-    if ('name' in pointsListCard && pointsListCard.name === '((unranked))') {
+    // Second: the card is explicitely unknown in the list
+    if ('name' in pointsListCard && pointsListCard.name === '((unknown))') {
         return {
-            points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
+            points: 0,
             name: pointsListCard.name,
-            status: 'unranked',
-            imageurl: MTGPointsListModelV1UnrankedImageUrl
+            status: 'unknown',
+            imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : MTGPointsListModelV1UnknownImageUrl
         };
     }
 
@@ -1114,7 +1243,7 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
             points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
             name: pointsListCard.name ? pointsListCard.name : cardName,
             status: 'unranked',
-            imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : MTGPointsListModelV1UnrankedImageUrl
+            imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : MTGPointsListModelV1UnknownImageUrl
         };
     }
 
@@ -1123,7 +1252,7 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
             points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
             name: pointsListCard.name ? pointsListCard.name : cardName,
             status: 'unranked',
-            imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : MTGPointsListModelV1UnrankedImageUrl
+            imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : MTGPointsListModelV1UnknownImageUrl
         };
     }
 
@@ -1205,7 +1334,7 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
     return {
         points: Number.parseInt(points),
         name: pointsListCard.name ? pointsListCard.name : cardName,
-        imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : MTGPointsListModelV1UnrankedImageUrl,
+        imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : MTGPointsListModelV1UnknownImageUrl,
         status: 'found'
     };
 }
@@ -1380,12 +1509,14 @@ function MTGPointsListModelV1FindCardByNameInUpdatePointsList(name, currentForma
 
             return {
                 name: card.flavorofnameen,
+                status: 'found',
                 ...baseCard
             };
         }
 
         return {
             name: normalizedName,
+            status: 'found',
             ...card
         };
     }
@@ -1397,6 +1528,7 @@ function MTGPointsListModelV1FindCardByNameInUpdatePointsList(name, currentForma
 
             return {
                 name: cardKey,
+                status: 'found',
                 ...cards[cardKey]
             };
         }
@@ -1408,9 +1540,11 @@ function MTGPointsListModelV1FindCardByNameInUpdatePointsList(name, currentForma
             currentFormatChoiceValues
         );
 
+    // Last: unkown card
     if (unrankedCard !== null) {
         return {
-            name: '((unranked))',
+            name: '((unknown))',
+            status: 'unknown',
             ...unrankedCard
         };
     }

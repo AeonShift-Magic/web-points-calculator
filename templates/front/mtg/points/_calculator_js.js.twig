@@ -46,17 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
         none: '{{ 'global.none.label'|trans|raw }}',
         total: '{{ 'front.mtg.form.results.breakdown.cardzones.total'|trans|raw }}',
         unranked: '{{ 'front.mtg.choose.links.choosecommander.table.status.unranked'|trans|raw }}',
+        unknown: '{{ 'front.mtg.choose.links.choosecommander.table.status.unknown'|trans|raw }}',
         released: '{{ 'front.mtg.choose.links.choosecommander.table.status.released'|trans|raw }}'
     };
 
     const getExceedingLabel = () => {
         if (typeof window.MTGPOINTSLISTMODELV1_MODEL_MESSAGES === 'undefined') {
-            return 'Exceeding';
+            return '{{ 'front.mtg.form.results.breakdown.remaining.exceeding'|trans|raw }}';
         }
         const msg = window.MTGPOINTSLISTMODELV1_MODEL_MESSAGES;
         return (msg && typeof msg.exceeding === 'string' && msg.exceeding.trim() !== '')
             ? msg.exceeding
-            : 'Exceeding';
+            : '{{ 'front.mtg.form.results.breakdown.remaining.exceeding'|trans|raw }}';
     };
 
     // Shared datalist for all decklist "add card" inputs
@@ -169,6 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadPlayerNameEl = document.getElementById('decklist-download-player-name');
     const downloadCommentEl = document.getElementById('decklist-download-comment');
     const downloadErrorEl = document.getElementById('decklist-download-error');
+    const deckList1StartEl = root.querySelector('#decklist1-start');
+    const deckList2StartEl = root.querySelector('#decklist2-start');
+    const deckList3StartEl = root.querySelector('#decklist3-start');
 
 
     // Also cache non-root selectors once
@@ -1594,7 +1598,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 sharedCardNamesDatalistEl = document.createElement('datalist');
                 sharedCardNamesDatalistEl.id = CARD_NAMES_DATALIST_ID;
-                document.body.appendChild(sharedCardNamesDatalistEl);
+                inputEl.insertAdjacentElement('afterend', sharedCardNamesDatalistEl);
             }
         }
 
@@ -1608,6 +1612,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const opt = document.createElement('option');
                 opt.value = trimmed;
+                opt.innerHTML = trimmed;
                 sharedCardNamesDatalistEl.appendChild(opt);
             }
             sharedCardNamesDatalistPopulated = true;
@@ -1924,6 +1929,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="gray-text">N/A</span>`);
             } else if (deckListData?.remaining > 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="green-text">${ deckListData?.remaining } <span class="icon-ok"></span></span>`);
+            } else if (!Number.isFinite(deckListData?.remaining)) {
+                targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">?<span class="icon-cancel"></span></span>`);
             } else {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">0 (${ getExceedingLabel() } ${ Math.abs(deckListData?.remaining) })<span class="icon-cancel"></span></span>`);
             }
@@ -1955,14 +1962,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Update the cards found
+        // Update the cards found + total
         [
-            { deckListData: deckList1Data, targetDOMElement: deckList1CardsEl },
-            { deckListData: deckList2Data, targetDOMElement: deckList2CardsEl },
-            { deckListData: deckList3Data, targetDOMElement: deckList3CardsEl }
-        ].forEach(({ deckListData, targetDOMElement }) => {
-            if (!targetDOMElement) return;
-            targetDOMElement.innerHTML = '';
+            { deckListData: deckList1Data, targetListDOMElement: deckList1CardsEl, targetTotalDOMElement: deckList1TotalEl },
+            { deckListData: deckList2Data, targetListDOMElement: deckList2CardsEl, targetTotalDOMElement: deckList2TotalEl },
+            { deckListData: deckList3Data, targetListDOMElement: deckList3CardsEl, targetTotalDOMElement: deckList3TotalEl }
+        ].forEach(({ deckListData, targetListDOMElement, targetTotalDOMElement }) => {
+            if (!targetListDOMElement) return;
+            if (!targetTotalDOMElement) return;
+
+            targetListDOMElement.innerHTML = '';
+            targetTotalDOMElement.innerHTML = '';
             const zones = ['commandzone', 'companions', 'maindeck', 'sideboard', 'attractions', 'stickers', 'contraptions'];
             // This doesn't need i18n
             const zonesAsText = {
@@ -1980,55 +1990,58 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cards = deckListData?.[zone];
 
                 if (Array.isArray(cards) && cards.length > 0) {
-                    targetDOMElement.insertAdjacentHTML(
+                    targetListDOMElement.insertAdjacentHTML(
                         'beforeend',
                         `<li class="decklist-zone"><strong class="gray-text">&darr; ${ zonesAsText[zone] }</strong></li>`
                     );
                     for (const card of cards) {
-                        ++total;
-                        const imageUrl = (typeof card.imageurl === 'string' && card.imageurl)
-                            ? card.imageurl
-                            : MTGPointsListModelV1UnrankedImageUrl;
-                        targetDOMElement.insertAdjacentHTML(
-                            'beforeend',
-                            `<li><a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ card.name }</a> <span class="help-text">(x${ card.copies })</span></li>`
-                        );
+                        if (card?.status !== 'unknown') {
+                            ++total;
+                            const imageUrl = (typeof card.imageurl === 'string' && card.imageurl)
+                                ? card.imageurl
+                                : MTGPointsListModelV1UnknownImageUrl;
+                            targetListDOMElement.insertAdjacentHTML(
+                                'beforeend',
+                                `<li><a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ card.name }</a> <span class="help-text">(x${ card.copies })</span></li>`
+                            );
+                        }
                     }
                 }
             }
 
-            targetDOMElement.insertAdjacentHTML(
+            targetListDOMElement.insertAdjacentHTML(
                 'beforeend',
                 `<li class="decklist-zone"><strong class="gray-text">${ MESSAGES.total } ${ total }</strong></li>`
             );
-        });
 
-        // Update the total cards founds span
-        [
-            { deckListData: deckList1Data, targetDOMElement: deckList1TotalEl },
-            { deckListData: deckList2Data, targetDOMElement: deckList2TotalEl },
-            { deckListData: deckList3Data, targetDOMElement: deckList3TotalEl }
-        ].forEach(({ deckListData, targetDOMElement }) => {
-            if (!targetDOMElement) return;
-            targetDOMElement.innerHTML = '';
-            targetDOMElement.insertAdjacentHTML('beforeend', ` (${ deckListData?.total })`);
+            targetTotalDOMElement.insertAdjacentHTML('beforeend', ` (${ total })`);
         });
 
         // Finally, depending on errors or not, show the correct div summary
         [
-            { deckListData: deckList1Data, targetDOMElementLegal: deckList1LegalEl, targetDOMElementIllegal: deckList1IllegalEl, targetDOMElementErrors: deckList1ErrorsEl },
-            { deckListData: deckList2Data, targetDOMElementLegal: deckList2LegalEl, targetDOMElementIllegal: deckList2IllegalEl, targetDOMElementErrors: deckList2ErrorsEl },
-            { deckListData: deckList3Data, targetDOMElementLegal: deckList3LegalEl, targetDOMElementIllegal: deckList3IllegalEl, targetDOMElementErrors: deckList3ErrorsEl }
-        ].forEach(({ deckListData, targetDOMElementLegal, targetDOMElementIllegal, targetDOMElementErrors }) => {
-            if (!targetDOMElementLegal || !targetDOMElementIllegal) return;
-            if (deckListData?.errors.length > 0) {
-                targetDOMElementLegal.classList.add('hidden');
-                targetDOMElementIllegal.classList.remove('hidden');
-                targetDOMElementErrors.classList.remove('hidden');
+            { deckListData: deckList1Data, targetDOMElementLegal: deckList1LegalEl, targetDOMElementIllegal: deckList1IllegalEl, targetDOMElementErrors: deckList1ErrorsEl, targetDOMElementStart: deckList1StartEl, targetDOMTextarea: deckList1El },
+            { deckListData: deckList2Data, targetDOMElementLegal: deckList2LegalEl, targetDOMElementIllegal: deckList2IllegalEl, targetDOMElementErrors: deckList2ErrorsEl, targetDOMElementStart: deckList2StartEl, targetDOMTextarea: deckList2El },
+            { deckListData: deckList3Data, targetDOMElementLegal: deckList3LegalEl, targetDOMElementIllegal: deckList3IllegalEl, targetDOMElementErrors: deckList3ErrorsEl, targetDOMElementStart: deckList3StartEl, targetDOMTextarea: deckList3El }
+        ].forEach(({ deckListData, targetDOMElementLegal, targetDOMElementIllegal, targetDOMElementErrors, targetDOMElementStart, targetDOMTextarea }) => {
+            if (!deckListData || !targetDOMElementLegal || !targetDOMElementIllegal || !targetDOMElementErrors || !targetDOMElementStart || !targetDOMTextarea) return;
+
+            if(targetDOMTextarea?.value.trim().length !== 0) {
+                if (deckListData?.errors.length > 0) {
+                    targetDOMElementLegal.classList.add('hidden');
+                    targetDOMElementIllegal.classList.remove('hidden');
+                    targetDOMElementErrors.classList.remove('hidden');
+                    targetDOMElementStart.classList.add('hidden');
+                } else {
+                    targetDOMElementLegal.classList.remove('hidden');
+                    targetDOMElementIllegal.classList.add('hidden');
+                    targetDOMElementErrors.classList.add('hidden');
+                    targetDOMElementStart.classList.add('hidden');
+                }
             } else {
-                targetDOMElementLegal.classList.remove('hidden');
+                targetDOMElementLegal.classList.add('hidden');
                 targetDOMElementIllegal.classList.add('hidden');
                 targetDOMElementErrors.classList.add('hidden');
+                targetDOMElementStart.classList.remove('hidden');
             }
         });
 

@@ -689,6 +689,12 @@ front:
                 label: 'Download Magic: The Gathering™ Point Lists'
                 updatelink: 'Download the Point List for this Update as a CSV file'
                 latest: 'Current'
+            index:
+                title: 'AeonShift Magic: The Gathering™'
+                label: 'AeonShift Magic: The Gathering™'
+            dccalculator:
+                title: 'Duel Commander Calculator'
+                label: 'Duel Commander Calculator'
         resetpassword:
             label: 🛡️ Reset
             title: Reset your password
@@ -749,6 +755,7 @@ front:
                         status:
                             label: 'Release Status'
                             unranked: '<span class="red-text">Unranked</span>'
+                            unknown: '<span class="red-text">Unknown</span>'
                             released: '<span class="green-text">Released</span>'
                         rankingindex:
                             duel:
@@ -792,7 +799,7 @@ front:
                 help: >
                     Paste your deck here (your Player 1 decklist here if using teams). 
                     Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield's Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
-                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>
+                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation). Lines should be in the form of: <code>1 Ruhan of the Fomori</code></strong>
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -817,7 +824,7 @@ front:
                 help: >
                     Paste your Player 2 decklist here if using teams. 
                     Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
-                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>
+                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation). Lines should be in the form of: <code>1 Ruhan of the Fomori</code></strong>
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -829,7 +836,7 @@ front:
                 help: >
                     Paste your Player 3 decklist here if using teams. 
                     Supported text list systems are: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield''s Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8's MTGO Export. 
-                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation).</strong>
+                    <strong>Your decklist MUST be in English, with the EXACT card name (check case and punctuation). Lines should be in the form of: <code>1 Ruhan of the Fomori</code></strong>
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
@@ -866,7 +873,8 @@ front:
                     usage:
                         text: 'Points Usage:'
                         help: 'These are the points you used in your deck, sorted from most consuming to least consuming.'
-                        unranked: '(Unranked/unknown card)'
+                        unranked: '(Unranked)'
+                        unknown: '(Unknown)'
                     budget:
                         text: 'Budget Points:'
                         help: 'These are the points you can spend in your deck, based on your format choices (and Commanders, if any).'
@@ -916,9 +924,11 @@ front:
                     cznoteligiblemulticommander:
                         text: 'One of the card in your Command Zone is not eligible to be a commander (multiple commanders) for these cards: '
                     cznotvalidmulticztypenotthesame:
-                        text: 'All of your commanders must be of the same multi command zone type (such as Partner, Friends forever, etc...).'
+                        text: 'All of your commanders must be of the same Partner Ability type (such as Partner, Friends forever, etc.).'
                     coloridentitymissmatch:
-                        text: 'One or more cards in your deck do not match the color identity of your Command Zone. These cards: '
+                        text: 'One or more cards in your deck do not match the color identity of your Command Zone: '
+                    unknown:
+                        text: 'Your deck contains unknown cards, please check those names: '
                 legal:
                     no:
                         label: 'Your deck is <strong>NOT LEGAL</strong> within your format choices.'
@@ -963,6 +973,8 @@ front:
                     rankedcommander:
                         text: 'Your Commander is ranked.'
                         help: 'Your commander is ranked in the current Point List.'
+                start:
+                    label: 'Start adding cards to your decklist on the left, using our "Add a Card" form, or by pasting a decklist from another site in the text zone on the left while following instructions below.'
             decklist:
                 addcard:
                     label: 'Add a card'

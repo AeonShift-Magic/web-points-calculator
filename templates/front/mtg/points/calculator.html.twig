@@ -1,0 +1,67 @@
+{% extends 'front/front_layout.html.twig' %}
+
+{% block title %}{{ 'front.nav.home.label'|trans }}{% endblock %}
+
+{% block body_attributes %}data-no-stimulus{% endblock %}
+
+{% block custom_js %}
+    <script>
+        (function () {
+            const id = 'page-js-loader';
+            if (document.getElementById(id)) return;
+
+            const el = document.createElement('div');
+            el.id = id;
+            el.setAttribute('aria-hidden', 'true');
+            el.innerHTML = '<img src="{{ asset('images/loader.gif') }}" alt="Loading">';
+
+            const append = () => {
+                if (document.body) {
+                    document.body.appendChild(el);
+                } else {
+                    document.documentElement.appendChild(el);
+                }
+            };
+
+            append();
+        })();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const hidePageJsLoader = () => {
+                const el = document.getElementById('page-js-loader');
+                if (el) el.remove();
+            };
+
+            hidePageJsLoader();
+        });
+
+    </script>
+{% endblock %}
+
+{% block link_canonical %}
+    <link rel="canonical" href="{{ url('front_mtg_points_calculator') }}">
+{% endblock %}
+
+{% block top_spacer %}{% endblock %}
+
+{% block main_layout %}
+    {# Calculator form #}
+    {{ include('front/mtg/points/_calculator_form.html.twig') }}
+
+    {# Choose a Commander form #}
+    {{ include('front/mtg/points/_choose_commander.html.twig') }}
+
+    {# Format choice cards #}
+    {{ include('front/mtg/points/_format_choice_cards.html.twig') }}
+
+    {# Format choice quiz #}
+    {{ include('front/mtg/points/_format_choice_quiz.html.twig') }}
+
+{% endblock %}
+
+{% block endbody %}
+    <script>{{ include('front/mtg/points/_vanilla_tilt_and_datalist.js.twig') }}</script>
+    {# Inline the calculator JavaScript #}
+    <script>{{ include('front/mtg/points/_pointslists.js.twig') }}</script>
+    <script async>{{ include('front/mtg/points/_calculator_js.js.twig') }}</script>
+{% endblock %}

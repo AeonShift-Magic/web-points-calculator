@@ -2,42 +2,6 @@
 
 {% block title %}{{ 'front.nav.home.label'|trans }}{% endblock %}
 
-{% block body_attributes %}data-no-stimulus{% endblock %}
-
-{% block custom_js %}
-    <script>
-        (function () {
-            const id = 'page-js-loader';
-            if (document.getElementById(id)) return;
-
-            const el = document.createElement('div');
-            el.id = id;
-            el.setAttribute('aria-hidden', 'true');
-            el.innerHTML = '<img src="{{ asset('images/loader.gif') }}" alt="Loading">';
-
-            const append = () => {
-                if (document.body) {
-                    document.body.appendChild(el);
-                } else {
-                    document.documentElement.appendChild(el);
-                }
-            };
-
-            append();
-        })();
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const hidePageJsLoader = () => {
-                const el = document.getElementById('page-js-loader');
-                if (el) el.remove();
-            };
-
-            hidePageJsLoader();
-        });
-
-    </script>
-{% endblock %}
-
 {% block link_canonical %}
     <link rel="canonical" href="{{ url('front_mtg_points_index') }}">
 {% endblock %}
@@ -71,7 +35,7 @@
                             </div>
                             <div class="flex flex-col lg:flex-row w-full justify-around items-center">
                                 <div class="flex flex-col justify-center items-center px-6">
-                                    <a class="btn btn-star btn-green btn-big m-2" href="#formats" title="{{ 'front.mtg.choose.links.choose.title'|trans|striptags }}" data-turbo="false">
+                                    <a class="btn btn-star btn-green btn-big m-2" href="{{ url('front_mtg_points_calculator') }}#formats" title="{{ 'front.mtg.choose.links.choose.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
@@ -83,7 +47,7 @@
                                     <p class="format-help text-lg">{{ 'front.mtg.choose.links.choose.title'|trans|raw }}</p>
                                 </div>
                                 <div class="flex flex-col justify-center items-center px-6">
-                                    <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.choose.links.gotoform.title'|trans|striptags }}" data-turbo="false">
+                                    <a class="btn btn-star btn-gray btn-big m-2" href="{{ url('front_mtg_points_calculator') }}#calculator" title="{{ 'front.mtg.choose.links.gotoform.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
@@ -95,7 +59,7 @@
                                     <p class="format-help text-lg">{{ 'front.mtg.choose.links.gotoform.title'|trans|raw }}</p>
                                 </div>
                                 <div class="flex flex-col justify-center items-center px-6">
-                                    <a class="btn btn-star btn-blue btn-big m-2" href="#quiz" title="{{ 'front.mtg.choose.links.quiz.title'|trans|striptags }}" data-turbo="false">
+                                    <a class="btn btn-star btn-blue btn-big m-2" href="{{ url('front_mtg_points_calculator') }}#quiz" title="{{ 'front.mtg.choose.links.quiz.title'|trans|striptags }}" data-turbo="false">
                                         <span class="top-left"></span>
                                         <span class="top-right"></span>
                                         <span class="title">
@@ -114,23 +78,4 @@
         </div>
     </div>
 
-    {# Format choice cards #}
-    {{ include('front/mtg/points/_format_choice_cards.html.twig') }}
-
-    {# Format choice quiz #}
-    {{ include('front/mtg/points/_format_choice_quiz.html.twig') }}
-
-    {# Calculator form #}
-    {{ include('front/mtg/points/_calculator_form.html.twig') }}
-
-    {# Choose a Commander form #}
-    {{ include('front/mtg/points/_choose_commander.html.twig') }}
-
-{% endblock %}
-
-{% block endbody %}
-    <script>{{ include('front/mtg/points/_vanilla_tilt.js.twig') }}</script>
-    {# Inline the calculator JavaScript #}
-    <script>{{ include('front/mtg/points/_pointslists.js.twig') }}</script>
-    <script async>{{ include('front/mtg/points/_calculator_js.js.twig') }}</script>
 {% endblock %}

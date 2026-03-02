@@ -29,7 +29,7 @@ final class PointsController extends AbstractController
     }
 
     /**
-     * Home route - choose between assistance, shortcuts and calculator.
+     * Calculator route - straight to the calculator.
      *
      * @param MTGUpdateRepository $MTGUpdateRepository
      * @param MTGSourceCardRepository $MTGSourceCardRepository
@@ -38,8 +38,8 @@ final class PointsController extends AbstractController
      *
      * @return Response
      */
-    #[Route('/{slug?}', name: 'front_mtg_points_index', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
-    public function mtgPointsIndex(MTGUpdateRepository $MTGUpdateRepository, MTGSourceCardRepository $MTGSourceCardRepository): Response
+    #[Route('/calculator/{slug?}', name: 'front_mtg_points_calculator', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
+    public function mtgPointsCalculator(MTGUpdateRepository $MTGUpdateRepository, MTGSourceCardRepository $MTGSourceCardRepository): Response
     {
         /** @var MTGUpdate[] $updates */
         $updates = $MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDateForForms();
@@ -57,7 +57,7 @@ final class PointsController extends AbstractController
         }
 
         return $this->render(
-            'front/mtg/points/index.html.twig',
+            'front/mtg/points/calculator.html.twig',
             [
                 'updates'                => $updates,
                 'ranking_totals'         => $MTGSourceCardRepository->getRankingTotals(),
@@ -66,6 +66,28 @@ final class PointsController extends AbstractController
                 'model_files_to_include' => $modelFilesToInclude,
             ]
         );
+    }
+
+    /**
+     * Home route - choose between assistance, shortcuts and calculator.
+     *
+     * @return Response
+     */
+    #[Route(name: 'front_mtg_points_index', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'], priority: 10)]
+    public function mtgPointsIndex(): Response
+    {
+        return $this->render('front/mtg/points/index.html.twig');
+    }
+
+    /**
+     * Points route - View points from a list.
+     *
+     * @return Response
+     */
+    #[Route('/pointslist/view', name: 'front_mtg_points_list', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
+    public function mtgPointsList(): Response
+    {
+        return $this->render('front/mtg/points/list.html.twig');
     }
 
     #[Route('/pointslist/download', name: 'front_mtg_points_download', methods: ['GET'])]

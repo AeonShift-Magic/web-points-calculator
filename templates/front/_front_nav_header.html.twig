@@ -4,9 +4,17 @@
             <a tabindex="0" href="{{ url('front_home') }}" title="{{ 'front.nav.home.title'|trans }}">{{ 'front.nav.home.label'|trans }}</a>
         </li>
         <li>
-            <a tabindex="0" href="{{ url('front_mtg_points_index') }}" title="{{ 'front.nav.mtg.calculator.title'|trans }}">
-                <span class="icon-docs"></span> {{ 'front.nav.mtg.calculator.label'|trans }}</a>
+            <a tabindex="0" href="{{ url('front_mtg_points_index') }}" title="{{ 'front.nav.mtg.index.title'|trans }}">
+                <span class="icon-docs"></span> {{ 'front.nav.mtg.index.label'|trans }}</a>
             <ul class="">
+                <li>
+                    <a tabindex="0" href="{{ url('front_mtg_points_calculator') }}" title="{{ 'front.nav.mtg.calculator.title'|trans }}">
+                        <span class="icon-chart-bar"></span> {{ 'front.nav.mtg.calculator.label'|trans }}</a>
+                </li>
+                <li>
+                    <a tabindex="0" href="{{ url('front_mtg_points_calculator', {'slug': 'duel-commander'}) }}" title="{{ 'front.nav.mtg.dccalculator.title'|trans }}">
+                        <span class="icon-chart-bar"></span> {{ 'front.nav.mtg.dccalculator.label'|trans }}</a>
+                </li>
                 <li>
                     <a tabindex="0" href="{{ url('front_mtg_points_download') }}" title="{{ 'front.nav.mtg.download.title'|trans }}">
                         <span class="icon-download-cloud"></span> {{ 'front.nav.mtg.download.label'|trans }}</a>

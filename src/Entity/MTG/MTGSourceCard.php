@@ -136,6 +136,14 @@ class MTGSourceCard extends MTGAbstractCard
     #[ORM\Column(length: 20)]
     private string $maximumTimelineLegality = 'printed';
 
+    #[Assert\NotNull]
+    #[ORM\Column(type: 'string', length: 4096)]
+    private string $oracleText = '';
+
+    #[Assert\NotNull]
+    #[ORM\Column(length: 255)]
+    private string $types = '';
+
     public function __construct()
     {
         parent::__construct();
@@ -242,6 +250,41 @@ class MTGSourceCard extends MTGAbstractCard
     public function getMaximumTimelineLegality(): string
     {
         return $this->maximumTimelineLegality;
+    }
+
+    public function getOracleText(): string
+    {
+        return $this->oracleText;
+    }
+
+    public function getTypes(): string
+    {
+        return $this->types;
+    }
+
+    public function hasChooseABackground(): bool
+    {
+        return mb_stristr($this->oracleText, 'choose a background') !== false;
+    }
+
+    public function hasDoctorsCompanion(): bool
+    {
+        return mb_stristr(str_replace('’', "'", $this->oracleText), 'doctor\'s companion') !== false;
+    }
+
+    public function hasPartnerType(): bool
+    {
+        return mb_stristr($this->getMultiCZType(), 'partner_type_') !== false;
+    }
+
+    public function isABackground(): bool
+    {
+        return mb_stripos($this->types, 'background') !== false;
+    }
+
+    public function isADoctor(): bool
+    {
+        return mb_stripos($this->types, 'time lord doctor') !== false;
     }
 
     public function isBlack(): bool
@@ -464,6 +507,20 @@ class MTGSourceCard extends MTGAbstractCard
     public function setMaximumTimelineLegality(string $maximumTimelineLegality): static
     {
         $this->maximumTimelineLegality = $maximumTimelineLegality;
+
+        return $this;
+    }
+
+    public function setOracleText(string $oracleText): self
+    {
+        $this->oracleText = $oracleText;
+
+        return $this;
+    }
+
+    public function setTypes(string $types): self
+    {
+        $this->types = $types;
 
         return $this;
     }
