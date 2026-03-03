@@ -633,8 +633,8 @@ front:
             link: 'Copier le lien'
     home:
         title: Calculateur AeonShift
-        subtitle: Entrez AeonShift, un système d’équilibrage stratégique pour vos jeux.
-        chooselicense: Quelle licence souhaitez-vous jouer ?
+        subtitle: Entrez dans AeonShift, un système d’équilibrage stratégique pour vos jeux.
+        chooselicense: A quelle licence souhaitez-vous jouer ?
         licenses:
             mtg:
                 label: Magic The Gathering™
