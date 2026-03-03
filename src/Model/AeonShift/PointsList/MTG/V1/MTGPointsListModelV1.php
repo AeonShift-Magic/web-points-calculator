@@ -16,14 +16,14 @@ use App\Model\AeonShift\PointsList\MTGPointsListModelInterface;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_UNICODE;
 use JsonException;
 use Override;
 use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use const JSON_THROW_ON_ERROR;
-use const JSON_UNESCAPED_UNICODE;
 
 final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGPointsListModelInterface
 {

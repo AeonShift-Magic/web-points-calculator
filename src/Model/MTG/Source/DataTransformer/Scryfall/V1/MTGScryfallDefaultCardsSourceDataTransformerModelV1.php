@@ -1472,6 +1472,12 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             return null;
         }
 
+        // Skip cards with lang != en and printed_name != name.
+        // to ensure that the card image is in english.
+        if(isset($card['lang']) && $card['lang'] !== 'en' && isset($card['printed_name']) && $card['printed_name'] !== $card['name']) {
+            return null;
+        }
+
         // Extract basic fields
         $oracleId = $card['oracle_id'];
         $set = isset($card['set']) && is_string($card['set']) ? $card['set'] : '';
