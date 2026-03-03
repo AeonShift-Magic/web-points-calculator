@@ -39,9 +39,19 @@ jobs:
             -   name: Install Composer dependencies
                 run: composer install --no-interaction --prefer-dist --no-scripts
 
+            -   name: Create test database schema
+                run: |
+                    php bin/console doctrine:database:create --env=test || true
+                    php bin/console doctrine:schema:create --env=test
+
             # ---- Warm up Symfony caches ----
             -   name: Warm Symfony cache for env Test
                 run: php bin/console cache:warmup --env=test -vvv --no-optional-warmers
+
+            -   name: Install Importmap & Assets
+                run: |
+                    php bin/console importmap:install --env=test
+                    php bin/console assets:install --symlink --env=test
 
             # ---- PHPUnit ----
             -   name: Run PHPUnit Using Embedded Configuration
