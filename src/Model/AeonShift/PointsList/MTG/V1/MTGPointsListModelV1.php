@@ -16,14 +16,14 @@ use App\Model\AeonShift\PointsList\MTGPointsListModelInterface;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_UNICODE;
 use JsonException;
 use Override;
 use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use const JSON_THROW_ON_ERROR;
-use const JSON_UNESCAPED_UNICODE;
 
 final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGPointsListModelInterface
 {
@@ -644,7 +644,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '\\');
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -686,7 +686,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '\\');
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -728,7 +728,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '\\');
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -776,7 +776,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
             ++$processingLine;
             $shiftedLineArray = array_shift($splitLines);
             /** @var array<int, string> $CSVlineContentsAsArray */
-            $CSVlineContentsAsArray = str_getcsv((string)$shiftedLineArray);
+            $CSVlineContentsAsArray = str_getcsv((string)$shiftedLineArray, ',', '"', '\\');
 
             // If we're on the first line, it MUST be the unranked cards line.
             if (($processingLine === 9) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== self::UNRANKED_CARD_NAME) {
