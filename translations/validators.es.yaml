@@ -1,0 +1,73 @@
+admin:
+    form:
+        mtg:
+            points_list:
+                create:
+                    validitystartingat:
+                        empty: Por favor, introduce una fecha válida
+                import:
+                    file:
+                        error: Por favor, selecciona un archivo CSV válido.
+            update:
+                create:
+                    pointslist:
+                        empty: Por favor, proporciona una lista de puntos
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: Por favor, introduce una fecha válida
+                    title:
+                        too_long: 'Por favor, introduce un título más corto.'
+                import:
+                    file:
+                        error: Por favor, selecciona un archivo CSV válido.
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': 'Por favor, introduce un título.'
+                        too_long: 'Por favor, introduce un título más corto.'
+                    descriptionen:
+                        'null': 'Por favor, introduce una descripción.'
+                    startingat:
+                        'null': 'Por favor, introduce una fecha de inicio válida.'
+                    endingat:
+                        'null': 'Por favor, introduce una fecha de fin válida.'
+        user:
+            create:
+                roles:
+                    invalid: Por favor, elige roles válidos para el usuario.
+                    multipleinvalid: Por favor, elige roles válidos para el usuario.
+user:
+    create:
+        roles:
+            invalid: Por favor, elige roles válidos para el usuario.
+            multipleinvalid: Por favor, elige roles válidos para el usuario.
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': 'Por favor, introduce un título.'
+                    too_long: 'Por favor, introduce un título más corto.'
+                descriptionen:
+                    'null': 'Por favor, introduce una descripción.'
+                startingat:
+                    'null': 'Por favor, introduce una fecha de inicio válida.'
+                endingat:
+                    'null': 'Por favor, introduce una fecha de fin válida.'
+daterange:
+    invalid: Ten cuidado de elegir una fecha de fin posterior a la fecha de inicio.
+front:
+    users:
+        forms:
+            username:
+                exists: Este nombre de usuario ya está en uso.
+            email:
+                exists: Este correo electrónico ya está en uso.
+            password:
+                help: 'La contraseña debe tener al menos 8 caracteres.'
+    user:
+        forms:
+            password:
+                blank: 'Por favor, introduce una contraseña.'

@@ -1,0 +1,1333 @@
+admin:
+    account:
+        email:
+            help: >
+                Tu correo electrónico. Debe ser único. Se utilizará para recuperar el acceso, comunicarte, y será visible para las personas registradas en los eventos que crees; además tendrás que validar esta dirección cada vez que la cambies. 
+                <strong>ADVERTENCIA: TODOS los correos se enviarán a esta dirección. Por favor, compruébala tres veces antes de rellenar/cambiar este campo.</strong>
+            label: 'Email:'
+            placeholder: johnorjane.doe@provider.domain
+        roles:
+            label: 'Rol(es)/Permiso(s) en este sitio:'
+        username:
+            help: Tu nombre de usuario en este sitio web. Debe ser único y no estar siendo usado actualmente por otra persona.
+            label: 'Nombre de usuario:'
+            placeholder: JohnDoe84
+    customblock:
+        editlink:
+            label: ✏️ Editar este bloque ({blockkey})
+    form:
+        customblock:
+            create:
+                blockkey:
+                    help: Si ya está usado, todos los bloques con el idioma y la ubicación correctos se mostrarán en orden ascendente de peso.
+                    label: Ubicación del bloque
+                    placeholder: Selecciona una ubicación
+                contents:
+                    help: |
+                        <strong>Ten cuidado con el HTML y su validez</strong>: puede romper la apariencia del sitio o no mostrarse correctamente.</strong> <br> <strong>Advertencia: recuerda que hay aproximadamente 10 minutos de caché en todos los bloques del sitio (para cada idioma y ubicación).</strong>
+                    label: Contenido
+                weight:
+                    help: Entre -100 y 100. Si ya está usado, todos los bloques con el idioma y la ubicación correctos se mostrarán en orden ascendente de peso.
+                    label: Peso
+                    placeholder: Peso del bloque
+            legends:
+                info: 'Parámetros del bloque'
+        page:
+            create:
+                contents:
+                    help: >
+                        <strong>Ten cuidado con el HTML y su validez</strong>: puede romper la apariencia del sitio o no mostrarse correctamente.</strong>
+                    label: Contenido
+                language:
+                    help: El idioma en el que se mostrará esta página.
+                    label: Idioma
+                slug:
+                    help: Déjalo en blanco para generar automáticamente un slug basado en el título.
+                    label: Slug
+                title:
+                    help: El título de la página, que se mostrará en el encabezado y en los resultados de búsqueda.
+                    label: Título
+                weight:
+                    help: Entre -100 y 100. Si ya está usado, todas las páginas con el idioma y la ubicación correctos se mostrarán en orden ascendente de peso.
+                    label: Peso
+                zone:
+                    help: La zona en la que se mostrará esta página. Por ejemplo, "header" para el encabezado, "footer" para el pie de página, etc.
+                    label: Zona
+            legends:
+                info: 'Detalles de la página'
+        abstract:
+            update:
+                create:
+                    titleen:
+                        help: 'El título público de tu actualización/anuncio (inglés)'
+                        label: 'Título (EN)'
+                        placeholder: 'Mi nuevo anuncio'
+                    pointslist:
+                        help: 'Qué lista de puntos usar'
+                        label: 'Lista de puntos a usar'
+                        placeholder: 'Por favor selecciona una lista de puntos'
+                    startingat:
+                        help: '¿Cuándo empieza a ser efectiva esta actualización?'
+                        label: 'Fecha de inicio'
+                    endingat:
+                        help: '¿Cuándo deja de ser efectiva esta actualización?'
+                        label: 'Fecha de fin'
+                    descriptionen:
+                        label: 'Descripción (EN)'
+                        help: 'Posibles detalles complementarios'
+                    public:
+                        label: 'Público'
+                        help: 'Marcar esta actualización como pública'
+                    rulesmodel:
+                        label: 'Modelo de reglas'
+                        help: 'El modelo de reglas a aplicar al usar esta lista'
+                legends:
+                    info: 'Detalles de la actualización'
+        mtg:
+            cardsourceactivityhistory:
+                create:
+                    channel:
+                        label: 'Canal'
+                    startedat:
+                        label: 'Iniciado el'
+                    endedat:
+                        label: 'Finalizado el'
+                    successsummary:
+                        label: 'Resumen de éxitos'
+                    errorsummary:
+                        label: 'Resumen de errores'
+                    startedfrom:
+                        label: 'Iniciado desde'
+                    logfilepath:
+                        label: 'Archivo de registro'
+                    uniqueid:
+                        label: 'ID de tarea única'
+            pointslist:
+                create:
+                    filename:
+                        label: 'Nombre de archivo'
+                    uploadnbcards:
+                        label: 'Número de cartas en el archivo inicial'
+                    title:
+                        help: 'El título de tu lista de puntos'
+                        label: 'Título'
+                        placeholder: 'Mi lista de puntos XX/XX/XXXX'
+                    lastuploadedat:
+                        label: 'Última subida el'
+                    currentnbcards:
+                        label: 'Número actual de cartas en la base de datos'
+                    relatedupdates:
+                        label: 'Anuncios/actualizaciones relacionadas'
+                    validitystartingat:
+                        help: 'La fecha desde la que se aplica esta lista; se usa para determinar el orden y la más reciente'
+                        label: 'Válida desde'
+                    rulesmodel:
+                        label: 'Modelo de reglas'
+                        help: 'El modelo de reglas a aplicar'
+                import:
+                    firstline:
+                        text: '⚠️ Las primeras 5 líneas de este documento se ignorarán durante la importación; úsalas para metadatos'
+                    columnsright:
+                        text: '(estas columnas, y todas las de la derecha, se ignoran durante la importación)'
+                    pvalues:
+                        text: 'P-Values, en este orden: Standard Play (línea 6), Lite Play (línea 7), Power Play (línea 8)'
+                        header:
+                            liteplay:
+                                text: 'P-Values de Lite Play'
+                            standardplay:
+                                text: 'P-Values de Standard Play'
+                            powerplay:
+                                text: 'P-Values de Power Play'
+                        liteplay:
+                            basesingleton:
+                                text: 'P-Value base de Singleton (Lite Play)'
+                            basequadruples:
+                                text: 'P-Value base de Quadruples (Lite Play)'
+                            duelcommander:
+                                text: 'P-Value de Duel Commander (Lite Play)'
+                            commander:
+                                text: 'P-Value de Commander/cEDH FFA (Lite Play)'
+                            highlander:
+                                text: 'P-Value de Highlander (Lite Play)'
+                            modern:
+                                text: 'P-Value de Modern (Lite Play)'
+                            pioneer:
+                                text: 'P-Value de Pioneer (Lite Play)'
+                            standard:
+                                text: 'P-Value de Standard (Lite Play)'
+                        standardplay:
+                            basesingleton:
+                                text: 'P-Value base de Singleton (Standard Play)'
+                            basequadruples:
+                                text: 'P-Value base de Quadruples (Standard Play)'
+                            duelcommander:
+                                text: 'P-Value de Duel Commander (Standard Play)'
+                            commander:
+                                text: 'P-Value de Commander/cEDH FFA (Standard Play)'
+                            highlander:
+                                text: 'P-Value de Highlander (Standard Play)'
+                            modern:
+                                text: 'P-Value de Modern (Standard Play)'
+                            pioneer:
+                                text: 'P-Value de Pioneer (Standard Play)'
+                            standard:
+                                text: 'P-Value de Standard (Standard Play)'
+                        powerplay:
+                            basesingleton:
+                                text: 'P-Value base de Singleton (Power Play)'
+                            basequadruples:
+                                text: 'P-Value base de Quadruples (Power Play)'
+                            duelcommander:
+                                text: 'P-Value de Duel Commander (Power Play)'
+                            commander:
+                                text: 'P-Value de Commander/cEDH FFA (Power Play)'
+                            highlander:
+                                text: 'P-Value de Highlander (Power Play)'
+                            modern:
+                                text: 'P-Value de Modern (Power Play)'
+                            pioneer:
+                                text: 'P-Value de Pioneer (Power Play)'
+                            standard:
+                                text: 'P-Value de Standard (Power Play)'
+                    label: >
+                        📥 Importar/actualizar lista de puntos (archivo CSV)
+                    help: >
+                        Usa este formulario para actualizar la lista de puntos a partir de la plantilla CSV proporcionada, una carta por línea. 
+                        <br>
+                        <strong>Advertencia: esto sobrescribirá toda la lista de puntos actual y es irreversible.</strong>
+                    help2: >
+                        Nota: nuestra herramienta comprueba un mínimo de integridad del archivo antes de sobrescribir y normaliza el contenido de las celdas (mayúsculas/minúsculas, longitud, datos numéricos...), pero es <strong>tu responsabilidad</strong> cuidar del contenido y de cualquier dato perdido.
+                    help3: >
+                        El archivo CSV debe estar en formato <strong>UTF-8 (Unicode)</strong>, con columnas separadas por <strong>comas</strong> y saltos de línea en formato <strong>Unix (New Line)</strong>. 
+                        <br>
+                        Los valores pueden ir entre comillas dobles ("). 
+                        <br>
+                        Un resultado por línea; cada posición (columna "Name (EN)") debe ser única y representar <strong>un nombre de carta EXACTO (se comprueba cada carácter, incluyendo: espacios, puntuación, nombres de doble cara y mayúsculas/minúsculas) que exista en la base de datos de cartas fuente</strong> (el orden de las líneas no importa). 
+                        <br>
+                        Los puntos (6 columnas)") son números enteros o decimales (se aceptan valores como "10" o "10.5").
+                    help4: >
+                        El archivo debe contener exactamente 5 líneas en la parte superior, que se descartarán, luego 3 líneas para los P-Values en orden (Standard Play, Lite Play, Power Play) y la novena línea DEBE tener una carta llamada "((unranked))" y fija los puntos para las cartas no rankeadas.
+                    help5: >
+                        <strong>No modifiques las columnas, su orden, ni añadas columnas extra a la izquierda.</strong>
+                    help6: >
+                        También puedes modificar cartas individualmente sin volver a subir todo el archivo haciendo clic en el botón a la derecha de cada línea en la página de listado.
+                    help7: >
+                        Nota: los cambios son visibles en tiempo real en la parte de administración de este sitio web, pero la visualización pública y los cálculos pueden tardar hasta 10 minutos.
+                    help8: >
+                        La tabla de abajo muestra un ejemplo del contenido esperado en tu archivo CSV:
+                    confirm:
+                        label: 'Confirmo que he leído y entendido las instrucciones anteriores y deseo importar/actualizar la lista de puntos.'
+                    file:
+                        button:
+                            label: '📥 Importar/actualizar lista de puntos (archivo CSV)'
+                            title: 'Importar/actualizar lista de puntos (archivo CSV)'
+                        error: 'Por favor, selecciona un archivo CSV válido.'
+                        label: '📥 Importar/actualizar lista de puntos (archivo CSV)'
+                        help: >
+                            Importar la lista de puntos desde la plantilla CSV proporcionada, un resultado por línea. Tamaño máximo: 4 MB. <br><strong>Advertencia: esto sobrescribirá todas las cartas de la lista de puntos y es irreversible.</strong>
+                        unreadable: 'El archivo no se puede leer o está vacío. Comprueba que se puede abrir, que es CSV en UTF-8, con comas como separadores, y finales de línea Unix.'
+                    updated:
+                        success: 'Puntos actualizados correctamente: {number} línea(s) procesada(s).'
+                    error:
+                        filecontents: 'El contenido del archivo no es válido; por favor sigue las instrucciones de abajo.'
+                        processing_line: 'Error al procesar la línea {line_number}: {error}. Por favor sigue las instrucciones de abajo.'
+                        column_count: 'La línea no tiene el número correcto de columnas; se esperan al menos 7'
+                        invalid_value: 'Valor no válido'
+                        invalid_name: 'Una carta debe tener el mismo nombre que una carta de la lista de cartas fuente'
+                        invalid_game_points: 'Puntos no válidos (deben ser un entero entre -1000 y 1000)'
+                        invalid_first_line: 'El nombre de la carta en inglés en la primera línea DEBE ser "((unranked))"'
+                        incorrectname: 'Nombre de carta incorrecto: "{name}"'
+                        notfoundinsources: 'Carta desconocida en las cartas fuente: "{name}"'
+                    info: 'Importación de puntos'
+                legends:
+                    info: 'Detalles de la lista de puntos'
+            pointslistcard:
+                create:
+                    pointslist:
+                        label: 'Lista de puntos'
+                        help: 'Qué lista de puntos asociar a esta carta'
+                        placeholder: 'Por favor, elige una lista de puntos'
+                    nameen:
+                        label: 'Nombre (EN)'
+                        help: 'El nombre de la carta, en inglés. Debe coincidir carácter por carácter con una carta de la base de datos.'
+                    imageurl:
+                        label: 'URL de la imagen de la carta'
+                        help: 'La URL para encontrar la imagen cuando se use en el sitio.'
+                    scryfallid:
+                        label: 'ID de Scryfall'
+                        help: 'El ID de Scryfall de la carta, si es necesario'
+                    scryfalluri:
+                        label: 'URI de Scryfall'
+                        help: 'La URI de Scryfall de la carta, si es necesario'
+                    manavalue:
+                        label: 'Mana Value'
+                        help: 'El Mana Value de la carta'
+                    oracleid:
+                        label: 'ID de Oracle'
+                        help: 'El ID de Oracle de la carta'
+                    multicztype:
+                        label: 'Tipo de múltiples en Command Zone'
+                        help: 'El tipo de múltiples objetos en Command Zones, como "doctors_companion", "choose_a_background", "friends_forever", "partner", "doctors_companion", "choose_a_background".'
+                    points2hg:
+                        label: 'Puntos Two-Headed Giant'
+                        help: 'Los puntos para esta carta en la variante 2HG.'
+                    points2hgspecial:
+                        label: 'Puntos Two-Headed Giant (especial)'
+                        help: 'Los puntos para esta carta en la variante 2HG (especial, como "As a Commander").'
+                    pointsduelcommander:
+                        label: 'Puntos Duel Commander'
+                        help: 'Los puntos para esta carta en Duel Commander.'
+                    pointsduelcommanderspecial:
+                        label: 'Puntos Duel Commander (especial)'
+                        help: 'Los puntos para esta carta en Duel Commander (especial, como "As a Commander").'
+                    pointscommander:
+                        label: 'Puntos Commander/cEDH Free-For-All'
+                        help: 'Los puntos para esta carta en Commander/cEDH multijugador free-for-all.'
+                    pointscommanderspecial:
+                        label: 'Puntos Commander/cEDH Free-For-All (especial)'
+                        help: 'Los puntos para esta carta en Commander/cEDH multijugador free-for-all (especial, como "As a Commander").'
+                    islegal2hg:
+                        label: 'Legal en 2HG'
+                        help: 'Marca si la carta es legal en Two-Headed Giant'
+                    islegal2hgspecial:
+                        label: 'Legal en 2HG (especial)'
+                        help: 'Marca si la carta es legal en Two-Headed Giant (especial, como "As a Commander")'
+                    islegalduelcommander:
+                        label: 'Legal en Duel Commander'
+                        help: 'Marca si la carta es legal en Duel Commander'
+                    islegalduelcommanderspecial:
+                        label: 'Legal en Duel Commander (especial)'
+                        help: 'Marca si la carta es legal en Duel (especial, como "As a Commander")'
+                    islegalcommander:
+                        label: 'Legal en Commander/cEDH multijugador free-for-all'
+                        help: 'Marca si la carta es legal en Commander/cEDH multijugador free-for-all'
+                    islegalcommanderspecial:
+                        label: 'Legal en Commander/cEDH multijugador free-for-all (especial)'
+                        help: 'Marca si la carta es legal en Commander/cEDH multijugador free-for-all (especial, como "As a Commander")'
+                    firstline:
+                        label: 'El primer nombre en inglés después de los P-Values DEBE ser siempre <code class="inline">((unranked))</code> (y define los puntos para las cartas no rankeadas)'
+                    isczeligible:
+                        label: 'mensajes'
+                    pointshighlander:
+                        label: 'Puntos Highlander'
+                        help: 'Los puntos para esta carta en Highlander.'
+                    pointsmodern:
+                        label: 'Puntos Modern'
+                        help: 'Los puntos para esta carta en Modern.'
+                    pointspioneer:
+                        label: 'Puntos Pioneer'
+                        help: 'Los puntos para esta carta en Pioneer.'
+                    pointsstandard:
+                        label: 'Puntos Standard'
+                        help: 'Los puntos para esta carta en Standard.'
+                    pointsbasesingleton:
+                        label: 'Puntos base de Singleton'
+                        help: 'Los puntos base para esta carta en Singleton.'
+                    pointsbasequadruples:
+                        label: 'Puntos base de Quadruples'
+                        help: 'Los puntos base para esta carta en Quadruples.'
+                legends:
+                    info: 'Detalles de la carta de lista de puntos'
+            update:
+                create:
+                    titleen:
+                        help: 'El título público de tu actualización/anuncio (inglés)'
+                        label: 'Título (EN)'
+                        placeholder: 'Mi nuevo anuncio'
+                    pointslist:
+                        help: 'Qué lista de puntos usar'
+                        label: 'Lista de puntos a usar'
+                        placeholder: 'Elige una lista de puntos'
+                    start:
+                        help: '¿Cuándo pasa a ser efectiva esta actualización?'
+                        label: 'Fecha de inicio'
+                    published:
+                        label: 'Publicado'
+                        help: 'Marca para hacer esta actualización visible a los usuarios'
+                    end:
+                        help: '¿Cuándo termina esta actualización?'
+                        label: 'Fecha de fin'
+                    descriptionen:
+                        label: 'Descripción (EN)'
+                        help: 'Detalles adicionales opcionales'
+                    public:
+                        label: 'Público'
+                        help: 'Hacer esta actualización visible públicamente'
+                    rulesmode:
+                        label: 'Plantilla de reglas'
+                        help: 'La plantilla de reglas a aplicar al usar esta lista'
+                    relatedpointslist:
+                        label: 'Lista(s) de puntos relacionada(s)'
+            sourcecard:
+                create:
+                    nameen:
+                        label: 'Nombre (EN)'
+                        help: 'El nombre de la carta, en inglés. Debe ser exacto carácter por carácter.'
+                        placeholder: 'Black Lotus...'
+                    flavorofnameen:
+                        label: 'Nombre de flavor de (EN)'
+                        help: 'El nombre de flavor / nombre de carta “skinned” ("Minas Morgul" para "Cabal Coffers"...), en inglés. Debe ser exacto carácter por carácter.'
+                        placeholder: 'Minas Morgul...'
+                    alternatenameen:
+                        label: 'Nombre alternativo (EN)'
+                        help: 'Nombres alternativos de la carta, en inglés. Deben ser exactos carácter por carácter.'
+                        placeholder: 'Cabal Coffers...'
+                    imageurl:
+                        label: 'URL de la imagen de la carta'
+                        help: 'La URL para encontrar la imagen cuando se use en el sitio.'
+                        placeholder: 'https://...'
+                    firstprintsetcode:
+                        label: 'Código del set de primera impresión'
+                    iscommandzoneeligible:
+                        label: 'CZ Eligible'
+                        help: '¿La carta es elegible para ser Commander?'
+                    coloridentity:
+                        label: 'Identidad de color'
+                    firstprintedat:
+                        label: 'Primera impresión el'
+                    ismultiplecommandzoneeligible:
+                        label: 'Multiple CZ Eligible'
+                    isblue:
+                        label: 'ID azul.'
+                    isblack:
+                        label: 'ID negro.'
+                    iswhite:
+                        label: 'ID blanco.'
+                    isgreen:
+                        label: 'ID verde.'
+                    isred:
+                        label: 'ID rojo.'
+                    iscolorless:
+                        label: 'ID incoloro.'
+                    maximumtimelinelegality:
+                        label: 'Legalidad máxima de timeline'
+                    mtgoprice:
+                        label: 'Precio MTGO'
+                        help: 'El precio MTGO de esta carta.'
+                    mvalue:
+                        label: 'M-Value (tendencia)'
+                        help: 'El M-Value de esta carta (valor monetario mixto en EUR-USD).'
+                    duelrank:
+                        label: 'Rango de Duel Commander'
+                    cedhrank:
+                        label: 'Rango de cEDH'
+                    ffarank:
+                        label: 'Rango de FFA'
+                    digitalonly:
+                        label: '¿Solo digital?'
+                    latestmvalue:
+                        label: 'Último M-Value'
+                    mvaluecount:
+                        label: 'Recuento de M-Value (número de precios usados actualmente)'
+        user:
+            account:
+                roles:
+                    label: 'Rol(es)/Permiso(s) en este sitio:'
+                    help: 'Define los permisos del usuario en el sitio. Por ejemplo, un organizador puede organizar eventos, un administrador puede gestionar el sitio, etc.'
+    home:
+        goto:
+            text: 'Ir a una subsección del área de administración:'
+    nav:
+        customblocks:
+            edit:
+                label: '✏️ Editar bloque personalizado: ubicación "{blockkey}" / peso "{weight}"'
+                title: 'Editar bloque personalizado: ubicación "{blockkey}" / peso "{weight}"'
+            index:
+                label: Bloques personalizados
+                title: Gestionar bloques personalizados
+            new:
+                label: ➕ Añadir un bloque personalizado
+                title: Añadir un bloque personalizado
+            show:
+                label: 'Detalles del bloque personalizado: ubicación "{blockkey}" / peso "{weight}"'
+        front:
+            label: Inicio público →
+            title: Inicio público
+        home:
+            label: 🔴 Inicio admin
+            title: Inicio admin
+        pages:
+            index:
+                label: Páginas
+                title: Gestionar páginas
+            new:
+                label: ➕ Añadir una página
+                title: Añadir una página
+            edit:
+                label: '✏️ Editar página "{page}"'
+                title: 'Editar página "{page}"'
+            show:
+                label: 'Detalles de la página "{page}"'
+        users:
+            index:
+                label: Usuarios
+                title: Gestionar usuarios
+            new:
+                label: ➕ Añadir un usuario
+                title: Añadir un usuario
+            edit:
+                label: '✏️ Editar usuario "{user}"'
+                title: 'Editar usuario "{user}"'
+            editpassword:
+                label: '🛡️ Editar la contraseña de "{user}"'
+            show:
+                label: 'Detalles del usuario: "{name}"'
+            pending:
+                label: '⏳ Usuarios pendientes'
+                title: 'Usuarios pendientes'
+        mtg:
+            cardsourceactivityhistory:
+                index:
+                    label: 'MTG - Historial de actividad de la fuente de cartas'
+                    title: 'MTG - Historial de actividad de la fuente de cartas'
+            pointslist:
+                index:
+                    label: 'MTG - Listas de puntos'
+                    title: 'MTG - Listas de puntos'
+                new:
+                    label: '➕ Crear una lista de puntos MTG'
+                    title: 'Crear una lista de puntos MTG'
+                edit:
+                    label: 'MTG - Editar lista de puntos "{name}"'
+                    title: 'MTG - Editar lista de puntos "{name}"'
+                show:
+                    label: 'MTG - Detalles de la lista de puntos "{name}"'
+                    title: 'MTG - Detalles de la lista de puntos "{name}"'
+                import:
+                    label: 'MTG - Importar puntos para la lista "{name}"'
+                    title: 'MTG - Importar puntos para la lista "{name}"'
+            pointslistcard:
+                index:
+                    label: 'MTG - Cartas de la lista de puntos'
+                    title: 'MTG - Cartas de la lista de puntos'
+                new:
+                    label: '➕ Crear una carta de lista de puntos MTG'
+                    title: 'Crear una carta de lista de puntos MTG'
+                edit:
+                    label: 'MTG - Editar carta de lista de puntos "{name}"'
+                    title: 'MTG - Editar carta de lista de puntos "{name}"'
+                show:
+                    title: 'MTG - Detalles de la carta de lista de puntos "{name}"'
+                    label: 'MTG - Detalles de la carta de lista de puntos "{name}"'
+            update:
+                index:
+                    label: 'MTG - Actualizaciones'
+                    title: 'MTG - Actualizaciones'
+                new:
+                    label: '➕ Crear una actualización MTG'
+                    title: 'Crear una actualización MTG'
+                show:
+                    title: 'MTG - Detalles de la actualización/anuncio "{name}"'
+                    label: 'MTG - Detalles de la actualización/anuncio "{name}"'
+                edit:
+                    label: 'MTG - Editar actualización/anuncio "{name}"'
+                    title: 'MTG - Editar actualización/anuncio "{name}"'
+            dbupdate:
+                index:
+                    title: 'MTG - Actualizaciones de base de datos'
+                    label: 'MTG - Actualizaciones de base de datos'
+                latest:
+                    label: 'MTG - Último estado de actualización de la base de datos fuente'
+                startnew:
+                    label: 'MTG - Inicio manual de una nueva actualización de la base de datos fuente'
+            source:
+                index:
+                    title: 'MTG - Descarga / Importación de fuente'
+                    label: 'MTG - Descarga / Importación de fuente'
+            sourcedownload:
+                index:
+                    label: 'MTG - Estado de descarga de la fuente'
+                latest:
+                    label: 'MTG - Último estado de descarga de la fuente'
+                startnew:
+                    label: 'MTG - Inicio manual de una nueva descarga de la fuente'
+            sourcecard:
+                index:
+                    title: 'MTG - Cartas fuente'
+                    label: 'MTG - Cartas fuente'
+                show:
+                    title: 'MTG - Detalles de la carta fuente "{name}"'
+                    label: 'MTG - Detalles de la carta fuente "{name}"'
+        cardsourceactivityhistory:
+            index:
+                label: 'Historial de actividad de las fuentes de cartas'
+    user:
+        password:
+            password_updated_success: Contraseña actualizada correctamente para {username}.
+        forms:
+            password:
+                first: Nueva contraseña para el usuario
+                help: Por favor, introduce una contraseña válida, que debe contener una mayúscula, una minúscula y un dígito; mínimo 8 caracteres.
+                invalid_repeated: Las contraseñas no coinciden
+                oldpassword:
+                    error: La contraseña antigua no parece ser correcta.
+                    help: Por razones de seguridad, introduce la contraseña actual para cambiarla.
+                    label: Contraseña actual
+                second: Introduce la contraseña de nuevo
+            edit:
+                id:
+                    label: 'Tu ID interno único: <strong>{id}</strong>&nbsp;<em>(puedes usarlo para comunicarte con nuestro equipo)</em>.'
+                fieldsets:
+                    private_data:
+                        label: 'Datos privados'
+                    admin:
+                        label: 'Administración'
+                    password:
+                        label: 'Contraseña'
+            legends:
+                info: 'Información del usuario'
+    mtg:
+        cardsourceactivityhistory:
+            error:
+                fileremoved: 'El archivo de registro solicitado ya no existe.'
+        pointslistcard:
+            points:
+                label: 'Puntos BRUTOS (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+        update:
+            publish: 'Publicar'
+            unpublish: 'Despublicar'
+            published: 'Actualización publicada correctamente.'
+            unpublished: 'Actualización despublicada correctamente.'
+customblock:
+    footer:
+        en:
+            name: Pie de página (EN 🇬🇧)
+        fr:
+            name: Pie de página (FR 🇫🇷)
+    home1:
+        en:
+            name: Bloque de inicio 1 (EN 🇬🇧)
+        fr:
+            name: Bloque de inicio 1 (FR 🇫🇷)
+    home2:
+        en:
+            name: Bloque de inicio 2 (EN 🇬🇧)
+        fr:
+            name: Bloque de inicio 2 (FR 🇫🇷)
+    home3:
+        en:
+            name: Bloque de inicio 3 (EN 🇬🇧)
+        fr:
+            name: Bloque de inicio 3 (FR 🇫🇷)
+    home4:
+        en:
+            name: Bloque de inicio 4 (EN 🇬🇧)
+        fr:
+            name: Bloque de inicio 4 (FR 🇫🇷)
+    legal:
+        en:
+            name: Legal (EN 🇬🇧)
+        fr:
+            name: Legal (FR 🇫🇷)
+email:
+    appendix:
+        label: ' | AeonShift'
+    resetpassword:
+        subject: 🛡️ Tu solicitud de restablecimiento de contraseña
+        success: Tu contraseña se ha restablecido correctamente; ahora puedes iniciar sesión usándola.
+        text1: Para restablecer tu contraseña, visita el siguiente enlace
+        text2: Este enlace caducará en {expires}.
+        title: Instrucciones para restablecer la contraseña de tu cuenta
+front:
+    globals:
+        media_preview:
+            title: 'Vista previa de medios'
+            label: '(este es el archivo actual)'
+        share:
+            facebook: 'Compartir en Facebook'
+            messenger_mobile: 'Enviar por Facebook Messenger (móvil)'
+            messenger_computer: 'Enviar por Facebook Messenger (escritorio)'
+            twitter: 'Compartir en Twitter/X'
+            email: 'Enviar por correo'
+            bluesky: 'Compartir en Bluesky'
+            reddit: 'Compartir en Reddit'
+            link: 'Copiar enlace'
+    home:
+        title: Calculadora AeonShift
+        subtitle: Entra en AeonShift, un sistema de equilibrio estratégico para tus partidas.
+        chooselicense: ¿Qué licencia quieres jugar?
+        licenses:
+            mtg:
+                label: Magic The Gathering™
+                title: Jugar Magic The Gathering™ AeonShift
+        discover:
+            title: AeonShift, un sistema de equilibrio completo para juegos
+            link:
+                text: Descubrir
+                title: Haz clic aquí para saber más sobre el sistema de juego AeonShift
+        links:
+            title: Ir más allá
+            about:
+                text: Acerca de
+                title: Más información sobre el juego, su historia y su gobernanza
+            directory:
+                text: Directorio
+                title: ¿Dónde puedes jugar AeonShift?
+            faq:
+                text: FAQ
+                title: Preguntas frecuentes
+            rules:
+                text: MTG – Reglas del juego
+                title: Descubre las reglas de AeonShift para Magic The Gathering™
+
+    nav:
+        login:
+            label: 🪪 Iniciar sesión
+            title: Iniciar sesión en el sitio
+        logout:
+            label: ⏻ Cerrar sesión del sitio
+            title: ⏻ Cerrar sesión
+        home:
+            label: Inicio
+            title: Volver al inicio
+        mtg:
+            calculator:
+                title: 'Calculadora de Magic: The Gathering™'
+                label: 'Calculadora de Magic: The Gathering™'
+            download:
+                title: 'Descargar listas de puntos de Magic: The Gathering™'
+                label: 'Descargar listas de puntos de Magic: The Gathering™'
+                updatelink: 'Descargar la lista de puntos de esta actualización como archivo CSV'
+                latest: 'Actual'
+            index:
+                title: 'AeonShift Magic: The Gathering™'
+                label: 'AeonShift Magic: The Gathering™'
+            dccalculator:
+                title: 'Calculadora de Duel Commander'
+                label: 'Calculadora de Duel Commander'
+        resetpassword:
+            label: 🛡️ Restablecer
+            title: Restablecer tu contraseña
+        resetpasswordconfirm:
+            title: Solicitud de restablecimiento de contraseña
+        updatepassword:
+            label: 🔐 Cambiar mi contraseña
+            title: Cambiar mi contraseña
+        learnmore:
+            label: 'Saber más'
+            title: 'Saber más sobre AeonShift'
+    resetpassword:
+        error: Hubo un problema al procesar tu solicitud de restablecimiento de contraseña. Por favor, contacta con nuestro equipo.
+        text1: Introduce el correo que usaste para registrarte. Si existe en nuestra base de datos, recibirás un correo con instrucciones.
+        text2: ℹ️ O simplemente inicia sesión <a href="{link}" title="Iniciar sesión usando tu código de registro único">usando tu código de registro único</a> en su lugar.
+    resetpasswordconfirm:
+        text1: Si existe una dirección de correo en nuestra base de datos y coincide con una cuenta, se enviará un correo a esa dirección con más instrucciones para restablecer la contraseña de la cuenta asociada.
+    mtg:
+        calculator:
+            title: 'Calculadora de puntos AeonShift Magic The Gathering™'
+            subtitle: '(si la calculadora deja de funcionar, solo recarga la página)'
+            starformat:
+                text: 'Este es el nombre de tu Star Format, si existe, o "Custom" si no tiene un nombre Star.'
+            fullnameformat:
+                text: 'Este es el nombre completo de tu formato, que también puede servir como referencia.'
+        choose:
+            title: 'Elige un <strong class="green-text">formato estrella de AeonShift</strong> abajo'
+            text: 'Estás jugando <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
+            links:
+                choosecommander:
+                    text: 'Encontrar un Commander'
+                    title: 'Ayúdame a encontrar un Commander.'
+                    description: 'Esta sección te muestra posibles Commanders según tu selección de formato de arriba. Actualiza tu selección si quieres encontrar un Commander para otro formato.'
+                    description2: 'Nota: los valores de abajo son solo para single-Commanders. Las habilidades Partner están excluidas.'
+                    description3: 'Puedes combinar filtros y ordenar columnas en secuencia para ordenaciones múltiples.'
+                    form:
+                        nameen:
+                            label: 'Nombre'
+                        coloridentity:
+                            label: 'Identidad de color'
+                        ranking:
+                            players:
+                                duel: 'Rango de Duel Commander'
+                                cedh: 'Rango de cEDH'
+                                ffa: 'Rango global Free-For-All'
+                            label: 'Ranking'
+                            top: '★★★  Solo Commanders Top'
+                            popular: '★ Commanders Top y populares'
+                            alltournamentranked: 'Todos los Commanders rankeados en torneos'
+                            all: 'Todos los Commanders'
+                    table:
+                        nameen:
+                            label: 'Nombre'
+                            placeholder: 'Ruhan of the Fomori'
+                        budget:
+                            label: 'Presupuesto 🧺'
+                            placeholder: 'Presupuesto mínimo'
+                        status:
+                            label: 'Estado de lanzamiento'
+                            unranked: '<span class="red-text">Sin ranking</span>'
+                            unknown: '<span class="red-text">Desconocido</span>'
+                            released: '<span class="green-text">Lanzado</span>'
+                        rankingindex:
+                            duel:
+                                label: 'Ranking de Duel Commander (cuanto más bajo, mejor)'
+                            cedh:
+                                label: 'Ranking de cEDH (cuanto más bajo, mejor)'
+                            ffa:
+                                label: 'Ranking de FFA (cuanto más bajo, mejor)'
+                        coloridentity:
+                            label: 'Identidad de color'
+                        firstprintedyear:
+                            label: 'Año de primera impresión'
+                        mv:
+                            label: 'Mana Value'
+                        multicztype:
+                            label: 'Tipo posible de múltiples en Command Zone'
+                        sort:
+                            label: 'Ordenar la tabla usando esta columna (ascendente o descendente)'
+                        minimumbudget:
+                            label: 'Presupuesto mínimo 🧺'
+                            placeholder: '80'
+                gotoform:
+                    text: 'Usar nuestra calculadora'
+                    title: 'Ve simplemente al formulario de la <strong>calculadora</strong>, con todas las opciones para elegir.'
+                freeform:
+                    text: 'No necesito un formato'
+                    title: 'Solo quiero jugar <strong>con lo que tengo</strong> y contar mis puntos (AeonShift libre).'
+                choose:
+                    text: 'Elegir un formato estrella'
+                    title: 'Quiero <strong>elegir un formato específico</strong> para jugar AeonShift Magic The Gathering™.'
+                quiz:
+                    text: 'Ayúdame a elegir un formato'
+                    title: 'Ayúdame a elegir un formato para jugar AeonShift Magic The Gathering™ mediante <strong>un cuestionario</strong>.'
+        form:
+            title: '🎛️ Personaliza tu formato'
+            formtitle: 'Estás jugando:'
+            fixeddecklist: 'Tu decklist se ha reformateado para mejorar la legibilidad'
+            decklist1:
+                label: 'Decklist <span class="gray-text">(Decklist del jugador 1 si se usan equipos)</span>'
+                incentive: '↓ 📋 Pega tu decklist aquí ↓'
+                help: >
+                    Pega tu deck aquí (tu decklist del jugador 1 si usas equipos). 
+                    Los sistemas de listas de texto compatibles son: Magic The Gathering™ Online Import, Magic The Gathering™ Arena Import, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Tu decklist DEBE estar en inglés, con el nombre EXACTO de la carta (revisa mayúsculas/minúsculas y puntuación). Las líneas deben ser del tipo: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist2:
+                label: 'Decklist - Jugador 2'
+                incentive: '↓ 📋 Pega tu decklist aquí ↓'
+                help: >
+                    Pega aquí la decklist del jugador 2 si usas equipos. 
+                    Los sistemas de listas de texto compatibles son: Magic The Gathering™ Online Import, Magic The Gathering™ Arena Import, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Tu decklist DEBE estar en inglés, con el nombre EXACTO de la carta (revisa mayúsculas/minúsculas y puntuación). Las líneas deben ser del tipo: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist3:
+                label: 'Decklist - Jugador 3'
+                incentive: '↓ 📋 Pega tu decklist aquí ↓'
+                help: >
+                    Pega aquí la decklist del jugador 3 si usas equipos. 
+                    Los sistemas de listas de texto compatibles son: Magic The Gathering™ Online Import, Magic The Gathering™ Arena Import, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Tu decklist DEBE estar en inglés, con el nombre EXACTO de la carta (revisa mayúsculas/minúsculas y puntuación). Las líneas deben ser del tipo: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            results:
+                breakdown:
+                    title: 'Desglose de tus puntos:'
+                    basepoints:
+                        text: 'Puntos base (P-Value):'
+                        help: 'Este es tu P-Value, los puntos base determinados por tus elecciones de formato en el formulario de arriba.'
+                    cards:
+                        text: 'Cartas encontradas en tu lista:'
+                        help: 'Estas son todas las cartas que identificamos en tu lista; por favor, revisa esta lista.'
+                        viewmore: 'Ver todas las cartas encontradas'
+                    modulations:
+                        text: 'Modulaciones (avanzado):'
+                        help: 'Estas son posibles modulaciones de tu P-Value, basadas en el formato y las elecciones de cartas que hiciste.'
+                        viewmore: 'Ver detalles de tus modulaciones'
+                    cardzones:
+                        text: 'Totales por zonas de cartas:'
+                        maindeck: 'Deck principal:'
+                        sideboard: 'Sideboard:'
+                        commandzone: 'Command Zone:'
+                        companion: 'Companions:'
+                        attractions: 'Attractions:'
+                        contraptions: 'Contraptions:'
+                        stickers: 'Stickers:'
+                        total: 'Total de cartas identificadas (todas las zonas):'
+                    mvalue:
+                        text: 'M-Value:'
+                        help: 'Este es tu M-Value, el valor monetario de tu deck, usado para restricciones financieras.'
+                        viewmore: 'Ver detalles de tu M-Value'
+                    usage:
+                        text: 'Uso de puntos:'
+                        help: 'Estos son los puntos que usaste en tu deck, ordenados de mayor a menor consumo.'
+                        unranked: '(Sin ranking)'
+                        unknown: '(Desconocido)'
+                    budget:
+                        text: 'Presupuesto de puntos:'
+                        help: 'Estos son los puntos que puedes gastar en tu deck, según tus elecciones de formato (y Commanders, si los hay).'
+                    remaining:
+                        text: 'Puntos restantes, no gastados:'
+                        help: 'Estos son los puntos que te quedan. Si te ayuda, puedes seguir usándolos.'
+                        exceeding: 'excediendo: '
+                decklist1:
+                    label: 'Resultados para tu decklist n.º 1:'
+                decklist2:
+                    label: 'Resultados para tu decklist n.º 2:'
+                decklist3:
+                    label: 'Resultados para tu decklist n.º 3:'
+                errors:
+                    containsinvalidtimelinecards:
+                        text: 'La decklist contiene cartas que no son legales en la timeline seleccionada.'
+                    invalidcommandzone:
+                        text: 'Tu Command Zone (Commander(s)) no es válida.'
+                    invalidnumberofcards:
+                        text: 'La decklist no contiene el número correcto de cartas.'
+                    invalidsideboard:
+                        text: 'Tu sideboard no es válido.'
+                    copies:
+                        text: 'La decklist contiene copias ilegales de la misma carta.'
+                    nocommander:
+                        text: 'No se encontró ningún Commander en tu decklist, a pesar de haber probado todos los formatos de texto posibles.'
+                    impossibletofindacommander:
+                        text: 'Es imposible determinar el/los Commander(s) en tu decklist; por favor añade más cartas y revisa los saltos de línea.'
+                    toomanypoints:
+                        text: 'Tu decklist consumió demasiados puntos. Debes ajustar tus puntos para mantenerte dentro de tu presupuesto.'
+                    tooexpensive:
+                        text: 'Tu decklist tiene un M-Value superior al máximo permitido por tu formato.'
+                    failedparsing:
+                        text: 'No se pudo analizar la decklist; por favor revisa que lo que pegaste sea válido.'
+                    internalerror:
+                        text: 'Ocurrió un error interno al procesar tu decklist. Por favor, contacta con nuestro equipo.'
+                    singlecopiescardnotunique:
+                        text: 'Attractions, Contraptions y Stickers deben ser únicos (solo una copia de cada).'
+                    singletoncardnotunique:
+                        text: 'Tu decklist no es singleton (solo se permite una copia de cada carta). Por favor revisa las cantidades de: '
+                    numberofcardnotcorrectforquadruples:
+                        text: 'Tu decklist no tiene el número correcto de copias por carta (máximo 4 copias o menos según el máximo autorizado). Para estas cartas: '
+                    wrongtimelineforcards:
+                        text: 'Tu decklist tiene cartas que no son legales en tu timeline actual para estas cartas: '
+                    cznoteligibleonecommander:
+                        text: 'Tu Command Zone no es válida; tu commander debe ser elegible para ser commander.'
+                    cznoteligiblemulticommander:
+                        text: 'Una de las cartas de tu Command Zone no es elegible para ser commander (múltiples commanders) para estas cartas: '
+                    cznotvalidmulticztypenotthesame:
+                        text: 'Todos tus commanders deben ser del mismo tipo de habilidad Partner (como Partner, Friends forever, etc.).'
+                    coloridentitymissmatch:
+                        text: 'Una o más cartas en tu deck no coinciden con la identidad de color de tu Command Zone: '
+                    unknown:
+                        text: 'Tu deck contiene cartas desconocidas; por favor revisa estos nombres: '
+                legal:
+                    no:
+                        label: 'Tu deck <strong>NO ES LEGAL</strong> según tus elecciones de formato.'
+                    yes:
+                        label: 'Tu deck es <strong>LEGAL</strong> según tus elecciones de formato.'
+                    download:
+                        title: 'Descargar o imprimir tu decklist'
+                        help: 'Introduce el nombre del jugador y luego elige una opción abajo para imprimir o descargar.'
+                        playername: 'Nombre del jugador:'
+                        generatedat: 'Documento generado el: '
+                        label:
+                            link:
+                                label: 'Descargar o imprimir tu hoja de registro de deck'
+                            csv:
+                                label: 'Hoja de registro de deck (CSV)'
+                                title: 'Descargar tu hoja de registro de deck (CSV)'
+                            pdf:
+                                label: 'Hoja de registro de deck (PDF)'
+                                title: 'Descargar tu hoja de registro de deck (PDF)'
+                            text:
+                                label: 'Hoja de registro de deck (Texto)'
+                                title: 'Descargar tu hoja de registro de deck (Texto)'
+                            print:
+                                label: 'Imprimir ahora'
+                                title: 'Imprimir tu hoja de registro de deck'
+                        comment:
+                            label: 'Comentario (opcional)'
+                            help: 'Añade un comentario a tu decklist si es necesario.'
+                modulations:
+                    firstprint:
+                        text: 'Tu Commander editado más recientemente fue editado por primera vez antes del año actual.'
+                        help: '+2% del P-Value del formato por cada año por debajo del año actual para tu commander más reciente.'
+                    multiplecommanders:
+                        types:
+                            chooseabackground: '-20% de presupuesto si se usa una habilidad Partner'
+                            other: '-40% de presupuesto si se usa una habilidad Partner'
+                        text: 'Usas más de un Commander.'
+                        help: '-20% del P-Value del formato si usas una carta de tipo Background, -40% de los puntos del formato en caso contrario.'
+                    manavalue:
+                        text: 'Para cada uno de tus Commanders, su mana value es inferior a 4.'
+                        help: '"-10% del P-Value del formato si mana value 3, -20% si mana value 2, -30% si mana value 1 o 0. La mitad de eso si se usa una habilidad Partner no-Background.'
+                    rankedcommander:
+                        text: 'Tu Commander está rankeado.'
+                        help: 'Tu commander está rankeado en la lista de puntos actual.'
+                start:
+                    label: 'Empieza a añadir cartas a tu decklist a la izquierda usando nuestro formulario "Añadir una carta", o pegando una decklist de otro sitio en la zona de texto de la izquierda siguiendo las instrucciones de abajo.'
+            decklist:
+                addcard:
+                    label: 'Añadir una carta'
+        pointslist:
+            choice:
+                label: '{name} ({datestart} → {dateend})'
+            latest:
+                label: '{name} (Lista actual)'
+        quiz:
+            back:
+                label: '← Pregunta anterior'
+                title: 'Volver a la pregunta anterior'
+            help:
+                text1: 'Vamos a ayudarte a encontrar tu formato.'
+                text2: 'Solo responde estas 5 preguntas rápidas. ↓'
+            question1:
+                label: 'Jugadores/equipos/vida:'
+                text: '¿Cuántos jugadores (equipos) y puntos de vida quieres?'
+                answer1:
+                    label: '2 jugadores (Duel)'
+                    help: 'Partidas Duel: dos jugadores, dos equipos. <br><strong>20 vidas al inicio.</strong>'
+                answer2:
+                    label: '4 jugadores (2 equipos)'
+                    help: 'Two-Headed Giant: cuatro jugadores, dos equipos de dos. <br><strong>30 vidas compartidas al inicio.</strong> <em class="comingsoon">¡Próximamente!</em>'
+                answer3:
+                    label: '4+ jugadores (Free-For-All)'
+                    help: 'cEDH/Commander: cuatro jugadores o más, free-for-all. <br><strong>40 vidas al inicio.</strong> <em class="comingsoon">¡Próximamente!</em>'
+                answer4:
+                    label: '6 jugadores (2 equipos)'
+                    help: 'Team Trio: dos equipos de tres jugadores, con reglas especiales de emparejamiento. <br><strong>20 vidas al inicio.</strong> <em class="comingsoon">¡Próximamente!</em>'
+            question2:
+                label: 'Copias máximas de una carta en un deck:'
+                text: '¿Cuál es el número máximo de copias que puede tener una carta en un deck, incluyendo Command Zones y Sideboards?'
+                answer1:
+                    label: 'máx. 1 copia'
+                    help: 'Singleton - un máximo de una copia de cada carta en toda la decklist.'
+                answer2:
+                    label: 'máx. 4 copias'
+                    help: 'Quadruples - un máximo de cuatro copias de cada carta en toda la decklist. <em class="comingsoon">¡Próximamente!</em>'
+            question3:
+                label: 'Cartas en deck principal/sideboard:'
+                text: '¿Cuántas cartas debe tener un deck (deck principal/sideboard)?'
+                answer1:
+                    label: '100/0'
+                    help: '100 cartas en el deck principal, sin sideboard.'
+                answer2:
+                    label: '60+/0-15'
+                    help: '60 cartas o más en el deck principal, 0 a 15 en el sideboard. <em class="comingsoon">¡Próximamente!</em>'
+            question4:
+                label: 'Commanders/Command Zones:'
+                text: '¿Quieres usar Commanders/Command Zones?'
+                answer1:
+                    label: 'No'
+                    help: 'No se comprobarán reglas adicionales. <em class="comingsoon">¡Próximamente!</em>'
+                answer2:
+                    label: 'Sí'
+                    help: 'Esto añadirá reglas y restricciones especiales de construcción y juego.'
+            question5:
+                label: 'Timeline máxima de legalidad:'
+                text: '¿Cuál es la timeline máxima de legalidad con la que quieres jugar?'
+                answer1:
+                    label: 'Printed'
+                    help: 'Lo que tengas, siempre que sea una carta auténtica de Magic The Gathering™. Esto incluye todas las cartas impresas.'
+                answer2:
+                    label: 'Funny'
+                    help: 'Esto incluye todas las cartas Eternal, más los sets divertidos.'
+                answer3:
+                    label: 'Eternal'
+                    help: 'Incluye todas las cartas de Eternal, más o menos impresas en Vintage, legales en torneos sancionados.'
+                answer4:
+                    label: 'Modern'
+                    help: 'Incluye todas las cartas que son legales o están baneadas en Modern. <em class="comingsoon">¡Próximamente!</em>'
+                answer5:
+                    label: 'Pioneer'
+                    help: 'Incluye todas las cartas que son legales o están baneadas en Pioneer. <em class="comingsoon">¡Próximamente!</em>'
+                answer6:
+                    label: 'Standard'
+                    help: 'Incluye todas las cartas que son legales o están baneadas en Standard. <em class="comingsoon">¡Próximamente!</em>'
+            question6:
+                label: 'P-value:'
+                text: '¿Cuál es tu P-value de referencia? El P-value determina los puntos base para construir, antes de cualquier modulación.'
+                answer1:
+                    label: 'Standard Play'
+                    help: 'Este es el P-value por defecto y el recomendado para la mayoría de jugadores. Úsalo si no sabes cuál elegir.'
+                answer2:
+                    label: 'Lite Play'
+                    help: 'Este es un P-value más conservador y se recomienda a jugadores que quieren jugar con un P-value más bajo, lo que significa menos dinero invertido y menos explosividad. <em class="comingsoon">¡Próximamente!</em>'
+                answer3:
+                    label: 'Power Play'
+                    help: 'Este es un P-value más agresivo y se recomienda a jugadores que quieren jugar con un P-value más alto, lo que significa menos límites en cartas y más explosividad. <em class="comingsoon">¡Próximamente!</em>'
+            question7:
+                label: 'Aplicar restricciones financieras'
+                text: '¿Estás usando restricciones financieras?'
+                answer1:
+                    label: 'No'
+                    help: 'Juegas solo con cartas originales (o permites proxies).'
+                answer2:
+                    label: 'Sí'
+                    help: 'Juegas solo con cartas originales, pero tienes una restricción económica en los decks y quieres usar nuestro M-Value para ello. <em class="comingsoon">¡Próximamente!</em>'
+            question8:
+                label: 'Actualización de lista de puntos a usar:'
+                text: '¿Qué actualización de lista de puntos debería usarse? Usa siempre la más reciente salvo que estés revisando decklists pasadas.'
+            previous:
+                text: '⬅️ Pregunta anterior'
+global:
+    actions:
+        label: Acciones
+        title: Acciones
+    back: ⬅️ Volver
+    createbutton:
+        label: ➕ Añadir
+        title: Añadir un elemento
+    createdat:
+        label: Creado el
+    dates:
+        label: Creado / Última actualización
+    delete:
+        confirmprompt: ¿De verdad quieres eliminar este elemento? Esta acción no se puede deshacer.
+    deletesuccess:
+        text: 'Elemento eliminado correctamente'
+    deletebutton:
+        label: ❌ Eliminar
+        title: Eliminar este elemento
+    editbutton:
+        label: ✏️ Editar
+        title: Editar
+    email:
+        responsibility: AeonShift solo envía correos para sus funciones esenciales y nunca te contactará por ningún otro motivo. Si recibes un correo sospechoso, no hagas clic en ningún enlace y contacta con nuestro equipo.
+    error:
+        404:
+            text: ¡Vaya! No se pudo encontrar la página solicitada. Quizá deberías usar el menú de arriba para buscar lo que necesitas, o simplemente volver atrás en tu historial...
+            title: 404 - No encontrado 😔
+        500:
+            text: ¡Vaya! El servidor, como una lista de puntos, ha alcanzado su límite. Si este error persiste, por favor contacta con nuestro equipo.
+            title: 500 - Error del servidor 😔
+    id:
+        label: ID
+    indexbutton:
+        label: 🔙 Volver a la lista
+        title: Volver a la lista
+    mandatoryfields:
+        text: '* = Estos campos son obligatorios.'
+    noelements:
+        label: No hay elementos para mostrar.
+    none:
+        label: N/A
+    pagenumber: Página <strong>{current}/{total}</strong>
+    passwordbutton:
+        label: Cambiar contraseña
+        title: Cambiar la contraseña del usuario
+    roles:
+        ROLE_ADMIN: Administrador
+        ROLE_USER: Usuario estándar
+    savebutton:
+        label: 💾 Guardar
+        title: Guardar cambios
+    savesuccess:
+        text: Guardado correctamente.
+    selectnone: --
+    skipcontent:
+        label: Saltar al contenido principal
+    showbutton:
+        label: 👁️ Ver
+        title: Ver detalles
+    showbuttonfront:
+        label: 👁️ Ver (público)
+        title: 'Ver en la parte pública'
+    total:
+        label: <strong>{elements}</strong> elemento(s) en total
+    updatedat:
+        label: Actualizado el
+    1:
+        label: 'Sí'
+    0:
+        label: 'No'
+    table:
+        summary: 'Entradas _START_ a _END_ de _TOTAL_'
+        empty: '0 entradas en total'
+        filtered: '(filtrado de _MAX_ en total)'
+        thousands: ''
+        menu: 'Mostrar _MENU_ entradas'
+        search: 'Buscar (usa "xx yy" para una cadena continua):'
+        none: 'No se encontraron entradas coincidentes'
+        first: 'Primera'
+        last: 'Última'
+        next: 'Siguiente'
+        previous: 'Anterior'
+        ariasort: 'Ordenar esta columna'
+        ariasortreverse: 'Ordenar esta columna en orden inverso'
+    legal:
+        title: 'Legal'
+        label: 'Legal'
+    rules:
+        label: 'Reglas'
+        title: 'Reglas del juego'
+    start:
+        label: 'Iniciar el comando'
+        title: 'Iniciar el comando'
+    users:
+        label: 'Creado por / Última actualización por'
+    import:
+        label: '📥 Importar/actualizar'
+        title: '📥 Importar/actualizar cartas/puntos (archivo CSV)'
+    export:
+        label: '📤 Exportar CSV de la lista de puntos'
+        title: 'Exporta esta lista de puntos con los valores actuales en formato CSV para usarla en una hoja de cálculo u otro sitio y reimportarla más tarde.'
+    filter:
+        label: Filtrar resultados
+        title: 'Haz clic aquí para filtrar resultados según tu selección'
+    reset:
+        title: 'Restablecer el formulario'
+        label: 'Restablecer'
+    max:
+        label: 'Solo se muestran los primeros 100.'
+    choose:
+        label: '↓ Por favor elige'
+mtg:
+    addform:
+        title: 'Añadir una carta'
+    add:
+        label: 'Añadir'
+    copies:
+        text: 'X'
+    cardzones:
+        choose: 'Zona'
+        maindeck: 'Deck principal'
+        sideboard: 'Sideboard'
+        commandzone: 'Command Zone'
+        companion: 'Companion'
+        attractions: 'Attraction'
+        contraptions: 'Contraption'
+        stickers: 'Sticker'
+    name:
+        label: 'Nombre'
+        placeholder: 'Ruhan of the Fomori'
+    popular:
+        comingsoon:
+            text: '<em class="blue-text">¡Próximamente!</em> Mantente atento.'
+        eternal:
+            title: 'Timeline: <strong class="blue-text">Eternal</strong>'
+        modern:
+            title: 'Timeline: <strong class="blue-text">Modern</strong>'
+        pioneer:
+            title: 'Timeline: <strong class="blue-text">Pioneer</strong>'
+        standard:
+            title: 'Timeline: <strong class="blue-text">Standard</strong>'
+        quadruples:
+            eternal:
+                eternal:
+                    label: Eternal
+                    title: Jugar AeonShift Eternal
+                    subtitle: <strong>2 jugadores</strong>, <strong>20</strong> vidas, mínimo <strong>60</strong> cartas en el deck principal + <strong>0-15</strong> cartas de sideboard, <strong>dos</strong> partidas ganadas, timeline <strong>Eternal</strong>
+            modern:
+                modern:
+                    label: Modern
+                    title: Jugar AeonShift Modern
+                    subtitle: <strong>2 jugadores</strong>, <strong>20</strong> vidas, mínimo <strong>60</strong> cartas en el deck principal + <strong>0-15</strong> cartas de sideboard, <strong>dos</strong> partidas ganadas, timeline <strong>Modern</strong>
+        singleton:
+            eternal:
+                2hg:
+                    label: Two-Headed Giant Duel Commander
+                    title: Jugar AeonShift 2HG Duel Commander
+                    subtitle: <strong>4</strong> jugadores, <strong>2</strong> equipos, <strong>30</strong> vidas compartidas, Singleton de <strong>100 cartas</strong>, <strong>una</strong> partida ganada, timeline <strong>Eternal</strong> <em class="blue-text">¡Próximamente!</em>
+                commander:
+                    label: Commander/cEDH
+                    title: Jugar AeonShift Commander/cEDH
+                    subtitle: <strong>4+</strong> jugadores – free-for-all, <strong>40</strong> vidas, <strong>Command</strong> Zones, Singleton de <strong>100 cartas</strong>, <strong>una</strong> partida ganada, timeline <strong>Eternal</strong> <em class="blue-text">¡Próximamente!</em>
+                duelcommander:
+                    label: Duel Commander
+                    title: Jugar AeonShift Duel Commander
+                    subtitle: <strong>2</strong> jugadores, <strong>20</strong> vidas, <strong>Command</strong> Zones, Singleton de <strong>100 cartas</strong>, <strong>dos</strong> partidas ganadas, timeline <strong>Eternal</strong>
+                freeform:
+                    label: Freeform
+                    title: Jugar AeonShift Freeform
+                    subtitle: Juega con <strong>las cartas que tengas</strong>, <strong>20</strong> vidas, mínimo <strong>60</strong> cartas, partidas <strong>ilimitadas</strong>, timeline <strong>Eternal</strong>!
+                highlander:
+                    label: Highlander
+                    title: Jugar AeonShift Highlander
+                    subtitle: <strong>2 jugadores</strong>, <strong>20</strong> vidas, Singleton de <strong>100 cartas</strong>, <strong>dos</strong> partidas ganadas, timeline <strong>Eternal</strong>
+            modern:
+                2hg:
+                    label: Two-Headed Giant Modern Duel Commander
+                    title: Jugar AeonShift 2HG Modern Duel Commander
+                    subtitle: <strong>4</strong> jugadores, <strong>2</strong> equipos, <strong>30</strong> vidas compartidas, Singleton de <strong>100 cartas</strong>, <strong>una</strong> partida ganada, timeline <strong>Modern</strong> <em class="blue-text">¡Próximamente!</em>
+                commander:
+                    label: Modern Commander/cEDH
+                    title: Jugar AeonShift Modern Commander/cEDH
+                    subtitle: <strong>4+</strong> jugadores – free-for-all, <strong>40</strong> vidas, <strong>Command</strong> Zones, Singleton de <strong>100 cartas</strong>, <strong>una</strong> partida ganada, timeline <strong>Modern</strong> <em class="blue-text">¡Próximamente!</em>
+                duelcommander:
+                    label: Modern Duel Commander
+                    title: Jugar AeonShift Modern Duel Commander
+                    subtitle: <strong>2</strong> jugadores, <strong>20</strong> vidas, <strong>Command</strong> Zones, Singleton de <strong>100 cartas</strong>, <strong>dos</strong> partidas ganadas, timeline <strong>Modern</strong>
+                freeform:
+                    label: Modern Freeform
+                    title: Jugar AeonShift Modern Freeform
+                    subtitle: Juega con <strong>las cartas que tengas</strong>, <strong>20</strong> vidas, mínimo <strong>60</strong> cartas, partidas <strong>ilimitadas</strong>, timeline <strong>Modern</strong>!
+                highlander:
+                    label: Modern Highlander
+                    title: Jugar AeonShift Modern Highlander
+                    subtitle: <strong>2 jugadores</strong>, <strong>20</strong> vidas, Singleton de <strong>100 cartas</strong>, <strong>dos</strong> partidas ganadas, timeline <strong>Modern</strong>
+page:
+    position:
+        footer:
+            label: Footer
+        header:
+            label: Header
+user:
+    login:
+        alreadylogged: Ya has iniciado sesión como {user}, <a data-turbo="false" href="{url}" title="Cerrar sesión">Cerrar sesión</a>
+        helptext1: ℹ️ ¿Aún no tienes una cuenta? <a href="{link}" title="Haz clic aquí para crear una cuenta">¡Crea una primero!</a>
+        helptext2: 😣 ¿Olvidaste tu contraseña? <a href="{link}" title="Restablecer tu contraseña">Haz clic aquí</a> para establecer una nueva.
+        password:
+            help: Introduce tu contraseña si has establecido una.
+            label: Contraseña
+            placeholder: tu contraseña
+        submit:
+            label: 🔑 Iniciar sesión
+        success: Ahora estás autenticado correctamente como {username}
+        title: Iniciar sesión
+        username:
+            help: Introduce aquí tu nombre de usuario, normalmente el apodo con el que te registraste.
+            label: Nombre de usuario
+            placeholder: tu nombre de usuario
+    logout:
+        success: Ahora has cerrado sesión.
+    roles:
+        admin:
+            label: Administrador
+        user:
+            label: Usuario estándar

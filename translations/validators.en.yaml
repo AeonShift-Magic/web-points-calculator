@@ -2,20 +2,72 @@ admin:
     form:
         mtg:
             points_list:
-                import:
-                    file:
-                        error: 'Please select a valid CSV file.'
                 create:
                     validitystartingat:
-                        empty: 'Please input a valid date'
+                        empty: Please input a valid date
+                import:
+                    file:
+                        error: Please select a valid CSV file.
             update:
                 create:
                     pointslist:
-                        empty: 'Please provide a points list'
+                        empty: Please provide a points list
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: Please input a valid date
+                    title:
+                        too_long: 'Please input a shorter title.'
+                import:
+                    file:
+                        error: Please select a valid CSV file.
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': 'Please input a title.'
+                        too_long: 'Please input a shorter title.'
+                    descriptionen:
+                        'null': 'Please input a description.'
+                    startingat:
+                        'null': 'Please input a valid starting date.'
+                    endingat:
+                        'null': 'Please input a valid ending date.'
         user:
             create:
                 roles:
                     invalid: Please choose valid roles for the user.
                     multipleinvalid: Please choose valid roles for the user.
+user:
+    create:
+        roles:
+            invalid: Please choose valid roles for the user.
+            multipleinvalid: Please choose valid roles for the user.
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': 'Please input a title.'
+                    too_long: 'Please input a shorter title.'
+                descriptionen:
+                    'null': 'Please input a description.'
+                startingat:
+                    'null': 'Please input a valid starting date.'
+                endingat:
+                    'null': 'Please input a valid ending date.'
 daterange:
-    invalid: 'Be careful to choose an end date that is later than the start date.'
+    invalid: Be careful to choose an end date that is later than the start date.
+front:
+    users:
+        forms:
+            username:
+                exists: This username is already taken.
+            email:
+                exists: This email is already taken.
+            password:
+                help: 'Password must be at least 8 characters long.'
+    user:
+        forms:
+            password:
+                blank: 'Please input a password.'

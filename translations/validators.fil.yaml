@@ -1,0 +1,73 @@
+admin:
+    form:
+        mtg:
+            points_list:
+                create:
+                    validitystartingat:
+                        empty: Pakilagay ang isang valid na petsa
+                import:
+                    file:
+                        error: Pakipili ang isang valid na CSV file.
+            update:
+                create:
+                    pointslist:
+                        empty: Pakibigay ang isang points list
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: Pakilagay ang isang valid na petsa
+                    title:
+                        too_long: 'Pakilagay ang mas maikling pamagat.'
+                import:
+                    file:
+                        error: Pakipili ang isang valid na CSV file.
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': 'Pakilagay ang isang pamagat.'
+                        too_long: 'Pakilagay ang mas maikling pamagat.'
+                    descriptionen:
+                        'null': 'Pakilagay ang isang paglalarawan.'
+                    startingat:
+                        'null': 'Pakilagay ang isang valid na petsa ng pagsisimula.'
+                    endingat:
+                        'null': 'Pakilagay ang isang valid na petsa ng pagtatapos.'
+        user:
+            create:
+                roles:
+                    invalid: Pakipili ang mga valid na role para sa user.
+                    multipleinvalid: Pakipili ang mga valid na role para sa user.
+user:
+    create:
+        roles:
+            invalid: Pakipili ang mga valid na role para sa user.
+            multipleinvalid: Pakipili ang mga valid na role para sa user.
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': 'Pakilagay ang isang pamagat.'
+                    too_long: 'Pakilagay ang mas maikling pamagat.'
+                descriptionen:
+                    'null': 'Pakilagay ang isang paglalarawan.'
+                startingat:
+                    'null': 'Pakilagay ang isang valid na petsa ng pagsisimula.'
+                endingat:
+                    'null': 'Pakilagay ang isang valid na petsa ng pagtatapos.'
+daterange:
+    invalid: Mag-ingat sa pagpili ng petsa ng pagtatapos na mas huli kaysa sa petsa ng pagsisimula.
+front:
+    users:
+        forms:
+            username:
+                exists: Nakuha na ang username na ito.
+            email:
+                exists: Nakuha na ang email na ito.
+            password:
+                help: 'Ang password ay dapat hindi bababa sa 8 karakter ang haba.'
+    user:
+        forms:
+            password:
+                blank: 'Pakilagay ang isang password.'

@@ -1,0 +1,1333 @@
+admin:
+    account:
+        email:
+            help: >
+                Ang iyong email. Dapat ay natatangi. Gagamitin ito para mabawi ang access, makipag-ugnayan, at makikita ito ng mga taong naka-rehistro sa mga event na gagawin mo; at kakailanganin mong i-validate ang address na ito sa tuwing babaguhin mo ito. 
+                <strong>BABALA: LAHAT ng email ay ipapadala sa address na ito. Pakisuri nang tatlong beses bago punan/baguhin ang field na ito.</strong>
+            label: 'Email:'
+            placeholder: johnorjane.doe@provider.domain
+        roles:
+            label: 'Role(s)/Permission(s) sa site na ito:'
+        username:
+            help: Ang iyong username sa website na ito. Dapat ay natatangi at hindi kasalukuyang ginagamit ng ibang tao.
+            label: 'Username:'
+            placeholder: JohnDoe84
+    customblock:
+        editlink:
+            label: ✏️ I-edit ang block na ito ({blockkey})
+    form:
+        customblock:
+            create:
+                blockkey:
+                    help: Kung ginagamit na, lahat ng block na may tamang wika at lokasyon ay ipapakita ayon sa pataas na weight.
+                    label: Lokasyon ng block
+                    placeholder: Pumili ng lokasyon
+                contents:
+                    help: |
+                        <strong>Mag-ingat sa HTML at sa pagiging valid nito</strong>: puwedeng masira ang itsura ng site o hindi maipakita nang tama.</strong> <br> <strong>Babala: tandaan na may humigit-kumulang 10 minutong cache sa lahat ng block ng site (para sa bawat wika at lokasyon).</strong>
+                    label: Nilalaman
+                weight:
+                    help: Sa pagitan ng -100 at 100. Kung ginagamit na, lahat ng block na may tamang wika at lokasyon ay ipapakita ayon sa pataas na weight.
+                    label: Bigat
+                    placeholder: Bigat ng block
+            legends:
+                info: 'Mga parameter ng block'
+        page:
+            create:
+                contents:
+                    help: >
+                        <strong>Mag-ingat sa HTML at sa pagiging valid nito</strong>: puwedeng masira ang itsura ng site o hindi maipakita nang tama.</strong>
+                    label: Nilalaman
+                language:
+                    help: Ang wikang gagamitin para ipakita ang pahinang ito.
+                    label: Wika
+                slug:
+                    help: Iwanang blangko para awtomatikong gumawa ng slug batay sa title.
+                    label: Slug
+                title:
+                    help: Ang title ng pahina, na ipapakita sa header at sa mga resulta ng paghahanap.
+                    label: Title
+                weight:
+                    help: Sa pagitan ng -100 at 100. Kung ginagamit na, lahat ng page na may tamang wika at lokasyon ay ipapakita ayon sa pataas na weight.
+                    label: Bigat
+                zone:
+                    help: Ang zone kung saan ipapakita ang pahinang ito. Halimbawa, "header" para sa header, "footer" para sa footer, atbp.
+                    label: Zone
+            legends:
+                info: 'Detalye ng pahina'
+        abstract:
+            update:
+                create:
+                    titleen:
+                        help: 'Ang pampublikong title ng iyong update/anunsyo (English)'
+                        label: 'Title (EN)'
+                        placeholder: 'Aking bagong anunsyo'
+                    pointslist:
+                        help: 'Aling Point List ang gagamitin'
+                        label: 'Point List na gagamitin'
+                        placeholder: 'Pakipili ang isang Point List'
+                    startingat:
+                        help: 'Kailan magsisimulang maging epektibo ang update na ito?'
+                        label: 'Petsa ng simula'
+                    endingat:
+                        help: 'Kailan titigil maging epektibo ang update na ito?'
+                        label: 'Petsa ng pagtatapos'
+                    descriptionen:
+                        label: 'Description (EN)'
+                        help: 'Posibleng dagdag na detalye'
+                    public:
+                        label: 'Public'
+                        help: 'Markahan ang update na ito bilang public'
+                    rulesmodel:
+                        label: 'Rules model'
+                        help: 'Ang rules model na ilalapat kapag ginagamit ang listahang ito'
+                legends:
+                    info: 'Detalye ng update'
+        mtg:
+            cardsourceactivityhistory:
+                create:
+                    channel:
+                        label: 'Channel'
+                    startedat:
+                        label: 'Nagsimula noong'
+                    endedat:
+                        label: 'Natapos noong'
+                    successsummary:
+                        label: 'Buod ng tagumpay'
+                    errorsummary:
+                        label: 'Buod ng error'
+                    startedfrom:
+                        label: 'Sinimulan mula sa'
+                    logfilepath:
+                        label: 'Log file'
+                    uniqueid:
+                        label: 'Natatanging task ID'
+            pointslist:
+                create:
+                    filename:
+                        label: 'Filename'
+                    uploadnbcards:
+                        label: 'Bilang ng cards sa unang file'
+                    title:
+                        help: 'Ang title ng iyong Point List'
+                        label: 'Title'
+                        placeholder: 'Aking XX/XX/XXXX Point List'
+                    lastuploadedat:
+                        label: 'Huling na-upload noong'
+                    currentnbcards:
+                        label: 'Kasalukuyang bilang ng cards sa database'
+                    relatedupdates:
+                        label: 'Kaugnay na anunsyo/updates'
+                    validitystartingat:
+                        help: 'Ang petsa kung kailan nagsisimulang umiral ang listahang ito; ginagamit para matukoy ang order at ang pinakabago'
+                        label: 'Simula ng validity'
+                    rulesmodel:
+                        label: 'Rules model'
+                        help: 'Ang rules model na ilalapat'
+                import:
+                    firstline:
+                        text: '⚠️ Ang unang 5 linya ng dokumentong ito ay hindi isasama sa pag-import; gamitin ang mga ito para sa metadata'
+                    columnsright:
+                        text: '(ang mga column na ito, at lahat ng nasa kanan, ay hindi isasama sa pag-import)'
+                    pvalues:
+                        text: 'P-Values, sa ganitong pagkakasunod: Standard Play (linya 6), Lite Play (linya 7), Power Play (linya 8)'
+                        header:
+                            liteplay:
+                                text: 'Lite Play P-Values'
+                            standardplay:
+                                text: 'Standard Play P-Values'
+                            powerplay:
+                                text: 'Power Play P-Values'
+                        liteplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value (Lite Play)'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value (Lite Play)'
+                            duelcommander:
+                                text: 'Duel Commander P-Value (Lite Play)'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value (Lite Play)'
+                            highlander:
+                                text: 'Highlander P-Value (Lite Play)'
+                            modern:
+                                text: 'Modern P-Value (Lite Play)'
+                            pioneer:
+                                text: 'Pioneer P-Value (Lite Play)'
+                            standard:
+                                text: 'Standard P-Value (Lite Play)'
+                        standardplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value (Standard Play)'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value (Standard Play)'
+                            duelcommander:
+                                text: 'Duel Commander P-Value (Standard Play)'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value (Standard Play)'
+                            highlander:
+                                text: 'Highlander P-Value (Standard Play)'
+                            modern:
+                                text: 'Modern P-Value (Standard Play)'
+                            pioneer:
+                                text: 'Pioneer P-Value (Standard Play)'
+                            standard:
+                                text: 'Standard P-Value (Standard Play)'
+                        powerplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value (Power Play)'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value (Power Play)'
+                            duelcommander:
+                                text: 'Duel Commander P-Value (Power Play)'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value (Power Play)'
+                            highlander:
+                                text: 'Highlander P-Value (Power Play)'
+                            modern:
+                                text: 'Modern P-Value (Power Play)'
+                            pioneer:
+                                text: 'Pioneer P-Value (Power Play)'
+                            standard:
+                                text: 'Standard P-Value (Power Play)'
+                    label: >
+                        📥 I-import/i-update ang Point List (CSV file)
+                    help: >
+                        Gamitin ang form na ito para i-update ang Point List mula sa ibinigay na CSV template, isang card kada linya. 
+                        <br>
+                        <strong>Babala: mao-overwrite nito ang buong kasalukuyang Point List at hindi na ito mababawi.</strong>
+                    help2: >
+                        Note: sinusuri ng tool namin ang minimum na integridad ng file bago mag-overwrite at ni-no-normalize ang laman ng cells (case, haba, numeric data...), pero <strong>responsibilidad mo</strong> ang pag-aalaga sa content at anumang mawawalang data.
+                    help3: >
+                        Ang CSV file ay dapat nasa <strong>UTF-8 (Unicode)</strong> format, ang mga column ay hiwalay gamit ang <strong>commas</strong>, at ang line breaks ay nasa <strong>Unix (New Line)</strong> format. 
+                        <br>
+                        Maaaring ilagay ang values sa loob ng double quotes ("). 
+                        <br>
+                        Isang resulta kada linya; bawat posisyon (column "Name (EN)") ay dapat natatangi at kumatawan sa <strong>EKSAKTONG pangalan ng card (sinusuri ang bawat karakter, kasama ang: spaces, punctuation, double-face names at case) na umiiral sa source cards database</strong> (hindi mahalaga ang pagkakasunod ng linya). 
+                        <br>
+                        Ang points (6 columns)") ay mga integer o decimal numbers (tinatanggap ang values tulad ng "10" o "10.5").
+                    help4: >
+                        Dapat ay may eksaktong 5 linya sa itaas ang file na itatapon, pagkatapos ay 3 linya para sa P-Values sa pagkakasunod (Standard Play, Lite Play, Power Play) at ang ika-siyam na linya ay DAPAT may card na pinangalanang "((unranked))" at ito ang nagtatakda ng points para sa unranked cards.
+                    help5: >
+                        <strong>Huwag baguhin ang mga column, ang kanilang pagkakasunod, at huwag magdagdag ng extra columns sa kaliwa.</strong>
+                    help6: >
+                        Maaari mo ring baguhin ang mga card nang paisa-isa nang hindi muling ina-upload ang buong file sa pamamagitan ng pag-click sa button sa kanan ng bawat linya sa listing page.
+                    help7: >
+                        Note: ang mga pagbabago ay makikita agad sa admin part ng website na ito, pero ang public display at calculations ay maaaring umabot ng hanggang 10 minuto.
+                    help8: >
+                        Ipinapakita ng table sa ibaba ang isang halimbawa ng inaasahang laman ng CSV file mo:
+                    confirm:
+                        label: 'Kinikilala ko na nabasa at naunawaan ko ang mga tagubilin sa itaas at nais kong i-import/i-update ang Point List.'
+                    file:
+                        button:
+                            label: '📥 I-import/i-update ang Point List (CSV file)'
+                            title: 'I-import/i-update ang Point List (CSV file)'
+                        error: 'Pakipili ang isang valid na CSV file.'
+                        label: '📥 I-import/i-update ang Point List (CSV file)'
+                        help: >
+                            I-import ang Point List mula sa ibinigay na CSV template, isang resulta kada linya. Maximum size: 4 MB. <br><strong>Babala: mao-overwrite nito ang lahat ng Point List cards at hindi na ito mababawi.</strong>
+                        unreadable: 'Hindi mabasa o walang laman ang file. Suriin kung nabubuksan ito, CSV UTF-8 format, commas ang separators, at Unix line endings.'
+                    updated:
+                        success: 'Matagumpay na na-update ang points: {number} linya ang naproseso.'
+                    error:
+                        filecontents: 'Invalid ang laman ng file; pakisunod ang mga tagubilin sa ibaba.'
+                        processing_line: 'Error sa pagproseso ng linya {line_number}: {error}. Pakisunod ang mga tagubilin sa ibaba.'
+                        column_count: 'Walang tamang bilang ng columns ang linya; inaasahan ang hindi bababa sa 7'
+                        invalid_value: 'Invalid na value'
+                        invalid_name: 'Dapat pareho ang pangalan ng card sa card na nasa source card list'
+                        invalid_game_points: 'Invalid na points (dapat integer sa pagitan ng -1000 at 1000)'
+                        invalid_first_line: 'Ang English card name sa unang linya ay DAPAT "((unranked))"'
+                        incorrectname: 'Maling pangalan ng card: "{name}"'
+                        notfoundinsources: 'Hindi kilalang card sa source cards: "{name}"'
+                    info: 'Points Import'
+                legends:
+                    info: 'Detalye ng Point List'
+            pointslistcard:
+                create:
+                    pointslist:
+                        label: 'Point List'
+                        help: 'Aling Point List ang iuugnay sa card na ito'
+                        placeholder: 'Pumili ng Point List'
+                    nameen:
+                        label: 'Name (EN)'
+                        help: 'Ang pangalan ng card, sa English. Dapat eksakto sa bawat karakter at tumugma sa card sa database.'
+                    imageurl:
+                        label: 'Card Image URL'
+                        help: 'Ang URL kung saan makikita ang image kapag ginamit sa site.'
+                    scryfallid:
+                        label: 'Scryfall ID'
+                        help: 'Ang Scryfall ID ng card, kung kailangan'
+                    scryfalluri:
+                        label: 'Scryfall URI'
+                        help: 'Ang Scryfall URI ng card, kung kailangan'
+                    manavalue:
+                        label: 'Mana Value'
+                        help: 'Ang mana value ng card'
+                    oracleid:
+                        label: 'Oracle ID'
+                        help: 'Ang Oracle ID ng card'
+                    multicztype:
+                        label: 'Multiple in Command Zone type'
+                        help: 'Ang type ng multiple objects sa Command Zones, tulad ng "doctors_companion", "choose_a_background", "friends_forever", "partner", "doctors_companion", "choose_a_background".'
+                    points2hg:
+                        label: 'Two-Headed Giant points'
+                        help: 'Ang points para sa card na ito sa 2HG variant.'
+                    points2hgspecial:
+                        label: 'Two-Headed Giant points (special)'
+                        help: 'Ang points para sa card na ito sa 2HG variant (special, tulad ng "As a Commander").'
+                    pointsduelcommander:
+                        label: 'Duel Commander points'
+                        help: 'Ang points para sa card na ito sa Duel Commander.'
+                    pointsduelcommanderspecial:
+                        label: 'Duel Commander points (special)'
+                        help: 'Ang points para sa card na ito sa Duel Commander (special, tulad ng "As a Commander").'
+                    pointscommander:
+                        label: 'Commander/cEDH Free-For-All points'
+                        help: 'Ang points para sa card na ito sa Multiplayer Free-For-All Commander/cEDH.'
+                    pointscommanderspecial:
+                        label: 'Commander/cEDH Free-For-All points (special)'
+                        help: 'Ang points para sa card na ito sa Multiplayer Free-For-All Commander/cEDH (special, tulad ng "As a Commander").'
+                    islegal2hg:
+                        label: 'Legal sa 2HG'
+                        help: 'I-check kung legal ang card sa Two-Headed Giant'
+                    islegal2hgspecial:
+                        label: 'Legal sa 2HG (special)'
+                        help: 'I-check kung legal ang card sa Two-Headed Giant (special, tulad ng "As a Commander")'
+                    islegalduelcommander:
+                        label: 'Legal sa Duel Commander'
+                        help: 'I-check kung legal ang card sa Duel Commander'
+                    islegalduelcommanderspecial:
+                        label: 'Legal sa Duel Commander (special)'
+                        help: 'I-check kung legal ang card sa Duel (special, tulad ng "As a Commander")'
+                    islegalcommander:
+                        label: 'Legal sa Multiplayer Free-For-All Commander/cEDH'
+                        help: 'I-check kung legal ang card sa Multiplayer Free-For-All Commander/cEDH'
+                    islegalcommanderspecial:
+                        label: 'Legal sa Multiplayer Free-For-All Commander/cEDH (special)'
+                        help: 'I-check kung legal ang card sa Multiplayer Free-For-All Commander/cEDH (special, tulad ng "As a Commander")'
+                    firstline:
+                        label: 'Ang unang pangalan sa English pagkatapos ng P-values ay DAPAT laging <code class="inline">((unranked))</code> (at nagtatakda ng points para sa unranked cards)'
+                    isczeligible:
+                        label: 'messages'
+                    pointshighlander:
+                        label: 'Highlander points'
+                        help: 'Ang points para sa card na ito sa Highlander.'
+                    pointsmodern:
+                        label: 'Modern points'
+                        help: 'Ang points para sa card na ito sa Modern.'
+                    pointspioneer:
+                        label: 'Pioneer points'
+                        help: 'Ang points para sa card na ito sa Pioneer.'
+                    pointsstandard:
+                        label: 'Standard points'
+                        help: 'Ang points para sa card na ito sa Standard.'
+                    pointsbasesingleton:
+                        label: 'Base Singleton points'
+                        help: 'Ang base points para sa card na ito sa Singleton.'
+                    pointsbasequadruples:
+                        label: 'Base Quadruples points'
+                        help: 'Ang base points para sa card na ito sa Quadruples.'
+                legends:
+                    info: 'Detalye ng Point List Card'
+            update:
+                create:
+                    titleen:
+                        help: 'Ang pampublikong title ng iyong update/anunsyo (English)'
+                        label: 'Title (EN)'
+                        placeholder: 'Aking bagong anunsyo'
+                    pointslist:
+                        help: 'Aling Point List ang gagamitin'
+                        label: 'Point List na gagamitin'
+                        placeholder: 'Pumili ng Point List'
+                    start:
+                        help: 'Kailan magiging epektibo ang update na ito?'
+                        label: 'Petsa ng simula'
+                    published:
+                        label: 'Nailathala'
+                        help: 'I-check para maging visible ang update na ito sa users'
+                    end:
+                        help: 'Kailan matatapos ang update na ito?'
+                        label: 'Petsa ng pagtatapos'
+                    descriptionen:
+                        label: 'Description (EN)'
+                        help: 'Opsyonal na dagdag na detalye'
+                    public:
+                        label: 'Public'
+                        help: 'Gawing public ang update na ito'
+                    rulesmode:
+                        label: 'Rules Template'
+                        help: 'Ang rules template na ilalapat kapag ginagamit ang listahang ito'
+                    relatedpointslist:
+                        label: 'Kaugnay na Point List(s)'
+            sourcecard:
+                create:
+                    nameen:
+                        label: 'Name (EN)'
+                        help: 'Ang pangalan ng card, sa English. Dapat eksakto sa bawat karakter.'
+                        placeholder: 'Black Lotus...'
+                    flavorofnameen:
+                        label: 'Flavor Name Of (EN)'
+                        help: 'Ang flavor name / skinned card name ng card ("Minas Morgul" para sa "Cabal Coffers"...), sa English. Dapat eksakto sa bawat karakter.'
+                        placeholder: 'Minas Morgul...'
+                    alternatenameen:
+                        label: 'Alternative Name (EN)'
+                        help: 'Mga alternatibong pangalan ng card, sa English. Dapat eksakto sa bawat karakter.'
+                        placeholder: 'Cabal Coffers...'
+                    imageurl:
+                        label: 'Card Image URL'
+                        help: 'Ang URL kung saan makikita ang image kapag ginamit sa site.'
+                        placeholder: 'https://...'
+                    firstprintsetcode:
+                        label: 'First Print Set Code'
+                    iscommandzoneeligible:
+                        label: 'CZ Eligible'
+                        help: 'Eligible ba ang card para maging Commander?'
+                    coloridentity:
+                        label: 'Color Identity'
+                    firstprintedat:
+                        label: 'Unang na-print noong'
+                    ismultiplecommandzoneeligible:
+                        label: 'Multiple CZ Eligible'
+                    isblue:
+                        label: 'Blue ID.'
+                    isblack:
+                        label: 'Black ID.'
+                    iswhite:
+                        label: 'White ID.'
+                    isgreen:
+                        label: 'Green ID.'
+                    isred:
+                        label: 'Red ID.'
+                    iscolorless:
+                        label: 'Colorless ID.'
+                    maximumtimelinelegality:
+                        label: 'Maximum Timeline Legality'
+                    mtgoprice:
+                        label: 'MTGO price'
+                        help: 'Ang MTGO price ng card na ito.'
+                    mvalue:
+                        label: 'M-Value (trend)'
+                        help: 'Ang M-Value ng card na ito (pinagsamang money value sa EUR-USD).'
+                    duelrank:
+                        label: 'Duel Commander Rank'
+                    cedhrank:
+                        label: 'cEDH Rank'
+                    ffarank:
+                        label: 'FFA Rank'
+                    digitalonly:
+                        label: 'Digital-only ba?'
+                    latestmvalue:
+                        label: 'Latest M-Value'
+                    mvaluecount:
+                        label: 'M-Value Count (bilang ng mga presyong ginagamit ngayon)'
+        user:
+            account:
+                roles:
+                    label: 'Role(s)/Permission(s) sa site na ito:'
+                    help: 'Tinutukoy ang permissions ng user sa site. Halimbawa, ang organizer ay puwedeng mag-organize ng events, ang administrator ay puwedeng mag-manage ng site, atbp.'
+    home:
+        goto:
+            text: 'Pumunta sa isang sub-section ng admin area:'
+    nav:
+        customblocks:
+            edit:
+                label: '✏️ I-edit ang custom block: lokasyon "{blockkey}" / bigat "{weight}"'
+                title: 'I-edit ang custom block: lokasyon "{blockkey}" / bigat "{weight}"'
+            index:
+                label: Custom Blocks
+                title: Pamahalaan ang custom blocks
+            new:
+                label: ➕ Magdagdag ng custom block
+                title: Magdagdag ng custom block
+            show:
+                label: 'Detalye ng custom block: lokasyon "{blockkey}" / bigat "{weight}"'
+        front:
+            label: Public home →
+            title: Public home
+        home:
+            label: 🔴 Admin home
+            title: Admin home
+        pages:
+            index:
+                label: Pages
+                title: Pamahalaan ang pages
+            new:
+                label: ➕ Magdagdag ng page
+                title: Magdagdag ng page
+            edit:
+                label: '✏️ I-edit ang page "{page}"'
+                title: 'I-edit ang page "{page}"'
+            show:
+                label: 'Detalye ng page "{page}"'
+        users:
+            index:
+                label: Users
+                title: Pamahalaan ang users
+            new:
+                label: ➕ Magdagdag ng user
+                title: Magdagdag ng user
+            edit:
+                label: '✏️ I-edit ang user "{user}"'
+                title: 'I-edit ang user "{user}"'
+            editpassword:
+                label: '🛡️ I-edit ang password ni "{user}"'
+            show:
+                label: 'Detalye ng user: "{name}"'
+            pending:
+                label: '⏳ Mga pending na user'
+                title: 'Mga pending na user'
+        mtg:
+            cardsourceactivityhistory:
+                index:
+                    label: 'MTG - Card Source Activity History'
+                    title: 'MTG - Card Source Activity History'
+            pointslist:
+                index:
+                    label: 'MTG - Point Lists'
+                    title: 'MTG - Point Lists'
+                new:
+                    label: '➕ Gumawa ng MTG Point List'
+                    title: 'Gumawa ng MTG Point List'
+                edit:
+                    label: 'MTG - I-edit ang Point List "{name}"'
+                    title: 'MTG - I-edit ang Point List "{name}"'
+                show:
+                    label: 'MTG - Detalye ng Point List "{name}"'
+                    title: 'MTG - Detalye ng Point List "{name}"'
+                import:
+                    label: 'MTG - Mag-import ng points para sa List "{name}"'
+                    title: 'MTG - Mag-import ng points para sa List "{name}"'
+            pointslistcard:
+                index:
+                    label: 'MTG - Point List Cards'
+                    title: 'MTG - Point List Cards'
+                new:
+                    label: '➕ Gumawa ng MTG Point List Card'
+                    title: 'Gumawa ng MTG Point List Card'
+                edit:
+                    label: 'MTG - I-edit ang Point List Card "{name}"'
+                    title: 'MTG - I-edit ang Point List Card "{name}"'
+                show:
+                    title: 'MTG - Detalye ng Point List Card "{name}"'
+                    label: 'MTG - Detalye ng Point List Card "{name}"'
+            update:
+                index:
+                    label: 'MTG - Updates'
+                    title: 'MTG - Updates'
+                new:
+                    label: '➕ Gumawa ng MTG Update'
+                    title: 'Gumawa ng MTG Update'
+                show:
+                    title: 'MTG - Detalye ng update/anunsyo "{name}"'
+                    label: 'MTG - Detalye ng update/anunsyo "{name}"'
+                edit:
+                    label: 'MTG - I-edit ang update/anunsyo "{name}"'
+                    title: 'MTG - I-edit ang update/anunsyo "{name}"'
+            dbupdate:
+                index:
+                    title: 'MTG - Database Updates'
+                    label: 'MTG - Database Updates'
+                latest:
+                    label: 'MTG - Latest source database update state'
+                startnew:
+                    label: 'MTG - Manual start of a new source database update'
+            source:
+                index:
+                    title: 'MTG - Source Download / Import'
+                    label: 'MTG - Source Download / Import'
+            sourcedownload:
+                index:
+                    label: 'MTG - Source Download Status'
+                latest:
+                    label: 'MTG - Latest source download state'
+                startnew:
+                    label: 'MTG - Manual start of a new source download'
+            sourcecard:
+                index:
+                    title: 'MTG - Source Cards'
+                    label: 'MTG - Source Cards'
+                show:
+                    title: 'MTG - Detalye ng source card "{name}"'
+                    label: 'MTG - Detalye ng source card "{name}"'
+        cardsourceactivityhistory:
+            index:
+                label: 'Card sources activity history'
+    user:
+        password:
+            password_updated_success: Matagumpay na na-update ang password para kay {username}.
+        forms:
+            password:
+                first: Bagong password para sa user
+                help: Pakilagay ang isang valid na password na dapat may malaking titik, maliit na titik, at digit; minimum 8 characters.
+                invalid_repeated: Hindi tugma ang mga password
+                oldpassword:
+                    error: Mukhang hindi tama ang lumang password.
+                    help: Pakilagay ang kasalukuyang password para mapalitan ito para sa seguridad.
+                    label: Kasalukuyang password
+                second: Ilagay muli ang password
+            edit:
+                id:
+                    label: 'Ang iyong natatanging internal ID: <strong>{id}</strong>&nbsp;<em>(maaari mo itong gamitin para makipag-ugnayan sa aming team)</em>.'
+                fieldsets:
+                    private_data:
+                        label: 'Pribadong data'
+                    admin:
+                        label: 'Administrasyon'
+                    password:
+                        label: 'Password'
+            legends:
+                info: 'Impormasyon ng user'
+    mtg:
+        cardsourceactivityhistory:
+            error:
+                fileremoved: 'Wala na ang hinihinging log file.'
+        pointslistcard:
+            points:
+                label: 'RAW Points (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+        update:
+            publish: 'I-publish'
+            unpublish: 'I-unpublish'
+            published: 'Matagumpay na na-publish ang update.'
+            unpublished: 'Matagumpay na na-unpublish ang update.'
+customblock:
+    footer:
+        en:
+            name: Footer (EN 🇬🇧)
+        fr:
+            name: Footer (FR 🇫🇷)
+    home1:
+        en:
+            name: Home Block 1 (EN 🇬🇧)
+        fr:
+            name: Home Block 1 (FR 🇫🇷)
+    home2:
+        en:
+            name: Home Block 2 (EN 🇬🇧)
+        fr:
+            name: Home Block 2 (FR 🇫🇷)
+    home3:
+        en:
+            name: Home Block 3 (EN 🇬🇧)
+        fr:
+            name: Home Block 3 (FR 🇫🇷)
+    home4:
+        en:
+            name: Home Block 4 (EN 🇬🇧)
+        fr:
+            name: Home Block 4 (FR 🇫🇷)
+    legal:
+        en:
+            name: Legal (EN 🇬🇧)
+        fr:
+            name: Legal (FR 🇫🇷)
+email:
+    appendix:
+        label: ' | AeonShift'
+    resetpassword:
+        subject: 🛡️ Ang iyong request para i-reset ang password
+        success: Matagumpay na na-reset ang iyong password; maaari ka nang mag-log in gamit ito.
+        text1: Para i-reset ang iyong password, pakibisita ang sumusunod na link
+        text2: Mag-e-expire ang link na ito sa {expires}.
+        title: Mga tagubilin sa pag-reset ng password para sa iyong account
+front:
+    globals:
+        media_preview:
+            title: 'Preview ng media'
+            label: '(ito ang kasalukuyang file)'
+        share:
+            facebook: 'I-share sa Facebook'
+            messenger_mobile: 'Ipadala sa Facebook Messenger (mobile)'
+            messenger_computer: 'Ipadala sa Facebook Messenger (desktop)'
+            twitter: 'I-share sa Twitter/X'
+            email: 'Ipadala sa email'
+            bluesky: 'I-share sa Bluesky'
+            reddit: 'I-share sa Reddit'
+            link: 'Kopyahin ang link'
+    home:
+        title: AeonShift Calculator
+        subtitle: Pumasok sa AeonShift, isang strategic balance system para sa iyong mga laro.
+        chooselicense: Aling license ang gusto mong laruin?
+        licenses:
+            mtg:
+                label: Magic The Gathering™
+                title: Laruin ang Magic The Gathering™ AeonShift
+        discover:
+            title: AeonShift, isang mayamang balance system para sa mga laro
+            link:
+                text: Tuklasin
+                title: Mag-click dito para matuto pa tungkol sa AeonShift game system
+        links:
+            title: Magpatuloy pa
+            about:
+                text: Tungkol
+                title: Mas maraming impormasyon tungkol sa laro, kasaysayan nito, at pamamahala
+            directory:
+                text: Directory
+                title: Saan ka makakapaglaro ng AeonShift?
+            faq:
+                text: FAQ
+                title: Mga madalas itanong
+            rules:
+                text: MTG – Mga patakaran ng laro
+                title: Tuklasin ang AeonShift game rules para sa Magic The Gathering™
+
+    nav:
+        login:
+            label: 🪪 Mag-log in
+            title: Mag-log in sa site
+        logout:
+            label: ⏻ Mag-log out mula sa site
+            title: ⏻ Mag-log out
+        home:
+            label: Home
+            title: Bumalik sa home
+        mtg:
+            calculator:
+                title: 'Magic: The Gathering™ Calculator'
+                label: 'Magic: The Gathering™ Calculator'
+            download:
+                title: 'I-download ang Magic: The Gathering™ Point Lists'
+                label: 'I-download ang Magic: The Gathering™ Point Lists'
+                updatelink: 'I-download ang Point List para sa update na ito bilang CSV file'
+                latest: 'Kasalukuyan'
+            index:
+                title: 'AeonShift Magic: The Gathering™'
+                label: 'AeonShift Magic: The Gathering™'
+            dccalculator:
+                title: 'Duel Commander Calculator'
+                label: 'Duel Commander Calculator'
+        resetpassword:
+            label: 🛡️ Reset
+            title: I-reset ang password
+        resetpasswordconfirm:
+            title: Password reset request
+        updatepassword:
+            label: 🔐 Palitan ang aking password
+            title: Palitan ang aking password
+        learnmore:
+            label: 'Alamin pa'
+            title: 'Alamin pa tungkol sa AeonShift'
+    resetpassword:
+        error: Nagkaroon ng problema sa pagproseso ng iyong password reset request. Pakikontak ang aming team.
+        text1: Ilagay ang email na ginamit mo sa pag-register. Kung nasa database namin ito, makakatanggap ka ng email na may mga tagubilin.
+        text2: ℹ️ O mag-log in na lang <a href="{link}" title="Mag-log in gamit ang iyong natatanging registration code">gamit ang iyong natatanging registration code</a> sa halip.
+    resetpasswordconfirm:
+        text1: Kung may email address sa aming database at tumutugma ito sa isang account, magpapadala ng email sa address na iyon na may karagdagang tagubilin para i-reset ang password ng kaugnay na account.
+    mtg:
+        calculator:
+            title: 'AeonShift Magic The Gathering™ Points Calculator'
+            subtitle: '(kung tumigil sa paggana ang calculator, i-refresh lang ang page)'
+            starformat:
+                text: 'Ito ang iyong Star Format na pangalan, kung meron, o "Custom" kung wala itong Star Name.'
+            fullnameformat:
+                text: 'Ito ang buong pangalan ng iyong format, na maaari ring pagbatayan.'
+        choose:
+            title: 'Pumili ng <strong class="green-text">AeonShift star format</strong> sa ibaba'
+            text: 'Ikaw ay naglalaro ng <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
+            links:
+                choosecommander:
+                    text: 'Maghanap ng Commander'
+                    title: 'Tulungan akong maghanap ng Commander.'
+                    description: 'Ipinapakita ng seksyong ito ang mga posibleng Commander batay sa format selection mo sa itaas. I-update ang selection mo kung gusto mong maghanap ng Commander para sa ibang format.'
+                    description2: 'Note: ang mga value sa ibaba ay para sa single-Commanders lamang. Hindi kasama ang Partner abilities.'
+                    description3: 'Maaari kang mag-combine ng filters at mag-sort ng columns nang sunod-sunod para sa multiple sorting.'
+                    form:
+                        nameen:
+                            label: 'Pangalan'
+                        coloridentity:
+                            label: 'Color Identity'
+                        ranking:
+                            players:
+                                duel: 'Duel Commander Rank'
+                                cedh: 'cEDH Rank'
+                                ffa: 'Free-For-All Global Rank'
+                            label: 'Ranking'
+                            top: '★★★  Top Commanders Only'
+                            popular: '★ Top at Popular na Commanders'
+                            alltournamentranked: 'Lahat ng Tournament Ranked Commanders'
+                            all: 'Lahat ng Commanders'
+                    table:
+                        nameen:
+                            label: 'Pangalan'
+                            placeholder: 'Ruhan of the Fomori'
+                        budget:
+                            label: 'Budget 🧺'
+                            placeholder: 'Minimum na Budget'
+                        status:
+                            label: 'Release Status'
+                            unranked: '<span class="red-text">Unranked</span>'
+                            unknown: '<span class="red-text">Unknown</span>'
+                            released: '<span class="green-text">Released</span>'
+                        rankingindex:
+                            duel:
+                                label: 'Duel Commander Ranking (Mas mababa = mas maganda)'
+                            cedh:
+                                label: 'cEDH Ranking (Mas mababa = mas maganda)'
+                            ffa:
+                                label: 'FFA Ranking (Mas mababa = mas maganda)'
+                        coloridentity:
+                            label: 'Color Identity'
+                        firstprintedyear:
+                            label: 'Taon ng unang pag-print'
+                        mv:
+                            label: 'Mana Value'
+                        multicztype:
+                            label: 'Posibleng Multiple Command Zone Type'
+                        sort:
+                            label: 'I-sort ang table gamit ang column na ito (pataas o pababa)'
+                        minimumbudget:
+                            label: 'Minimum na Budget 🧺'
+                            placeholder: '80'
+                gotoform:
+                    text: 'Gamitin ang aming calculator'
+                    title: 'Pumunta lang sa <strong>calculator</strong> form, kasama ang lahat ng pagpipilian.'
+                freeform:
+                    text: 'Hindi ko kailangan ng format'
+                    title: 'Gusto ko lang maglaro <strong>kung ano ang meron ako</strong> at bilangin ang points (Freeform AeonShift).'
+                choose:
+                    text: 'Pumili ng star format'
+                    title: 'Gusto kong <strong>pumili ng partikular na format</strong> para maglaro ng AeonShift Magic The Gathering™.'
+                quiz:
+                    text: 'Tulungan akong pumili ng format'
+                    title: 'Tulungan akong pumili ng format para maglaro ng AeonShift Magic The Gathering™ sa pamamagitan ng <strong>quiz</strong>.'
+        form:
+            title: '🎛️ I-customize ang iyong format'
+            formtitle: 'Ikaw ay naglalaro:'
+            fixeddecklist: 'Inayos ang format ng iyong decklist para mas madaling basahin'
+            decklist1:
+                label: 'Decklist <span class="gray-text">(Decklist ng Player 1 kapag gumagamit ng teams)</span>'
+                incentive: '↓ 📋 I-paste ang iyong decklist dito ↓'
+                help: >
+                    I-paste ang iyong deck dito (decklist ng Player 1 kapag gumagamit ng teams). 
+                    Supported text list systems: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Ang iyong decklist ay DAPAT nasa English, at may EKSAKTONG pangalan ng card (suriin ang case at punctuation). Ang mga linya ay dapat ganito: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist2:
+                label: 'Decklist - Player 2'
+                incentive: '↓ 📋 I-paste ang iyong decklist dito ↓'
+                help: >
+                    I-paste dito ang decklist ng Player 2 kung gumagamit ng teams. 
+                    Supported text list systems: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Ang iyong decklist ay DAPAT nasa English, at may EKSAKTONG pangalan ng card (suriin ang case at punctuation). Ang mga linya ay dapat ganito: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist3:
+                label: 'Decklist - Player 3'
+                incentive: '↓ 📋 I-paste ang iyong decklist dito ↓'
+                help: >
+                    I-paste dito ang decklist ng Player 3 kung gumagamit ng teams. 
+                    Supported text list systems: Magic The Gathering™ Online Import format, Magic The Gathering™ Arena Import format, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Ang iyong decklist ay DAPAT nasa English, at may EKSAKTONG pangalan ng card (suriin ang case at punctuation). Ang mga linya ay dapat ganito: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            results:
+                breakdown:
+                    title: 'Pagkakahati ng iyong points:'
+                    basepoints:
+                        text: 'Base Points (P-Value):'
+                        help: 'Ito ang iyong P-Value, ang base points ayon sa mga pinili mong format sa form sa itaas.'
+                    cards:
+                        text: 'Mga card na nahanap sa iyong list:'
+                        help: 'Ito ang lahat ng card na na-identify namin sa iyong list; pakisuri muli ang listahang ito.'
+                        viewmore: 'Tingnan lahat ng nahanap na card'
+                    modulations:
+                        text: 'Modulations (advanced):'
+                        help: 'Ito ang mga posibleng modulation ng iyong P-Value, batay sa format at mga pinili mong card.'
+                        viewmore: 'Tingnan ang detalye ng iyong modulations'
+                    cardzones:
+                        text: 'Kabuuan ng Card Zone:'
+                        maindeck: 'Main Deck:'
+                        sideboard: 'Sideboard:'
+                        commandzone: 'Command Zone:'
+                        companion: 'Companions:'
+                        attractions: 'Attractions:'
+                        contraptions: 'Contraptions:'
+                        stickers: 'Stickers:'
+                        total: 'Kabuuang na-identify na cards (lahat ng zone):'
+                    mvalue:
+                        text: 'M-Value:'
+                        help: 'Ito ang iyong M-Value, ang money-value ng deck mo, ginagamit para sa financial constraints.'
+                        viewmore: 'Tingnan ang detalye ng iyong M-Value'
+                    usage:
+                        text: 'Points Usage:'
+                        help: 'Ito ang points na ginamit mo sa deck, nakaayos mula sa pinakamatakaw hanggang sa pinakamababa.'
+                        unranked: '(Unranked)'
+                        unknown: '(Unknown)'
+                    budget:
+                        text: 'Budget Points:'
+                        help: 'Ito ang points na maaari mong gastusin sa deck mo, batay sa format choices mo (at Commanders kung meron).'
+                    remaining:
+                        text: 'Natitira, hindi nagamit na points:'
+                        help: 'Ito ang natitirang points mo. Maaari mo pa ring gamitin kung makakatulong.'
+                        exceeding: 'lumalampas: '
+                decklist1:
+                    label: 'Mga resulta para sa iyong decklist #1:'
+                decklist2:
+                    label: 'Mga resulta para sa iyong decklist #2:'
+                decklist3:
+                    label: 'Mga resulta para sa iyong decklist #3:'
+                errors:
+                    containsinvalidtimelinecards:
+                        text: 'Ang decklist ay may mga card na hindi legal sa napiling timeline.'
+                    invalidcommandzone:
+                        text: 'Hindi valid ang iyong Command Zone (Commander(s)).'
+                    invalidnumberofcards:
+                        text: 'Hindi tama ang bilang ng cards sa decklist.'
+                    invalidsideboard:
+                        text: 'Hindi valid ang iyong sideboard.'
+                    copies:
+                        text: 'Ang decklist ay may ilegal na copies ng parehong card.'
+                    nocommander:
+                        text: 'Walang nahanap na Commander sa decklist mo, kahit sinubukan ang lahat ng posibleng source text formats.'
+                    impossibletofindacommander:
+                        text: 'Imposibleng matukoy ang Commander(s) sa decklist mo; magdagdag pa ng cards at suriin ang line breaks sa decklist.'
+                    toomanypoints:
+                        text: 'Masyadong maraming points ang nakonsumo ng decklist mo. Kailangan mong ayusin ang points mo para manatili sa Budget.'
+                    tooexpensive:
+                        text: 'Mas mataas ang M-Value ng decklist mo kaysa sa maximum na pinapayagan ng format mo.'
+                    failedparsing:
+                        text: 'Hindi ma-parse ang decklist; pakisuri kung valid ang iyong na-paste.'
+                    internalerror:
+                        text: 'May naganap na internal error habang pinoproseso ang decklist mo. Pakikontak ang aming team.'
+                    singlecopiescardnotunique:
+                        text: 'Dapat unique ang Attractions, Contraptions at Stickers (isang kopya lang bawat isa).'
+                    singletoncardnotunique:
+                        text: 'Hindi singleton ang decklist mo (isang kopya lang ng bawat card ang pinapayagan). Pakisuri ang dami para sa: '
+                    numberofcardnotcorrectforquadruples:
+                        text: 'Hindi tama ang bilang ng copies ng decklist mo para sa bawat card (maximum 4 copies o mas mababa ayon sa max copies na pinapayagan ng card). Para sa mga card na ito: '
+                    wrongtimelineforcards:
+                        text: 'May mga card ang decklist mo na hindi legal sa kasalukuyan mong legality timeline para sa mga card na ito: '
+                    cznoteligibleonecommander:
+                        text: 'Hindi valid ang iyong Command Zone; dapat eligible ang commander mo na maging commander.'
+                    cznoteligiblemulticommander:
+                        text: 'Isa sa mga card sa Command Zone mo ay hindi eligible na maging commander (multiple commanders) para sa mga card na ito: '
+                    cznotvalidmulticztypenotthesame:
+                        text: 'Dapat pare-pareho ang Partner Ability type ng lahat ng commander mo (tulad ng Partner, Friends forever, atbp.).'
+                    coloridentitymissmatch:
+                        text: 'Isa o higit pang card sa deck mo ay hindi tugma sa color identity ng Command Zone mo: '
+                    unknown:
+                        text: 'May unknown cards ang deck mo; pakisuri ang mga pangalang ito: '
+                legal:
+                    no:
+                        label: 'Ang deck mo ay <strong>HINDI LEGAL</strong> ayon sa format choices mo.'
+                    yes:
+                        label: 'Ang deck mo ay <strong>LEGAL</strong> ayon sa format choices mo.'
+                    download:
+                        title: 'I-download o i-print ang iyong decklist'
+                        help: 'Ilagay ang pangalan ng player, pagkatapos ay pumili ng opsyon sa ibaba para mag-print o mag-download.'
+                        playername: 'Pangalan ng player:'
+                        generatedat: 'Dokumentong ginawa noong: '
+                        label:
+                            link:
+                                label: 'I-download o i-print ang iyong Deck Registration Sheet'
+                            csv:
+                                label: 'Deck Registration Sheet (CSV)'
+                                title: 'I-download ang iyong Deck Registration Sheet (CSV)'
+                            pdf:
+                                label: 'Deck Registration Sheet (PDF)'
+                                title: 'I-download ang iyong Deck Registration Sheet (PDF)'
+                            text:
+                                label: 'Deck Registration Sheet (Text)'
+                                title: 'I-download ang iyong Deck Registration Sheet (Text)'
+                            print:
+                                label: 'I-print ngayon'
+                                title: 'I-print ang iyong Deck Registration Sheet'
+                        comment:
+                            label: 'Komento (opsyonal)'
+                            help: 'Magdagdag ng komento sa decklist mo kung kinakailangan.'
+                modulations:
+                    firstprint:
+                        text: 'Ang pinakakamakailan mong na-edit na Commander ay unang na-edit bago ang kasalukuyang taon.'
+                        help: '+2% ng P-Value ng format kada taon na mas mababa kaysa sa kasalukuyang taon para sa pinakabagong commander mo.'
+                    multiplecommanders:
+                        types:
+                            chooseabackground: '-20% budget kung ginamit ang Partner Ability'
+                            other: '-40% budget kung ginamit ang Partner Ability'
+                        text: 'Gumagamit ka ng higit sa isang Commander.'
+                        help: '-20% ng P-Value ng format kung gumagamit ng Background-typed card, -40% ng format points kung hindi.'
+                    manavalue:
+                        text: 'Para sa bawat Commander mo, mas mababa sa 4 ang mana value nito.'
+                        help: '"-10% ng P-Value ng format kung mana value 3, -20% kung mana value 2, -30% kung mana value 1 o 0. Kalahati niyan kung gumagamit ng non-Background Partner Ability.'
+                    rankedcommander:
+                        text: 'Ranked ang iyong Commander.'
+                        help: 'Ranked ang commander mo sa kasalukuyang Point List.'
+                start:
+                    label: 'Simulan ang pagdagdag ng cards sa decklist mo sa kaliwa gamit ang aming "Add a Card" form, o sa pamamagitan ng pag-paste ng decklist mula sa ibang site sa text zone sa kaliwa habang sinusunod ang mga tagubilin sa ibaba.'
+            decklist:
+                addcard:
+                    label: 'Magdagdag ng card'
+        pointslist:
+            choice:
+                label: '{name} ({datestart} → {dateend})'
+            latest:
+                label: '{name} (Kasalukuyang List)'
+        quiz:
+            back:
+                label: '← Nakaraang tanong'
+                title: 'Bumalik sa nakaraang tanong'
+            help:
+                text1: 'Tutulungan ka naming hanapin ang format mo.'
+                text2: 'Sagutin lang ang 5 mabilis na tanong na ito. ↓'
+            question1:
+                label: 'Players/teams/life:'
+                text: 'Ilang players (teams) at life points ang gusto mo?'
+                answer1:
+                    label: '2 Players (Duel)'
+                    help: 'Duel games: dalawang players, dalawang teams. <br><strong>20 life totals sa simula.</strong>'
+                answer2:
+                    label: '4 Players (2 Teams)'
+                    help: 'Two-Headed Giant: apat na players, dalawang team na tig-dalawa. <br><strong>30 shared life totals sa simula.</strong> <em class="comingsoon">Parating na!</em>'
+                answer3:
+                    label: '4+ Players (Free-For-All)'
+                    help: 'cEDH/Commander: apat o higit pang players, free-for-all. <br><strong>40 life totals sa simula.</strong> <em class="comingsoon">Parating na!</em>'
+                answer4:
+                    label: '6 Players (2 Teams)'
+                    help: 'Team Trio: dalawang team na tig-tatlo, na may special rules para sa matching. <br><strong>20 life totals sa simula.</strong> <em class="comingsoon">Parating na!</em>'
+            question2:
+                label: 'Maximum copies ng card sa isang deck:'
+                text: 'Ano ang maximum na bilang ng copies ng card sa isang deck, kasama ang Command Zones at Sideboards?'
+                answer1:
+                    label: 'max. 1 copy'
+                    help: 'Singleton - maximum isang kopya ng bawat card sa buong decklist.'
+                answer2:
+                    label: 'max. 4 copies'
+                    help: 'Quadruples - maximum apat na kopya ng bawat card sa buong decklist. <em class="comingsoon">Parating na!</em>'
+            question3:
+                label: 'Cards sa main deck/sideboard:'
+                text: 'Ilang cards ang dapat nasa deck (main deck/sideboard)?'
+                answer1:
+                    label: '100/0'
+                    help: '100 cards main deck, walang sideboard.'
+                answer2:
+                    label: '60+/0-15'
+                    help: '60 cards o higit pa sa main deck, 0 hanggang 15 sa sideboard. <em class="comingsoon">Parating na!</em>'
+            question4:
+                label: 'Commanders/Command Zones:'
+                text: 'Gusto mo bang gumamit ng Commanders/Command Zones?'
+                answer1:
+                    label: 'Hindi'
+                    help: 'Walang karagdagang rules ang iche-check. <em class="comingsoon">Parating na!</em>'
+                answer2:
+                    label: 'Oo'
+                    help: 'Magdadagdag ito ng special construction at gameplay rules at restrictions.'
+            question5:
+                label: 'Maximum legality timeline:'
+                text: 'Ano ang maximum legality timeline na gusto mong laruin?'
+                answer1:
+                    label: 'Printed'
+                    help: 'Kung ano man ang meron ka, basta authentic Magic The Gathering™ card. Kasama dito ang lahat ng cards na na-print na.'
+                answer2:
+                    label: 'Funny'
+                    help: 'Kasama dito ang lahat ng Eternal cards, plus ang fun sets.'
+                answer3:
+                    label: 'Eternal'
+                    help: 'Kasama ang lahat ng cards mula Eternal, karamihan ay Vintage-printed, sanctioned-tournament-legal cards.'
+                answer4:
+                    label: 'Modern'
+                    help: 'Kasama ang lahat ng cards na legal o banned sa Modern. <em class="comingsoon">Parating na!</em>'
+                answer5:
+                    label: 'Pioneer'
+                    help: 'Kasama ang lahat ng cards na legal o banned sa Pioneer. <em class="comingsoon">Parating na!</em>'
+                answer6:
+                    label: 'Standard'
+                    help: 'Kasama ang lahat ng cards na legal o banned sa Standard. <em class="comingsoon">Parating na!</em>'
+            question6:
+                label: 'P-value:'
+                text: 'Ano ang reference P-value mo? Ang P-value ang nagtatakda ng base points para sa pagbuo, bago ang anumang modulations.'
+                answer1:
+                    label: 'Standard Play'
+                    help: 'Ito ang default na P-value at rekomendadong value para sa karamihan. Gamitin ito kung hindi mo alam ang pipiliin.'
+                answer2:
+                    label: 'Lite Play'
+                    help: 'Mas conservative na P-value ito, at inirerekomenda sa gustong maglaro gamit ang mas mababang P-value—ibig sabihin mas kaunting pera ang invested at mas kaunting explosiveness. <em class="comingsoon">Parating na!</em>'
+                answer3:
+                    label: 'Power Play'
+                    help: 'Mas aggressive na P-value ito, at inirerekomenda sa gustong maglaro gamit ang mas mataas na P-value—ibig sabihin mas kaunting limit sa cards at mas maraming explosiveness. <em class="comingsoon">Parating na!</em>'
+            question7:
+                label: 'I-apply ang financial constraints'
+                text: 'Gumagamit ka ba ng financial constraints?'
+                answer1:
+                    label: 'Hindi'
+                    help: 'Naglalaro ka gamit ang original cards lang (o pinapayagan ang proxies).'
+                answer2:
+                    label: 'Oo'
+                    help: 'Naglalaro ka gamit ang original cards lang, pero may money constraint ka sa decks at gusto mong gamitin ang aming M-Value para dito. <em class="comingsoon">Parating na!</em>'
+            question8:
+                label: 'Point List Update na gagamitin:'
+                text: 'Aling Point List update ang dapat gamitin? Laging gamitin ang pinakabago maliban kung sinusuri ang lumang decklists.'
+            previous:
+                text: '⬅️ Nakaraang tanong'
+global:
+    actions:
+        label: Mga aksyon
+        title: Mga aksyon
+    back: ⬅️ Bumalik
+    createbutton:
+        label: ➕ Magdagdag
+        title: Magdagdag ng item
+    createdat:
+        label: Ginawa noong
+    dates:
+        label: Ginawa / Huling na-update
+    delete:
+        confirmprompt: Sigurado ka bang gusto mong burahin ang item na ito? Hindi na mababawi ang aksyong ito.
+    deletesuccess:
+        text: 'Matagumpay na nabura ang item'
+    deletebutton:
+        label: ❌ Burahin
+        title: Burahin ang item na ito
+    editbutton:
+        label: ✏️ I-edit
+        title: I-edit
+    email:
+        responsibility: AeonShift only sends emails for its essential features and will never contact you for any other reason. If you receive a suspicious email, do not click on any links and contact our team.
+    error:
+        404:
+            text: Naku! Hindi mahanap ang pahinang hiniling mo. Maaari mong gamitin ang menu sa itaas para hanapin ang kailangan mo, o bumalik sa history...
+            title: 404 - Hindi Natagpuan 😔
+        500:
+            text: Naku! Ang server, gaya ng Point List, ay umabot sa limit nito. Kung nagpapatuloy ang error na ito, pakikontak ang aming team.
+            title: 500 - Error sa Server 😔
+    id:
+        label: ID
+    indexbutton:
+        label: 🔙 Bumalik sa listahan
+        title: Bumalik sa listahan
+    mandatoryfields:
+        text: '* = Ang mga field na ito ay required.'
+    noelements:
+        label: Walang items na ipapakita.
+    none:
+        label: N/A
+    pagenumber: Pahina <strong>{current}/{total}</strong>
+    passwordbutton:
+        label: Palitan ang password
+        title: Palitan ang password ng user
+    roles:
+        ROLE_ADMIN: Administrator
+        ROLE_USER: Regular user
+    savebutton:
+        label: 💾 I-save
+        title: I-save ang mga pagbabago
+    savesuccess:
+        text: Matagumpay na na-save.
+    selectnone: --
+    skipcontent:
+        label: Laktawan papunta sa main content
+    showbutton:
+        label: 👁️ Tingnan
+        title: Tingnan ang detalye
+    showbuttonfront:
+        label: 👁️ Tingnan (front)
+        title: 'Tingnan sa public side'
+    total:
+        label: <strong>{elements}</strong> item(s) kabuuan
+    updatedat:
+        label: Na-update noong
+    1:
+        label: 'Oo'
+    0:
+        label: 'Hindi'
+    table:
+        summary: 'Entries _START_ hanggang _END_ ng _TOTAL_'
+        empty: '0 entries sa kabuuan'
+        filtered: '(na-filter mula _MAX_ kabuuan)'
+        thousands: ''
+        menu: 'Ipakita ang _MENU_ entries'
+        search: 'Maghanap (gamitin ang "xx yy" para sa tuloy-tuloy na string):'
+        none: 'Walang nahanap na tumutugmang entries'
+        first: 'Una'
+        last: 'Huli'
+        next: 'Susunod'
+        previous: 'Nakaraan'
+        ariasort: 'I-sort ang column na ito'
+        ariasortreverse: 'I-sort ang column na ito pabaligtad'
+    legal:
+        title: 'Legal'
+        label: 'Legal'
+    rules:
+        label: 'Rules'
+        title: 'Game Rules'
+    start:
+        label: 'Simulan ang command'
+        title: 'Simulan ang command'
+    users:
+        label: 'Ginawa ng / Huling na-update ng'
+    import:
+        label: '📥 I-import/i-update'
+        title: '📥 I-import/i-update ang cards/points (CSV file)'
+    export:
+        label: '📤 I-export ang Point List CSV file'
+        title: 'I-export ang Point List na ito na may kasalukuyang values sa CSV format para magamit sa spreadsheet o saanman at i-reimport sa susunod.'
+    filter:
+        label: I-filter ang results
+        title: 'I-click dito para i-filter ang results batay sa selection mo'
+    reset:
+        title: 'I-reset ang form'
+        label: 'I-reset'
+    max:
+        label: 'Ang unang 100 lang ang ipinapakita.'
+    choose:
+        label: '↓ Pakipili'
+mtg:
+    addform:
+        title: 'Magdagdag ng card'
+    add:
+        label: 'Magdagdag'
+    copies:
+        text: 'X'
+    cardzones:
+        choose: 'Zone'
+        maindeck: 'Main Deck'
+        sideboard: 'Sideboard'
+        commandzone: 'Command Zone'
+        companion: 'Companion'
+        attractions: 'Attraction'
+        contraptions: 'Contraption'
+        stickers: 'Sticker'
+    name:
+        label: 'Pangalan'
+        placeholder: 'Ruhan of the Fomori'
+    popular:
+        comingsoon:
+            text: '<em class="blue-text">Parating na!</em> Abangan.'
+        eternal:
+            title: 'Timeline: <strong class="blue-text">Eternal</strong>'
+        modern:
+            title: 'Timeline: <strong class="blue-text">Modern</strong>'
+        pioneer:
+            title: 'Timeline: <strong class="blue-text">Pioneer</strong>'
+        standard:
+            title: 'Timeline: <strong class="blue-text">Standard</strong>'
+        quadruples:
+            eternal:
+                eternal:
+                    label: Eternal
+                    title: Maglaro ng AeonShift Eternal
+                    subtitle: <strong>2 players</strong>, <strong>20</strong> life, minimum <strong>60</strong> maindeck cards + <strong>0-15</strong> sideboard cards, <strong>dalawang</strong> panalong games, <strong>Eternal</strong> timeline
+            modern:
+                modern:
+                    label: Modern
+                    title: Maglaro ng AeonShift Modern
+                    subtitle: <strong>2 players</strong>, <strong>20</strong> life, minimum <strong>60</strong> maindeck cards + <strong>0-15</strong> sideboard cards, <strong>dalawang</strong> panalong games, <strong>Modern</strong> timeline
+        singleton:
+            eternal:
+                2hg:
+                    label: Two-Headed Giant Duel Commander
+                    title: Maglaro ng AeonShift 2HG Duel Commander
+                    subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>isang</strong> panalong game, <strong>Eternal</strong> timeline <em class="blue-text">Parating na!</em>
+                commander:
+                    label: Commander/cEDH
+                    title: Maglaro ng AeonShift Commander/cEDH
+                    subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>isang</strong> panalong game, <strong>Eternal</strong> timeline <em class="blue-text">Parating na!</em>
+                duelcommander:
+                    label: Duel Commander
+                    title: Maglaro ng AeonShift Duel Commander
+                    subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>dalawang</strong> panalong games, <strong>Eternal</strong> timeline
+                freeform:
+                    label: Freeform
+                    title: Maglaro ng AeonShift Freeform
+                    subtitle: Maglaro gamit <strong>ang kahit anong cards</strong> na meron ka, <strong>20</strong> life, minimum <strong>60</strong> cards, <strong>unlimited</strong> games, <strong>Eternal</strong> timeline!
+                highlander:
+                    label: Highlander
+                    title: Maglaro ng AeonShift Highlander
+                    subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>dalawang</strong> panalong games, <strong>Eternal</strong> timeline
+            modern:
+                2hg:
+                    label: Two-Headed Giant Modern Duel Commander
+                    title: Maglaro ng AeonShift 2HG Modern Duel Commander
+                    subtitle: <strong>4</strong> players, <strong>2</strong> teams, <strong>30</strong> shared life, <strong>100-card</strong> Singleton, <strong>isang</strong> panalong game, <strong>Modern</strong> timeline <em class="blue-text">Parating na!</em>
+                commander:
+                    label: Modern Commander/cEDH
+                    title: Maglaro ng AeonShift Modern Commander/cEDH
+                    subtitle: <strong>4+</strong> players – free-for-all, <strong>40</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>isang</strong> panalong game, <strong>Modern</strong> timeline <em class="blue-text">Parating na!</em>
+                duelcommander:
+                    label: Modern Duel Commander
+                    title: Maglaro ng AeonShift Modern Duel Commander
+                    subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>Command</strong> Zones, <strong>100-card</strong> Singleton, <strong>dalawang</strong> panalong games, <strong>Modern</strong> timeline
+                freeform:
+                    label: Modern Freeform
+                    title: Maglaro ng AeonShift Modern Freeform
+                    subtitle: Maglaro gamit <strong>ang kahit anong cards</strong> na meron ka, <strong>20</strong> life, minimum <strong>60</strong> cards, <strong>unlimited</strong> games, <strong>Modern</strong> timeline!
+                highlander:
+                    label: Modern Highlander
+                    title: Maglaro ng AeonShift Modern Highlander
+                    subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>dalawang</strong> panalong games, <strong>Modern</strong> timeline
+page:
+    position:
+        footer:
+            label: Footer
+        header:
+            label: Header
+user:
+    login:
+        alreadylogged: Naka-log in ka na bilang {user}, <a data-turbo="false" href="{url}" title="Mag-log out">Mag-log out</a>
+        helptext1: ℹ️ Wala ka pang account? <a href="{link}" title="I-click dito para gumawa ng account">Gumawa muna ng isa!</a>
+        helptext2: 😣 Nakalimutan ang password? <a href="{link}" title="I-reset ang password">I-click dito</a> para magtakda ng bago.
+        password:
+            help: Ilagay ang password mo kung may na-set ka na.
+            label: Password
+            placeholder: iyong password
+        submit:
+            label: 🔑 Mag-log in
+        success: Matagumpay ka nang na-authenticate bilang {username}
+        title: Mag-sign in
+        username:
+            help: Ilagay dito ang username mo, kadalasan ang palayaw na ginamit mo sa pag-register.
+            label: Username
+            placeholder: iyong username
+    logout:
+        success: Naka-log out ka na.
+    roles:
+        admin:
+            label: Administrator
+        user:
+            label: Regular User

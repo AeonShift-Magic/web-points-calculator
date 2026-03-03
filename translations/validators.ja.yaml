@@ -1,0 +1,73 @@
+admin:
+    form:
+        mtg:
+            points_list:
+                create:
+                    validitystartingat:
+                        empty: 有効な日付を入力してください
+                import:
+                    file:
+                        error: 有効なCSVファイルを選択してください。
+            update:
+                create:
+                    pointslist:
+                        empty: ポイントリストを指定してください
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: 有効な日付を入力してください
+                    title:
+                        too_long: 'より短いタイトルを入力してください。'
+                import:
+                    file:
+                        error: 有効なCSVファイルを選択してください。
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': 'タイトルを入力してください。'
+                        too_long: 'より短いタイトルを入力してください。'
+                    descriptionen:
+                        'null': '説明を入力してください。'
+                    startingat:
+                        'null': '有効な開始日を入力してください。'
+                    endingat:
+                        'null': '有効な終了日を入力してください。'
+        user:
+            create:
+                roles:
+                    invalid: ユーザーに対して有効なロールを選択してください。
+                    multipleinvalid: ユーザーに対して有効なロールを選択してください。
+user:
+    create:
+        roles:
+            invalid: ユーザーに対して有効なロールを選択してください。
+            multipleinvalid: ユーザーに対して有効なロールを選択してください。
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': 'タイトルを入力してください。'
+                    too_long: 'より短いタイトルを入力してください。'
+                descriptionen:
+                    'null': '説明を入力してください。'
+                startingat:
+                    'null': '有効な開始日を入力してください。'
+                endingat:
+                    'null': '有効な終了日を入力してください。'
+daterange:
+    invalid: 開始日より後の日付になる終了日を選択するよう注意してください。
+front:
+    users:
+        forms:
+            username:
+                exists: このユーザー名は既に使用されています。
+            email:
+                exists: このメールアドレスは既に使用されています。
+            password:
+                help: 'パスワードは8文字以上である必要があります。'
+    user:
+        forms:
+            password:
+                blank: 'パスワードを入力してください。'

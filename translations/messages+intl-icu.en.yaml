@@ -828,7 +828,20 @@ front:
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
-                    1 Argothian Enchantress
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
                     ...
             decklist3:
                 label: 'Decklist - Player 3'
@@ -840,7 +853,20 @@ front:
                 placeholder: |
                     1 Black Lotus                        
                     1 Library of Alexandria                        
-                    1 Argothian Enchantress
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
                     ...
             results:
                 breakdown:
@@ -853,7 +879,7 @@ front:
                         help: 'These are all the cards we identified in your list, please double-check this list.'
                         viewmore: 'View all the cards found'
                     modulations:
-                        text: 'Modulations:'
+                        text: 'Modulations (advanced):'
                         help: 'These are possible modulations of your P-Value, based on the format and card choices you made.'
                         viewmore: 'View your modulation details'
                     cardzones:

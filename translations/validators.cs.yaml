@@ -1,0 +1,73 @@
+admin:
+    form:
+        mtg:
+            points_list:
+                create:
+                    validitystartingat:
+                        empty: Zadejte prosím platné datum
+                import:
+                    file:
+                        error: Vyberte prosím platný CSV soubor.
+            update:
+                create:
+                    pointslist:
+                        empty: Poskytněte prosím seznam bodů
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: Zadejte prosím platné datum
+                    title:
+                        too_long: 'Zadejte prosím kratší název.'
+                import:
+                    file:
+                        error: Vyberte prosím platný CSV soubor.
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': 'Zadejte prosím název.'
+                        too_long: 'Zadejte prosím kratší název.'
+                    descriptionen:
+                        'null': 'Zadejte prosím popis.'
+                    startingat:
+                        'null': 'Zadejte prosím platné datum začátku.'
+                    endingat:
+                        'null': 'Zadejte prosím platné datum konce.'
+        user:
+            create:
+                roles:
+                    invalid: Vyberte prosím pro uživatele platné role.
+                    multipleinvalid: Vyberte prosím pro uživatele platné role.
+user:
+    create:
+        roles:
+            invalid: Vyberte prosím pro uživatele platné role.
+            multipleinvalid: Vyberte prosím pro uživatele platné role.
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': 'Zadejte prosím název.'
+                    too_long: 'Zadejte prosím kratší název.'
+                descriptionen:
+                    'null': 'Zadejte prosím popis.'
+                startingat:
+                    'null': 'Zadejte prosím platné datum začátku.'
+                endingat:
+                    'null': 'Zadejte prosím platné datum konce.'
+daterange:
+    invalid: Dbejte na to, aby datum konce bylo později než datum začátku.
+front:
+    users:
+        forms:
+            username:
+                exists: Toto uživatelské jméno je již obsazeno.
+            email:
+                exists: Tento e-mail je již obsazen.
+            password:
+                help: 'Heslo musí mít alespoň 8 znaků.'
+    user:
+        forms:
+            password:
+                blank: 'Zadejte prosím heslo.'

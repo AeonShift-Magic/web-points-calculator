@@ -34,7 +34,7 @@ final class AdminChangePasswordType extends AbstractType
                     ],
                     'constraints' => [
                         new NotBlank(
-                            message: 'Please enter a password',
+                            message: 'front.user.forms.password.blank',
                         ),
                         new Regex(
                             pattern: '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/',

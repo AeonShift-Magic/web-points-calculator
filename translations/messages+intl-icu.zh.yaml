@@ -1,0 +1,1333 @@
+admin:
+    account:
+        email:
+            help: >
+                你的电子邮箱。必须唯一。将用于恢复访问、沟通，并且对你创建的活动的报名者可见；每次你更改该地址时都需要验证。 
+                <strong>警告：所有邮件都会发送到此地址。填写/更改前请务必三次核对。</strong>
+            label: '邮箱：'
+            placeholder: johnorjane.doe@provider.domain
+        roles:
+            label: '本网站的角色/权限：'
+        username:
+            help: 你在本网站的用户名。必须唯一，且不能被其他人正在使用。
+            label: '用户名：'
+            placeholder: JohnDoe84
+    customblock:
+        editlink:
+            label: ✏️ 编辑此区块（{blockkey}）
+    form:
+        customblock:
+            create:
+                blockkey:
+                    help: 若已被使用，所有符合语言与位置的区块将按权重升序显示。
+                    label: 区块位置
+                    placeholder: 选择一个位置
+                contents:
+                    help: |
+                        <strong>请谨慎使用 HTML 并确保其有效性</strong>：否则可能破坏网站外观或无法正确显示。</strong> <br> <strong>提示：请记住所有网站区块（每种语言与位置）大约有 10 分钟缓存。</strong>
+                    label: 内容
+                weight:
+                    help: 介于 -100 与 100。若已被使用，所有符合语言与位置的区块将按权重升序显示。
+                    label: 权重
+                    placeholder: 区块权重
+            legends:
+                info: '区块参数'
+        page:
+            create:
+                contents:
+                    help: >
+                        <strong>请谨慎使用 HTML 并确保其有效性</strong>：否则可能破坏网站外观或无法正确显示。</strong>
+                    label: 内容
+                language:
+                    help: 此页面将显示的语言。
+                    label: 语言
+                slug:
+                    help: 留空以根据标题自动生成 slug。
+                    label: Slug
+                title:
+                    help: 页面标题，将显示在页眉与搜索结果中。
+                    label: 标题
+                weight:
+                    help: 介于 -100 与 100。若已被使用，所有符合语言与位置的页面将按权重升序显示。
+                    label: 权重
+                zone:
+                    help: 此页面显示的区域。例如，“header” 表示页眉，“footer” 表示页脚等。
+                    label: 区域
+            legends:
+                info: '页面详情'
+        abstract:
+            update:
+                create:
+                    titleen:
+                        help: '你的更新/公告的公开标题（英文）'
+                        label: '标题（EN）'
+                        placeholder: '我的新公告'
+                    pointslist:
+                        help: '选择使用哪一份积分表'
+                        label: '使用的积分表'
+                        placeholder: '请选择一份积分表'
+                    startingat:
+                        help: '此更新从何时开始生效？'
+                        label: '开始日期'
+                    endingat:
+                        help: '此更新从何时停止生效？'
+                        label: '结束日期'
+                    descriptionen:
+                        label: '描述（EN）'
+                        help: '可选的补充说明'
+                    public:
+                        label: '公开'
+                        help: '将此更新标记为公开'
+                    rulesmodel:
+                        label: '规则模型'
+                        help: '使用此列表时要应用的规则模型'
+                legends:
+                    info: '更新详情'
+        mtg:
+            cardsourceactivityhistory:
+                create:
+                    channel:
+                        label: '渠道'
+                    startedat:
+                        label: '开始时间'
+                    endedat:
+                        label: '结束时间'
+                    successsummary:
+                        label: '成功摘要'
+                    errorsummary:
+                        label: '错误摘要'
+                    startedfrom:
+                        label: '启动来源'
+                    logfilepath:
+                        label: '日志文件'
+                    uniqueid:
+                        label: '唯一任务 ID'
+            pointslist:
+                create:
+                    filename:
+                        label: '文件名'
+                    uploadnbcards:
+                        label: '初始文件中的卡牌数量'
+                    title:
+                        help: '你的积分表标题'
+                        label: '标题'
+                        placeholder: '我的 XX/XX/XXXX 积分表'
+                    lastuploadedat:
+                        label: '最后上传时间'
+                    currentnbcards:
+                        label: '数据库中的当前卡牌数量'
+                    relatedupdates:
+                        label: '关联的公告/更新'
+                    validitystartingat:
+                        help: '此列表开始适用的日期，用于确定顺序与最新列表'
+                        label: '生效起始日期'
+                    rulesmodel:
+                        label: '规则模型'
+                        help: '要应用的规则模型'
+                import:
+                    firstline:
+                        text: '⚠️ 导入时将忽略该文档的前 5 行，可用于填写元数据'
+                    columnsright:
+                        text: '（这些列以及其右侧所有列在导入时都会被忽略）'
+                    pvalues:
+                        text: 'P-Values，顺序为：Standard Play（第 6 行）、Lite Play（第 7 行）、Power Play（第 8 行）'
+                        header:
+                            liteplay:
+                                text: 'Lite Play P-Values'
+                            standardplay:
+                                text: 'Standard Play P-Values'
+                            powerplay:
+                                text: 'Power Play P-Values'
+                        liteplay:
+                            basesingleton:
+                                text: '基础 Singleton P-Value（Lite Play）'
+                            basequadruples:
+                                text: '基础 Quadruples P-Value（Lite Play）'
+                            duelcommander:
+                                text: 'Duel Commander P-Value（Lite Play）'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value（Lite Play）'
+                            highlander:
+                                text: 'Highlander P-Value（Lite Play）'
+                            modern:
+                                text: 'Modern P-Value（Lite Play）'
+                            pioneer:
+                                text: 'Pioneer P-Value（Lite Play）'
+                            standard:
+                                text: 'Standard P-Value（Lite Play）'
+                        standardplay:
+                            basesingleton:
+                                text: '基础 Singleton P-Value（Standard Play）'
+                            basequadruples:
+                                text: '基础 Quadruples P-Value（Standard Play）'
+                            duelcommander:
+                                text: 'Duel Commander P-Value（Standard Play）'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value（Standard Play）'
+                            highlander:
+                                text: 'Highlander P-Value（Standard Play）'
+                            modern:
+                                text: 'Modern P-Value（Standard Play）'
+                            pioneer:
+                                text: 'Pioneer P-Value（Standard Play）'
+                            standard:
+                                text: 'Standard P-Value（Standard Play）'
+                        powerplay:
+                            basesingleton:
+                                text: '基础 Singleton P-Value（Power Play）'
+                            basequadruples:
+                                text: '基础 Quadruples P-Value（Power Play）'
+                            duelcommander:
+                                text: 'Duel Commander P-Value（Power Play）'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value（Power Play）'
+                            highlander:
+                                text: 'Highlander P-Value（Power Play）'
+                            modern:
+                                text: 'Modern P-Value（Power Play）'
+                            pioneer:
+                                text: 'Pioneer P-Value（Power Play）'
+                            standard:
+                                text: 'Standard P-Value（Power Play）'
+                    label: >
+                        📥 导入/更新积分表（CSV 文件）
+                    help: >
+                        使用此表单从提供的 CSV 模板更新积分表，每行一张牌。 
+                        <br>
+                        <strong>警告：这将覆盖当前全部积分表内容且不可逆。</strong>
+                    help2: >
+                        注：我们的工具在覆盖前会进行最低限度的文件完整性检查，并规范化单元格内容（大小写、长度、数字数据等），但内容正确性与任何数据丢失<strong>由你负责</strong>。
+                    help3: >
+                        CSV 文件必须为 <strong>UTF-8（Unicode）</strong> 格式，列以 <strong>逗号</strong> 分隔，换行为 <strong>Unix（New Line）</strong> 格式。 
+                        <br>
+                        值可以用双引号（"）包裹。 
+                        <br>
+                        每行一个结果；每个位置（“Name (EN)” 列）必须唯一，并代表<strong>源卡牌数据库中存在的“精确”卡名（逐字符校验，包括：空格、标点、双面卡名与大小写）</strong>（行顺序不重要）。 
+                        <br>
+                        Points（6 列）为整数或小数（可接受 “10” 或 “10.5” 等）。
+                    help4: >
+                        文件顶部必须正好有 5 行（会被丢弃），随后按顺序提供 3 行 P-Values（Standard Play、Lite Play、Power Play），第 9 行必须包含名为 “((unranked))” 的卡牌，用于设置 unranked 卡的点数。
+                    help5: >
+                        <strong>不要修改列、列顺序，也不要在左侧添加额外列。</strong>
+                    help6: >
+                        你也可以在列表页点击每行右侧按钮，逐张修改卡牌，而无需重新上传整个文件。
+                    help7: >
+                        注：更改在后台管理区实时可见，但公开显示与计算可能最多需要 10 分钟。
+                    help8: >
+                        下表展示了 CSV 文件期望内容的示例：
+                    confirm:
+                        label: '我确认已阅读并理解以上说明，并希望导入/更新积分表。'
+                    file:
+                        button:
+                            label: '📥 导入/更新积分表（CSV 文件）'
+                            title: '导入/更新积分表（CSV 文件）'
+                        error: '请选择一个有效的 CSV 文件。'
+                        label: '📥 导入/更新积分表（CSV 文件）'
+                        help: >
+                            从提供的 CSV 模板导入积分表，每行一个结果。最大大小：4 MB。 <br><strong>警告：这将覆盖所有积分表卡牌且不可逆。</strong>
+                        unreadable: '文件不可读取或为空。请检查文件可打开、为 CSV UTF-8 格式、以逗号分隔、并使用 Unix 行尾。'
+                    updated:
+                        success: '点数更新成功：已处理 {number} 行。'
+                    error:
+                        filecontents: '文件内容无效；请遵循下方说明。'
+                        processing_line: '处理第 {line_number} 行时出错：{error}。请遵循下方说明。'
+                        column_count: '该行列数不正确，至少应为 7 列'
+                        invalid_value: '无效值'
+                        invalid_name: '卡牌名称必须与源卡牌列表中的卡牌名称一致'
+                        invalid_game_points: '无效点数（必须为 -1000 到 1000 之间的整数）'
+                        invalid_first_line: '第一行的英文卡牌名称必须是 "((unranked))"'
+                        incorrectname: '卡牌名称不正确："{name}"'
+                        notfoundinsources: '源卡牌中未知的卡牌："{name}"'
+                    info: '点数导入'
+                legends:
+                    info: '积分表详情'
+            pointslistcard:
+                create:
+                    pointslist:
+                        label: '积分表'
+                        help: '将此卡关联到哪一份积分表'
+                        placeholder: '请选择一份积分表'
+                    nameen:
+                        label: '名称（EN）'
+                        help: '卡牌英文名称。必须与数据库中的卡名逐字符精确匹配。'
+                    imageurl:
+                        label: '卡牌图片 URL'
+                        help: '网站使用该卡牌时用于获取图片的 URL。'
+                    scryfallid:
+                        label: 'Scryfall ID'
+                        help: '如需使用，填写卡牌的 Scryfall ID'
+                    scryfalluri:
+                        label: 'Scryfall URI'
+                        help: '如需使用，填写卡牌的 Scryfall URI'
+                    manavalue:
+                        label: 'Mana Value'
+                        help: '卡牌的 Mana Value'
+                    oracleid:
+                        label: 'Oracle ID'
+                        help: '卡牌的 Oracle ID'
+                    multicztype:
+                        label: 'Command Zone 多个对象类型'
+                        help: 'Command Zones 中多个对象的类型，例如 "doctors_companion"、"choose_a_background"、"friends_forever"、"partner" 等。'
+                    points2hg:
+                        label: 'Two-Headed Giant 点数'
+                        help: '该卡在 2HG 变体中的点数。'
+                    points2hgspecial:
+                        label: 'Two-Headed Giant 点数（特殊）'
+                        help: '该卡在 2HG 变体中的点数（特殊，例如 "As a Commander"）。'
+                    pointsduelcommander:
+                        label: 'Duel Commander 点数'
+                        help: '该卡在 Duel Commander 中的点数。'
+                    pointsduelcommanderspecial:
+                        label: 'Duel Commander 点数（特殊）'
+                        help: '该卡在 Duel Commander 中的点数（特殊，例如 "As a Commander"）。'
+                    pointscommander:
+                        label: 'Commander/cEDH Free-For-All 点数'
+                        help: '该卡在多人 Free-For-All 的 Commander/cEDH 中的点数。'
+                    pointscommanderspecial:
+                        label: 'Commander/cEDH Free-For-All 点数（特殊）'
+                        help: '该卡在多人 Free-For-All 的 Commander/cEDH 中的点数（特殊，例如 "As a Commander"）。'
+                    islegal2hg:
+                        label: '2HG 合法'
+                        help: '勾选以表示该卡在 Two-Headed Giant 中合法'
+                    islegal2hgspecial:
+                        label: '2HG 合法（特殊）'
+                        help: '勾选以表示该卡在 Two-Headed Giant 中合法（特殊，例如 "As a Commander"）'
+                    islegalduelcommander:
+                        label: 'Duel Commander 合法'
+                        help: '勾选以表示该卡在 Duel Commander 中合法'
+                    islegalduelcommanderspecial:
+                        label: 'Duel Commander 合法（特殊）'
+                        help: '勾选以表示该卡在 Duel 中合法（特殊，例如 "As a Commander"）'
+                    islegalcommander:
+                        label: '多人 Free-For-All Commander/cEDH 合法'
+                        help: '勾选以表示该卡在多人 Free-For-All Commander/cEDH 中合法'
+                    islegalcommanderspecial:
+                        label: '多人 Free-For-All Commander/cEDH 合法（特殊）'
+                        help: '勾选以表示该卡在多人 Free-For-All Commander/cEDH 中合法（特殊，例如 "As a Commander"）'
+                    firstline:
+                        label: 'P-values 后面的第一个英文名称必须始终为 <code class="inline">((unranked))</code>（用于定义 unranked 卡的点数）'
+                    isczeligible:
+                        label: 'messages'
+                    pointshighlander:
+                        label: 'Highlander 点数'
+                        help: '该卡在 Highlander 中的点数。'
+                    pointsmodern:
+                        label: 'Modern 点数'
+                        help: '该卡在 Modern 中的点数。'
+                    pointspioneer:
+                        label: 'Pioneer 点数'
+                        help: '该卡在 Pioneer 中的点数。'
+                    pointsstandard:
+                        label: 'Standard 点数'
+                        help: '该卡在 Standard 中的点数。'
+                    pointsbasesingleton:
+                        label: '基础 Singleton 点数'
+                        help: '该卡在 Singleton 中的基础点数。'
+                    pointsbasequadruples:
+                        label: '基础 Quadruples 点数'
+                        help: '该卡在 Quadruples 中的基础点数。'
+                legends:
+                    info: '积分表卡牌详情'
+            update:
+                create:
+                    titleen:
+                        help: '你的更新/公告的公开标题（英文）'
+                        label: '标题（EN）'
+                        placeholder: '我的新公告'
+                    pointslist:
+                        help: '选择使用哪一份积分表'
+                        label: '使用的积分表'
+                        placeholder: '选择一份积分表'
+                    start:
+                        help: '此更新何时开始生效？'
+                        label: '开始日期'
+                    published:
+                        label: '已发布'
+                        help: '勾选以让该更新对用户可见'
+                    end:
+                        help: '此更新何时结束？'
+                        label: '结束日期'
+                    descriptionen:
+                        label: '描述（EN）'
+                        help: '可选的附加说明'
+                    public:
+                        label: '公开'
+                        help: '将此更新公开显示'
+                    rulesmode:
+                        label: '规则模板'
+                        help: '使用此列表时要应用的规则模板'
+                    relatedpointslist:
+                        label: '关联积分表'
+            sourcecard:
+                create:
+                    nameen:
+                        label: '名称（EN）'
+                        help: '卡牌英文名称。必须逐字符精确。'
+                        placeholder: 'Black Lotus...'
+                    flavorofnameen:
+                        label: '皮肤/风味名称来源（EN）'
+                        help: '卡牌的风味名/皮肤名（例如 "Cabal Coffers" 的 "Minas Morgul"），英文，必须逐字符精确。'
+                        placeholder: 'Minas Morgul...'
+                    alternatenameen:
+                        label: '别名（EN）'
+                        help: '卡牌的英文别名。必须逐字符精确。'
+                        placeholder: 'Cabal Coffers...'
+                    imageurl:
+                        label: '卡牌图片 URL'
+                        help: '网站使用该卡牌时用于获取图片的 URL。'
+                        placeholder: 'https://...'
+                    firstprintsetcode:
+                        label: '首印系列代码'
+                    iscommandzoneeligible:
+                        label: 'CZ Eligible'
+                        help: '该卡是否可作为 Commander？'
+                    coloridentity:
+                        label: '色标（Color Identity）'
+                    firstprintedat:
+                        label: '首次印刷日期'
+                    ismultiplecommandzoneeligible:
+                        label: 'Multiple CZ Eligible'
+                    isblue:
+                        label: '蓝色 ID。'
+                    isblack:
+                        label: '黑色 ID。'
+                    iswhite:
+                        label: '白色 ID。'
+                    isgreen:
+                        label: '绿色 ID。'
+                    isred:
+                        label: '红色 ID。'
+                    iscolorless:
+                        label: '无色 ID。'
+                    maximumtimelinelegality:
+                        label: '最大时间线合法性'
+                    mtgoprice:
+                        label: 'MTGO 价格'
+                        help: '该卡的 MTGO 价格。'
+                    mvalue:
+                        label: 'M-Value（趋势）'
+                        help: '该卡的 M-Value（EUR-USD 混合货币价值）。'
+                    duelrank:
+                        label: 'Duel Commander 排名'
+                    cedhrank:
+                        label: 'cEDH 排名'
+                    ffarank:
+                        label: 'FFA 排名'
+                    digitalonly:
+                        label: '是否仅数字版？'
+                    latestmvalue:
+                        label: '最新 M-Value'
+                    mvaluecount:
+                        label: 'M-Value 计数（当前使用的价格数量）'
+        user:
+            account:
+                roles:
+                    label: '本网站的角色/权限：'
+                    help: '定义用户在网站上的权限。例如，组织者可以组织活动，管理员可以管理网站等。'
+    home:
+        goto:
+            text: '前往管理区的子版块：'
+    nav:
+        customblocks:
+            edit:
+                label: '✏️ 编辑自定义区块：位置“{blockkey}”/ 权重“{weight}”'
+                title: '编辑自定义区块：位置“{blockkey}”/ 权重“{weight}”'
+            index:
+                label: 自定义区块
+                title: 管理自定义区块
+            new:
+                label: ➕ 添加自定义区块
+                title: 添加自定义区块
+            show:
+                label: '自定义区块详情：位置“{blockkey}”/ 权重“{weight}”'
+        front:
+            label: 公开首页 →
+            title: 公开首页
+        home:
+            label: 🔴 管理首页
+            title: 管理首页
+        pages:
+            index:
+                label: 页面
+                title: 管理页面
+            new:
+                label: ➕ 添加页面
+                title: 添加页面
+            edit:
+                label: '✏️ 编辑页面“{page}”'
+                title: '编辑页面“{page}”'
+            show:
+                label: '页面详情“{page}”'
+        users:
+            index:
+                label: 用户
+                title: 管理用户
+            new:
+                label: ➕ 添加用户
+                title: 添加用户
+            edit:
+                label: '✏️ 编辑用户“{user}”'
+                title: '编辑用户“{user}”'
+            editpassword:
+                label: '🛡️ 编辑“{user}”的密码'
+            show:
+                label: '用户详情：“{name}”'
+            pending:
+                label: '⏳ 待处理用户'
+                title: '待处理用户'
+        mtg:
+            cardsourceactivityhistory:
+                index:
+                    label: 'MTG - 卡牌来源活动历史'
+                    title: 'MTG - 卡牌来源活动历史'
+            pointslist:
+                index:
+                    label: 'MTG - 积分表'
+                    title: 'MTG - 积分表'
+                new:
+                    label: '➕ 创建 MTG 积分表'
+                    title: '创建 MTG 积分表'
+                edit:
+                    label: 'MTG - 编辑积分表“{name}”'
+                    title: 'MTG - 编辑积分表“{name}”'
+                show:
+                    label: 'MTG - 积分表“{name}”详情'
+                    title: 'MTG - 积分表“{name}”详情'
+                import:
+                    label: 'MTG - 为列表“{name}”导入点数'
+                    title: 'MTG - 为列表“{name}”导入点数'
+            pointslistcard:
+                index:
+                    label: 'MTG - 积分表卡牌'
+                    title: 'MTG - 积分表卡牌'
+                new:
+                    label: '➕ 创建 MTG 积分表卡牌'
+                    title: '创建 MTG 积分表卡牌'
+                edit:
+                    label: 'MTG - 编辑积分表卡牌“{name}”'
+                    title: 'MTG - 编辑积分表卡牌“{name}”'
+                show:
+                    title: 'MTG - 积分表卡牌“{name}”详情'
+                    label: 'MTG - 积分表卡牌“{name}”详情'
+            update:
+                index:
+                    label: 'MTG - 更新'
+                    title: 'MTG - 更新'
+                new:
+                    label: '➕ 创建 MTG 更新'
+                    title: '创建 MTG 更新'
+                show:
+                    title: 'MTG - 更新/公告“{name}”详情'
+                    label: 'MTG - 更新/公告“{name}”详情'
+                edit:
+                    label: 'MTG - 编辑更新/公告“{name}”'
+                    title: 'MTG - 编辑更新/公告“{name}”'
+            dbupdate:
+                index:
+                    title: 'MTG - 数据库更新'
+                    label: 'MTG - 数据库更新'
+                latest:
+                    label: 'MTG - 最新源数据库更新状态'
+                startnew:
+                    label: 'MTG - 手动启动新的源数据库更新'
+            source:
+                index:
+                    title: 'MTG - 源数据下载 / 导入'
+                    label: 'MTG - 源数据下载 / 导入'
+            sourcedownload:
+                index:
+                    label: 'MTG - 源数据下载状态'
+                latest:
+                    label: 'MTG - 最新源数据下载状态'
+                startnew:
+                    label: 'MTG - 手动启动新的源数据下载'
+            sourcecard:
+                index:
+                    title: 'MTG - 源卡牌'
+                    label: 'MTG - 源卡牌'
+                show:
+                    title: 'MTG - 源卡牌“{name}”详情'
+                    label: 'MTG - 源卡牌“{name}”详情'
+        cardsourceactivityhistory:
+            index:
+                label: '卡牌来源活动历史'
+    user:
+        password:
+            password_updated_success: 已成功为 {username} 更新密码。
+        forms:
+            password:
+                first: 用户的新密码
+                help: 请输入有效密码，必须包含大写字母、小写字母和数字，至少 8 个字符。
+                invalid_repeated: 两次输入的密码不一致
+                oldpassword:
+                    error: 旧密码似乎不正确。
+                    help: 出于安全原因，请输入当前密码以进行修改。
+                    label: 当前密码
+                second: 再输入一次密码
+            edit:
+                id:
+                    label: '你的唯一内部 ID：<strong>{id}</strong>&nbsp;<em>（可用于与我们的团队沟通）</em>。'
+                fieldsets:
+                    private_data:
+                        label: '私密数据'
+                    admin:
+                        label: '管理'
+                    password:
+                        label: '密码'
+            legends:
+                info: '用户信息'
+    mtg:
+        cardsourceactivityhistory:
+            error:
+                fileremoved: '请求的日志文件已不存在。'
+        pointslistcard:
+            points:
+                label: 'RAW Points（Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard）'
+        update:
+            publish: '发布'
+            unpublish: '取消发布'
+            published: '更新已成功发布。'
+            unpublished: '更新已成功取消发布。'
+customblock:
+    footer:
+        en:
+            name: 页脚（EN 🇬🇧）
+        fr:
+            name: 页脚（FR 🇫🇷）
+    home1:
+        en:
+            name: 首页区块 1（EN 🇬🇧）
+        fr:
+            name: 首页区块 1（FR 🇫🇷）
+    home2:
+        en:
+            name: 首页区块 2（EN 🇬🇧）
+        fr:
+            name: 首页区块 2（FR 🇫🇷）
+    home3:
+        en:
+            name: 首页区块 3（EN 🇬🇧）
+        fr:
+            name: 首页区块 3（FR 🇫🇷）
+    home4:
+        en:
+            name: 首页区块 4（EN 🇬🇧）
+        fr:
+            name: 首页区块 4（FR 🇫🇷）
+    legal:
+        en:
+            name: 法律信息（EN 🇬🇧）
+        fr:
+            name: 法律信息（FR 🇫🇷）
+email:
+    appendix:
+        label: ' | AeonShift'
+    resetpassword:
+        subject: 🛡️ 你的密码重置请求
+        success: 你的密码已成功重置，现在可以使用新密码登录。
+        text1: 要重置密码，请访问以下链接
+        text2: 该链接将于 {expires} 后过期。
+        title: 账户密码重置说明
+front:
+    globals:
+        media_preview:
+            title: '媒体预览'
+            label: '（这是当前文件）'
+        share:
+            facebook: '分享到 Facebook'
+            messenger_mobile: '通过 Facebook Messenger 发送（移动端）'
+            messenger_computer: '通过 Facebook Messenger 发送（桌面端）'
+            twitter: '分享到 Twitter/X'
+            email: '通过邮件发送'
+            bluesky: '分享到 Bluesky'
+            reddit: '分享到 Reddit'
+            link: '复制链接'
+    home:
+        title: AeonShift 计算器
+        subtitle: 进入 AeonShift —— 为你的对局提供策略性平衡系统。
+        chooselicense: 你想玩哪种授权/项目？
+        licenses:
+            mtg:
+                label: Magic The Gathering™
+                title: 游玩 Magic The Gathering™ AeonShift
+        discover:
+            title: AeonShift，一个丰富的游戏平衡系统
+            link:
+                text: 了解更多
+                title: 点击此处了解 AeonShift 游戏系统
+        links:
+            title: 进一步探索
+            about:
+                text: 关于
+                title: 了解更多关于游戏、其历史与治理的信息
+            directory:
+                text: 目录
+                title: 你可以在哪里玩 AeonShift？
+            faq:
+                text: FAQ
+                title: 常见问题
+            rules:
+                text: MTG – 游戏规则
+                title: 探索 Magic The Gathering™ 的 AeonShift 游戏规则
+
+    nav:
+        login:
+            label: 🪪 登录
+            title: 登录网站
+        logout:
+            label: ⏻ 退出登录
+            title: ⏻ 退出登录
+        home:
+            label: 首页
+            title: 返回首页
+        mtg:
+            calculator:
+                title: 'Magic: The Gathering™ 计算器'
+                label: 'Magic: The Gathering™ 计算器'
+            download:
+                title: '下载 Magic: The Gathering™ 积分表'
+                label: '下载 Magic: The Gathering™ 积分表'
+                updatelink: '将本次更新的积分表下载为 CSV 文件'
+                latest: '当前'
+            index:
+                title: 'AeonShift Magic: The Gathering™'
+                label: 'AeonShift Magic: The Gathering™'
+            dccalculator:
+                title: 'Duel Commander 计算器'
+                label: 'Duel Commander 计算器'
+        resetpassword:
+            label: 🛡️ 重置
+            title: 重置你的密码
+        resetpasswordconfirm:
+            title: 密码重置请求
+        updatepassword:
+            label: 🔐 修改我的密码
+            title: 修改我的密码
+        learnmore:
+            label: '了解更多'
+            title: '了解更多关于 AeonShift'
+    resetpassword:
+        error: 处理你的密码重置请求时出现问题。请联系我们的团队。
+        text1: 输入你注册时使用的邮箱。如果该邮箱存在于数据库中，你将收到一封包含说明的邮件。
+        text2: ℹ️ 或者，你也可以改为 <a href="{link}" title="使用你的唯一注册代码登录">使用你的唯一注册代码登录</a>。
+    resetpasswordconfirm:
+        text1: 若数据库中存在与账户匹配的邮箱地址，将向该邮箱发送邮件，提供进一步的密码重置说明。
+    mtg:
+        calculator:
+            title: 'AeonShift Magic The Gathering™ 点数计算器'
+            subtitle: '（如果计算器停止工作，刷新页面即可）'
+            starformat:
+                text: '这是你的 Star Format 名称（若有）；如果没有 Star 名称，则为 “Custom”。'
+            fullnameformat:
+                text: '这是你的格式全名，也可作为参考。'
+        choose:
+            title: '在下方选择一个 <strong class="green-text">AeonShift star format</strong>'
+            text: '你正在游玩 <strong class="green-text">AeonShift Magic The Gathering™</strong>。'
+            links:
+                choosecommander:
+                    text: '查找 Commander'
+                    title: '帮我找一个 Commander。'
+                    description: '本区域会根据你上方的格式选择显示可能的 Commander。如果你想为其他格式寻找 Commander，请更新你的选择。'
+                    description2: '注：下方数值仅针对单 Commander。Partner 异能不包含在内。'
+                    description3: '你可以组合筛选，并按顺序对列进行多次排序。'
+                    form:
+                        nameen:
+                            label: '名称'
+                        coloridentity:
+                            label: '色标（Color Identity）'
+                        ranking:
+                            players:
+                                duel: 'Duel Commander 排名'
+                                cedh: 'cEDH 排名'
+                                ffa: 'Free-For-All 全局排名'
+                            label: '排名'
+                            top: '★★★  仅顶级 Commander'
+                            popular: '★ 顶级与热门 Commander'
+                            alltournamentranked: '所有赛事上榜 Commander'
+                            all: '所有 Commander'
+                    table:
+                        nameen:
+                            label: '名称'
+                            placeholder: 'Ruhan of the Fomori'
+                        budget:
+                            label: '预算 🧺'
+                            placeholder: '最低预算'
+                        status:
+                            label: '发布状态'
+                            unranked: '<span class="red-text">Unranked</span>'
+                            unknown: '<span class="red-text">Unknown</span>'
+                            released: '<span class="green-text">Released</span>'
+                        rankingindex:
+                            duel:
+                                label: 'Duel Commander 排名（越低越好）'
+                            cedh:
+                                label: 'cEDH 排名（越低越好）'
+                            ffa:
+                                label: 'FFA 排名（越低越好）'
+                        coloridentity:
+                            label: '色标（Color Identity）'
+                        firstprintedyear:
+                            label: '首次印刷年份'
+                        mv:
+                            label: 'Mana Value'
+                        multicztype:
+                            label: '可能的多 Command Zone 类型'
+                        sort:
+                            label: '用此列对表格排序（升序或降序）'
+                        minimumbudget:
+                            label: '最低预算 🧺'
+                            placeholder: '80'
+                gotoform:
+                    text: '使用计算器'
+                    title: '直接前往 <strong>calculator</strong> 表单，那里有所有可选项。'
+                freeform:
+                    text: '我不需要格式'
+                    title: '我只想 <strong>用我手头的牌</strong> 来玩并计算点数（Freeform AeonShift）。'
+                choose:
+                    text: '选择 star format'
+                    title: '我想 <strong>选择一个特定格式</strong> 来游玩 AeonShift Magic The Gathering™。'
+                quiz:
+                    text: '帮我选择格式'
+                    title: '通过 <strong>测验</strong> 帮我选择 AeonShift Magic The Gathering™ 的游玩格式。'
+        form:
+            title: '🎛️ 自定义你的格式'
+            formtitle: '你正在游玩：'
+            fixeddecklist: '你的牌表已重新格式化以便阅读'
+            decklist1:
+                label: 'Decklist <span class="gray-text">（若使用队伍则为玩家 1 的牌表）</span>'
+                incentive: '↓ 📋 在此粘贴你的牌表 ↓'
+                help: >
+                    在此粘贴你的牌组（若使用队伍则为玩家 1 的牌表）。 
+                    支持的文本列表格式包括：Magic The Gathering™ Online 导入格式、Magic The Gathering™ Arena 导入格式、Moxfield 纯文本、Archidekt 通用标题文本、TappedOut MTGA、MTGTop8 的 MTGO 导出。 
+                    <strong>你的牌表必须为英文，并使用精确的卡名（检查大小写与标点）。每行格式应为：<code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist2:
+                label: 'Decklist - 玩家 2'
+                incentive: '↓ 📋 在此粘贴你的牌表 ↓'
+                help: >
+                    若使用队伍，请在此粘贴玩家 2 的牌表。 
+                    支持的文本列表格式包括：Magic The Gathering™ Online 导入格式、Magic The Gathering™ Arena 导入格式、Moxfield 纯文本、Archidekt 通用标题文本、TappedOut MTGA、MTGTop8 的 MTGO 导出。 
+                    <strong>你的牌表必须为英文，并使用精确的卡名（检查大小写与标点）。每行格式应为：<code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist3:
+                label: 'Decklist - 玩家 3'
+                incentive: '↓ 📋 在此粘贴你的牌表 ↓'
+                help: >
+                    若使用队伍，请在此粘贴玩家 3 的牌表。 
+                    支持的文本列表格式包括：Magic The Gathering™ Online 导入格式、Magic The Gathering™ Arena 导入格式、Moxfield 纯文本、Archidekt 通用标题文本、TappedOut MTGA、MTGTop8 的 MTGO 导出。 
+                    <strong>你的牌表必须为英文，并使用精确的卡名（检查大小写与标点）。每行格式应为：<code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            results:
+                breakdown:
+                    title: '你的点数明细：'
+                    basepoints:
+                        text: '基础点数（P-Value）：'
+                        help: '这是你的 P-Value，即根据上方表单中的格式选择确定的基础点数。'
+                    cards:
+                        text: '在列表中识别到的卡牌：'
+                        help: '这是我们在你的列表中识别到的所有卡牌，请务必仔细核对。'
+                        viewmore: '查看全部识别到的卡牌'
+                    modulations:
+                        text: '调制项（高级）：'
+                        help: '这些是基于你的格式与卡牌选择，对 P-Value 可能产生的调制项。'
+                        viewmore: '查看调制详情'
+                    cardzones:
+                        text: '各区域卡牌总数：'
+                        maindeck: '主牌：'
+                        sideboard: '备牌：'
+                        commandzone: 'Command Zone：'
+                        companion: 'Companions：'
+                        attractions: 'Attractions：'
+                        contraptions: 'Contraptions：'
+                        stickers: 'Stickers：'
+                        total: '识别到的卡牌总数（所有区域）：'
+                    mvalue:
+                        text: 'M-Value：'
+                        help: '这是你的 M-Value（牌组的金钱价值），用于财务限制。'
+                        viewmore: '查看 M-Value 详情'
+                    usage:
+                        text: '点数使用情况：'
+                        help: '这是你在牌组中使用的点数，按消耗从高到低排序。'
+                        unranked: '(Unranked)'
+                        unknown: '(Unknown)'
+                    budget:
+                        text: '点数预算：'
+                        help: '这是你在牌组中可支配的点数，取决于你的格式选择（以及是否有 Commander）。'
+                    remaining:
+                        text: '剩余未使用点数：'
+                        help: '这是你剩余的点数；如果有帮助，你可以继续使用它们。'
+                        exceeding: '超出： '
+                decklist1:
+                    label: '你的牌表 #1 的结果：'
+                decklist2:
+                    label: '你的牌表 #2 的结果：'
+                decklist3:
+                    label: '你的牌表 #3 的结果：'
+                errors:
+                    containsinvalidtimelinecards:
+                        text: '牌表包含在所选时间线中不合法的卡牌。'
+                    invalidcommandzone:
+                        text: '你的 Command Zone（Commander）无效。'
+                    invalidnumberofcards:
+                        text: '牌表中的卡牌数量不正确。'
+                    invalidsideboard:
+                        text: '你的备牌无效。'
+                    copies:
+                        text: '牌表包含同名卡的非法数量。'
+                    nocommander:
+                        text: '尽管尝试了所有可能的源文本格式，但在你的牌表中仍未找到 Commander。'
+                    impossibletofindacommander:
+                        text: '无法确定你的牌表中的 Commander；请添加更多卡牌并检查换行。'
+                    toomanypoints:
+                        text: '你的牌表消耗了过多点数。你需要调整牌组以保持在预算内。'
+                    tooexpensive:
+                        text: '你的牌表的 M-Value 高于该格式允许的最大值。'
+                    failedparsing:
+                        text: '无法解析牌表，请检查你粘贴的内容是否有效。'
+                    internalerror:
+                        text: '处理牌表时发生内部错误。请联系我们的团队。'
+                    singlecopiescardnotunique:
+                        text: 'Attractions、Contraptions 与 Stickers 必须唯一（每张只能一份）。'
+                    singletoncardnotunique:
+                        text: '你的牌表不是 singleton（每张卡仅允许一份）。请检查这些卡的数量：'
+                    numberofcardnotcorrectforquadruples:
+                        text: '你的牌表中某些卡牌的数量不正确（最多 4 份，或不超过该卡允许的最大份数）。涉及卡牌：'
+                    wrongtimelineforcards:
+                        text: '你的牌表中有卡牌在当前合法时间线下不合法：'
+                    cznoteligibleonecommander:
+                        text: '你的 Command Zone 无效：Commander 必须具备成为 Commander 的资格。'
+                    cznoteligiblemulticommander:
+                        text: '你的 Command Zone 中有卡牌不具备成为 Commander 的资格（多 Commander）。涉及卡牌：'
+                    cznotvalidmulticztypenotthesame:
+                        text: '你的所有 Commander 必须属于同一种 Partner 异能类型（例如 Partner、Friends forever 等）。'
+                    coloridentitymissmatch:
+                        text: '你的牌组中有卡牌与 Command Zone 的色标不匹配：'
+                    unknown:
+                        text: '你的牌组包含未知卡牌，请检查以下名称：'
+                legal:
+                    no:
+                        label: '你的牌组在当前格式选择下 <strong>不合法</strong>。'
+                    yes:
+                        label: '你的牌组在当前格式选择下 <strong>合法</strong>。'
+                    download:
+                        title: '下载或打印你的牌表'
+                        help: '输入玩家姓名，然后在下方选择打印或下载选项。'
+                        playername: '玩家姓名：'
+                        generatedat: '文档生成时间： '
+                        label:
+                            link:
+                                label: '下载或打印你的牌组登记表'
+                            csv:
+                                label: '牌组登记表（CSV）'
+                                title: '下载你的牌组登记表（CSV）'
+                            pdf:
+                                label: '牌组登记表（PDF）'
+                                title: '下载你的牌组登记表（PDF）'
+                            text:
+                                label: '牌组登记表（文本）'
+                                title: '下载你的牌组登记表（文本）'
+                            print:
+                                label: '立即打印'
+                                title: '打印你的牌组登记表'
+                        comment:
+                            label: '备注（可选）'
+                            help: '如有需要，为你的牌表添加备注。'
+                modulations:
+                    firstprint:
+                        text: '你最近编辑的 Commander 首次编辑/印刷早于当前年份。'
+                        help: '以最新的 Commander 为准：每早于当前年份 1 年，格式 P-Value +2%。'
+                    multiplecommanders:
+                        types:
+                            chooseabackground: '若使用 Partner 异能，预算 -20%'
+                            other: '若使用 Partner 异能，预算 -40%'
+                        text: '你使用了不止一个 Commander。'
+                        help: '若使用 Background 类型卡牌：格式 P-Value -20%；否则：格式点数 -40%。'
+                    manavalue:
+                        text: '你的每位 Commander 的 Mana Value 都低于 4。'
+                        help: '"Mana Value 为 3：格式 P-Value -10%；为 2：-20%；为 1 或 0：-30%。若使用非 Background 的 Partner 异能，上述减半。'
+                    rankedcommander:
+                        text: '你的 Commander 有排名。'
+                        help: '你的 Commander 在当前积分表中有排名。'
+                start:
+                    label: '在左侧使用我们的“添加卡牌”表单开始往你的牌表添加卡牌，或将其他网站的牌表粘贴到左侧文本区域，并遵循下方说明。'
+            decklist:
+                addcard:
+                    label: '添加卡牌'
+        pointslist:
+            choice:
+                label: '{name}（{datestart} → {dateend}）'
+            latest:
+                label: '{name}（当前列表）'
+        quiz:
+            back:
+                label: '← 上一题'
+                title: '返回上一题'
+            help:
+                text1: '让我们帮你找到适合的格式。'
+                text2: '只需回答这 5 个快速问题。↓'
+            question1:
+                label: '玩家/队伍/生命：'
+                text: '你想要多少玩家（队伍）以及多少生命值？'
+                answer1:
+                    label: '2 名玩家（Duel）'
+                    help: 'Duel 对局：两名玩家，两支队伍。<br><strong>起始生命值 20。</strong>'
+                answer2:
+                    label: '4 名玩家（2 支队伍）'
+                    help: 'Two-Headed Giant：四名玩家，两支两人队伍。<br><strong>起始共享生命值 30。</strong> <em class="comingsoon">即将推出！</em>'
+                answer3:
+                    label: '4+ 名玩家（Free-For-All）'
+                    help: 'cEDH/Commander：四名及以上玩家，free-for-all。<br><strong>起始生命值 40。</strong> <em class="comingsoon">即将推出！</em>'
+                answer4:
+                    label: '6 名玩家（2 支队伍）'
+                    help: 'Team Trio：两支三人队伍，带特殊配对规则。<br><strong>起始生命值 20。</strong> <em class="comingsoon">即将推出！</em>'
+            question2:
+                label: '牌组中同一张卡的最大份数：'
+                text: '在牌组中（包括 Command Zones 与 Sideboards）同一张卡最多允许多少份？'
+                answer1:
+                    label: '最多 1 份'
+                    help: 'Singleton - 整个牌表中每张牌最多 1 份。'
+                answer2:
+                    label: '最多 4 份'
+                    help: 'Quadruples - 整个牌表中每张牌最多 4 份。 <em class="comingsoon">即将推出！</em>'
+            question3:
+                label: '主牌/备牌的卡牌数量：'
+                text: '牌组应有多少张卡（主牌/备牌）？'
+                answer1:
+                    label: '100/0'
+                    help: '主牌 100 张，不使用备牌。'
+                answer2:
+                    label: '60+/0-15'
+                    help: '主牌至少 60 张，备牌 0 到 15 张。 <em class="comingsoon">即将推出！</em>'
+            question4:
+                label: 'Commander/Command Zones：'
+                text: '你要使用 Commander/Command Zones 吗？'
+                answer1:
+                    label: '否'
+                    help: '不会检查额外规则。 <em class="comingsoon">即将推出！</em>'
+                answer2:
+                    label: '是'
+                    help: '这将增加构筑与对局的特殊规则与限制。'
+            question5:
+                label: '最大合法时间线：'
+                text: '你想使用哪条最大合法时间线进行游戏？'
+                answer1:
+                    label: 'Printed'
+                    help: '只要是正品 Magic The Gathering™ 卡牌即可，包括所有历史印刷过的卡牌。'
+                answer2:
+                    label: 'Funny'
+                    help: '包含所有 Eternal 卡牌，以及趣味系列。'
+                answer3:
+                    label: 'Eternal'
+                    help: '包含 Eternal 的所有卡牌（大致相当于 Vintage 印刷范围与官方赛事合法牌）。'
+                answer4:
+                    label: 'Modern'
+                    help: '包含 Modern 中合法或被禁的所有卡牌。 <em class="comingsoon">即将推出！</em>'
+                answer5:
+                    label: 'Pioneer'
+                    help: '包含 Pioneer 中合法或被禁的所有卡牌。 <em class="comingsoon">即将推出！</em>'
+                answer6:
+                    label: 'Standard'
+                    help: '包含 Standard 中合法或被禁的所有卡牌。 <em class="comingsoon">即将推出！</em>'
+            question6:
+                label: 'P-value：'
+                text: '你的参考 P-value 是多少？P-value 决定构筑的基础点数（在任何调制项之前）。'
+                answer1:
+                    label: 'Standard Play'
+                    help: '这是默认的 P-value，并推荐给大多数玩家。如果你不确定选什么，就用它。'
+                answer2:
+                    label: 'Lite Play'
+                    help: '更保守的 P-value，推荐给想用更低 P-value 的玩家（投入更少，爆发性更低）。 <em class="comingsoon">即将推出！</em>'
+                answer3:
+                    label: 'Power Play'
+                    help: '更激进的 P-value，推荐给想用更高 P-value 的玩家（限制更少，爆发性更强）。 <em class="comingsoon">即将推出！</em>'
+            question7:
+                label: '应用财务限制'
+                text: '你是否启用财务限制？'
+                answer1:
+                    label: '否'
+                    help: '你只使用原版卡牌（或允许代理卡）。'
+                answer2:
+                    label: '是'
+                    help: '你只使用原版卡牌，但对牌组有金额限制，并希望使用我们的 M-Value。 <em class="comingsoon">即将推出！</em>'
+            question8:
+                label: '要使用的积分表更新：'
+                text: '应使用哪次积分表更新？除非你在核对旧牌表，否则总是使用最新版本。'
+            previous:
+                text: '⬅️ 上一题'
+global:
+    actions:
+        label: 操作
+        title: 操作
+    back: ⬅️ 返回
+    createbutton:
+        label: ➕ 添加
+        title: 添加一个项目
+    createdat:
+        label: 创建于
+    dates:
+        label: 创建 / 最后更新
+    delete:
+        confirmprompt: 你确定要删除此项目吗？此操作无法撤销。
+    deletesuccess:
+        text: '项目已成功删除'
+    deletebutton:
+        label: ❌ 删除
+        title: 删除此项目
+    editbutton:
+        label: ✏️ 编辑
+        title: 编辑
+    email:
+        responsibility: AeonShift 仅会为其核心功能发送邮件，绝不会因其他原因联系你。如果你收到可疑邮件，请不要点击任何链接并联系我们的团队。
+    error:
+        404:
+            text: 糟糕！找不到你请求的页面。也许你可以使用上方菜单开始查找你需要的内容，或者返回浏览历史...
+            title: 404 - 未找到 😔
+        500:
+            text: 糟糕！服务器像积分表一样达到了点数上限。如果该错误持续出现，请联系我们的团队。
+            title: 500 - 服务器错误 😔
+    id:
+        label: ID
+    indexbutton:
+        label: 🔙 返回列表
+        title: 返回列表
+    mandatoryfields:
+        text: '* = 这些字段为必填。'
+    noelements:
+        label: 没有可显示的项目。
+    none:
+        label: N/A
+    pagenumber: 第 <strong>{current}/{total}</strong> 页
+    passwordbutton:
+        label: 修改密码
+        title: 修改用户密码
+    roles:
+        ROLE_ADMIN: 管理员
+        ROLE_USER: 普通用户
+    savebutton:
+        label: 💾 保存
+        title: 保存更改
+    savesuccess:
+        text: 保存成功。
+    selectnone: --
+    skipcontent:
+        label: 跳转到主要内容
+    showbutton:
+        label: 👁️ 查看
+        title: 查看详情
+    showbuttonfront:
+        label: 👁️ 查看（前台）
+        title: '在公开端查看'
+    total:
+        label: 共 <strong>{elements}</strong> 项
+    updatedat:
+        label: 更新于
+    1:
+        label: '是'
+    0:
+        label: '否'
+    table:
+        summary: '显示第 _START_ 到 _END_ 条，共 _TOTAL_ 条'
+        empty: '共 0 条'
+        filtered: '（从 _MAX_ 条中过滤）'
+        thousands: ''
+        menu: '显示 _MENU_ 条'
+        search: '搜索（使用 "xx yy" 表示连续字符串）：'
+        none: '未找到匹配条目'
+        first: '第一页'
+        last: '最后一页'
+        next: '下一页'
+        previous: '上一页'
+        ariasort: '排序此列'
+        ariasortreverse: '反向排序此列'
+    legal:
+        title: '合法'
+        label: '合法'
+    rules:
+        label: '规则'
+        title: '游戏规则'
+    start:
+        label: '开始执行命令'
+        title: '开始执行命令'
+    users:
+        label: '创建者 / 最后更新者'
+    import:
+        label: '📥 导入/更新'
+        title: '📥 导入/更新卡牌/点数（CSV 文件）'
+    export:
+        label: '📤 导出积分表 CSV 文件'
+        title: '将此积分表以当前数值导出为 CSV，便于在表格或其他地方使用，并可稍后重新导入。'
+    filter:
+        label: 过滤结果
+        title: '点击此处根据你的选择过滤结果'
+    reset:
+        title: '重置表单'
+        label: '重置'
+    max:
+        label: '仅显示前 100 条。'
+    choose:
+        label: '↓ 请选择'
+mtg:
+    addform:
+        title: '添加卡牌'
+    add:
+        label: '添加'
+    copies:
+        text: 'X'
+    cardzones:
+        choose: '区域'
+        maindeck: '主牌'
+        sideboard: '备牌'
+        commandzone: 'Command Zone'
+        companion: 'Companion'
+        attractions: 'Attraction'
+        contraptions: 'Contraption'
+        stickers: 'Sticker'
+    name:
+        label: '名称'
+        placeholder: 'Ruhan of the Fomori'
+    popular:
+        comingsoon:
+            text: '<em class="blue-text">即将推出！</em> 敬请关注。'
+        eternal:
+            title: '时间线：<strong class="blue-text">Eternal</strong>'
+        modern:
+            title: '时间线：<strong class="blue-text">Modern</strong>'
+        pioneer:
+            title: '时间线：<strong class="blue-text">Pioneer</strong>'
+        standard:
+            title: '时间线：<strong class="blue-text">Standard</strong>'
+        quadruples:
+            eternal:
+                eternal:
+                    label: Eternal
+                    title: 游玩 AeonShift Eternal
+                    subtitle: <strong>2 名玩家</strong>，<strong>20</strong> 生命，主牌至少 <strong>60</strong> 张 + 备牌 <strong>0-15</strong> 张，<strong>两</strong>局胜利，<strong>Eternal</strong> 时间线
+            modern:
+                modern:
+                    label: Modern
+                    title: 游玩 AeonShift Modern
+                    subtitle: <strong>2 名玩家</strong>，<strong>20</strong> 生命，主牌至少 <strong>60</strong> 张 + 备牌 <strong>0-15</strong> 张，<strong>两</strong>局胜利，<strong>Modern</strong> 时间线
+        singleton:
+            eternal:
+                2hg:
+                    label: Two-Headed Giant Duel Commander
+                    title: 游玩 AeonShift 2HG Duel Commander
+                    subtitle: <strong>4</strong> 名玩家，<strong>2</strong> 支队伍，共享生命 <strong>30</strong>，<strong>100 张</strong> Singleton，<strong>一</strong>局胜利，<strong>Eternal</strong> 时间线 <em class="blue-text">即将推出！</em>
+                commander:
+                    label: Commander/cEDH
+                    title: 游玩 AeonShift Commander/cEDH
+                    subtitle: <strong>4+</strong> 名玩家 – free-for-all，<strong>40</strong> 生命，<strong>Command</strong> Zones，<strong>100 张</strong> Singleton，<strong>一</strong>局胜利，<strong>Eternal</strong> 时间线 <em class="blue-text">即将推出！</em>
+                duelcommander:
+                    label: Duel Commander
+                    title: 游玩 AeonShift Duel Commander
+                    subtitle: <strong>2</strong> 名玩家，<strong>20</strong> 生命，<strong>Command</strong> Zones，<strong>100 张</strong> Singleton，<strong>两</strong>局胜利，<strong>Eternal</strong> 时间线
+                freeform:
+                    label: Freeform
+                    title: 游玩 AeonShift Freeform
+                    subtitle: 用<strong>你拥有的任何卡牌</strong>来玩，<strong>20</strong> 生命，至少 <strong>60</strong> 张，<strong>不限</strong>局数，<strong>Eternal</strong> 时间线！
+                highlander:
+                    label: Highlander
+                    title: 游玩 AeonShift Highlander
+                    subtitle: <strong>2</strong> 名玩家，<strong>20</strong> 生命，<strong>100 张</strong> Singleton，<strong>两</strong>局胜利，<strong>Eternal</strong> 时间线
+            modern:
+                2hg:
+                    label: Two-Headed Giant Modern Duel Commander
+                    title: 游玩 AeonShift 2HG Modern Duel Commander
+                    subtitle: <strong>4</strong> 名玩家，<strong>2</strong> 支队伍，共享生命 <strong>30</strong>，<strong>100 张</strong> Singleton，<strong>一</strong>局胜利，<strong>Modern</strong> 时间线 <em class="blue-text">即将推出！</em>
+                commander:
+                    label: Modern Commander/cEDH
+                    title: 游玩 AeonShift Modern Commander/cEDH
+                    subtitle: <strong>4+</strong> 名玩家 – free-for-all，<strong>40</strong> 生命，<strong>Command</strong> Zones，<strong>100 张</strong> Singleton，<strong>一</strong>局胜利，<strong>Modern</strong> 时间线 <em class="blue-text">即将推出！</em>
+                duelcommander:
+                    label: Modern Duel Commander
+                    title: 游玩 AeonShift Modern Duel Commander
+                    subtitle: <strong>2</strong> 名玩家，<strong>20</strong> 生命，<strong>Command</strong> Zones，<strong>100 张</strong> Singleton，<strong>两</strong>局胜利，<strong>Modern</strong> 时间线
+                freeform:
+                    label: Modern Freeform
+                    title: 游玩 AeonShift Modern Freeform
+                    subtitle: 用<strong>你拥有的任何卡牌</strong>来玩，<strong>20</strong> 生命，至少 <strong>60</strong> 张，<strong>不限</strong>局数，<strong>Modern</strong> 时间线！
+                highlander:
+                    label: Modern Highlander
+                    title: 游玩 AeonShift Modern Highlander
+                    subtitle: <strong>2</strong> 名玩家，<strong>20</strong> 生命，<strong>100 张</strong> Singleton，<strong>两</strong>局胜利，<strong>Modern</strong> 时间线
+page:
+    position:
+        footer:
+            label: Footer
+        header:
+            label: Header
+user:
+    login:
+        alreadylogged: 你已以 {user} 身份登录，<a data-turbo="false" href="{url}" title="退出登录">退出登录</a>
+        helptext1: ℹ️ 还没有账号？ <a href="{link}" title="点击这里创建账号">先创建一个！</a>
+        helptext2: 😣 忘记密码？ <a href="{link}" title="重置密码">点击这里</a> 设置新密码。
+        password:
+            help: 如果你设置过密码，请在此输入。
+            label: 密码
+            placeholder: 你的密码
+        submit:
+            label: 🔑 登录
+        success: 你已成功以 {username} 身份通过验证
+        title: 登录
+        username:
+            help: 在此输入用户名，通常是你注册时使用的昵称。
+            label: 用户名
+            placeholder: 你的用户名
+    logout:
+        success: 你已退出登录。
+    roles:
+        admin:
+            label: 管理员
+        user:
+            label: 普通用户

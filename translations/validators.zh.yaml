@@ -1,0 +1,73 @@
+admin:
+    form:
+        mtg:
+            points_list:
+                create:
+                    validitystartingat:
+                        empty: 请输入有效日期
+                import:
+                    file:
+                        error: 请选择有效的 CSV 文件。
+            update:
+                create:
+                    pointslist:
+                        empty: 请提供一份积分表
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: 请输入有效日期
+                    title:
+                        too_long: '请输入更短的标题。'
+                import:
+                    file:
+                        error: 请选择有效的 CSV 文件。
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': '请输入标题。'
+                        too_long: '请输入更短的标题。'
+                    descriptionen:
+                        'null': '请输入描述。'
+                    startingat:
+                        'null': '请输入有效的开始日期。'
+                    endingat:
+                        'null': '请输入有效的结束日期。'
+        user:
+            create:
+                roles:
+                    invalid: 请为该用户选择有效的角色。
+                    multipleinvalid: 请为该用户选择有效的角色。
+user:
+    create:
+        roles:
+            invalid: 请为该用户选择有效的角色。
+            multipleinvalid: 请为该用户选择有效的角色。
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': '请输入标题。'
+                    too_long: '请输入更短的标题。'
+                descriptionen:
+                    'null': '请输入描述。'
+                startingat:
+                    'null': '请输入有效的开始日期。'
+                endingat:
+                    'null': '请输入有效的结束日期。'
+daterange:
+    invalid: 请注意选择一个晚于开始日期的结束日期。
+front:
+    users:
+        forms:
+            username:
+                exists: 该用户名已被占用。
+            email:
+                exists: 该邮箱已被占用。
+            password:
+                help: '密码长度至少为 8 个字符。'
+    user:
+        forms:
+            password:
+                blank: '请输入密码。'

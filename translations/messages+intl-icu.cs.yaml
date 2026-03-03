@@ -1,0 +1,1333 @@
+admin:
+    account:
+        email:
+            help: >
+                Váš e-mail. Musí být jedinečný. Bude použit k obnovení přístupu, ke komunikaci a bude viditelný lidem registrovaným na události, které vytvoříte; tuto adresu budete muset ověřit pokaždé, když ji změníte. 
+                <strong>UPOZORNĚNÍ: VŠECHNY e-maily budou odesílány na tuto adresu. Před vyplněním/změnou toto pole prosím zkontrolujte třikrát.</strong>
+            label: 'Email:'
+            placeholder: johnorjane.doe@provider.domain
+        roles:
+            label: 'Role/Oprávnění na tomto webu:'
+        username:
+            help: Vaše uživatelské jméno na tomto webu. Musí být jedinečné a nesmí ho právě používat nikdo jiný.
+            label: 'Uživatelské jméno:'
+            placeholder: JohnDoe84
+    customblock:
+        editlink:
+            label: ✏️ Upravit tento blok ({blockkey})
+    form:
+        customblock:
+            create:
+                blockkey:
+                    help: Pokud je již použito, všechny bloky se správným jazykem a umístěním se zobrazí ve vzestupném pořadí podle váhy.
+                    label: Umístění bloku
+                    placeholder: Vyberte umístění
+                contents:
+                    help: |
+                        <strong>Dávejte pozor na HTML a jeho validitu</strong>: může rozbít vzhled webu nebo se nezobrazit správně.</strong> <br> <strong>Upozornění: pamatujte, že všechny bloky webu mají přibližně 10minutovou cache (pro každý jazyk a umístění).</strong>
+                    label: Obsah
+                weight:
+                    help: Mezi -100 a 100. Pokud je již použito, všechny bloky se správným jazykem a umístěním se zobrazí ve vzestupném pořadí podle váhy.
+                    label: Váha
+                    placeholder: Váha bloku
+            legends:
+                info: 'Parametry bloku'
+        page:
+            create:
+                contents:
+                    help: >
+                        <strong>Dávejte pozor na HTML a jeho validitu</strong>: může rozbít vzhled webu nebo se nezobrazit správně.</strong>
+                    label: Obsah
+                language:
+                    help: Jazyk, ve kterém se tato stránka zobrazí.
+                    label: Jazyk
+                slug:
+                    help: Ponechte prázdné pro automatické vygenerování slugu podle názvu.
+                    label: Slug
+                title:
+                    help: Název stránky, který se zobrazí v záhlaví a ve výsledcích vyhledávání.
+                    label: Název
+                weight:
+                    help: Mezi -100 a 100. Pokud je již použito, všechny stránky se správným jazykem a umístěním se zobrazí ve vzestupném pořadí podle váhy.
+                    label: Váha
+                zone:
+                    help: Zóna, ve které se tato stránka zobrazí. Například „header“ pro záhlaví, „footer“ pro patičku atd.
+                    label: Zóna
+            legends:
+                info: 'Detaily stránky'
+        abstract:
+            update:
+                create:
+                    titleen:
+                        help: 'Veřejný název vaší aktualizace/oznámení (anglicky)'
+                        label: 'Název (EN)'
+                        placeholder: 'Moje nové oznámení'
+                    pointslist:
+                        help: 'Který seznam bodů použít'
+                        label: 'Použít seznam bodů'
+                        placeholder: 'Vyberte prosím seznam bodů'
+                    startingat:
+                        help: 'Kdy tato aktualizace začne platit?'
+                        label: 'Datum začátku'
+                    endingat:
+                        help: 'Kdy tato aktualizace přestane platit?'
+                        label: 'Datum konce'
+                    descriptionen:
+                        label: 'Popis (EN)'
+                        help: 'Možné doplňující informace'
+                    public:
+                        label: 'Veřejné'
+                        help: 'Označit tuto aktualizaci jako veřejnou'
+                    rulesmodel:
+                        label: 'Model pravidel'
+                        help: 'Model pravidel, který se má použít při používání tohoto seznamu'
+                legends:
+                    info: 'Detaily aktualizace'
+        mtg:
+            cardsourceactivityhistory:
+                create:
+                    channel:
+                        label: 'Kanál'
+                    startedat:
+                        label: 'Zahájeno'
+                    endedat:
+                        label: 'Ukončeno'
+                    successsummary:
+                        label: 'Souhrn úspěchů'
+                    errorsummary:
+                        label: 'Souhrn chyb'
+                    startedfrom:
+                        label: 'Spuštěno z'
+                    logfilepath:
+                        label: 'Soubor logu'
+                    uniqueid:
+                        label: 'Jedinečné ID úlohy'
+            pointslist:
+                create:
+                    filename:
+                        label: 'Název souboru'
+                    uploadnbcards:
+                        label: 'Počet karet v původním souboru'
+                    title:
+                        help: 'Název vašeho seznamu bodů'
+                        label: 'Název'
+                        placeholder: 'Můj seznam bodů XX/XX/XXXX'
+                    lastuploadedat:
+                        label: 'Naposledy nahráno'
+                    currentnbcards:
+                        label: 'Aktuální počet karet v databázi'
+                    relatedupdates:
+                        label: 'Související oznámení/aktualizace'
+                    validitystartingat:
+                        help: 'Datum, od kterého se tento seznam uplatňuje; používá se pro určení pořadí a nejnovějšího'
+                        label: 'Platnost od'
+                    rulesmodel:
+                        label: 'Model pravidel'
+                        help: 'Model pravidel, který se má použít'
+                import:
+                    firstline:
+                        text: '⚠️ Prvních 5 řádků tohoto dokumentu bude při importu ignorováno; použijte je pro metadata'
+                    columnsright:
+                        text: '(tyto sloupce a všechny napravo jsou při importu ignorovány)'
+                    pvalues:
+                        text: 'P-hodnoty v tomto pořadí: Standard Play (řádek 6), Lite Play (řádek 7), Power Play (řádek 8)'
+                        header:
+                            liteplay:
+                                text: 'P-hodnoty Lite Play'
+                            standardplay:
+                                text: 'P-hodnoty Standard Play'
+                            powerplay:
+                                text: 'P-hodnoty Power Play'
+                        liteplay:
+                            basesingleton:
+                                text: 'Základní P-hodnota Singleton (Lite Play)'
+                            basequadruples:
+                                text: 'Základní P-hodnota Quadruples (Lite Play)'
+                            duelcommander:
+                                text: 'P-hodnota Duel Commander (Lite Play)'
+                            commander:
+                                text: 'P-hodnota Commander/cEDH FFA (Lite Play)'
+                            highlander:
+                                text: 'P-hodnota Highlander (Lite Play)'
+                            modern:
+                                text: 'P-hodnota Modern (Lite Play)'
+                            pioneer:
+                                text: 'P-hodnota Pioneer (Lite Play)'
+                            standard:
+                                text: 'P-hodnota Standard (Lite Play)'
+                        standardplay:
+                            basesingleton:
+                                text: 'Základní P-hodnota Singleton (Standard Play)'
+                            basequadruples:
+                                text: 'Základní P-hodnota Quadruples (Standard Play)'
+                            duelcommander:
+                                text: 'P-hodnota Duel Commander (Standard Play)'
+                            commander:
+                                text: 'P-hodnota Commander/cEDH FFA (Standard Play)'
+                            highlander:
+                                text: 'P-hodnota Highlander (Standard Play)'
+                            modern:
+                                text: 'P-hodnota Modern (Standard Play)'
+                            pioneer:
+                                text: 'P-hodnota Pioneer (Standard Play)'
+                            standard:
+                                text: 'P-hodnota Standard (Standard Play)'
+                        powerplay:
+                            basesingleton:
+                                text: 'Základní P-hodnota Singleton (Power Play)'
+                            basequadruples:
+                                text: 'Základní P-hodnota Quadruples (Power Play)'
+                            duelcommander:
+                                text: 'P-hodnota Duel Commander (Power Play)'
+                            commander:
+                                text: 'P-hodnota Commander/cEDH FFA (Power Play)'
+                            highlander:
+                                text: 'P-hodnota Highlander (Power Play)'
+                            modern:
+                                text: 'P-hodnota Modern (Power Play)'
+                            pioneer:
+                                text: 'P-hodnota Pioneer (Power Play)'
+                            standard:
+                                text: 'P-hodnota Standard (Power Play)'
+                    label: >
+                        📥 Importovat/aktualizovat seznam bodů (CSV soubor)
+                    help: >
+                        Použijte tento formulář k aktualizaci seznamu bodů podle dodané CSV šablony, jedna karta na řádek. 
+                        <br>
+                        <strong>Upozornění: tímto se přepíše celý aktuální seznam bodů a operace je nevratná.</strong>
+                    help2: >
+                        Poznámka: náš nástroj před přepsáním kontroluje minimální integritu souboru a normalizuje obsah buněk (velikost písmen, délku, číselná data...), ale je <strong>vaší odpovědností</strong> dbát na obsah a případnou ztrátu dat.
+                    help3: >
+                        CSV soubor musí být ve formátu <strong>UTF-8 (Unicode)</strong>, sloupce oddělené <strong>čárkami</strong> a konce řádků ve formátu <strong>Unix (New Line)</strong>. 
+                        <br>
+                        Hodnoty mohou být uzavřeny do dvojitých uvozovek ("). 
+                        <br>
+                        Jeden záznam na řádek; každá pozice (sloupec „Name (EN)“) musí být jedinečná a představovat <strong>EXAKTNÍ název karty (kontroluje se každý znak včetně: mezer, interpunkce, názvů oboustranných karet a velikosti písmen) existující v databázi zdrojových karet</strong> (pořadí řádků nehraje roli). 
+                        <br>
+                        Body (6 sloupců)") jsou celá nebo desetinná čísla (hodnoty jako „10“ nebo „10.5“ jsou přijímány).
+                    help4: >
+                        Soubor musí mít nahoře přesně 5 řádků, které budou zahozeny, poté 3 řádky P-hodnot v pořadí (Standard Play, Lite Play, Power Play) a devátý řádek MUSÍ obsahovat kartu pojmenovanou „((unranked))“ a nastavuje body pro nehodnocené karty.
+                    help5: >
+                        <strong>Nemuňte sloupce, jejich pořadí ani nepřidávejte další sloupce vlevo.</strong>
+                    help6: >
+                        Karty můžete upravovat i jednotlivě bez opětovného nahrání celého souboru kliknutím na tlačítko napravo od každého řádku na stránce výpisu.
+                    help7: >
+                        Poznámka: změny jsou viditelné v reálném čase v administraci tohoto webu, ale veřejné zobrazení a výpočty mohou trvat až 10 minut.
+                    help8: >
+                        Tabulka níže ukazuje příklad očekávaného obsahu vašeho CSV souboru:
+                    confirm:
+                        label: 'Potvrzuji, že jsem si přečetl(a) a porozuměl(a) výše uvedeným pokynům a chci importovat/aktualizovat seznam bodů.'
+                    file:
+                        button:
+                            label: '📥 Importovat/aktualizovat seznam bodů (CSV soubor)'
+                            title: 'Importovat/aktualizovat seznam bodů (CSV soubor)'
+                        error: 'Vyberte prosím platný CSV soubor.'
+                        label: '📥 Importovat/aktualizovat seznam bodů (CSV soubor)'
+                        help: >
+                            Importovat seznam bodů z dodané CSV šablony, jeden záznam na řádek. Maximální velikost: 4 MB. <br><strong>Upozornění: tímto se přepíšou všechny karty seznamu bodů a operace je nevratná.</strong>
+                        unreadable: 'Soubor je nečitelný nebo prázdný. Zkontrolujte, že jej lze otevřít, že je ve formátu CSV UTF-8, s čárkami jako oddělovači a s unixovými konci řádků.'
+                    updated:
+                        success: 'Body úspěšně aktualizovány: zpracováno {number} řádků.'
+                    error:
+                        filecontents: 'Obsah souboru je neplatný; postupujte prosím podle pokynů níže.'
+                        processing_line: 'Chyba při zpracování řádku {line_number}: {error}. Postupujte prosím podle pokynů níže.'
+                        column_count: 'Řádek nemá správný počet sloupců; očekává se alespoň 7'
+                        invalid_value: 'Neplatná hodnota'
+                        invalid_name: 'Karta musí mít stejný název jako karta uvedená ve zdrojovém seznamu karet'
+                        invalid_game_points: 'Neplatné body (musí být celé číslo mezi -1000 a 1000)'
+                        invalid_first_line: 'Název karty v angličtině na prvním řádku MUSÍ být „((unranked))“'
+                        incorrectname: 'Nesprávný název karty: „{name}“'
+                        notfoundinsources: 'Karta neznámá ve zdrojových kartách: „{name}“'
+                    info: 'Import bodů'
+                legends:
+                    info: 'Detaily seznamu bodů'
+            pointslistcard:
+                create:
+                    pointslist:
+                        label: 'Seznam bodů'
+                        help: 'Ke kterému seznamu bodů tuto kartu přiřadit'
+                        placeholder: 'Vyberte prosím seznam bodů'
+                    nameen:
+                        label: 'Název (EN)'
+                        help: 'Název karty v angličtině. Musí se shodovat znak po znaku s kartou v databázi.'
+                    imageurl:
+                        label: 'URL obrázku karty'
+                        help: 'URL, odkud se má načítat obrázek při použití na webu.'
+                    scryfallid:
+                        label: 'Scryfall ID'
+                        help: 'Scryfall ID karty, pokud je potřeba'
+                    scryfalluri:
+                        label: 'Scryfall URI'
+                        help: 'Scryfall URI karty, pokud je potřeba'
+                    manavalue:
+                        label: 'Mana value'
+                        help: 'Mana value karty'
+                    oracleid:
+                        label: 'Oracle ID'
+                        help: 'Oracle ID karty'
+                    multicztype:
+                        label: 'Typ pro více karet v Command Zone'
+                        help: 'Typ více objektů v Command Zones, např. „doctors_companion“, „choose_a_background“, „friends_forever“, „partner“, „doctors_companion“, „choose_a_background“.'
+                    points2hg:
+                        label: 'Body Two-Headed Giant'
+                        help: 'Body pro tuto kartu ve variantě 2HG.'
+                    points2hgspecial:
+                        label: 'Body Two-Headed Giant (speciální)'
+                        help: 'Body pro tuto kartu ve variantě 2HG (speciální, např. „As a Commander“).'
+                    pointsduelcommander:
+                        label: 'Body Duel Commander'
+                        help: 'Body pro tuto kartu v Duel Commander.'
+                    pointsduelcommanderspecial:
+                        label: 'Body Duel Commander (speciální)'
+                        help: 'Body pro tuto kartu v Duel Commander (speciální, např. „As a Commander“).'
+                    pointscommander:
+                        label: 'Body Commander/cEDH Free-For-All'
+                        help: 'Body pro tuto kartu v multiplayer Free-For-All Commander/cEDH.'
+                    pointscommanderspecial:
+                        label: 'Body Commander/cEDH Free-For-All (speciální)'
+                        help: 'Body pro tuto kartu v multiplayer Free-For-All Commander/cEDH (speciální, např. „As a Commander“).'
+                    islegal2hg:
+                        label: 'Legální v 2HG'
+                        help: 'Zaškrtněte, pokud je karta legální v Two-Headed Giant'
+                    islegal2hgspecial:
+                        label: 'Legální v 2HG (speciální)'
+                        help: 'Zaškrtněte, pokud je karta legální v Two-Headed Giant (speciální, např. „As a Commander“)'
+                    islegalduelcommander:
+                        label: 'Legální v Duel Commander'
+                        help: 'Zaškrtněte, pokud je karta legální v Duel Commander'
+                    islegalduelcommanderspecial:
+                        label: 'Legální v Duel Commander (speciální)'
+                        help: 'Zaškrtněte, pokud je karta legální v Duel (speciální, např. „As a Commander“)'
+                    islegalcommander:
+                        label: 'Legální v multiplayer Free-For-All Commander/cEDH'
+                        help: 'Zaškrtněte, pokud je karta legální v multiplayer Free-For-All Commander/cEDH'
+                    islegalcommanderspecial:
+                        label: 'Legální v multiplayer Free-For-All Commander/cEDH (speciální)'
+                        help: 'Zaškrtněte, pokud je karta legální v multiplayer Free-For-All Commander/cEDH (speciální, např. „As a Commander“)'
+                    firstline:
+                        label: 'První anglický název po P-hodnotách MUSÍ být vždy <code class="inline">((unranked))</code> (a definuje body pro nehodnocené karty)'
+                    isczeligible:
+                        label: 'zprávy'
+                    pointshighlander:
+                        label: 'Body Highlander'
+                        help: 'Body pro tuto kartu v Highlander.'
+                    pointsmodern:
+                        label: 'Body Modern'
+                        help: 'Body pro tuto kartu v Modern.'
+                    pointspioneer:
+                        label: 'Body Pioneer'
+                        help: 'Body pro tuto kartu v Pioneer.'
+                    pointsstandard:
+                        label: 'Body Standard'
+                        help: 'Body pro tuto kartu v Standard.'
+                    pointsbasesingleton:
+                        label: 'Základní body Singleton'
+                        help: 'Základní body pro tuto kartu v Singleton.'
+                    pointsbasequadruples:
+                        label: 'Základní body Quadruples'
+                        help: 'Základní body pro tuto kartu v Quadruples.'
+                legends:
+                    info: 'Detaily karty seznamu bodů'
+            update:
+                create:
+                    titleen:
+                        help: 'Veřejný název vaší aktualizace/oznámení (anglicky)'
+                        label: 'Název (EN)'
+                        placeholder: 'Moje nové oznámení'
+                    pointslist:
+                        help: 'Který seznam bodů použít'
+                        label: 'Použít seznam bodů'
+                        placeholder: 'Vyberte seznam bodů'
+                    start:
+                        help: 'Kdy tato aktualizace začne platit?'
+                        label: 'Datum začátku'
+                    published:
+                        label: 'Publikováno'
+                        help: 'Zaškrtněte pro zpřístupnění této aktualizace uživatelům'
+                    end:
+                        help: 'Kdy tato aktualizace skončí?'
+                        label: 'Datum konce'
+                    descriptionen:
+                        label: 'Popis (EN)'
+                        help: 'Volitelné doplňující informace'
+                    public:
+                        label: 'Veřejné'
+                        help: 'Zpřístupnit tuto aktualizaci veřejně'
+                    rulesmode:
+                        label: 'Šablona pravidel'
+                        help: 'Šablona pravidel, která se má použít při používání tohoto seznamu'
+                    relatedpointslist:
+                        label: 'Související seznam(y) bodů'
+            sourcecard:
+                create:
+                    nameen:
+                        label: 'Název (EN)'
+                        help: 'Název karty v angličtině. Musí být přesný na znaky.'
+                        placeholder: 'Black Lotus...'
+                    flavorofnameen:
+                        label: 'Flavor Name Of (EN)'
+                        help: 'Flavor název / „skinned“ název karty („Minas Morgul“ pro „Cabal Coffers“...), v angličtině. Musí být přesný na znaky.'
+                        placeholder: 'Minas Morgul...'
+                    alternatenameen:
+                        label: 'Alternativní název (EN)'
+                        help: 'Alternativní názvy karty v angličtině. Musí být přesné na znaky.'
+                        placeholder: 'Cabal Coffers...'
+                    imageurl:
+                        label: 'URL obrázku karty'
+                        help: 'URL, odkud se má načítat obrázek při použití na webu.'
+                        placeholder: 'https://...'
+                    firstprintsetcode:
+                        label: 'Kód setu prvního tisku'
+                    iscommandzoneeligible:
+                        label: 'CZ Eligible'
+                        help: 'Je karta způsobilá být Commandrem?'
+                    coloridentity:
+                        label: 'Barevná identita'
+                    firstprintedat:
+                        label: 'Poprvé vytištěno'
+                    ismultiplecommandzoneeligible:
+                        label: 'Způsobilé pro více CZ'
+                    isblue:
+                        label: 'Modrá ID.'
+                    isblack:
+                        label: 'Černá ID.'
+                    iswhite:
+                        label: 'Bílá ID.'
+                    isgreen:
+                        label: 'Zelená ID.'
+                    isred:
+                        label: 'Červená ID.'
+                    iscolorless:
+                        label: 'Bezbarvá ID.'
+                    maximumtimelinelegality:
+                        label: 'Maximální legální timeline'
+                    mtgoprice:
+                        label: 'Cena MTGO'
+                        help: 'Cena této karty na MTGO.'
+                    mvalue:
+                        label: 'M-Value (trend)'
+                        help: 'M-Value této karty (smíšená peněžní hodnota v EUR-USD).'
+                    duelrank:
+                        label: 'Pořadí Duel Commander'
+                    cedhrank:
+                        label: 'Pořadí cEDH'
+                    ffarank:
+                        label: 'Pořadí FFA'
+                    digitalonly:
+                        label: 'Pouze digitální?'
+                    latestmvalue:
+                        label: 'Poslední M-Value'
+                    mvaluecount:
+                        label: 'Počet M-Value (počet aktuálně použitých cen)'
+        user:
+            account:
+                roles:
+                    label: 'Role/Oprávnění na tomto webu:'
+                    help: 'Definuje oprávnění uživatele na webu. Například organizátor může organizovat události, administrátor může spravovat web atd.'
+    home:
+        goto:
+            text: 'Přejít do podsekce administrace:'
+    nav:
+        customblocks:
+            edit:
+                label: '✏️ Upravit vlastní blok: umístění "{blockkey}" / váha "{weight}"'
+                title: 'Upravit vlastní blok: umístění "{blockkey}" / váha "{weight}"'
+            index:
+                label: Vlastní bloky
+                title: Spravovat vlastní bloky
+            new:
+                label: ➕ Přidat vlastní blok
+                title: Přidat vlastní blok
+            show:
+                label: 'Detaily vlastního bloku: umístění "{blockkey}" / váha "{weight}"'
+        front:
+            label: Veřejná domovská stránka →
+            title: Veřejná domovská stránka
+        home:
+            label: 🔴 Domů (admin)
+            title: Domů (admin)
+        pages:
+            index:
+                label: Stránky
+                title: Spravovat stránky
+            new:
+                label: ➕ Přidat stránku
+                title: Přidat stránku
+            edit:
+                label: '✏️ Upravit stránku "{page}"'
+                title: 'Upravit stránku "{page}"'
+            show:
+                label: 'Detaily stránky "{page}"'
+        users:
+            index:
+                label: Uživatelé
+                title: Spravovat uživatele
+            new:
+                label: ➕ Přidat uživatele
+                title: Přidat uživatele
+            edit:
+                label: '✏️ Upravit uživatele "{user}"'
+                title: 'Upravit uživatele "{user}"'
+            editpassword:
+                label: '🛡️ Upravit heslo uživatele "{user}"'
+            show:
+                label: 'Detaily uživatele: "{name}"'
+            pending:
+                label: '⏳ Čekající uživatelé'
+                title: 'Čekající uživatelé'
+        mtg:
+            cardsourceactivityhistory:
+                index:
+                    label: 'MTG - Historie aktivity zdroje karet'
+                    title: 'MTG - Historie aktivity zdroje karet'
+            pointslist:
+                index:
+                    label: 'MTG - Seznamy bodů'
+                    title: 'MTG - Seznamy bodů'
+                new:
+                    label: '➕ Vytvořit MTG seznam bodů'
+                    title: 'Vytvořit MTG seznam bodů'
+                edit:
+                    label: 'MTG - Upravit seznam bodů "{name}"'
+                    title: 'MTG - Upravit seznam bodů "{name}"'
+                show:
+                    label: 'MTG - Detaily seznamu bodů "{name}"'
+                    title: 'MTG - Detaily seznamu bodů "{name}"'
+                import:
+                    label: 'MTG - Importovat body pro seznam "{name}"'
+                    title: 'MTG - Importovat body pro seznam "{name}"'
+            pointslistcard:
+                index:
+                    label: 'MTG - Karty seznamu bodů'
+                    title: 'MTG - Karty seznamu bodů'
+                new:
+                    label: '➕ Vytvořit MTG kartu seznamu bodů'
+                    title: 'Vytvořit MTG kartu seznamu bodů'
+                edit:
+                    label: 'MTG - Upravit kartu seznamu bodů "{name}"'
+                    title: 'MTG - Upravit kartu seznamu bodů "{name}"'
+                show:
+                    title: 'MTG - Detaily karty seznamu bodů "{name}"'
+                    label: 'MTG - Detaily karty seznamu bodů "{name}"'
+            update:
+                index:
+                    label: 'MTG - Aktualizace'
+                    title: 'MTG - Aktualizace'
+                new:
+                    label: '➕ Vytvořit MTG aktualizaci'
+                    title: 'Vytvořit MTG aktualizaci'
+                show:
+                    title: 'MTG - Detaily aktualizace/oznámení "{name}"'
+                    label: 'MTG - Detaily aktualizace/oznámení "{name}"'
+                edit:
+                    label: 'MTG - Upravit aktualizaci/oznámení "{name}"'
+                    title: 'MTG - Upravit aktualizaci/oznámení "{name}"'
+            dbupdate:
+                index:
+                    title: 'MTG - Aktualizace databáze'
+                    label: 'MTG - Aktualizace databáze'
+                latest:
+                    label: 'MTG - Poslední stav aktualizace zdrojové databáze'
+                startnew:
+                    label: 'MTG - Ruční spuštění nové aktualizace zdrojové databáze'
+            source:
+                index:
+                    title: 'MTG - Stažení / Import zdroje'
+                    label: 'MTG - Stažení / Import zdroje'
+            sourcedownload:
+                index:
+                    label: 'MTG - Stav stahování zdroje'
+                latest:
+                    label: 'MTG - Poslední stav stažení zdroje'
+                startnew:
+                    label: 'MTG - Ruční spuštění nového stažení zdroje'
+            sourcecard:
+                index:
+                    title: 'MTG - Zdrojové karty'
+                    label: 'MTG - Zdrojové karty'
+                show:
+                    title: 'MTG - Detaily zdrojové karty "{name}"'
+                    label: 'MTG - Detaily zdrojové karty "{name}"'
+        cardsourceactivityhistory:
+            index:
+                label: 'Historie aktivity zdrojů karet'
+    user:
+        password:
+            password_updated_success: Heslo bylo úspěšně aktualizováno pro {username}.
+        forms:
+            password:
+                first: Nové heslo pro uživatele
+                help: Zadejte prosím platné heslo, které musí obsahovat velké písmeno, malé písmeno a číslici; minimálně 8 znaků.
+                invalid_repeated: Hesla se neshodují
+                oldpassword:
+                    error: Staré heslo se nezdá být správné.
+                    help: Pro bezpečnostní důvody zadejte prosím aktuální heslo, abyste jej mohli změnit.
+                    label: Aktuální heslo
+                second: Zadejte heslo znovu
+            edit:
+                id:
+                    label: 'Vaše jedinečné interní ID: <strong>{id}</strong>&nbsp;<em>(můžete ho použít při komunikaci s naším týmem)</em>.'
+                fieldsets:
+                    private_data:
+                        label: 'Soukromá data'
+                    admin:
+                        label: 'Administrace'
+                    password:
+                        label: 'Heslo'
+            legends:
+                info: 'Informace o uživateli'
+    mtg:
+        cardsourceactivityhistory:
+            error:
+                fileremoved: 'Požadovaný soubor logu již neexistuje.'
+        pointslistcard:
+            points:
+                label: 'HRUBÉ body (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+        update:
+            publish: 'Publikovat'
+            unpublish: 'Zrušit publikování'
+            published: 'Aktualizace byla úspěšně publikována.'
+            unpublished: 'Publikování aktualizace bylo úspěšně zrušeno.'
+customblock:
+    footer:
+        en:
+            name: Patička (EN 🇬🇧)
+        fr:
+            name: Patička (FR 🇫🇷)
+    home1:
+        en:
+            name: Domovský blok 1 (EN 🇬🇧)
+        fr:
+            name: Domovský blok 1 (FR 🇫🇷)
+    home2:
+        en:
+            name: Domovský blok 2 (EN 🇬🇧)
+        fr:
+            name: Domovský blok 2 (FR 🇫🇷)
+    home3:
+        en:
+            name: Domovský blok 3 (EN 🇬🇧)
+        fr:
+            name: Domovský blok 3 (FR 🇫🇷)
+    home4:
+        en:
+            name: Domovský blok 4 (EN 🇬🇧)
+        fr:
+            name: Domovský blok 4 (FR 🇫🇷)
+    legal:
+        en:
+            name: Právní (EN 🇬🇧)
+        fr:
+            name: Právní (FR 🇫🇷)
+email:
+    appendix:
+        label: ' | AeonShift'
+    resetpassword:
+        subject: 🛡️ Žádost o reset hesla
+        success: Vaše heslo bylo úspěšně resetováno, nyní se můžete přihlásit jeho použitím.
+        text1: Pro reset hesla prosím navštivte následující odkaz
+        text2: Tento odkaz vyprší za {expires}.
+        title: Pokyny k resetu hesla pro váš účet
+front:
+    globals:
+        media_preview:
+            title: 'Náhled média'
+            label: '(toto je aktuální soubor)'
+        share:
+            facebook: 'Sdílet na Facebooku'
+            messenger_mobile: 'Odeslat přes Facebook Messenger (mobil)'
+            messenger_computer: 'Odeslat přes Facebook Messenger (počítač)'
+            twitter: 'Sdílet na Twitteru/X'
+            email: 'Odeslat e-mailem'
+            bluesky: 'Sdílet na Bluesky'
+            reddit: 'Sdílet na Redditu'
+            link: 'Kopírovat odkaz'
+    home:
+        title: Kalkulačka AeonShift
+        subtitle: Vstupte do AeonShift, strategického vyvažovacího systému pro vaše hry.
+        chooselicense: Kterou licenci chcete hrát?
+        licenses:
+            mtg:
+                label: Magic The Gathering™
+                title: Hrát Magic The Gathering™ AeonShift
+        discover:
+            title: AeonShift, bohatý vyvažovací systém pro hry
+            link:
+                text: Objevit
+                title: Klikněte zde a zjistěte více o herním systému AeonShift
+        links:
+            title: Jít dál
+            about:
+                text: O projektu
+                title: Více informací o hře, její historii a správě
+            directory:
+                text: Adresář
+                title: Kde můžete hrát AeonShift?
+            faq:
+                text: FAQ
+                title: Často kladené otázky
+            rules:
+                text: MTG – Pravidla hry
+                title: Objevte pravidla hry AeonShift pro Magic The Gathering™
+
+    nav:
+        login:
+            label: 🪪 Přihlásit se
+            title: Přihlásit se na web
+        logout:
+            label: ⏻ Odhlásit se z webu
+            title: ⏻ Odhlásit se
+        home:
+            label: Domů
+            title: Vrátit se na domovskou stránku
+        mtg:
+            calculator:
+                title: 'Kalkulačka Magic: The Gathering™'
+                label: 'Kalkulačka Magic: The Gathering™'
+            download:
+                title: 'Stáhnout Magic: The Gathering™ seznamy bodů'
+                label: 'Stáhnout Magic: The Gathering™ seznamy bodů'
+                updatelink: 'Stáhnout seznam bodů pro tuto aktualizaci jako CSV soubor'
+                latest: 'Aktuální'
+            index:
+                title: 'AeonShift Magic: The Gathering™'
+                label: 'AeonShift Magic: The Gathering™'
+            dccalculator:
+                title: 'Kalkulačka Duel Commander'
+                label: 'Kalkulačka Duel Commander'
+        resetpassword:
+            label: 🛡️ Reset
+            title: Resetovat heslo
+        resetpasswordconfirm:
+            title: Žádost o reset hesla
+        updatepassword:
+            label: 🔐 Změnit heslo
+            title: Změnit heslo
+        learnmore:
+            label: 'Zjistit více'
+            title: 'Zjistit více o AeonShift'
+    resetpassword:
+        error: Při zpracování vaší žádosti o reset hesla došlo k problému. Kontaktujte prosím náš tým.
+        text1: Zadejte e-mail, který jste použili při registraci. Pokud existuje v naší databázi, obdržíte e-mail s instrukcemi.
+        text2: ℹ️ Nebo se místo toho jednoduše přihlaste <a href="{link}" title="Přihlásit se pomocí vašeho jedinečného registračního kódu">pomocí vašeho jedinečného registračního kódu</a>.
+    resetpasswordconfirm:
+        text1: Pokud v naší databázi existuje e-mailová adresa, která odpovídá účtu, bude na tuto adresu odeslán e-mail s dalšími instrukcemi k resetu hesla příslušného účtu.
+    mtg:
+        calculator:
+            title: 'Kalkulačka bodů AeonShift Magic The Gathering™'
+            subtitle: '(pokud kalkulačka přestane fungovat, jednoduše obnovte stránku)'
+            starformat:
+                text: 'Toto je váš název Star formátu, pokud existuje, nebo „Custom“, pokud nemá název Star.'
+            fullnameformat:
+                text: 'Toto je plný název vašeho formátu, který lze také použít jako odkaz.'
+        choose:
+            title: 'Vyberte níže <strong class="green-text">AeonShift star formát</strong>'
+            text: 'Hrajete <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
+            links:
+                choosecommander:
+                    text: 'Najít Commandera'
+                    title: 'Pomozte mi najít Commandera.'
+                    description: 'Tato sekce vám zobrazuje možné Commandery podle výběru formátu výše. Pokud chcete najít Commandera pro jiný formát, aktualizujte svůj výběr.'
+                    description2: 'Poznámka: hodnoty níže platí pouze pro single Commandery. Partner schopnosti jsou vyloučeny.'
+                    description3: 'Můžete kombinovat filtry a řadit sloupce postupně pro vícenásobné řazení.'
+                    form:
+                        nameen:
+                            label: 'Název'
+                        coloridentity:
+                            label: 'Barevná identita'
+                        ranking:
+                            players:
+                                duel: 'Pořadí Duel Commander'
+                                cedh: 'Pořadí cEDH'
+                                ffa: 'Globální pořadí Free-For-All'
+                            label: 'Pořadí'
+                            top: '★★★  Pouze top Commandeři'
+                            popular: '★ Top a populární Commandeři'
+                            alltournamentranked: 'Všichni turnajově hodnocení Commandeři'
+                            all: 'Všichni Commandeři'
+                    table:
+                        nameen:
+                            label: 'Název'
+                            placeholder: 'Ruhan of the Fomori'
+                        budget:
+                            label: 'Rozpočet 🧺'
+                            placeholder: 'Minimální rozpočet'
+                        status:
+                            label: 'Stav vydání'
+                            unranked: '<span class="red-text">Nehodnocené</span>'
+                            unknown: '<span class="red-text">Neznámé</span>'
+                            released: '<span class="green-text">Vydané</span>'
+                        rankingindex:
+                            duel:
+                                label: 'Pořadí Duel Commander (čím nižší, tím lepší)'
+                            cedh:
+                                label: 'Pořadí cEDH (čím nižší, tím lepší)'
+                            ffa:
+                                label: 'Pořadí FFA (čím nižší, tím lepší)'
+                        coloridentity:
+                            label: 'Barevná identita'
+                        firstprintedyear:
+                            label: 'Rok prvního tisku'
+                        mv:
+                            label: 'Mana value'
+                        multicztype:
+                            label: 'Možný typ více Command Zone'
+                        sort:
+                            label: 'Seřadit tabulku podle tohoto sloupce (vzestupně nebo sestupně)'
+                        minimumbudget:
+                            label: 'Minimální rozpočet 🧺'
+                            placeholder: '80'
+                gotoform:
+                    text: 'Použít naši kalkulačku'
+                    title: 'Jednoduše přejděte do formuláře <strong>kalkulačky</strong> se všemi možnostmi výběru.'
+                freeform:
+                    text: 'Nepotřebuji formát'
+                    title: 'Chci jen hrát <strong>s tím, co mám</strong>, a spočítat si body (Freeform AeonShift).'
+                choose:
+                    text: 'Vybrat star formát'
+                    title: 'Chci si <strong>vybrat konkrétní formát</strong> pro hraní AeonShift Magic The Gathering™.'
+                quiz:
+                    text: 'Pomozte mi vybrat formát'
+                    title: 'Pomozte mi vybrat formát pro hraní AeonShift Magic The Gathering™ pomocí <strong>kvízu</strong>.'
+        form:
+            title: '🎛️ Přizpůsobit formát'
+            formtitle: 'Hrajete:'
+            fixeddecklist: 'Váš decklist byl pro lepší čitelnost přeformátován'
+            decklist1:
+                label: 'Decklist <span class="gray-text">(decklist hráče 1 při hraní týmů)</span>'
+                incentive: '↓ 📋 Vložte sem svůj decklist ↓'
+                help: >
+                    Vložte sem svůj deck (decklist hráče 1 při hraní týmů). 
+                    Podporované textové formáty jsou: Magic The Gathering™ Online Import, Magic The Gathering™ Arena Import, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Váš decklist MUSÍ být v angličtině a s PŘESNÝM názvem karty (zkontrolujte velikost písmen a interpunkci). Řádky musí být ve tvaru: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist2:
+                label: 'Decklist - hráč 2'
+                incentive: '↓ 📋 Vložte sem svůj decklist ↓'
+                help: >
+                    Vložte sem decklist hráče 2, pokud hrajete v týmech. 
+                    Podporované textové formáty jsou: Magic The Gathering™ Online Import, Magic The Gathering™ Arena Import, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Váš decklist MUSÍ být v angličtině a s PŘESNÝM názvem karty (zkontrolujte velikost písmen a interpunkci). Řádky musí být ve tvaru: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist3:
+                label: 'Decklist - hráč 3'
+                incentive: '↓ 📋 Vložte sem svůj decklist ↓'
+                help: >
+                    Vložte sem decklist hráče 3, pokud hrajete v týmech. 
+                    Podporované textové formáty jsou: Magic The Gathering™ Online Import, Magic The Gathering™ Arena Import, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
+                    <strong>Váš decklist MUSÍ být v angličtině a s PŘESNÝM názvem karty (zkontrolujte velikost písmen a interpunkci). Řádky musí být ve tvaru: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            results:
+                breakdown:
+                    title: 'Rozpis vašich bodů:'
+                    basepoints:
+                        text: 'Základní body (P-hodnota):'
+                        help: 'Toto je vaše P-hodnota, základní body určené podle vašich voleb formátu ve formuláři výše.'
+                    cards:
+                        text: 'Karty nalezené ve vašem seznamu:'
+                        help: 'Toto jsou všechny karty, které jsme ve vašem seznamu identifikovali; prosím zkontrolujte tento seznam.'
+                        viewmore: 'Zobrazit všechny nalezené karty'
+                    modulations:
+                        text: 'Modulace (pokročilé):'
+                        help: 'Toto jsou možné modulace vaší P-hodnoty na základě formátu a voleb karet.'
+                        viewmore: 'Zobrazit detail modulací'
+                    cardzones:
+                        text: 'Součty zón karet:'
+                        maindeck: 'Hlavní balík:'
+                        sideboard: 'Sideboard:'
+                        commandzone: 'Command Zone:'
+                        companion: 'Companioni:'
+                        attractions: 'Attractions:'
+                        contraptions: 'Contraptions:'
+                        stickers: 'Stickers:'
+                        total: 'Celkem identifikovaných karet (všechny zóny):'
+                    mvalue:
+                        text: 'M-Value:'
+                        help: 'Toto je vaše M-Value, peněžní hodnota vašeho decku, používaná pro finanční omezení.'
+                        viewmore: 'Zobrazit detaily M-Value'
+                    usage:
+                        text: 'Využití bodů:'
+                        help: 'Toto jsou body, které jste v decku použili, seřazené od nejvíce náročných po nejméně náročné.'
+                        unranked: '(Nehodnocené)'
+                        unknown: '(Neznámé)'
+                    budget:
+                        text: 'Rozpočet bodů:'
+                        help: 'Toto jsou body, které můžete v decku utratit, podle vašich voleb formátu (a Commanderů, pokud existují).'
+                    remaining:
+                        text: 'Zbývající, neutracené body:'
+                        help: 'Toto jsou zbývající body, které vám zůstaly. Klidně je dál používejte, pokud vám to pomůže.'
+                        exceeding: 'překročení: '
+                decklist1:
+                    label: 'Výsledky pro váš decklist č. 1:'
+                decklist2:
+                    label: 'Výsledky pro váš decklist č. 2:'
+                decklist3:
+                    label: 'Výsledky pro váš decklist č. 3:'
+                errors:
+                    containsinvalidtimelinecards:
+                        text: 'Decklist obsahuje karty, které nejsou legální ve zvolené timeline.'
+                    invalidcommandzone:
+                        text: 'Vaše Command Zone (Commander(ři)) není platná.'
+                    invalidnumberofcards:
+                        text: 'Decklist neobsahuje správný počet karet.'
+                    invalidsideboard:
+                        text: 'Váš sideboard je neplatný.'
+                    copies:
+                        text: 'Decklist obsahuje nelegální množství kopií stejné karty.'
+                    nocommander:
+                        text: 'V decklistu nebyl nalezen žádný Commander, přestože byly vyzkoušeny všechny možné zdrojové textové formáty.'
+                    impossibletofindacommander:
+                        text: 'Nelze určit Commander(a) ve vašem decklistu; přidejte prosím více karet a zkontrolujte zalomení řádků v decklistu.'
+                    toomanypoints:
+                        text: 'Váš decklist spotřeboval příliš mnoho bodů. Musíte upravit body, abyste se vešli do rozpočtu.'
+                    tooexpensive:
+                        text: 'Váš decklist má M-Value vyšší, než je maximum povolené vaším formátem.'
+                    failedparsing:
+                        text: 'Decklist se nepodařilo zpracovat; zkontrolujte prosím, že vložený obsah je platný.'
+                    internalerror:
+                        text: 'Při zpracování decklistu došlo k interní chybě. Kontaktujte prosím náš tým.'
+                    singlecopiescardnotunique:
+                        text: 'Attractions, Contraptions a Stickers musí být jedinečné (pouze jedna kopie od každé).'
+                    singletoncardnotunique:
+                        text: 'Váš decklist není singleton (povolena je jen jedna kopie každé karty). Zkontrolujte prosím množství pro: '
+                    numberofcardnotcorrectforquadruples:
+                        text: 'Váš decklist nemá správný počet kopií pro jednotlivé karty (maximálně 4 kopie nebo méně podle povoleného maxima u karty). Pro tyto karty: '
+                    wrongtimelineforcards:
+                        text: 'Váš decklist obsahuje karty, které nejsou legální v aktuální timeline legálnosti pro tyto karty: '
+                    cznoteligibleonecommander:
+                        text: 'Vaše Command Zone není platná; váš commander musí být způsobilý být commanderem.'
+                    cznoteligiblemulticommander:
+                        text: 'Jedna z karet ve vaší Command Zone není způsobilá být commanderem (více commanderů) pro tyto karty: '
+                    cznotvalidmulticztypenotthesame:
+                        text: 'Všichni vaši commanderi musí být stejného typu Partner schopnosti (např. Partner, Friends forever atd.).'
+                    coloridentitymissmatch:
+                        text: 'Jedna nebo více karet ve vašem decku neodpovídá barevné identitě vaší Command Zone: '
+                    unknown:
+                        text: 'Váš deck obsahuje neznámé karty; zkontrolujte prosím tyto názvy: '
+                legal:
+                    no:
+                        label: 'Váš deck je <strong>NELEGÁLNÍ</strong> podle vašich voleb formátu.'
+                    yes:
+                        label: 'Váš deck je <strong>LEGÁLNÍ</strong> podle vašich voleb formátu.'
+                    download:
+                        title: 'Stáhnout nebo vytisknout váš decklist'
+                        help: 'Zadejte jméno hráče a poté vyberte jednu z možností níže pro tisk nebo stažení.'
+                        playername: 'Jméno hráče:'
+                        generatedat: 'Dokument vygenerován: '
+                        label:
+                            link:
+                                label: 'Stáhnout nebo vytisknout registrační list decku'
+                            csv:
+                                label: 'Registrační list decku (CSV)'
+                                title: 'Stáhnout registrační list decku (CSV)'
+                            pdf:
+                                label: 'Registrační list decku (PDF)'
+                                title: 'Stáhnout registrační list decku (PDF)'
+                            text:
+                                label: 'Registrační list decku (Text)'
+                                title: 'Stáhnout registrační list decku (Text)'
+                            print:
+                                label: 'Vytisknout nyní'
+                                title: 'Vytisknout registrační list decku'
+                        comment:
+                            label: 'Komentář (volitelné)'
+                            help: 'Pokud je potřeba, přidejte komentář k decklistu.'
+                modulations:
+                    firstprint:
+                        text: 'Váš naposledy upravený Commander byl poprvé vytištěn před aktuálním rokem.'
+                        help: '+2 % P-hodnoty formátu za každý rok pod aktuálním rokem pro vašeho nejnovějšího commandera.'
+                    multiplecommanders:
+                        types:
+                            chooseabackground: '-20 % rozpočtu, pokud je použita Partner schopnost'
+                            other: '-40 % rozpočtu, pokud je použita Partner schopnost'
+                        text: 'Používáte více než jednoho Commandera.'
+                        help: '-20 % P-hodnoty formátu při použití karty typu Background, jinak -40 % bodů formátu.'
+                    manavalue:
+                        text: 'U každého z vašich Commanderů je mana value nižší než 4.'
+                        help: '"-10 % P-hodnoty formátu při mana value 3, -20 % při mana value 2, -30 % při mana value 1 nebo 0. Polovina z toho při použití ne-Background Partner schopnosti.'
+                    rankedcommander:
+                        text: 'Váš Commander je hodnocen.'
+                        help: 'Váš commander je hodnocen v aktuálním seznamu bodů.'
+                start:
+                    label: 'Začněte přidávat karty do decklistu vlevo pomocí našeho formuláře „Přidat kartu“, nebo vložením decklistu z jiného webu do textové oblasti vlevo podle pokynů níže.'
+            decklist:
+                addcard:
+                    label: 'Přidat kartu'
+        pointslist:
+            choice:
+                label: '{name} ({datestart} → {dateend})'
+            latest:
+                label: '{name} (Aktuální seznam)'
+        quiz:
+            back:
+                label: '← Předchozí otázka'
+                title: 'Vrátit se na předchozí otázku'
+            help:
+                text1: 'Pomůžeme vám najít váš formát.'
+                text2: 'Stačí odpovědět na těchto 5 rychlých otázek. ↓'
+            question1:
+                label: 'Hráči/týmy/životy:'
+                text: 'Kolik hráčů (týmů) a životů chcete?'
+                answer1:
+                    label: '2 hráči (Duel)'
+                    help: 'Duel hry: dva hráči, dva týmy. <br><strong>20 životů na začátku.</strong>'
+                answer2:
+                    label: '4 hráči (2 týmy)'
+                    help: 'Two-Headed Giant: čtyři hráči, dva týmy po dvou. <br><strong>30 sdílených životů na začátku.</strong> <em class="comingsoon">Již brzy!</em>'
+                answer3:
+                    label: '4+ hráčů (Free-For-All)'
+                    help: 'cEDH/Commander: čtyři a více hráčů, free-for-all. <br><strong>40 životů na začátku.</strong> <em class="comingsoon">Již brzy!</em>'
+                answer4:
+                    label: '6 hráčů (2 týmy)'
+                    help: 'Team Trio: dva týmy po třech hráčích, se speciálními pravidly pro párování. <br><strong>20 životů na začátku.</strong> <em class="comingsoon">Již brzy!</em>'
+            question2:
+                label: 'Maximální počet kopií karty v decku:'
+                text: 'Jaký je maximální počet kopií karty v decku, včetně Command Zones a Sideboardů?'
+                answer1:
+                    label: 'max. 1 kopie'
+                    help: 'Singleton - maximálně jedna kopie každé karty napříč celým decklistem.'
+                answer2:
+                    label: 'max. 4 kopie'
+                    help: 'Quadruples - maximálně čtyři kopie každé karty napříč celým decklistem. <em class="comingsoon">Již brzy!</em>'
+            question3:
+                label: 'Karty v hlavním balíku/sideboardu:'
+                text: 'Kolik karet by měl deck mít (hlavní balík/sideboard)?'
+                answer1:
+                    label: '100/0'
+                    help: '100 karet v hlavním balíku, žádný sideboard.'
+                answer2:
+                    label: '60+/0-15'
+                    help: '60 a více karet v hlavním balíku, 0 až 15 v sideboardu. <em class="comingsoon">Již brzy!</em>'
+            question4:
+                label: 'Commandeři/Command Zones:'
+                text: 'Chcete používat Commandery/Command Zones?'
+                answer1:
+                    label: 'Ne'
+                    help: 'Nebudou kontrolována žádná další pravidla. <em class="comingsoon">Již brzy!</em>'
+                answer2:
+                    label: 'Ano'
+                    help: 'Přidá to speciální pravidla a omezení pro konstrukci decku i hratelnost.'
+            question5:
+                label: 'Maximální timeline legálnosti:'
+                text: 'Jakou maximální timeline legálnosti chcete hrát?'
+                answer1:
+                    label: 'Printed'
+                    help: 'Cokoli máte, pokud je to autentická karta Magic The Gathering™. Zahrnuje všechny kdy vytištěné karty.'
+                answer2:
+                    label: 'Funny'
+                    help: 'Zahrnuje všechny karty Eternal plus zábavné sety.'
+                answer3:
+                    label: 'Eternal'
+                    help: 'Zahrnuje všechny karty z Eternal, víceméně Vintage-tištěné, legální v sankcionovaných turnajích.'
+                answer4:
+                    label: 'Modern'
+                    help: 'Zahrnuje všechny karty, které jsou legální nebo zakázané v Modern. <em class="comingsoon">Již brzy!</em>'
+                answer5:
+                    label: 'Pioneer'
+                    help: 'Zahrnuje všechny karty, které jsou legální nebo zakázané v Pioneer. <em class="comingsoon">Již brzy!</em>'
+                answer6:
+                    label: 'Standard'
+                    help: 'Zahrnuje všechny karty, které jsou legální nebo zakázané v Standard. <em class="comingsoon">Již brzy!</em>'
+            question6:
+                label: 'P-hodnota:'
+                text: 'Jaká je vaše referenční P-hodnota? P-hodnota určuje základní body pro stavbu, před jakýmikoli modulacemi.'
+                answer1:
+                    label: 'Standard Play'
+                    help: 'Toto je výchozí P-hodnota a doporučená hodnota pro většinu hráčů. Použijte ji, pokud nevíte, co zvolit.'
+                answer2:
+                    label: 'Lite Play'
+                    help: 'Toto je konzervativnější P-hodnota; doporučuje se hráčům, kteří chtějí hrát s nižší P-hodnotou, což znamená méně investovaných peněz a menší explozivitu. <em class="comingsoon">Již brzy!</em>'
+                answer3:
+                    label: 'Power Play'
+                    help: 'Toto je agresivnější P-hodnota; doporučuje se hráčům, kteří chtějí hrát s vyšší P-hodnotou, což znamená méně omezení na karty a větší explozivitu. <em class="comingsoon">Již brzy!</em>'
+            question7:
+                label: 'Použít finanční omezení'
+                text: 'Používáte finanční omezení?'
+                answer1:
+                    label: 'Ne'
+                    help: 'Hrajete pouze s originálními kartami (nebo povolujete proxy).'
+                answer2:
+                    label: 'Ano'
+                    help: 'Hrajete pouze s originálními kartami, ale máte finanční limit na decky a chcete k tomu použít naši M-Value. <em class="comingsoon">Již brzy!</em>'
+            question8:
+                label: 'Kterou aktualizaci seznamu bodů použít:'
+                text: 'Která aktualizace seznamu bodů se má použít? Vždy používejte nejnovější, pokud nekontrolujete starší decklisty.'
+            previous:
+                text: '⬅️ Předchozí otázka'
+global:
+    actions:
+        label: Akce
+        title: Akce
+    back: ⬅️ Zpět
+    createbutton:
+        label: ➕ Přidat
+        title: Přidat položku
+    createdat:
+        label: Vytvořeno
+    dates:
+        label: Vytvořeno / Naposledy aktualizováno
+    delete:
+        confirmprompt: Opravdu chcete tuto položku smazat? Tuto akci nelze vrátit.
+    deletesuccess:
+        text: 'Položka byla úspěšně smazána'
+    deletebutton:
+        label: ❌ Smazat
+        title: Smazat tuto položku
+    editbutton:
+        label: ✏️ Upravit
+        title: Upravit
+    email:
+        responsibility: AeonShift posílá e-maily pouze pro své nezbytné funkce a nikdy vás nebude kontaktovat z jiného důvodu. Pokud obdržíte podezřelý e-mail, neklikejte na žádné odkazy a kontaktujte náš tým.
+    error:
+        404:
+            text: Jejda! Požadovanou stránku se nepodařilo najít. Možná byste měli použít menu výše a začít hledat, co potřebujete, nebo se jednoduše vrátit v historii...
+            title: 404 - Nenalezeno 😔
+        500:
+            text: Jejda! Server, podobně jako seznam bodů, dosáhl svých limitů. Pokud tato chyba přetrvává, kontaktujte prosím náš tým.
+            title: 500 - Chyba serveru 😔
+    id:
+        label: ID
+    indexbutton:
+        label: 🔙 Zpět na seznam
+        title: Zpět na seznam
+    mandatoryfields:
+        text: '* = Tato pole jsou povinná.'
+    noelements:
+        label: Žádné položky k zobrazení.
+    none:
+        label: N/A
+    pagenumber: Strana <strong>{current}/{total}</strong>
+    passwordbutton:
+        label: Změnit heslo
+        title: Změnit heslo uživatele
+    roles:
+        ROLE_ADMIN: Administrátor
+        ROLE_USER: Běžný uživatel
+    savebutton:
+        label: 💾 Uložit
+        title: Uložit změny
+    savesuccess:
+        text: Úspěšně uloženo.
+    selectnone: --
+    skipcontent:
+        label: Přeskočit na hlavní obsah
+    showbutton:
+        label: 👁️ Zobrazit
+        title: Zobrazit detaily
+    showbuttonfront:
+        label: 👁️ Zobrazit (front)
+        title: 'Zobrazit na veřejné části'
+    total:
+        label: <strong>{elements}</strong> položek celkem
+    updatedat:
+        label: Aktualizováno
+    1:
+        label: 'Ano'
+    0:
+        label: 'Ne'
+    table:
+        summary: 'Záznamy _START_ až _END_ z _TOTAL_'
+        empty: 'Celkem 0 záznamů'
+        filtered: '(filtrováno z _MAX_ celkem)'
+        thousands: ''
+        menu: 'Zobrazit _MENU_ záznamů'
+        search: 'Hledat (použijte „xx yy“ pro souvislý řetězec):'
+        none: 'Nenalezeny žádné odpovídající záznamy'
+        first: 'První'
+        last: 'Poslední'
+        next: 'Další'
+        previous: 'Předchozí'
+        ariasort: 'Seřadit tento sloupec'
+        ariasortreverse: 'Seřadit tento sloupec obráceně'
+    legal:
+        title: 'Legální'
+        label: 'Legální'
+    rules:
+        label: 'Pravidla'
+        title: 'Pravidla hry'
+    start:
+        label: 'Spustit příkaz'
+        title: 'Spustit příkaz'
+    users:
+        label: 'Vytvořil / Naposledy upravil'
+    import:
+        label: '📥 Importovat/aktualizovat'
+        title: '📥 Importovat/aktualizovat karty/body (CSV soubor)'
+    export:
+        label: '📤 Exportovat CSV seznamu bodů'
+        title: 'Exportovat tento seznam bodů s aktuálními hodnotami do CSV pro použití v tabulce nebo jinde a pozdější opětovný import.'
+    filter:
+        label: Filtrovat výsledky
+        title: 'Klikněte zde pro filtrování výsledků podle vašeho výběru'
+    reset:
+        title: 'Resetovat formulář'
+        label: 'Resetovat'
+    max:
+        label: 'Zobrazí se pouze prvních 100.'
+    choose:
+        label: '↓ Vyberte prosím'
+mtg:
+    addform:
+        title: 'Přidat kartu'
+    add:
+        label: 'Přidat'
+    copies:
+        text: 'X'
+    cardzones:
+        choose: 'Zóna'
+        maindeck: 'Hlavní balík'
+        sideboard: 'Sideboard'
+        commandzone: 'Command Zone'
+        companion: 'Companion'
+        attractions: 'Attraction'
+        contraptions: 'Contraption'
+        stickers: 'Sticker'
+    name:
+        label: 'Název'
+        placeholder: 'Ruhan of the Fomori'
+    popular:
+        comingsoon:
+            text: '<em class="blue-text">Již brzy!</em> Zůstaňte naladěni.'
+        eternal:
+            title: 'Timeline: <strong class="blue-text">Eternal</strong>'
+        modern:
+            title: 'Timeline: <strong class="blue-text">Modern</strong>'
+        pioneer:
+            title: 'Timeline: <strong class="blue-text">Pioneer</strong>'
+        standard:
+            title: 'Timeline: <strong class="blue-text">Standard</strong>'
+        quadruples:
+            eternal:
+                eternal:
+                    label: Eternal
+                    title: Hrát AeonShift Eternal
+                    subtitle: <strong>2 hráči</strong>, <strong>20</strong> životů, minimálně <strong>60</strong> karet v hlavním balíku + <strong>0-15</strong> karet v sideboardu, <strong>dvě</strong> vítězné hry, timeline <strong>Eternal</strong>
+            modern:
+                modern:
+                    label: Modern
+                    title: Hrát AeonShift Modern
+                    subtitle: <strong>2 hráči</strong>, <strong>20</strong> životů, minimálně <strong>60</strong> karet v hlavním balíku + <strong>0-15</strong> karet v sideboardu, <strong>dvě</strong> vítězné hry, timeline <strong>Modern</strong>
+        singleton:
+            eternal:
+                2hg:
+                    label: Two-Headed Giant Duel Commander
+                    title: Hrát AeonShift 2HG Duel Commander
+                    subtitle: <strong>4</strong> hráči, <strong>2</strong> týmy, <strong>30</strong> sdílených životů, Singleton <strong>100 karet</strong>, <strong>jedna</strong> vítězná hra, timeline <strong>Eternal</strong> <em class="blue-text">Již brzy!</em>
+                commander:
+                    label: Commander/cEDH
+                    title: Hrát AeonShift Commander/cEDH
+                    subtitle: <strong>4+</strong> hráči – free-for-all, <strong>40</strong> životů, <strong>Command</strong> Zones, Singleton <strong>100 karet</strong>, <strong>jedna</strong> vítězná hra, timeline <strong>Eternal</strong> <em class="blue-text">Již brzy!</em>
+                duelcommander:
+                    label: Duel Commander
+                    title: Hrát AeonShift Duel Commander
+                    subtitle: <strong>2</strong> hráči, <strong>20</strong> životů, <strong>Command</strong> Zones, Singleton <strong>100 karet</strong>, <strong>dvě</strong> vítězné hry, timeline <strong>Eternal</strong>
+                freeform:
+                    label: Freeform
+                    title: Hrát AeonShift Freeform
+                    subtitle: Hrajte s <strong>jakýmikoli kartami</strong>, které máte, <strong>20</strong> životů, minimálně <strong>60</strong> karet, <strong>neomezené</strong> hry, timeline <strong>Eternal</strong>!
+                highlander:
+                    label: Highlander
+                    title: Hrát AeonShift Highlander
+                    subtitle: <strong>2 hráči</strong>, <strong>20</strong> životů, Singleton <strong>100 karet</strong>, <strong>dvě</strong> vítězné hry, timeline <strong>Eternal</strong>
+            modern:
+                2hg:
+                    label: Two-Headed Giant Modern Duel Commander
+                    title: Hrát AeonShift 2HG Modern Duel Commander
+                    subtitle: <strong>4</strong> hráči, <strong>2</strong> týmy, <strong>30</strong> sdílených životů, Singleton <strong>100 karet</strong>, <strong>jedna</strong> vítězná hra, timeline <strong>Modern</strong> <em class="blue-text">Již brzy!</em>
+                commander:
+                    label: Modern Commander/cEDH
+                    title: Hrát AeonShift Modern Commander/cEDH
+                    subtitle: <strong>4+</strong> hráči – free-for-all, <strong>40</strong> životů, <strong>Command</strong> Zones, Singleton <strong>100 karet</strong>, <strong>jedna</strong> vítězná hra, timeline <strong>Modern</strong> <em class="blue-text">Již brzy!</em>
+                duelcommander:
+                    label: Modern Duel Commander
+                    title: Hrát AeonShift Modern Duel Commander
+                    subtitle: <strong>2</strong> hráči, <strong>20</strong> životů, <strong>Command</strong> Zones, Singleton <strong>100 karet</strong>, <strong>dvě</strong> vítězné hry, timeline <strong>Modern</strong>
+                freeform:
+                    label: Modern Freeform
+                    title: Hrát AeonShift Modern Freeform
+                    subtitle: Hrajte s <strong>jakýmikoli kartami</strong>, které máte, <strong>20</strong> životů, minimálně <strong>60</strong> karet, <strong>neomezené</strong> hry, timeline <strong>Modern</strong>!
+                highlander:
+                    label: Modern Highlander
+                    title: Hrát AeonShift Modern Highlander
+                    subtitle: <strong>2 hráči</strong>, <strong>20</strong> životů, Singleton <strong>100 karet</strong>, <strong>dvě</strong> vítězné hry, timeline <strong>Modern</strong>
+page:
+    position:
+        footer:
+            label: Patička
+        header:
+            label: Záhlaví
+user:
+    login:
+        alreadylogged: Již jste přihlášen(a) jako {user}, <a data-turbo="false" href="{url}" title="Odhlásit se">Odhlásit se</a>
+        helptext1: ℹ️ Ještě nemáte účet? <a href="{link}" title="Klikněte zde pro vytvoření účtu">Nejdřív si ho vytvořte!</a>
+        helptext2: 😣 Zapomněli jste heslo? <a href="{link}" title="Resetovat heslo">Klikněte zde</a> a nastavte si nové.
+        password:
+            help: Zadejte své heslo, pokud jste si ho nastavili.
+            label: Heslo
+            placeholder: vaše heslo
+        submit:
+            label: 🔑 Přihlásit se
+        success: Nyní jste úspěšně přihlášen(a) jako {username}
+        title: Přihlášení
+        username:
+            help: Zadejte zde své uživatelské jméno, obvykle přezdívku, se kterou jste se registrovali.
+            label: Uživatelské jméno
+            placeholder: vaše uživatelské jméno
+    logout:
+        success: Nyní jste odhlášen(a).
+    roles:
+        admin:
+            label: Administrátor
+        user:
+            label: Běžný uživatel

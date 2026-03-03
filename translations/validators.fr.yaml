@@ -2,20 +2,72 @@ admin:
     form:
         mtg:
             points_list:
-                import:
-                    file:
-                        error: 'Merci de choisir un fichier CSV valide.'
                 create:
                     validitystartingat:
-                        empty: 'Merci de rentrer une date valide'
+                        empty: Veuillez saisir une date valide
+                import:
+                    file:
+                        error: Veuillez sélectionner un fichier CSV valide.
             update:
                 create:
                     pointslist:
-                        empty: 'Merci de choisir une liste de points'
+                        empty: Veuillez fournir une liste de points
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: Veuillez saisir une date valide
+                    title:
+                        too_long: 'Veuillez saisir un titre plus court.'
+                import:
+                    file:
+                        error: Veuillez sélectionner un fichier CSV valide.
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': 'Veuillez saisir un titre.'
+                        too_long: 'Veuillez saisir un titre plus court.'
+                    descriptionen:
+                        'null': 'Veuillez saisir une description.'
+                    startingat:
+                        'null': 'Veuillez saisir une date de début valide.'
+                    endingat:
+                        'null': 'Veuillez saisir une date de fin valide.'
         user:
             create:
                 roles:
-                    invalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
-                    multipleinvalid: Merci de choisir des rôles valides pour l'utilisateur·ice.
+                    invalid: Veuillez choisir des rôles valides pour l’utilisateur.
+                    multipleinvalid: Veuillez choisir des rôles valides pour l’utilisateur.
+user:
+    create:
+        roles:
+            invalid: Veuillez choisir des rôles valides pour l’utilisateur.
+            multipleinvalid: Veuillez choisir des rôles valides pour l’utilisateur.
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': 'Veuillez saisir un titre.'
+                    too_long: 'Veuillez saisir un titre plus court.'
+                descriptionen:
+                    'null': 'Veuillez saisir une description.'
+                startingat:
+                    'null': 'Veuillez saisir une date de début valide.'
+                endingat:
+                    'null': 'Veuillez saisir une date de fin valide.'
 daterange:
-    invalid: 'Attention à bien choisir une date de fin ultérieure à la date de début'
+    invalid: Veillez à choisir une date de fin postérieure à la date de début.
+front:
+    users:
+        forms:
+            username:
+                exists: Ce nom d’utilisateur est déjà pris.
+            email:
+                exists: Cette adresse e-mail est déjà utilisée.
+            password:
+                help: 'Le mot de passe doit comporter au moins 8 caractères.'
+    user:
+        forms:
+            password:
+                blank: 'Veuillez saisir un mot de passe.'

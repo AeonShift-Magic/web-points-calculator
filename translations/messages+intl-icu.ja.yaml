@@ -1,0 +1,1333 @@
+admin:
+    account:
+        email:
+            help: >
+                あなたのメールアドレス。重複してはいけません。アクセスの復旧や連絡に使用され、あなたが作成するイベントに登録した人にも表示されます。また、このアドレスを変更するたびに検証が必要です。 
+                <strong>警告: すべてのメールはこのアドレスに送信されます。入力/変更する前に必ず三重に確認してください。</strong>
+            label: 'メール:'
+            placeholder: johnorjane.doe@provider.domain
+        roles:
+            label: 'このサイトでのロール/権限:'
+        username:
+            help: このウェブサイトでのユーザー名。重複してはいけません。また、他の人が現在使用していない必要があります。
+            label: 'ユーザー名:'
+            placeholder: JohnDoe84
+    customblock:
+        editlink:
+            label: ✏️ このブロックを編集 ({blockkey})
+    form:
+        customblock:
+            create:
+                blockkey:
+                    help: すでに使用されている場合、正しい言語と場所のすべてのブロックが重みの昇順で表示されます。
+                    label: ブロックの場所
+                    placeholder: 場所を選択
+                contents:
+                    help: |
+                        <strong>HTML とその妥当性に注意してください</strong>: サイトの見た目が崩れたり正しく表示されない可能性があります。</strong> <br> <strong>警告: すべてのサイトブロック（各言語・各場所）には約10分のキャッシュがあることを忘れないでください。</strong>
+                    label: 内容
+                weight:
+                    help: -100 から 100 の間。すでに使用されている場合、正しい言語と場所のすべてのブロックが重みの昇順で表示されます。
+                    label: 重み
+                    placeholder: ブロックの重み
+            legends:
+                info: 'ブロックのパラメータ'
+        page:
+            create:
+                contents:
+                    help: >
+                        <strong>HTML とその妥当性に注意してください</strong>: サイトの見た目が崩れたり正しく表示されない可能性があります。</strong>
+                    label: 内容
+                language:
+                    help: このページが表示される言語。
+                    label: 言語
+                slug:
+                    help: 空欄のままにすると、タイトルから自動的にスラッグを生成します。
+                    label: スラッグ
+                title:
+                    help: ページのタイトル。ヘッダーと検索結果に表示されます。
+                    label: タイトル
+                weight:
+                    help: -100 から 100 の間。すでに使用されている場合、正しい言語と場所のすべてのページが重みの昇順で表示されます。
+                    label: 重み
+                zone:
+                    help: 'このページが表示されるゾーン。例: ヘッダーは "header"、フッターは "footer" など。'
+                    label: ゾーン
+            legends:
+                info: 'ページの詳細'
+        abstract:
+            update:
+                create:
+                    titleen:
+                        help: '更新/告知の公開タイトル（英語）'
+                        label: 'タイトル (EN)'
+                        placeholder: '新しい告知'
+                    pointslist:
+                        help: '使用するポイントリスト'
+                        label: '使用するポイントリスト'
+                        placeholder: 'ポイントリストを選択してください'
+                    startingat:
+                        help: 'この更新はいつから有効ですか？'
+                        label: '開始日'
+                    endingat:
+                        help: 'この更新はいつまで有効ですか？'
+                        label: '終了日'
+                    descriptionen:
+                        label: '説明 (EN)'
+                        help: '補足の詳細（任意）'
+                    public:
+                        label: '公開'
+                        help: 'この更新を公開としてマークする'
+                    rulesmodel:
+                        label: 'ルールモデル'
+                        help: 'このリストを使用するときに適用するルールモデル'
+                legends:
+                    info: '更新の詳細'
+        mtg:
+            cardsourceactivityhistory:
+                create:
+                    channel:
+                        label: 'チャンネル'
+                    startedat:
+                        label: '開始日時'
+                    endedat:
+                        label: '終了日時'
+                    successsummary:
+                        label: '成功概要'
+                    errorsummary:
+                        label: 'エラー概要'
+                    startedfrom:
+                        label: '開始元'
+                    logfilepath:
+                        label: 'ログファイル'
+                    uniqueid:
+                        label: 'ユニークタスクID'
+            pointslist:
+                create:
+                    filename:
+                        label: 'ファイル名'
+                    uploadnbcards:
+                        label: '初期ファイル内のカード数'
+                    title:
+                        help: 'ポイントリストのタイトル'
+                        label: 'タイトル'
+                        placeholder: 'XX/XX/XXXX のポイントリスト'
+                    lastuploadedat:
+                        label: '最終アップロード'
+                    currentnbcards:
+                        label: 'データベース内の現在のカード数'
+                    relatedupdates:
+                        label: '関連する告知/更新'
+                    validitystartingat:
+                        help: 'このリストが適用される日付。順序や最新判定に使用されます。'
+                        label: '有効開始日'
+                    rulesmodel:
+                        label: 'ルールモデル'
+                        help: '適用するルールモデル'
+                import:
+                    firstline:
+                        text: '⚠️ インポート時、このドキュメントの最初の5行は無視されます。メタデータに利用してください。'
+                    columnsright:
+                        text: '(これらの列、および右側のすべての列はインポート時に無視されます)'
+                    pvalues:
+                        text: 'P-Values（この順序）: Standard Play（6行目）、Lite Play（7行目）、Power Play（8行目）'
+                        header:
+                            liteplay:
+                                text: 'Lite Play のP-Values'
+                            standardplay:
+                                text: 'Standard Play のP-Values'
+                            powerplay:
+                                text: 'Power Play のP-Values'
+                        liteplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value（Lite Play）'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value（Lite Play）'
+                            duelcommander:
+                                text: 'Duel Commander P-Value（Lite Play）'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value（Lite Play）'
+                            highlander:
+                                text: 'Highlander P-Value（Lite Play）'
+                            modern:
+                                text: 'Modern P-Value（Lite Play）'
+                            pioneer:
+                                text: 'Pioneer P-Value（Lite Play）'
+                            standard:
+                                text: 'Standard P-Value（Lite Play）'
+                        standardplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value（Standard Play）'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value（Standard Play）'
+                            duelcommander:
+                                text: 'Duel Commander P-Value（Standard Play）'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value（Standard Play）'
+                            highlander:
+                                text: 'Highlander P-Value（Standard Play）'
+                            modern:
+                                text: 'Modern P-Value（Standard Play）'
+                            pioneer:
+                                text: 'Pioneer P-Value（Standard Play）'
+                            standard:
+                                text: 'Standard P-Value（Standard Play）'
+                        powerplay:
+                            basesingleton:
+                                text: 'Base Singleton P-Value（Power Play）'
+                            basequadruples:
+                                text: 'Base Quadruples P-Value（Power Play）'
+                            duelcommander:
+                                text: 'Duel Commander P-Value（Power Play）'
+                            commander:
+                                text: 'Commander/cEDH FFA P-Value（Power Play）'
+                            highlander:
+                                text: 'Highlander P-Value（Power Play）'
+                            modern:
+                                text: 'Modern P-Value（Power Play）'
+                            pioneer:
+                                text: 'Pioneer P-Value（Power Play）'
+                            standard:
+                                text: 'Standard P-Value（Power Play）'
+                    label: >
+                        📥 ポイントリストをインポート/更新（CSVファイル）
+                    help: >
+                        このフォームを使って、提供されたCSVテンプレートからポイントリストを更新します（1行につき1カード）。 
+                        <br>
+                        <strong>警告: これは現在のポイントリスト全体を上書きし、元に戻せません。</strong>
+                    help2: >
+                        注: 当ツールは上書き前に最低限の整合性チェックを行い、セル内容（大小文字、長さ、数値データなど）を正規化しますが、内容や失われるデータに注意するのは<strong>あなたの責任</strong>です。
+                    help3: >
+                        CSVファイルは <strong>UTF-8（Unicode）</strong> 形式で、列は <strong>カンマ</strong> で区切り、改行は <strong>Unix（New Line）</strong> 形式である必要があります。 
+                        <br>
+                        値は二重引用符（"）で囲むことができます。 
+                        <br>
+                        1行につき1結果。各位置（列 "Name (EN)"）は一意で、<strong>ソースカードDBに存在するカードの正確な名称（スペース、句読点、両面カード名、大小文字を含むすべての文字が一致）</strong>である必要があります（行順は問いません）。 
+                        <br>
+                        Points（6列）は整数または小数（"10" や "10.5" など）が使用できます。
+                    help4: >
+                        ファイル先頭には必ず5行があり、それらは破棄されます。その後、P-Values のために3行（Standard Play、Lite Play、Power Play の順）が続き、9行目には必ず "((unranked))" というカードがあり、unrankedカードのポイントを設定します。
+                    help5: >
+                        <strong>列や列順を変更したり、左側に追加列を増やしたりしないでください。</strong>
+                    help6: >
+                        一覧ページの各行右側のボタンをクリックすれば、全ファイルを再アップロードせずに個別カードを編集することもできます。
+                    help7: >
+                        注: 変更は管理画面ではリアルタイムで反映されますが、公開表示と計算への反映には最大10分かかる場合があります。
+                    help8: >
+                        下の表は、CSVファイルに期待される内容の例を示しています:
+                    confirm:
+                        label: '上記の手順を読み理解したことを確認し、ポイントリストをインポート/更新します。'
+                    file:
+                        button:
+                            label: '📥 ポイントリストをインポート/更新（CSVファイル）'
+                            title: 'ポイントリストをインポート/更新（CSVファイル）'
+                        error: '有効なCSVファイルを選択してください。'
+                        label: '📥 ポイントリストをインポート/更新（CSVファイル）'
+                        help: >
+                            提供されたCSVテンプレートからポイントリストをインポート（1行につき1結果）。最大サイズ: 4 MB。 <br><strong>警告: これはポイントリストのカードをすべて上書きし、元に戻せません。</strong>
+                        unreadable: 'ファイルが読めないか空です。開けること、CSV UTF-8形式であること、区切りがカンマであること、改行がUnix形式であることを確認してください。'
+                    updated:
+                        success: 'ポイントを更新しました: {number} 行を処理しました。'
+                    error:
+                        filecontents: 'ファイル内容が無効です。以下の手順に従ってください。'
+                        processing_line: '行 {line_number} の処理でエラー: {error}。以下の手順に従ってください。'
+                        column_count: '行の列数が正しくありません（少なくとも7列が必要です）'
+                        invalid_value: '無効な値'
+                        invalid_name: 'カード名はソースカードリスト内のカード名と一致している必要があります'
+                        invalid_game_points: '無効なポイント（-1000〜1000の整数である必要があります）'
+                        invalid_first_line: '最初の行の英語カード名は必ず "((unranked))" でなければなりません'
+                        incorrectname: '不正なカード名: "{name}"'
+                        notfoundinsources: 'ソースカードに存在しないカード: "{name}"'
+                    info: 'ポイントのインポート'
+                legends:
+                    info: 'ポイントリストの詳細'
+            pointslistcard:
+                create:
+                    pointslist:
+                        label: 'ポイントリスト'
+                        help: 'このカードを関連付けるポイントリスト'
+                        placeholder: 'ポイントリストを選択してください'
+                    nameen:
+                        label: '名前 (EN)'
+                        help: 'カード名（英語）。データベース内のカードと文字単位で一致する必要があります。'
+                    imageurl:
+                        label: 'カード画像URL'
+                        help: 'サイト上で使用する画像のURL。'
+                    scryfallid:
+                        label: 'Scryfall ID'
+                        help: '必要に応じてカードのScryfall ID'
+                    scryfalluri:
+                        label: 'Scryfall URI'
+                        help: '必要に応じてカードのScryfall URI'
+                    manavalue:
+                        label: 'Mana Value'
+                        help: 'カードのマナ総量（Mana Value）'
+                    oracleid:
+                        label: 'Oracle ID'
+                        help: 'カードのOracle ID'
+                    multicztype:
+                        label: 'Command Zone の複数タイプ'
+                        help: 'Command Zones の複数オブジェクトのタイプ（例: "doctors_companion", "choose_a_background", "friends_forever", "partner", "doctors_companion", "choose_a_background"）。'
+                    points2hg:
+                        label: 'Two-Headed Giant のポイント'
+                        help: '2HGバリアントでのこのカードのポイント。'
+                    points2hgspecial:
+                        label: 'Two-Headed Giant のポイント（特殊）'
+                        help: '2HGバリアントでのこのカードのポイント（特殊。例: "As a Commander"）。'
+                    pointsduelcommander:
+                        label: 'Duel Commander のポイント'
+                        help: 'Duel Commander でのこのカードのポイント。'
+                    pointsduelcommanderspecial:
+                        label: 'Duel Commander のポイント（特殊）'
+                        help: 'Duel Commander でのこのカードのポイント（特殊。例: "As a Commander"）。'
+                    pointscommander:
+                        label: 'Commander/cEDH Free-For-All のポイント'
+                        help: 'マルチプレイヤー Free-For-All Commander/cEDH でのこのカードのポイント。'
+                    pointscommanderspecial:
+                        label: 'Commander/cEDH Free-For-All のポイント（特殊）'
+                        help: 'マルチプレイヤー Free-For-All Commander/cEDH でのこのカードのポイント（特殊。例: "As a Commander"）。'
+                    islegal2hg:
+                        label: '2HGで合法'
+                        help: 'Two-Headed Giant で合法ならチェック'
+                    islegal2hgspecial:
+                        label: '2HGで合法（特殊）'
+                        help: 'Two-Headed Giant で合法（特殊。例: "As a Commander"）ならチェック'
+                    islegalduelcommander:
+                        label: 'Duel Commanderで合法'
+                        help: 'Duel Commander で合法ならチェック'
+                    islegalduelcommanderspecial:
+                        label: 'Duel Commanderで合法（特殊）'
+                        help: 'Duel で合法（特殊。例: "As a Commander"）ならチェック'
+                    islegalcommander:
+                        label: 'Free-For-All Commander/cEDHで合法'
+                        help: 'マルチプレイヤー Free-For-All Commander/cEDH で合法ならチェック'
+                    islegalcommanderspecial:
+                        label: 'Free-For-All Commander/cEDHで合法（特殊）'
+                        help: 'マルチプレイヤー Free-For-All Commander/cEDH で合法（特殊。例: "As a Commander"）ならチェック'
+                    firstline:
+                        label: 'P-values の後に続く最初の英語名は必ず <code class="inline">((unranked))</code> でなければなりません（unrankedカードのポイントを定義します）'
+                    isczeligible:
+                        label: 'messages'
+                    pointshighlander:
+                        label: 'Highlander のポイント'
+                        help: 'Highlander でのこのカードのポイント。'
+                    pointsmodern:
+                        label: 'Modern のポイント'
+                        help: 'Modern でのこのカードのポイント。'
+                    pointspioneer:
+                        label: 'Pioneer のポイント'
+                        help: 'Pioneer でのこのカードのポイント。'
+                    pointsstandard:
+                        label: 'Standard のポイント'
+                        help: 'Standard でのこのカードのポイント。'
+                    pointsbasesingleton:
+                        label: 'Base Singleton のポイント'
+                        help: 'Singleton におけるこのカードのベースポイント。'
+                    pointsbasequadruples:
+                        label: 'Base Quadruples のポイント'
+                        help: 'Quadruples におけるこのカードのベースポイント。'
+                legends:
+                    info: 'ポイントリストカードの詳細'
+            update:
+                create:
+                    titleen:
+                        help: '更新/告知の公開タイトル（英語）'
+                        label: 'タイトル (EN)'
+                        placeholder: '新しい告知'
+                    pointslist:
+                        help: '使用するポイントリスト'
+                        label: '使用するポイントリスト'
+                        placeholder: 'ポイントリストを選択'
+                    start:
+                        help: 'この更新はいつ有効になりますか？'
+                        label: '開始日'
+                    published:
+                        label: '公開済み'
+                        help: 'チェックすると、この更新をユーザーに表示します'
+                    end:
+                        help: 'この更新はいつ終了しますか？'
+                        label: '終了日'
+                    descriptionen:
+                        label: '説明 (EN)'
+                        help: '追加の詳細（任意）'
+                    public:
+                        label: '公開'
+                        help: 'この更新を公開表示する'
+                    rulesmode:
+                        label: 'ルールテンプレート'
+                        help: 'このリスト使用時に適用するルールテンプレート'
+                    relatedpointslist:
+                        label: '関連ポイントリスト'
+            sourcecard:
+                create:
+                    nameen:
+                        label: '名前 (EN)'
+                        help: 'カード名（英語）。文字単位で正確である必要があります。'
+                        placeholder: 'Black Lotus...'
+                    flavorofnameen:
+                        label: 'フレーバー名の元 (EN)'
+                        help: 'フレーバー名/スキン名（例: "Cabal Coffers" の "Minas Morgul"）を英語で。文字単位で正確である必要があります。'
+                        placeholder: 'Minas Morgul...'
+                    alternatenameen:
+                        label: '別名 (EN)'
+                        help: 'カードの別名（英語）。文字単位で正確である必要があります。'
+                        placeholder: 'Cabal Coffers...'
+                    imageurl:
+                        label: 'カード画像URL'
+                        help: 'サイト上で使用する画像のURL。'
+                        placeholder: 'https://...'
+                    firstprintsetcode:
+                        label: '初刷セットコード'
+                    iscommandzoneeligible:
+                        label: 'CZ Eligible'
+                        help: 'このカードはCommanderとして適格ですか？'
+                    coloridentity:
+                        label: '色のアイデンティティ'
+                    firstprintedat:
+                        label: '初刷日'
+                    ismultiplecommandzoneeligible:
+                        label: 'Multiple CZ Eligible'
+                    isblue:
+                        label: '青ID'
+                    isblack:
+                        label: '黒ID'
+                    iswhite:
+                        label: '白ID'
+                    isgreen:
+                        label: '緑ID'
+                    isred:
+                        label: '赤ID'
+                    iscolorless:
+                        label: '無色ID'
+                    maximumtimelinelegality:
+                        label: '最大タイムライン合法性'
+                    mtgoprice:
+                        label: 'MTGO価格'
+                        help: 'このカードのMTGO価格。'
+                    mvalue:
+                        label: 'M-Value（トレンド）'
+                        help: 'このカードのM-Value（EUR-USD の混合金額価値）。'
+                    duelrank:
+                        label: 'Duel Commander ランク'
+                    cedhrank:
+                        label: 'cEDH ランク'
+                    ffarank:
+                        label: 'FFA ランク'
+                    digitalonly:
+                        label: 'デジタル専用？'
+                    latestmvalue:
+                        label: '最新のM-Value'
+                    mvaluecount:
+                        label: 'M-Value数（現在使用中の価格数）'
+        user:
+            account:
+                roles:
+                    label: 'このサイトでのロール/権限:'
+                    help: 'サイト上のユーザー権限を定義します。たとえば主催者はイベントを開催でき、管理者はサイトを管理できます。'
+    home:
+        goto:
+            text: '管理画面のサブセクションへ移動:'
+    nav:
+        customblocks:
+            edit:
+                label: '✏️ カスタムブロックを編集: 場所 "{blockkey}" / 重み "{weight}"'
+                title: 'カスタムブロックを編集: 場所 "{blockkey}" / 重み "{weight}"'
+            index:
+                label: カスタムブロック
+                title: カスタムブロックを管理
+            new:
+                label: ➕ カスタムブロックを追加
+                title: カスタムブロックを追加
+            show:
+                label: 'カスタムブロック詳細: 場所 "{blockkey}" / 重み "{weight}"'
+        front:
+            label: 公開ホーム →
+            title: 公開ホーム
+        home:
+            label: 🔴 管理ホーム
+            title: 管理ホーム
+        pages:
+            index:
+                label: ページ
+                title: ページを管理
+            new:
+                label: ➕ ページを追加
+                title: ページを追加
+            edit:
+                label: '✏️ ページを編集 "{page}"'
+                title: 'ページを編集 "{page}"'
+            show:
+                label: 'ページ詳細 "{page}"'
+        users:
+            index:
+                label: ユーザー
+                title: ユーザーを管理
+            new:
+                label: ➕ ユーザーを追加
+                title: ユーザーを追加
+            edit:
+                label: '✏️ ユーザーを編集 "{user}"'
+                title: 'ユーザーを編集 "{user}"'
+            editpassword:
+                label: '🛡️ "{user}" のパスワードを編集'
+            show:
+                label: 'ユーザー詳細: "{name}"'
+            pending:
+                label: '⏳ 承認待ちユーザー'
+                title: '承認待ちユーザー'
+        mtg:
+            cardsourceactivityhistory:
+                index:
+                    label: 'MTG - カードソース活動履歴'
+                    title: 'MTG - カードソース活動履歴'
+            pointslist:
+                index:
+                    label: 'MTG - ポイントリスト'
+                    title: 'MTG - ポイントリスト'
+                new:
+                    label: '➕ MTGポイントリストを作成'
+                    title: 'MTGポイントリストを作成'
+                edit:
+                    label: 'MTG - ポイントリストを編集 "{name}"'
+                    title: 'MTG - ポイントリストを編集 "{name}"'
+                show:
+                    label: 'MTG - ポイントリスト "{name}" の詳細'
+                    title: 'MTG - ポイントリスト "{name}" の詳細'
+                import:
+                    label: 'MTG - リスト "{name}" にポイントをインポート'
+                    title: 'MTG - リスト "{name}" にポイントをインポート'
+            pointslistcard:
+                index:
+                    label: 'MTG - ポイントリストカード'
+                    title: 'MTG - ポイントリストカード'
+                new:
+                    label: '➕ MTGポイントリストカードを作成'
+                    title: 'MTGポイントリストカードを作成'
+                edit:
+                    label: 'MTG - ポイントリストカードを編集 "{name}"'
+                    title: 'MTG - ポイントリストカードを編集 "{name}"'
+                show:
+                    title: 'MTG - ポイントリストカード "{name}" の詳細'
+                    label: 'MTG - ポイントリストカード "{name}" の詳細'
+            update:
+                index:
+                    label: 'MTG - 更新'
+                    title: 'MTG - 更新'
+                new:
+                    label: '➕ MTG更新を作成'
+                    title: 'MTG更新を作成'
+                show:
+                    title: 'MTG - 更新/告知 "{name}" の詳細'
+                    label: 'MTG - 更新/告知 "{name}" の詳細'
+                edit:
+                    label: 'MTG - 更新/告知 "{name}" を編集'
+                    title: 'MTG - 更新/告知 "{name}" を編集'
+            dbupdate:
+                index:
+                    title: 'MTG - データベース更新'
+                    label: 'MTG - データベース更新'
+                latest:
+                    label: 'MTG - ソースデータベース更新の最新状態'
+                startnew:
+                    label: 'MTG - ソースデータベース更新を手動開始'
+            source:
+                index:
+                    title: 'MTG - ソースのダウンロード/インポート'
+                    label: 'MTG - ソースのダウンロード/インポート'
+            sourcedownload:
+                index:
+                    label: 'MTG - ソースダウンロード状況'
+                latest:
+                    label: 'MTG - ソースダウンロードの最新状態'
+                startnew:
+                    label: 'MTG - ソースダウンロードを手動開始'
+            sourcecard:
+                index:
+                    title: 'MTG - ソースカード'
+                    label: 'MTG - ソースカード'
+                show:
+                    title: 'MTG - ソースカード "{name}" の詳細'
+                    label: 'MTG - ソースカード "{name}" の詳細'
+        cardsourceactivityhistory:
+            index:
+                label: 'カードソース活動履歴'
+    user:
+        password:
+            password_updated_success: '{username} のパスワードを正常に更新しました。'
+        forms:
+            password:
+                first: ユーザーの新しいパスワード
+                help: 大文字、小文字、数字を含み、8文字以上の有効なパスワードを入力してください。
+                invalid_repeated: パスワードが一致しません
+                oldpassword:
+                    error: 以前のパスワードが正しくないようです。
+                    help: セキュリティのため、変更するには現在のパスワードを入力してください。
+                    label: 現在のパスワード
+                second: パスワードをもう一度入力
+            edit:
+                id:
+                    label: 'あなたのユニークな内部ID: <strong>{id}</strong>&nbsp;<em>（サポートとのやり取りに使用できます）</em>.'
+                fieldsets:
+                    private_data:
+                        label: '個人データ'
+                    admin:
+                        label: '管理'
+                    password:
+                        label: 'パスワード'
+            legends:
+                info: 'ユーザー情報'
+    mtg:
+        cardsourceactivityhistory:
+            error:
+                fileremoved: '要求されたログファイルは既に存在しません。'
+        pointslistcard:
+            points:
+                label: 'RAW Points（Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard）'
+        update:
+            publish: '公開'
+            unpublish: '非公開'
+            published: '更新を公開しました。'
+            unpublished: '更新を非公開にしました。'
+customblock:
+    footer:
+        en:
+            name: フッター (EN 🇬🇧)
+        fr:
+            name: フッター (FR 🇫🇷)
+    home1:
+        en:
+            name: ホームブロック 1 (EN 🇬🇧)
+        fr:
+            name: ホームブロック 1 (FR 🇫🇷)
+    home2:
+        en:
+            name: ホームブロック 2 (EN 🇬🇧)
+        fr:
+            name: ホームブロック 2 (FR 🇫🇷)
+    home3:
+        en:
+            name: ホームブロック 3 (EN 🇬🇧)
+        fr:
+            name: ホームブロック 3 (FR 🇫🇷)
+    home4:
+        en:
+            name: ホームブロック 4 (EN 🇬🇧)
+        fr:
+            name: ホームブロック 4 (FR 🇫🇷)
+    legal:
+        en:
+            name: 法務 (EN 🇬🇧)
+        fr:
+            name: 法務 (FR 🇫🇷)
+email:
+    appendix:
+        label: ' | AeonShift'
+    resetpassword:
+        subject: 🛡️ パスワードリセットのご依頼
+        success: パスワードのリセットに成功しました。新しいパスワードでログインできます。
+        text1: パスワードをリセットするには、次のリンクにアクセスしてください
+        text2: このリンクは {expires} で期限切れになります。
+        title: アカウントのパスワードリセット手順
+front:
+    globals:
+        media_preview:
+            title: 'メディアプレビュー'
+            label: '(これは現在のファイルです)'
+        share:
+            facebook: 'Facebookで共有'
+            messenger_mobile: 'Facebook Messengerで送信（モバイル）'
+            messenger_computer: 'Facebook Messengerで送信（デスクトップ）'
+            twitter: 'Twitter/Xで共有'
+            email: 'メールで送信'
+            bluesky: 'Blueskyで共有'
+            reddit: 'Redditで共有'
+            link: 'リンクをコピー'
+    home:
+        title: AeonShift 計算機
+        subtitle: あなたのゲームのための戦略的バランスシステム AeonShift にようこそ。
+        chooselicense: どのライセンスでプレイしますか？
+        licenses:
+            mtg:
+                label: Magic The Gathering™
+                title: Magic The Gathering™ AeonShift をプレイする
+        discover:
+            title: ゲーム向けの豊かなバランスシステム AeonShift
+            link:
+                text: 詳細を見る
+                title: AeonShift のゲームシステムについて詳しく知る
+        links:
+            title: さらに進む
+            about:
+                text: 概要
+                title: ゲーム、その歴史、運営に関する詳細
+            directory:
+                text: ディレクトリ
+                title: AeonShift をどこで遊べますか？
+            faq:
+                text: FAQ
+                title: よくある質問
+            rules:
+                text: MTG – ゲームルール
+                title: Magic The Gathering™ 向け AeonShift ルールを確認する
+
+    nav:
+        login:
+            label: 🪪 ログイン
+            title: サイトにログイン
+        logout:
+            label: ⏻ ログアウト
+            title: ⏻ ログアウト
+        home:
+            label: ホーム
+            title: ホームに戻る
+        mtg:
+            calculator:
+                title: 'Magic: The Gathering™ 計算機'
+                label: 'Magic: The Gathering™ 計算機'
+            download:
+                title: 'Magic: The Gathering™ ポイントリストをダウンロード'
+                label: 'Magic: The Gathering™ ポイントリストをダウンロード'
+                updatelink: 'この更新のポイントリストをCSVとしてダウンロード'
+                latest: '現在'
+            index:
+                title: 'AeonShift Magic: The Gathering™'
+                label: 'AeonShift Magic: The Gathering™'
+            dccalculator:
+                title: 'Duel Commander 計算機'
+                label: 'Duel Commander 計算機'
+        resetpassword:
+            label: 🛡️ リセット
+            title: パスワードをリセット
+        resetpasswordconfirm:
+            title: パスワードリセットの申請
+        updatepassword:
+            label: 🔐 パスワードを変更
+            title: パスワードを変更
+        learnmore:
+            label: 'もっと知る'
+            title: 'AeonShift についてもっと知る'
+    resetpassword:
+        error: パスワードリセットの処理中に問題が発生しました。チームまでご連絡ください。
+        text1: 登録に使用したメールアドレスを入力してください。データベースに存在する場合、手順が記載されたメールが届きます。
+        text2: ℹ️ あるいは、代わりに <a href="{link}" title="ユニークな登録コードでログイン">ユニークな登録コードでログイン</a> することもできます。
+    resetpasswordconfirm:
+        text1: データベースにメールアドレスが存在し、アカウントに一致する場合、そのアドレスへパスワード再設定手順のメールが送信されます。
+    mtg:
+        calculator:
+            title: 'AeonShift Magic The Gathering™ ポイント計算機'
+            subtitle: '(計算機が動かなくなったらページを更新してください)'
+            starformat:
+                text: 'これはあなたの Star Format 名（ある場合）または Star 名がない場合は「Custom」です。'
+            fullnameformat:
+                text: 'これはあなたのフォーマットの完全名です。参照としても使用できます。'
+        choose:
+            title: '以下から <strong class="green-text">AeonShift star format</strong> を選択してください'
+            text: '<strong class="green-text">AeonShift Magic The Gathering™</strong> をプレイしています。'
+            links:
+                choosecommander:
+                    text: 'Commander を探す'
+                    title: 'Commander 探しを手伝ってください。'
+                    description: 'このセクションは、上のフォーマット選択に基づき候補の Commander を表示します。別のフォーマットの Commander を探したい場合は選択を更新してください。'
+                    description2: '注: 下の値は単体Commanderのみです。Partner能力は除外されています。'
+                    description3: 'フィルターを組み合わせたり、列を順に並べ替えて複数条件でソートできます。'
+                    form:
+                        nameen:
+                            label: '名前'
+                        coloridentity:
+                            label: '色のアイデンティティ'
+                        ranking:
+                            players:
+                                duel: 'Duel Commander ランク'
+                                cedh: 'cEDH ランク'
+                                ffa: 'FFA グローバルランク'
+                            label: 'ランキング'
+                            top: '★★★  トップCommanderのみ'
+                            popular: '★ トップ＆人気Commander'
+                            alltournamentranked: '大会ランク付きCommanderすべて'
+                            all: 'Commanderすべて'
+                    table:
+                        nameen:
+                            label: '名前'
+                            placeholder: 'Ruhan of the Fomori'
+                        budget:
+                            label: '予算 🧺'
+                            placeholder: '最低予算'
+                        status:
+                            label: 'リリース状況'
+                            unranked: '<span class="red-text">Unranked</span>'
+                            unknown: '<span class="red-text">Unknown</span>'
+                            released: '<span class="green-text">Released</span>'
+                        rankingindex:
+                            duel:
+                                label: 'Duel Commander ランキング（低いほど良い）'
+                            cedh:
+                                label: 'cEDH ランキング（低いほど良い）'
+                            ffa:
+                                label: 'FFA ランキング（低いほど良い）'
+                        coloridentity:
+                            label: '色のアイデンティティ'
+                        firstprintedyear:
+                            label: '初刷年'
+                        mv:
+                            label: 'Mana Value'
+                        multicztype:
+                            label: '複数の Command Zone タイプ（候補）'
+                        sort:
+                            label: 'この列で表を並べ替える（昇順/降順）'
+                        minimumbudget:
+                            label: '最低予算 🧺'
+                            placeholder: '80'
+                gotoform:
+                    text: '計算機を使う'
+                    title: 'すべての選択肢がある <strong>calculator</strong> フォームへ進んでください。'
+                freeform:
+                    text: 'フォーマットは不要'
+                    title: '<strong>手持ちのカードだけで</strong>遊んでポイントを数えたい（Freeform AeonShift）。'
+                choose:
+                    text: 'star format を選ぶ'
+                    title: 'AeonShift Magic The Gathering™ をプレイするために <strong>特定のフォーマットを選びたい</strong>。'
+                quiz:
+                    text: 'フォーマット選びを手伝って'
+                    title: '<strong>クイズ</strong>で AeonShift Magic The Gathering™ のフォーマット選びを手伝ってください。'
+        form:
+            title: '🎛️ フォーマットをカスタマイズ'
+            formtitle: 'プレイ中:'
+            fixeddecklist: '読みやすさのためデッキリストを整形しました'
+            decklist1:
+                label: 'Decklist <span class="gray-text">(チームの場合はプレイヤー1のデッキリスト)</span>'
+                incentive: '↓ 📋 ここにデッキリストを貼り付け ↓'
+                help: >
+                    ここにデッキを貼り付けてください（チームの場合はプレイヤー1のデッキリスト）。 
+                    対応テキスト形式: Magic The Gathering™ Online Import、Magic The Gathering™ Arena Import、Moxfield の Plain Text、Archidekt の汎用ヘッダー、TappedOut MTGA、MTGTop8 の MTGO Export。 
+                    <strong>デッキリストは英語で、カード名は完全一致（大小文字・句読点含む）である必要があります。行形式: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist2:
+                label: 'Decklist - プレイヤー2'
+                incentive: '↓ 📋 ここにデッキリストを貼り付け ↓'
+                help: >
+                    チームの場合はここにプレイヤー2のデッキリストを貼り付けてください。 
+                    対応テキスト形式: Magic The Gathering™ Online Import、Magic The Gathering™ Arena Import、Moxfield の Plain Text、Archidekt の汎用ヘッダー、TappedOut MTGA、MTGTop8 の MTGO Export。 
+                    <strong>デッキリストは英語で、カード名は完全一致（大小文字・句読点含む）である必要があります。行形式: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            decklist3:
+                label: 'Decklist - プレイヤー3'
+                incentive: '↓ 📋 ここにデッキリストを貼り付け ↓'
+                help: >
+                    チームの場合はここにプレイヤー3のデッキリストを貼り付けてください。 
+                    対応テキスト形式: Magic The Gathering™ Online Import、Magic The Gathering™ Arena Import、Moxfield の Plain Text、Archidekt の汎用ヘッダー、TappedOut MTGA、MTGTop8 の MTGO Export。 
+                    <strong>デッキリストは英語で、カード名は完全一致（大小文字・句読点含む）である必要があります。行形式: <code>1 Ruhan of the Fomori</code></strong>
+                placeholder: |
+                    1 Black Lotus                        
+                    1 Library of Alexandria                        
+                    1 Lightning Bolt
+                    1 Mana Leak
+                    1 Counterspell
+                    1 Cryptic Command
+                    1 Swords to Plowshares
+                    1 Search for Azcanta
+                    1 Blood Moon
+                    1 Savannah Lions
+                    5 Plains
+                    7 Island
+                    4 Mountain
+                    
+                    Commander
+                    1 Ruhan of the Fomori
+                    ...
+            results:
+                breakdown:
+                    title: 'ポイント内訳:'
+                    basepoints:
+                        text: 'ベースポイント（P-Value）:'
+                        help: 'これはP-Valueです。上のフォーマット選択により決まるベースポイントです。'
+                    cards:
+                        text: 'リスト内で見つかったカード:'
+                        help: '識別できたカード一覧です。必ず確認してください。'
+                        viewmore: '見つかったカードをすべて表示'
+                    modulations:
+                        text: 'モジュレーション（高度）:'
+                        help: 'フォーマットとカード選択に基づくP-Valueの調整要素です。'
+                        viewmore: 'モジュレーションの詳細を見る'
+                    cardzones:
+                        text: 'カードゾーン合計:'
+                        maindeck: 'メインデッキ:'
+                        sideboard: 'サイドボード:'
+                        commandzone: 'Command Zone:'
+                        companion: 'Companions:'
+                        attractions: 'Attractions:'
+                        contraptions: 'Contraptions:'
+                        stickers: 'Stickers:'
+                        total: '識別できたカード合計（全ゾーン）:'
+                    mvalue:
+                        text: 'M-Value:'
+                        help: 'これはデッキの金銭的価値（M-Value）で、財政制約に使用されます。'
+                        viewmore: 'M-Value の詳細を見る'
+                    usage:
+                        text: 'ポイント使用量:'
+                        help: 'デッキで使用したポイントを、消費が大きい順に並べています。'
+                        unranked: '(Unranked)'
+                        unknown: '(Unknown)'
+                    budget:
+                        text: 'ポイント予算:'
+                        help: 'フォーマット選択（およびCommanderの有無）に基づき、デッキで使えるポイントです。'
+                    remaining:
+                        text: '残りポイント（未使用）:'
+                        help: '残っているポイントです。必要なら引き続き使ってください。'
+                        exceeding: '超過: '
+                decklist1:
+                    label: 'デッキリスト #1 の結果:'
+                decklist2:
+                    label: 'デッキリスト #2 の結果:'
+                decklist3:
+                    label: 'デッキリスト #3 の結果:'
+                errors:
+                    containsinvalidtimelinecards:
+                        text: '選択したタイムラインで合法ではないカードがデッキリストに含まれています。'
+                    invalidcommandzone:
+                        text: 'Command Zone（Commander）が不正です。'
+                    invalidnumberofcards:
+                        text: 'デッキリストのカード枚数が正しくありません。'
+                    invalidsideboard:
+                        text: 'サイドボードが不正です。'
+                    copies:
+                        text: '同一カードの不正な枚数がデッキリストに含まれています。'
+                    nocommander:
+                        text: 'あらゆる入力形式を試しましたが、デッキリストからCommanderが見つかりませんでした。'
+                    impossibletofindacommander:
+                        text: 'デッキリストからCommanderを特定できません。カードを追加し、改行を確認してください。'
+                    toomanypoints:
+                        text: 'デッキリストが使用したポイントが多すぎます。予算内に収まるよう調整してください。'
+                    tooexpensive:
+                        text: 'デッキのM-Valueがフォーマットで許可される上限を超えています。'
+                    failedparsing:
+                        text: 'デッキリストを解析できませんでした。貼り付け内容が正しいか確認してください。'
+                    internalerror:
+                        text: 'デッキリスト処理中に内部エラーが発生しました。チームまでご連絡ください。'
+                    singlecopiescardnotunique:
+                        text: 'Attractions、Contraptions、Stickers はユニークである必要があります（各1枚のみ）。'
+                    singletoncardnotunique:
+                        text: 'デッキリストがシングルトンではありません（各カード1枚のみ）。数量を確認してください: '
+                    numberofcardnotcorrectforquadruples:
+                        text: '各カードの枚数が正しくありません（最大4枚、またはカードごとの許可最大枚数以下）。対象カード: '
+                    wrongtimelineforcards:
+                        text: '現在の合法タイムラインで合法ではないカードがあります。対象カード: '
+                    cznoteligibleonecommander:
+                        text: 'Command Zone が不正です。Commander はCommanderとして適格である必要があります。'
+                    cznoteligiblemulticommander:
+                        text: 'Command Zone 内に、複数Commanderとして不適格なカードがあります。対象カード: '
+                    cznotvalidmulticztypenotthesame:
+                        text: 'すべてのCommanderは同じPartner能力タイプ（Partner、Friends forever 等）である必要があります。'
+                    coloridentitymissmatch:
+                        text: 'デッキ内のカードの一部が Command Zone の色のアイデンティティと一致しません: '
+                    unknown:
+                        text: '不明なカードが含まれています。名前を確認してください: '
+                legal:
+                    no:
+                        label: 'あなたのデッキは、選択したフォーマット内で <strong>非合法</strong> です。'
+                    yes:
+                        label: 'あなたのデッキは、選択したフォーマット内で <strong>合法</strong> です。'
+                    download:
+                        title: 'デッキリストをダウンロードまたは印刷'
+                        help: 'プレイヤー名を入力し、以下から印刷またはダウンロードを選択してください。'
+                        playername: 'プレイヤー名:'
+                        generatedat: '生成日時: '
+                        label:
+                            link:
+                                label: 'デッキ登録シートをダウンロード/印刷'
+                            csv:
+                                label: 'デッキ登録シート（CSV）'
+                                title: 'デッキ登録シート（CSV）をダウンロード'
+                            pdf:
+                                label: 'デッキ登録シート（PDF）'
+                                title: 'デッキ登録シート（PDF）をダウンロード'
+                            text:
+                                label: 'デッキ登録シート（テキスト）'
+                                title: 'デッキ登録シート（テキスト）をダウンロード'
+                            print:
+                                label: '今すぐ印刷'
+                                title: 'デッキ登録シートを印刷'
+                        comment:
+                            label: 'コメント（任意）'
+                            help: '必要であればデッキリストにコメントを追加できます。'
+                modulations:
+                    firstprint:
+                        text: '最近編集したCommanderは、今年より前に初編集/初印刷されています。'
+                        help: '最新のCommanderについて、現年より前の年数ごとにフォーマットP-Valueの+2%。'
+                    multiplecommanders:
+                        types:
+                            chooseabackground: 'Partner能力を使用している場合、予算 -20%'
+                            other: 'Partner能力を使用している場合、予算 -40%'
+                        text: '複数のCommanderを使用しています。'
+                        help: 'Background系カードを使う場合はフォーマットP-Valueの-20%、それ以外は-40%。'
+                    manavalue:
+                        text: '各CommanderのMana Valueが4未満です。'
+                        help: '"Mana Value 3ならフォーマットP-Valueの-10%、2なら-20%、1または0なら-30%。非BackgroundのPartner能力ならその半分。'
+                    rankedcommander:
+                        text: 'Commanderがランク付けされています。'
+                        help: 'あなたのCommanderは現在のポイントリストでランク付けされています。'
+                start:
+                    label: '左側の「カードを追加」フォームでカードを追加するか、左側のテキスト欄に他サイトのデッキリストを貼り付け、以下の手順に従ってください。'
+            decklist:
+                addcard:
+                    label: 'カードを追加'
+        pointslist:
+            choice:
+                label: '{name}（{datestart} → {dateend}）'
+            latest:
+                label: '{name}（現在のリスト）'
+        quiz:
+            back:
+                label: '← 前の質問'
+                title: '前の質問に戻る'
+            help:
+                text1: 'あなたのフォーマット探しをお手伝いします。'
+                text2: '次の5つの簡単な質問に答えてください。↓'
+            question1:
+                label: 'プレイヤー/チーム/ライフ:'
+                text: 'プレイヤー数（チーム）とライフはいくつにしますか？'
+                answer1:
+                    label: '2人（Duel）'
+                    help: 'Duel: 2人、2チーム。<br><strong>開始ライフ20。</strong>'
+                answer2:
+                    label: '4人（2チーム）'
+                    help: 'Two-Headed Giant: 4人、2人ずつの2チーム。<br><strong>開始共有ライフ30。</strong> <em class="comingsoon">近日公開!</em>'
+                answer3:
+                    label: '4人以上（Free-For-All）'
+                    help: 'cEDH/Commander: 4人以上、free-for-all。<br><strong>開始ライフ40。</strong> <em class="comingsoon">近日公開!</em>'
+                answer4:
+                    label: '6人（2チーム）'
+                    help: 'Team Trio: 3人ずつの2チーム（特別なマッチング規則）。<br><strong>開始ライフ20。</strong> <em class="comingsoon">近日公開!</em>'
+            question2:
+                label: 'デッキ内の同一カード最大枚数:'
+                text: 'Command Zone と Sideboard を含め、デッキ内で同一カードは最大何枚にしますか？'
+                answer1:
+                    label: '最大1枚'
+                    help: 'Singleton - デッキ全体で各カード最大1枚。'
+                answer2:
+                    label: '最大4枚'
+                    help: 'Quadruples - デッキ全体で各カード最大4枚。 <em class="comingsoon">近日公開!</em>'
+            question3:
+                label: 'メインデッキ/サイドボードの枚数:'
+                text: 'デッキは何枚にしますか（メイン/サイド）？'
+                answer1:
+                    label: '100/0'
+                    help: 'メイン100枚、サイドなし。'
+                answer2:
+                    label: '60+/0-15'
+                    help: 'メイン60枚以上、サイド0〜15枚。 <em class="comingsoon">近日公開!</em>'
+            question4:
+                label: 'Commander/Command Zone:'
+                text: 'Commander/Command Zone を使用しますか？'
+                answer1:
+                    label: 'いいえ'
+                    help: '追加ルールはチェックされません。 <em class="comingsoon">近日公開!</em>'
+                answer2:
+                    label: 'はい'
+                    help: '構築とプレイに関する特別なルール/制約が追加されます。'
+            question5:
+                label: '最大合法タイムライン:'
+                text: 'どの最大合法タイムラインでプレイしますか？'
+                answer1:
+                    label: 'Printed'
+                    help: '本物のMagic The Gathering™カードであれば何でも（印刷されたすべてのカードを含む）。'
+                answer2:
+                    label: 'Funny'
+                    help: 'Eternal の全カードに加えて、fun セットも含みます。'
+                answer3:
+                    label: 'Eternal'
+                    help: 'Eternal のカード（概ねVintage相当の印刷・公認大会で合法なカード）を含みます。'
+                answer4:
+                    label: 'Modern'
+                    help: 'Modernで合法または禁止されているカードを含みます。 <em class="comingsoon">近日公開!</em>'
+                answer5:
+                    label: 'Pioneer'
+                    help: 'Pioneerで合法または禁止されているカードを含みます。 <em class="comingsoon">近日公開!</em>'
+                answer6:
+                    label: 'Standard'
+                    help: 'Standardで合法または禁止されているカードを含みます。 <em class="comingsoon">近日公開!</em>'
+            question6:
+                label: 'P-value:'
+                text: '基準P-valueはどれですか？P-valueは、モジュレーション前の構築ベースポイントを決定します。'
+                answer1:
+                    label: 'Standard Play'
+                    help: 'デフォルトで推奨のP-valueです。迷ったらこれを選んでください。'
+                answer2:
+                    label: 'Lite Play'
+                    help: 'より保守的なP-valueで、低いP-valueで遊びたい人向け（投資額と爆発力が低め）。 <em class="comingsoon">近日公開!</em>'
+                answer3:
+                    label: 'Power Play'
+                    help: 'より攻撃的なP-valueで、高いP-valueで遊びたい人向け（制限が少なく爆発力が高め）。 <em class="comingsoon">近日公開!</em>'
+            question7:
+                label: '財政制約を適用'
+                text: '財政制約を使用しますか？'
+                answer1:
+                    label: 'いいえ'
+                    help: 'オリジナルカードのみでプレイ（またはプロキシを許可）。'
+                answer2:
+                    label: 'はい'
+                    help: 'オリジナルカードのみでプレイしつつ、デッキに金額制約があり、そのためにM-Valueを使いたい。 <em class="comingsoon">近日公開!</em>'
+            question8:
+                label: '使用するポイントリスト更新:'
+                text: 'どのポイントリスト更新を使いますか？過去のデッキリストを確認する場合を除き、常に最新を使用してください。'
+            previous:
+                text: '⬅️ 前の質問'
+global:
+    actions:
+        label: アクション
+        title: アクション
+    back: ⬅️ 戻る
+    createbutton:
+        label: ➕ 追加
+        title: アイテムを追加
+    createdat:
+        label: 作成日
+    dates:
+        label: 作成 / 最終更新
+    delete:
+        confirmprompt: このアイテムを削除しますか？この操作は元に戻せません。
+    deletesuccess:
+        text: 'アイテムを削除しました'
+    deletebutton:
+        label: ❌ 削除
+        title: このアイテムを削除
+    editbutton:
+        label: ✏️ 編集
+        title: 編集
+    email:
+        responsibility: AeonShift は必須機能のためにのみメールを送信し、それ以外の理由で連絡することはありません。不審なメールを受け取った場合はリンクをクリックせず、チームまでご連絡ください。
+    error:
+        404:
+            text: おっと！指定されたページが見つかりませんでした。上のメニューで探し始めるか、履歴で戻ってください...
+            title: 404 - 見つかりません 😔
+        500:
+            text: おっと！サーバーがポイント上限に達しました（ポイントリストのように）。このエラーが続く場合はチームまでご連絡ください。
+            title: 500 - サーバーエラー 😔
+    id:
+        label: ID
+    indexbutton:
+        label: 🔙 一覧に戻る
+        title: 一覧に戻る
+    mandatoryfields:
+        text: '* = これらの項目は必須です。'
+    noelements:
+        label: 表示する項目がありません。
+    none:
+        label: N/A
+    pagenumber: ページ <strong>{current}/{total}</strong>
+    passwordbutton:
+        label: パスワード変更
+        title: ユーザーのパスワードを変更
+    roles:
+        ROLE_ADMIN: 管理者
+        ROLE_USER: 一般ユーザー
+    savebutton:
+        label: 💾 保存
+        title: 変更を保存
+    savesuccess:
+        text: 保存しました。
+    selectnone: --
+    skipcontent:
+        label: メインコンテンツへスキップ
+    showbutton:
+        label: 👁️ 表示
+        title: 詳細を表示
+    showbuttonfront:
+        label: 👁️ 表示（公開）
+        title: '公開側で表示'
+    total:
+        label: 合計 <strong>{elements}</strong> 件
+    updatedat:
+        label: 更新日
+    1:
+        label: 'はい'
+    0:
+        label: 'いいえ'
+    table:
+        summary: '_START_ から _END_ / 全 _TOTAL_ 件'
+        empty: '合計 0 件'
+        filtered: '（全 _MAX_ 件から絞り込み）'
+        thousands: ''
+        menu: '_MENU_ 件を表示'
+        search: '検索（連続文字列は "xx yy" を使用）:'
+        none: '一致する項目が見つかりません'
+        first: '最初'
+        last: '最後'
+        next: '次へ'
+        previous: '前へ'
+        ariasort: 'この列を並べ替える'
+        ariasortreverse: 'この列を逆順に並べ替える'
+    legal:
+        title: '合法'
+        label: '合法'
+    rules:
+        label: 'ルール'
+        title: 'ゲームルール'
+    start:
+        label: 'コマンド開始'
+        title: 'コマンド開始'
+    users:
+        label: '作成者 / 最終更新者'
+    import:
+        label: '📥 インポート/更新'
+        title: '📥 カード/ポイントをインポート/更新（CSVファイル）'
+    export:
+        label: '📤 ポイントリストCSVをエクスポート'
+        title: '現在の値でポイントリストをCSVとしてエクスポートし、スプレッドシート等で利用して後から再インポートできます。'
+    filter:
+        label: 結果をフィルター
+        title: 'クリックして選択に基づき結果をフィルターします'
+    reset:
+        title: 'フォームをリセット'
+        label: 'リセット'
+    max:
+        label: '最初の100件のみ表示されます。'
+    choose:
+        label: '↓ 選択してください'
+mtg:
+    addform:
+        title: 'カードを追加'
+    add:
+        label: '追加'
+    copies:
+        text: 'X'
+    cardzones:
+        choose: 'ゾーン'
+        maindeck: 'メインデッキ'
+        sideboard: 'サイドボード'
+        commandzone: 'Command Zone'
+        companion: 'Companion'
+        attractions: 'Attraction'
+        contraptions: 'Contraption'
+        stickers: 'Sticker'
+    name:
+        label: '名前'
+        placeholder: 'Ruhan of the Fomori'
+    popular:
+        comingsoon:
+            text: '<em class="blue-text">近日公開!</em> お楽しみに。'
+        eternal:
+            title: 'タイムライン: <strong class="blue-text">Eternal</strong>'
+        modern:
+            title: 'タイムライン: <strong class="blue-text">Modern</strong>'
+        pioneer:
+            title: 'タイムライン: <strong class="blue-text">Pioneer</strong>'
+        standard:
+            title: 'タイムライン: <strong class="blue-text">Standard</strong>'
+        quadruples:
+            eternal:
+                eternal:
+                    label: Eternal
+                    title: AeonShift Eternal をプレイ
+                    subtitle: <strong>2人</strong>、<strong>20</strong>ライフ、メインデッキ最低<strong>60</strong>枚 + サイドボード<strong>0-15</strong>枚、<strong>2</strong>本先取、タイムライン<strong>Eternal</strong>
+            modern:
+                modern:
+                    label: Modern
+                    title: AeonShift Modern をプレイ
+                    subtitle: <strong>2人</strong>、<strong>20</strong>ライフ、メインデッキ最低<strong>60</strong>枚 + サイドボード<strong>0-15</strong>枚、<strong>2</strong>本先取、タイムライン<strong>Modern</strong>
+        singleton:
+            eternal:
+                2hg:
+                    label: Two-Headed Giant Duel Commander
+                    title: AeonShift 2HG Duel Commander をプレイ
+                    subtitle: <strong>4人</strong>、<strong>2</strong>チーム、共有ライフ<strong>30</strong>、Singleton<strong>100枚</strong>、<strong>1</strong>本勝負、タイムライン<strong>Eternal</strong> <em class="blue-text">近日公開!</em>
+                commander:
+                    label: Commander/cEDH
+                    title: AeonShift Commander/cEDH をプレイ
+                    subtitle: <strong>4人以上</strong> – free-for-all、<strong>40</strong>ライフ、<strong>Command</strong> Zones、Singleton<strong>100枚</strong>、<strong>1</strong>本勝負、タイムライン<strong>Eternal</strong> <em class="blue-text">近日公開!</em>
+                duelcommander:
+                    label: Duel Commander
+                    title: AeonShift Duel Commander をプレイ
+                    subtitle: <strong>2人</strong>、<strong>20</strong>ライフ、<strong>Command</strong> Zones、Singleton<strong>100枚</strong>、<strong>2</strong>本先取、タイムライン<strong>Eternal</strong>
+                freeform:
+                    label: Freeform
+                    title: AeonShift Freeform をプレイ
+                    subtitle: <strong>手持ちのどんなカードでも</strong>プレイ、<strong>20</strong>ライフ、最低<strong>60</strong>枚、<strong>無制限</strong>ゲーム、タイムライン<strong>Eternal</strong>!
+                highlander:
+                    label: Highlander
+                    title: AeonShift Highlander をプレイ
+                    subtitle: <strong>2人</strong>、<strong>20</strong>ライフ、Singleton<strong>100枚</strong>、<strong>2</strong>本先取、タイムライン<strong>Eternal</strong>
+            modern:
+                2hg:
+                    label: Two-Headed Giant Modern Duel Commander
+                    title: AeonShift 2HG Modern Duel Commander をプレイ
+                    subtitle: <strong>4人</strong>、<strong>2</strong>チーム、共有ライフ<strong>30</strong>、Singleton<strong>100枚</strong>、<strong>1</strong>本勝負、タイムライン<strong>Modern</strong> <em class="blue-text">近日公開!</em>
+                commander:
+                    label: Modern Commander/cEDH
+                    title: AeonShift Modern Commander/cEDH をプレイ
+                    subtitle: <strong>4人以上</strong> – free-for-all、<strong>40</strong>ライフ、<strong>Command</strong> Zones、Singleton<strong>100枚</strong>、<strong>1</strong>本勝負、タイムライン<strong>Modern</strong> <em class="blue-text">近日公開!</em>
+                duelcommander:
+                    label: Modern Duel Commander
+                    title: AeonShift Modern Duel Commander をプレイ
+                    subtitle: <strong>2人</strong>、<strong>20</strong>ライフ、<strong>Command</strong> Zones、Singleton<strong>100枚</strong>、<strong>2</strong>本先取、タイムライン<strong>Modern</strong>
+                freeform:
+                    label: Modern Freeform
+                    title: AeonShift Modern Freeform をプレイ
+                    subtitle: <strong>手持ちのどんなカードでも</strong>プレイ、<strong>20</strong>ライフ、最低<strong>60</strong>枚、<strong>無制限</strong>ゲーム、タイムライン<strong>Modern</strong>!
+                highlander:
+                    label: Modern Highlander
+                    title: AeonShift Modern Highlander をプレイ
+                    subtitle: <strong>2人</strong>、<strong>20</strong>ライフ、Singleton<strong>100枚</strong>、<strong>2</strong>本先取、タイムライン<strong>Modern</strong>
+page:
+    position:
+        footer:
+            label: Footer
+        header:
+            label: Header
+user:
+    login:
+        alreadylogged: すでに {user} としてログインしています。<a data-turbo="false" href="{url}" title="ログアウト">ログアウト</a>
+        helptext1: ℹ️ まだアカウントがありませんか？ <a href="{link}" title="アカウント作成はこちら">まず作成してください！</a>
+        helptext2: 😣 パスワードを忘れましたか？ <a href="{link}" title="パスワードをリセット">こちらをクリック</a>して新しいものを設定してください。
+        password:
+            help: 設定済みの場合はパスワードを入力してください。
+            label: パスワード
+            placeholder: パスワード
+        submit:
+            label: 🔑 ログイン
+        success: '{username} として認証されました'
+        title: サインイン
+        username:
+            help: ユーザー名を入力してください（通常は登録時のニックネーム）。
+            label: ユーザー名
+            placeholder: ユーザー名
+    logout:
+        success: ログアウトしました。
+    roles:
+        admin:
+            label: 管理者
+        user:
+            label: 一般ユーザー

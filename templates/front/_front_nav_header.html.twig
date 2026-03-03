@@ -28,7 +28,7 @@
         <li id="locales">
             {% if supported_locales is defined and supported_locales is iterable %}
                 <a tabindex="0" title="{{ app.request.locale|locale_name(app.request.locale)|u.title }}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {{ ux_icon('flag:' ~ app.request.locale|replace({'en': 'gb'}) ~ '-4x3') }} {{ app.request.locale|locale_name(app.request.locale)|u.title }}</a>
+                    {{ ux_icon('flag:' ~ app.request.locale|replace({'en': 'gb', 'zh': 'cn', 'pt': 'br', 'fil': 'ph', 'cs': 'cz', 'ja': 'jp'}) ~ '-4x3') }} {{ app.request.locale|locale_name(app.request.locale)|u.title }}</a>
                 <ul class="" aria-labelledby="locales">
                     {% for supported_locale in supported_locales %}
                         {% if supported_locale !== app.request.locale %}

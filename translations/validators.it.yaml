@@ -1,0 +1,73 @@
+admin:
+    form:
+        mtg:
+            points_list:
+                create:
+                    validitystartingat:
+                        empty: Per favore inserisci una data valida
+                import:
+                    file:
+                        error: Per favore seleziona un file CSV valido.
+            update:
+                create:
+                    pointslist:
+                        empty: Per favore fornisci una lista punti
+
+            pointslist:
+                create:
+                    validitystartingat:
+                        empty: Per favore inserisci una data valida
+                    title:
+                        too_long: 'Per favore inserisci un titolo più breve.'
+                import:
+                    file:
+                        error: Per favore seleziona un file CSV valido.
+        abstract:
+            update:
+                create:
+                    titleen:
+                        'null': 'Per favore inserisci un titolo.'
+                        too_long: 'Per favore inserisci un titolo più breve.'
+                    descriptionen:
+                        'null': 'Per favore inserisci una descrizione.'
+                    startingat:
+                        'null': 'Per favore inserisci una data di inizio valida.'
+                    endingat:
+                        'null': 'Per favore inserisci una data di fine valida.'
+        user:
+            create:
+                roles:
+                    invalid: Per favore scegli ruoli validi per l’utente.
+                    multipleinvalid: Per favore scegli ruoli validi per l’utente.
+user:
+    create:
+        roles:
+            invalid: Per favore scegli ruoli validi per l’utente.
+            multipleinvalid: Per favore scegli ruoli validi per l’utente.
+    abstract:
+        update:
+            create:
+                titleen:
+                    'null': 'Per favore inserisci un titolo.'
+                    too_long: 'Per favore inserisci un titolo più breve.'
+                descriptionen:
+                    'null': 'Per favore inserisci una descrizione.'
+                startingat:
+                    'null': 'Per favore inserisci una data di inizio valida.'
+                endingat:
+                    'null': 'Per favore inserisci una data di fine valida.'
+daterange:
+    invalid: Fai attenzione a scegliere una data di fine successiva alla data di inizio.
+front:
+    users:
+        forms:
+            username:
+                exists: Questo nome utente è già in uso.
+            email:
+                exists: Questa email è già in uso.
+            password:
+                help: 'La password deve essere lunga almeno 8 caratteri.'
+    user:
+        forms:
+            password:
+                blank: 'Per favore inserisci una password.'
