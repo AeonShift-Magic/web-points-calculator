@@ -392,7 +392,7 @@ textarea::placeholder {
     margin-bottom: 0.25em;
 }
 
-datalist {
+datalist, .datalist-div {
     background-color: var(--theme-neutral-dark);
     color: var(--theme-white-alt);
     position: absolute;
@@ -412,7 +412,7 @@ datalist {
     border-radius: 0 0 3px 3px;
 }
 
-datalist option {
+datalist option, .datalist-option {
     background-color: var(--theme-neutral-dark);
     color: var(--theme-white-alt);
     font-size: 1em;
@@ -421,7 +421,12 @@ datalist option {
     cursor: pointer;
 }
 
-datalist option:hover, datalist option:focus {
+.datalist-option-no-results {
+    color: var(--theme-neutral-medium);
+    font-style: italic;
+}
+
+datalist option:hover, datalist option:focus, .datalist-option:hover, .datalist-option:focus {
     color: var(--theme-white-alt);
     background-color: var(--theme-blue-dark);
     outline: 0 none;

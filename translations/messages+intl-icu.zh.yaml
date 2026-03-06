@@ -1004,6 +1004,8 @@ front:
             decklist:
                 addcard:
                     label: '添加卡牌'
+                noresult:
+                    label: '未找到结果。'
         pointslist:
             choice:
                 label: '{name}（{datestart} → {dateend}）'

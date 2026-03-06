@@ -1004,6 +1004,8 @@ front:
             decklist:
                 addcard:
                     label: 'Add a card'
+                noresult:
+                    label: 'No results found'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'

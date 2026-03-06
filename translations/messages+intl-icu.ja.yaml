@@ -1004,6 +1004,8 @@ front:
             decklist:
                 addcard:
                     label: 'カードを追加'
+                noresult:
+                    label: '結果が見つかりませんでした。'
         pointslist:
             choice:
                 label: '{name}（{datestart} → {dateend}）'

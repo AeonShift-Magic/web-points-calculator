@@ -313,5 +313,8 @@ This project follows Wizards Of The Coast™ fansite policy.*
 
 
 ✨ Original code from [William Pinaud (DocFX)](https://github.com/DocFX) for AeonShift, 2025.
+
+With help from lovely contributors:
+- [Buisson](https://github.com/Buisson)
   
 Feel free to contribute to this project, reuse it, share it, star it on GitHub if you like it, or donate if you like and can!

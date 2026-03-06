@@ -1004,6 +1004,8 @@ front:
             decklist:
                 addcard:
                     label: 'Magdagdag ng card'
+                noresult:
+                    label: 'Walang nakitang resulta.'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'
