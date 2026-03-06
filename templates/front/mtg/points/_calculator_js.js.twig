@@ -1467,6 +1467,9 @@ document.addEventListener('DOMContentLoaded', () => {
         update: updateSelectEl?.value
     });
 
+    window.AeonShiftCalculator = window.AeonShiftCalculator || {};
+    window.AeonShiftCalculator.getCurrentFormatChoiceValues = getCurrentFormatChoiceValues;
+
     /**
      * Checks if the current form values match a preset from the premade list.
      *

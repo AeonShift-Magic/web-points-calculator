@@ -52,7 +52,7 @@ final class PointsController extends AbstractController
                 && class_exists($update->getPointsList()->getRulesModel())
                 && defined($update->getPointsList()->getRulesModel() . '::CALCULATOR_JS_FILE')
             ) {
-                $modelFilesToInclude[] = constant($update->getPointsList()->getRulesModel() . '::CALCULATOR_JS_FILE');
+                $modelFilesToInclude[$update->getPointsList()->getRulesModel()] = constant($update->getPointsList()->getRulesModel() . '::CALCULATOR_JS_FILE');
             }
         }
 
