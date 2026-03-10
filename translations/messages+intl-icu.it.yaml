@@ -777,6 +777,8 @@ front:
                         minimumbudget:
                             label: 'Budget minimo 🧺'
                             placeholder: '80'
+                        points:
+                            label: 'Punti'
                 gotoform:
                     text: 'Usa il nostro calcolatore'
                     title: 'Vai semplicemente al modulo del <strong>calcolatore</strong>, con tutte le opzioni tra cui scegliere.'
@@ -789,6 +791,9 @@ front:
                 quiz:
                     text: 'Aiutami a scegliere un formato'
                     title: 'Aiutami a scegliere un formato per giocare AeonShift Magic The Gathering™ tramite <strong>un quiz</strong>.'
+                cardpoints:
+                    description: 'Queste sono le carte classificate in base al formato selezionato sopra.'
+                    text: 'Carte classificate'
         form:
             title: '🎛️ Personalizza il tuo formato'
             formtitle: 'Stai giocando:'

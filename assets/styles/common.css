@@ -800,6 +800,10 @@ main {
     background: transparent url("../images/brass.jpg") center center / cover no-repeat scroll;
 }
 
+.bg-row-3 {
+    background: transparent url("../images/lotus.jpg") center center / cover no-repeat scroll;
+}
+
 .main-content {
     align-items: center;
     display: flex;

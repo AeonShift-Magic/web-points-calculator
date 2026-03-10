@@ -777,6 +777,8 @@ front:
                         minimumbudget:
                             label: '最低预算 🧺'
                             placeholder: '80'
+                        points:
+                            label: '积分'
                 gotoform:
                     text: '使用计算器'
                     title: '直接前往 <strong>calculator</strong> 表单，那里有所有可选项。'
@@ -789,6 +791,9 @@ front:
                 quiz:
                     text: '帮我选择格式'
                     title: '通过 <strong>测验</strong> 帮我选择 AeonShift Magic The Gathering™ 的游玩格式。'
+                cardpoints:
+                    description: '以下是根据您上方选择的格式对卡牌进行的排名。'
+                    text: '排名卡牌'
         form:
             title: '🎛️ 自定义你的格式'
             formtitle: '你正在游玩：'

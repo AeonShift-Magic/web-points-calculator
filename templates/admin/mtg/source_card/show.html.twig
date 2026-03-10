@@ -29,6 +29,9 @@
                     <td>{{ source_card.alternateNameEN }}</td>
                 </tr>
                 <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+                <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.scryfallid.label'|trans }}</th>
                     <td>{{ source_card.scryfallId }}</td>
                 </tr>
@@ -45,6 +48,9 @@
                     <td>{{ source_card.oracleId }}</td>
                 </tr>
                 <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+                <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.firstprintsetcode.label'|trans }}</th>
                     <td>{{ source_card.firstPrintedSetCode|upper }}</td>
                 </tr>
@@ -59,6 +65,9 @@
                 <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.digitalonly.label'|trans }}</th>
                     <td>{{ ('global.' ~ source_card.digitalOnly|default(0) ~ '.label')|trans }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.coloridentity.label'|trans }}</th>
@@ -94,6 +103,9 @@
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.manavalue.label'|trans }}</th>
                     <td>{{ source_card.manaValue }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.iscommandzoneeligible.label'|trans }}</th>
@@ -132,6 +144,9 @@
                     <td class="{{ 'value' ~ source_card.legallegalCommanderSpecial|default(0) }}">{{ ('global.' ~ source_card.legallegalCommanderSpecial|default(0) ~ '.label')|trans }}</td>
                 </tr>
                 <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+                <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.mtgoprice.label'|trans }}</th>
                     <td>{{ source_card.mTGOPrice|default(0.0) }}</td>
                 </tr>
@@ -148,6 +163,9 @@
                     <td>{{ source_card.mValueCount|default(0.0) }}</td>
                 </tr>
                 <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
+                </tr>
+                <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.duelrank.label'|trans }}</th>
                     <td>{{ source_card.duelRank|title }}</td>
                 </tr>
@@ -158,6 +176,9 @@
                 <tr>
                     <th>{{ 'admin.form.mtg.sourcecard.create.ffarank.label'|trans }}</th>
                     <td>{{ source_card.fFARank|title }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2" class="bg-slate-400"></th>
                 </tr>
                 <tr>
                     <th>{{ 'global.dates.label'|trans }}</th>

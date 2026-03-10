@@ -777,6 +777,8 @@ front:
                         minimumbudget:
                             label: '最低予算 🧺'
                             placeholder: '80'
+                        points:
+                            label: 'ポイント'
                 gotoform:
                     text: '計算機を使う'
                     title: 'すべての選択肢がある <strong>calculator</strong> フォームへ進んでください。'
@@ -789,6 +791,9 @@ front:
                 quiz:
                     text: 'フォーマット選びを手伝って'
                     title: '<strong>クイズ</strong>で AeonShift Magic The Gathering™ のフォーマット選びを手伝ってください。'
+                cardpoints:
+                    description: 'これらは、上記のフォーマット選択に基づいてランク付けされたカードです。'
+                    text: 'ランクカード'
         form:
             title: '🎛️ フォーマットをカスタマイズ'
             formtitle: 'プレイ中:'

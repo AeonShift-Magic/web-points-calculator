@@ -777,6 +777,8 @@ front:
                         minimumbudget:
                             label: 'Minimální rozpočet 🧺'
                             placeholder: '80'
+                        points:
+                            label: 'Body'
                 gotoform:
                     text: 'Použít naši kalkulačku'
                     title: 'Jednoduše přejděte do formuláře <strong>kalkulačky</strong> se všemi možnostmi výběru.'
@@ -789,6 +791,9 @@ front:
                 quiz:
                     text: 'Pomozte mi vybrat formát'
                     title: 'Pomozte mi vybrat formát pro hraní AeonShift Magic The Gathering™ pomocí <strong>kvízu</strong>.'
+                cardpoints:
+                    description: 'Toto jsou karty seřazené podle formátu, který jste si vybrali výše.'
+                    text: 'Hodnocené karty'
         form:
             title: '🎛️ Přizpůsobit formát'
             formtitle: 'Hrajete:'

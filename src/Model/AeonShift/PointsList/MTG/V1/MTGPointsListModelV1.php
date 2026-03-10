@@ -21,6 +21,7 @@ use const JSON_UNESCAPED_UNICODE;
 use JsonException;
 use Override;
 use RuntimeException;
+use const SORT_NUMERIC;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -451,6 +452,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         $pointsListCardsArray = [
             'cards'                      => [],
             'unranked'                   => [],
+            'ranked'                     => [],
             'timelineprecedences'        => self::TIMELINE_PRECEDENCES,
             'calculatorJsFunctionPrefix' => self::CALCULATOR_JS_FUNCTION_PREFIX,
             'pvalues'                    => [
@@ -595,10 +597,49 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
                     $pointsListCardsArray['cards'][$sourceCardName]['pointsPioneer'] = $pointListCard->getPointsPioneer();
                     $pointsListCardsArray['cards'][$sourceCardName]['pointsStandard'] = $pointListCard->getPointsStandard();
 
+                    // Also add it to the list of ranked cards for this list
+                    $pointsListCardsArray['ranked'][$sourceCardName] = $pointsListCardsArray['cards'][$sourceCardName];
+
                     continue 2;
                 }
             }
         }
+
+        // Sort the cards by Color Identity value then Count ascending
+        uasort($pointsListCardsArray['ranked'], static function (array $cardA, array $cardB): int {
+
+            $cardACI = isset($cardA['ci']) && is_array($cardA['ci']) ? $cardA['ci'] : [];
+            $cardBCI = isset($cardB['ci']) && is_array($cardB['ci']) ? $cardB['ci'] : [];
+
+            $normalize = static function (array $ci): array {
+                $colorOrder = ['W' => 0, 'U' => 1, 'B' => 2, 'R' => 3, 'G' => 4, 'C' => 5];
+                $mapped = [];
+                foreach ($ci as $c) {
+                    if (is_string($c) && isset($colorOrder[$c])) {
+                        $mapped[] = $colorOrder[$c];
+                    } else {
+                        // Unknown values go last
+                        $mapped[] = 99;
+                    }
+                }
+                sort($mapped, SORT_NUMERIC);
+
+                return $mapped;
+            };
+
+            $normA = $normalize($cardACI);
+            $normB = $normalize($cardBCI);
+
+            // Primary: lexicographic compare by ordered colors
+            $keyA = implode(',', $normA);
+            $keyB = implode(',', $normB);
+            if ($keyA !== $keyB) {
+                return $keyA <=> $keyB;
+            }
+
+            // Secondary: size of color identity (ascending)
+            return count($cardACI) <=> count($cardBCI);
+        });
 
         return $pointsListCardsArray;
     }
@@ -644,7 +685,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '\\');
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -686,7 +727,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '\\');
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -728,7 +769,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '\\');
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -776,7 +817,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
             ++$processingLine;
             $shiftedLineArray = array_shift($splitLines);
             /** @var array<int, string> $CSVlineContentsAsArray */
-            $CSVlineContentsAsArray = str_getcsv((string)$shiftedLineArray, ',', '"', '\\');
+            $CSVlineContentsAsArray = str_getcsv((string)$shiftedLineArray);
 
             // If we're on the first line, it MUST be the unranked cards line.
             if (($processingLine === 9) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== self::UNRANKED_CARD_NAME) {

@@ -1,6 +1,38 @@
-<div class="spaceless-row theme1 bg-row-2 quiz-choice-row relative z-10 min-h-[1200px]" id="choose-commander">
+<div class="spaceless-row gradient-down-theme2 relative z-40" id="choose-commander">
+    <div class="main-column no-shadow py-2">
+        <div class="w-full text-center flex flex-col justify-center items-center my-3">
+
+            <div class="flex flex-col lg:flex-row w-full justify-around items-center">
+                <a class="btn btn-star btn-blue btn-big m-2" href="#quiz" title="{{ 'front.mtg.choose.links.quiz.title'|trans|striptags }}" data-quiz-target="quiz-question-1" data-turbo="false">
+                    <span class="top-left"></span>
+                    <span class="top-right"></span>
+                    <span class="title">
+                        <span class="icon-question"></span>
+                        {{ 'front.mtg.choose.links.quiz.text'|trans }}
+                    </span>
+                    <span class="bottom-left"></span>
+                    <span class="bottom-right"></span>
+                </a>
+                <img src="{{ asset('images/aeonshift-logo-transparent-format.png') }}" alt="AeonShiftlogo" class="w-auto h-10 m-4">
+                <a class="btn btn-star btn-gray btn-big m-2" href="#calculator" title="{{ 'front.mtg.choose.links.gotoform.title'|trans|striptags }}" data-turbo="false">
+                    <span class="top-left"></span>
+                    <span class="top-right"></span>
+                    <span class="title">
+                        <span class="icon-chart-bar"></span>
+                        {{ 'front.mtg.choose.links.gotoform.text'|trans }}
+                    </span>
+                    <span class="bottom-left"></span>
+                    <span class="bottom-right"></span>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="spaceless-row theme1 bg-row-2 quiz-choice-row relative z-10 min-h-[1200px]">
     <div class="main-column no-shadow py-2 h-[1200px] format-incentive my-8">
-        <div class="w-full flex flex-col justify-around items-center p-px mb-4">
+        <div class="w-full flex flex-col justify-around items-center p-px mb-4 lg:px-4">
             <h2>{{ 'front.mtg.choose.links.choosecommander.text'|trans }}</h2>
             <p class="blue-text text-center my-1">
                 <span class="icon-info"></span> {{ 'front.mtg.choose.links.choosecommander.description'|trans }}

@@ -777,6 +777,8 @@ front:
                         minimumbudget:
                             label: 'Minimum na Budget 🧺'
                             placeholder: '80'
+                        points:
+                            label: 'Mga Puntos'
                 gotoform:
                     text: 'Gamitin ang aming calculator'
                     title: 'Pumunta lang sa <strong>calculator</strong> form, kasama ang lahat ng pagpipilian.'
@@ -789,6 +791,9 @@ front:
                 quiz:
                     text: 'Tulungan akong pumili ng format'
                     title: 'Tulungan akong pumili ng format para maglaro ng AeonShift Magic The Gathering™ sa pamamagitan ng <strong>quiz</strong>.'
+                cardpoints:
+                    description: 'Ito ang mga naka-rank na card, batay sa napili mong format sa itaas.'
+                    text: 'Mga Niraranggo na Kard'
         form:
             title: '🎛️ I-customize ang iyong format'
             formtitle: 'Ikaw ay naglalaro:'

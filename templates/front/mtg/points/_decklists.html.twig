@@ -14,9 +14,14 @@
                         <span class="icon-info"></span> {{ 'front.mtg.form.fixeddecklist'|trans|raw }}
                     </span>
 
-                    <a data-action="choose-commander-incentive" class="btn btn-blue mb-2 mt-4 text-xl" href="#choose-commander">
-                        <span class="icon-diamond mr-3"></span> {{ 'front.mtg.choose.links.choosecommander.text'|trans }}
-                    </a>
+                    <div class="flex flex-row items-center justify-around flex-wrap w-full">
+                        <a data-action="choose-commander-incentive" class="btn btn-blue mb-2 mt-4 text-xl" href="#choose-commander">
+                            <span class="icon-diamond mr-3"></span> {{ 'front.mtg.choose.links.choosecommander.text'|trans }}
+                        </a>
+                        <a data-action="choose-cards-incentive" class="btn btn-blue mb-2 mt-4 text-xl" href="#card-rankings">
+                            <span class="icon-docs mr-3"></span> {{ 'front.mtg.choose.links.viewpoints.text'|trans }}
+                        </a>
+                    </div>
 
                     <form id="decklist{{ i }}-add-card" class="w-full card-add-form" data-decklist-add-card-form="{{ i }}">
                         <fieldset class="flex flex-col mb-2">

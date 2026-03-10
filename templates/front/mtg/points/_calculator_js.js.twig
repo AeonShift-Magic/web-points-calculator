@@ -26,6 +26,8 @@
  *   Current value of the update select element.
  */
 
+let unknownImageUrl = '{{ asset('images/unranked.jpg') }}';
+
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('calculator-form');
     if (!root) {
@@ -174,7 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const deckList2StartEl = root.querySelector('#decklist2-start');
     const deckList3StartEl = root.querySelector('#decklist3-start');
 
-
     // Also cache non-root selectors once
     const calculatorEl = document.getElementById('calculator');
     const quizEl = document.getElementById('quiz');
@@ -185,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const commanderChoiceContainerEl = document.getElementById('choose-commander');
     const commanderYesEl = document.getElementById('commander-yes');
     const chooseCommanderIncentiveEls = document.querySelectorAll('[data-action="choose-commander-incentive"]');
+    const rankedCardsTbodyEl = document.getElementById('ranked-cards-container');
 
     /**
      * Cache choose-commander table DOM once (static bindings).
@@ -425,36 +427,33 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         decorated.sort((a, b) => {
-            // Special behavior for color identity:
-            // if the user selected colors (e.g. UW), put EXACT matches first, then sort the rest normally.
-            if (colIndex === COLOR_IDENTITY_COL_INDEX && selectedIdentity !== '') {
-                const aId = String(a.colorIdentity ?? '').toUpperCase();
-                const bId = String(b.colorIdentity ?? '').toUpperCase();
-
-                const aExact = aId === selectedIdentity;
-                const bExact = bId === selectedIdentity;
-
-                if (aExact !== bExact) return aExact ? -1 : 1;
-            }
-
             // Always push empty cells to the bottom (regardless of ASC/DESC)
             const aEmpty = isEmptyKey(a.key);
             const bEmpty = isEmptyKey(b.key);
             if (aEmpty !== bEmpty) return aEmpty ? 1 : -1;
 
-            // Fix color identity sorting: use <tr data-color-identity="...">, not the icon cell textContent
+            // Color identity sorting:
+            // If the user selected colors, put rows that CONTAIN ALL selected colors first.
+            // Then: 1) by size (len), 2) by canonical identity string (WUBRGC presence order).
             if (colIndex === COLOR_IDENTITY_COL_INDEX) {
-                const aId = String(a.colorIdentity ?? '').trim();
-                const bId = String(b.colorIdentity ?? '').trim();
+                const aId = String(a.colorIdentity ?? '').trim().toUpperCase();
+                const bId = String(b.colorIdentity ?? '').trim().toUpperCase();
 
-                const aLen = aId.length;
-                const bLen = bId.length;
+                if (selectedIdentity !== '') {
+                    const aMatches = selectedIdentity.split('').every(c => aId.includes(c));
+                    const bMatches = selectedIdentity.split('').every(c => bId.includes(c));
+                    if (aMatches !== bMatches) return aMatches ? -1 : 1;
+                }
 
-                // Sort by number of colors first (length), then by identity string.
-                if (aLen !== bLen) return (aLen < bLen ? -1 : 1) * dir;
+                if (aId.length !== bId.length) {
+                    return (aId.length < bId.length ? -1 : 1) * dir;
+                }
 
-                if (aId === bId) return a.idx - b.idx;
-                return (aId < bId ? -1 : 1) * dir;
+                if (aId !== bId) {
+                    return (aId < bId ? -1 : 1) * dir;
+                }
+
+                return a.idx - b.idx;
             }
 
             const r = CHOOSE_COMMANDER_SORT.compareKeys(a.key, b.key);
@@ -839,7 +838,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nameTimer = window.setTimeout(() => {
                 nameTimer = null;
                 applyChooseCommanderFilters();
-            }, 200);
+            }, 150);
         };
 
         for (const el of fields) {
@@ -888,6 +887,390 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+    };
+
+    /**
+     * Cache choose-cards table DOM (rows are dynamic; call init() after rendering).
+     */
+    const CHOOSE_CARDS_TABLE = (() => {
+        /** @type {HTMLTableElement|null} */
+        let tableEl = null;
+        /** @type {HTMLTableSectionElement|null} */
+        let tbodyEl = null;
+        /**
+         * @type {Array<{rowEl: HTMLTableRowElement, cardName: string}>}
+         */
+        let rows = [];
+
+        const init = () => {
+            tableEl = document.getElementById('choose-cards-table');
+            if (!(tableEl instanceof HTMLTableElement)) {
+                tableEl = null;
+                tbodyEl = null;
+                rows = [];
+                return;
+            }
+
+            tbodyEl = tableEl.tBodies?.[0] ?? null;
+
+            rows = [];
+            if (!tbodyEl) return;
+
+            const trEls = Array.from(tbodyEl.rows).filter(r => r instanceof HTMLTableRowElement);
+            for (const rowEl of trEls) {
+                const fromDataset = String(rowEl.dataset.cardName ?? '').trim();
+                const fromCell = String(rowEl.cells?.[0]?.textContent ?? '').trim();
+                rows.push({
+                    rowEl,
+                    cardName: fromDataset || fromCell
+                });
+            }
+        };
+
+        const getTableEl = () => tableEl;
+        const getRows = () => rows;
+
+        return { init, getTableEl, getRows };
+    })();
+
+    /**
+     * Choose-cards sorting perf cache (same approach as CHOOSE_COMMANDER_SORT).
+     */
+    const CHOOSE_CARDS_SORT = (() => {
+        /** @type {WeakMap<HTMLTableRowElement, Map<number, {type:'number'|'string', value:number|string}>>} */
+        const keyCacheByRow = new WeakMap();
+        const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+
+        const getRowCache = (rowEl) => {
+            let m = keyCacheByRow.get(rowEl);
+            if (!m) {
+                m = new Map();
+                keyCacheByRow.set(rowEl, m);
+            }
+            return m;
+        };
+
+        const parseComparable = (text) => {
+            const t = String(text ?? '').trim();
+
+            const numericCandidate = t.replace(/\s+/g, '').replace(/,/g, '.');
+            if (/^-?\d+(\.\d+)?$/.test(numericCandidate)) {
+                const n = Number(numericCandidate);
+                if (Number.isFinite(n)) return { type: 'number', value: n };
+            }
+
+            return { type: 'string', value: t.toLocaleLowerCase() };
+        };
+
+        const getKey = (rowEl, colIndex) => {
+            const cache = getRowCache(rowEl);
+            if (cache.has(colIndex)) return cache.get(colIndex);
+
+            const cell = rowEl.children?.[colIndex];
+            const key = parseComparable(cell?.textContent ?? '');
+            cache.set(colIndex, key);
+            return key;
+        };
+
+        const compareKeys = (ka, kb) => {
+            if (ka.type === 'number' && kb.type === 'number') {
+                if (ka.value === kb.value) return 0;
+                return ka.value < kb.value ? -1 : 1;
+            }
+            return collator.compare(String(ka.value), String(kb.value));
+        };
+
+        return { getKey, compareKeys };
+    })();
+
+    /**
+     * Apply filters from the "#choose-card-filter" form to rows of #choose-cards-table
+     * by toggling the "filtered-out" class on <tr>.
+     *
+     * Filters:
+     * - Name (#choose-card-name, min 2 chars)
+     * - Color identity (checkboxes name="choose-card-color-identity[]")
+     */
+    const applyChooseCardsFilters = () => {
+        const tableEl = CHOOSE_CARDS_TABLE.getTableEl();
+        if (!(tableEl instanceof HTMLTableElement)) return;
+
+        const filterFormEl = document.getElementById('choose-card-filter');
+        if (!(filterFormEl instanceof HTMLFormElement)) return;
+
+        const nameInputEl = /** @type {HTMLInputElement|null} */ (filterFormEl.querySelector('#choose-card-name'));
+
+        const selectedName = String(nameInputEl?.value ?? '').trim().toLocaleLowerCase();
+        const shouldFilterName = selectedName.length >= 2;
+
+        const selectedColors = Array
+            .from(filterFormEl.querySelectorAll('input[type="checkbox"][name="choose-card-color-identity[]"]'))
+            .filter(el => el instanceof HTMLInputElement && el.checked)
+            .map(el => String(el.value ?? '').trim().toUpperCase())
+            .filter(Boolean);
+
+        for (const r of CHOOSE_CARDS_TABLE.getRows()) {
+            const rowEl = r.rowEl;
+
+            let keepRow = true;
+
+            if (shouldFilterName) {
+                const rowName = String(r.cardName ?? '').toLocaleLowerCase();
+                keepRow = keepRow && rowName.includes(selectedName);
+            }
+
+            if (keepRow && selectedColors.length > 0) {
+                const colorIdentityAttribute = String(
+                    rowEl.getAttribute('data-color-identity')
+                    ?? rowEl.dataset.colorIdentity
+                    ?? ''
+                ).trim().toUpperCase();
+
+                for (const selectedColor of selectedColors) {
+                    if (!colorIdentityAttribute.includes(selectedColor)) {
+                        keepRow = false;
+                        break;
+                    }
+                }
+            }
+
+            rowEl.classList.toggle('filtered-out', !keepRow);
+        }
+    };
+
+    /**
+     * Sort rows of #choose-cards-table by a column index and direction.
+     *
+     * Column indexes in choose-cards-table:
+     * 0 = Name, 1 = Points, 2 = cEDH rank, 3 = MV, 4 = Color Identity
+     *
+     * @param {HTMLTableElement} tableEl
+     * @param {number} colIndex
+     * @param {'asc'|'desc'} direction
+     */
+    const sortChooseCardsTable = (tableEl, colIndex, direction) => {
+        const tbody = tableEl.tBodies?.[0];
+        if (!tbody) return;
+
+        const dir = direction === 'desc' ? -1 : 1;
+
+        /** @type {HTMLTableRowElement[]} */
+        const rows = Array.from(tbody.rows).filter(r => r instanceof HTMLTableRowElement);
+        if (rows.length <= 1) return;
+
+        const COLOR_IDENTITY_COL_INDEX = 4;
+
+        const filterFormEl = document.getElementById('choose-card-filter');
+        const selectedIdentity = (() => {
+            if (!(filterFormEl instanceof HTMLFormElement)) return '';
+
+            const checked = Array
+                .from(filterFormEl.querySelectorAll('input[type="checkbox"][name="choose-card-color-identity[]"]'))
+                .filter(el => el instanceof HTMLInputElement && el.checked)
+                .map(el => String(el.value ?? '').trim().toUpperCase())
+                .filter(Boolean);
+
+            if (checked.length === 0) return '';
+
+            const set = new Set(checked);
+            const order = ['W', 'U', 'B', 'R', 'G', 'C'];
+            return order.filter(c => set.has(c)).join('');
+        })();
+
+        const canonicalizeIdentity = (raw) => {
+            const s = String(raw ?? '').trim().toUpperCase();
+            if (s === '') return '';
+
+            const set = new Set(s.split('').filter(Boolean));
+            const order = ['W', 'U', 'B', 'R', 'G', 'C'];
+            return order.filter(c => set.has(c)).join('');
+        };
+
+        const decorated = rows.map((rowEl, idx) => {
+            if (colIndex === COLOR_IDENTITY_COL_INDEX) {
+                const raw = String(
+                    rowEl.getAttribute('data-color-identity')
+                    ?? rowEl.dataset.colorIdentity
+                    ?? ''
+                );
+                return {
+                    rowEl,
+                    idx,
+                    key: CHOOSE_CARDS_SORT.getKey(rowEl, colIndex),
+                    colorIdentity: canonicalizeIdentity(raw)
+                };
+            }
+
+            return {
+                rowEl,
+                idx,
+                key: CHOOSE_CARDS_SORT.getKey(rowEl, colIndex)
+            };
+        });
+
+        const isEmptyKey = (k) => {
+            if (!k) return true;
+            if (k.type === 'string') return String(k.value ?? '').trim() === '';
+            if (k.type === 'number') return !Number.isFinite(Number(k.value));
+            return true;
+        };
+
+        decorated.sort((a, b) => {
+            // Always push empty cells to the bottom (regardless of ASC/DESC)
+            const aEmpty = isEmptyKey(a.key);
+            const bEmpty = isEmptyKey(b.key);
+            if (aEmpty !== bEmpty) return aEmpty ? 1 : -1;
+
+            if (colIndex === COLOR_IDENTITY_COL_INDEX) {
+                const aId = String(a.colorIdentity ?? '').trim().toUpperCase();
+                const bId = String(b.colorIdentity ?? '').trim().toUpperCase();
+
+                if (selectedIdentity !== '') {
+                    const aMatches = selectedIdentity.split('').every(c => aId.includes(c));
+                    const bMatches = selectedIdentity.split('').every(c => bId.includes(c));
+                    if (aMatches !== bMatches) return aMatches ? -1 : 1;
+                }
+
+                if (aId.length !== bId.length) {
+                    return (aId.length < bId.length ? -1 : 1) * dir;
+                }
+
+                if (aId !== bId) {
+                    return (aId < bId ? -1 : 1) * dir;
+                }
+
+                return a.idx - b.idx;
+            }
+
+            const r = CHOOSE_CARDS_SORT.compareKeys(a.key, b.key);
+            if (r === 0) return a.idx - b.idx;
+            return r * dir;
+        });
+
+        let changed = false;
+        for (let i = 0; i < decorated.length; i++) {
+            if (decorated[i].rowEl !== rows[i]) {
+                changed = true;
+                break;
+            }
+        }
+        if (!changed) {
+            tableEl.dataset.sortCol = String(colIndex);
+            tableEl.dataset.sortDir = direction;
+            return;
+        }
+
+        const frag = document.createDocumentFragment();
+        for (const item of decorated) frag.appendChild(item.rowEl);
+        tbody.appendChild(frag);
+
+        tableEl.dataset.sortCol = String(colIndex);
+        tableEl.dataset.sortDir = direction;
+    };
+
+    /**
+     * Make the #choose-cards-table headers clickable to sort ASC/DESC.
+     * Safe to call multiple times (guards against double-binding).
+     */
+    const initChooseCardsTableSorting = () => {
+        const tableEl = document.getElementById('choose-cards-table');
+        if (!(tableEl instanceof HTMLTableElement)) return;
+
+        if (tableEl.dataset.chooseCardsSortBound === '1') return;
+        tableEl.dataset.chooseCardsSortBound = '1';
+
+        const headerRow = tableEl.tHead?.rows?.[0] ?? null;
+        const headers = headerRow ? Array.from(headerRow.cells) : [];
+        if (headers.length === 0) return;
+
+        headers.forEach((th, index) => {
+            th.style.cursor = 'pointer';
+            th.setAttribute('role', 'button');
+            th.setAttribute('tabindex', '0');
+
+            const activate = () => {
+                const currentCol = Number(tableEl.dataset.sortCol ?? -1);
+                const currentDir = String(tableEl.dataset.sortDir ?? 'asc');
+
+                const nextDir =
+                    currentCol === index
+                        ? (currentDir === 'asc' ? 'desc' : 'asc')
+                        : 'asc';
+
+                headers.forEach(h => h.removeAttribute('aria-sort'));
+                th.setAttribute('aria-sort', nextDir === 'asc' ? 'ascending' : 'descending');
+
+                // Reuse existing loader helper (it's generic enough even if named "COMMANDER")
+                CHOOSE_COMMANDER_TABLE_LOADER.show(tableEl);
+
+                const loaderHost = tableEl.closest('.table-wrapper') || tableEl.parentElement || tableEl;
+                if (loaderHost instanceof HTMLElement) {
+                    void loaderHost.offsetHeight;
+                }
+
+                window.setTimeout(() => {
+                    try {
+                        sortChooseCardsTable(tableEl, index, nextDir);
+                    } finally {
+                        CHOOSE_COMMANDER_TABLE_LOADER.hide();
+                    }
+                }, 0);
+            };
+
+            th.addEventListener('click', activate);
+            th.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    activate();
+                }
+            });
+        });
+    };
+
+    /**
+     * Bind filtering to all [data-update-card-rankings] fields:
+     * - throttled typing for card name (min 2 chars)
+     * - immediate update on checkbox changes
+     *
+     * Safe to call multiple times (guards against double-binding).
+     */
+    const initChooseCardsTableFiltering = () => {
+        const filterFormEl = document.getElementById('choose-card-filter');
+        if (!(filterFormEl instanceof HTMLFormElement)) return;
+
+        if (filterFormEl.dataset.chooseCardsFilterBound === '1') {
+            return;
+        }
+        filterFormEl.dataset.chooseCardsFilterBound = '1';
+
+        const fields = Array.from(filterFormEl.querySelectorAll('[data-update-card-rankings]'));
+
+        const nameInputEl = filterFormEl.querySelector('#choose-card-name');
+        let nameTimer = /** @type {number|null} */ (null);
+
+        const scheduleNameFilter = () => {
+            if (nameTimer !== null) {
+                window.clearTimeout(nameTimer);
+            }
+            nameTimer = window.setTimeout(() => {
+                nameTimer = null;
+                applyChooseCardsFilters();
+            }, 150);
+        };
+
+        for (const el of fields) {
+            if (!(el instanceof HTMLElement)) continue;
+
+            if (el === nameInputEl) {
+                el.addEventListener('input', scheduleNameFilter);
+                el.addEventListener('change', scheduleNameFilter);
+                continue;
+            }
+
+            el.addEventListener('change', applyChooseCardsFilters);
+        }
+
+        applyChooseCardsFilters();
     };
 
     /**
@@ -1467,8 +1850,24 @@ document.addEventListener('DOMContentLoaded', () => {
         update: updateSelectEl?.value
     });
 
+    /**
+     * Escape a string for safe inclusion in an HTML attribute.
+     *
+     * @param {*} v
+     *
+     * @returns {string}
+     */
+    function escapeHtmlAttr(v) {
+        return String(v ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
     window.AeonShiftCalculator = window.AeonShiftCalculator || {};
     window.AeonShiftCalculator.getCurrentFormatChoiceValues = getCurrentFormatChoiceValues;
+    window.AeonShiftCalculator.escapeHtmlAttr = escapeHtmlAttr;
 
     /**
      * Checks if the current form values match a preset from the premade list.
@@ -2002,10 +2401,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             ++total;
                             const imageUrl = (typeof card.imageurl === 'string' && card.imageurl)
                                 ? card.imageurl
-                                : MTGPointsListModelV1UnknownImageUrl;
+                                : unknownImageUrl;
                             targetListDOMElement.insertAdjacentHTML(
                                 'beforeend',
-                                `<li><a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" data-imageurl="${ MTGPointsListModelV1EscapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ card.name }</a> <span class="help-text">(x${ card.copies })</span></li>`
+                                `<li><a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" data-imageurl="${ escapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ card.name }</a> <span class="help-text">(x${ card.copies })</span></li>`
                             );
                         }
                     }
@@ -2028,7 +2427,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ].forEach(({ deckListData, targetDOMElementLegal, targetDOMElementIllegal, targetDOMElementErrors, targetDOMElementStart, targetDOMTextarea }) => {
             if (!deckListData || !targetDOMElementLegal || !targetDOMElementIllegal || !targetDOMElementErrors || !targetDOMElementStart || !targetDOMTextarea) return;
 
-            if(targetDOMTextarea?.value.trim().length !== 0) {
+            if (targetDOMTextarea?.value.trim().length !== 0) {
                 if (deckListData?.errors.length > 0) {
                     targetDOMElementLegal.classList.add('hidden');
                     targetDOMElementIllegal.classList.remove('hidden');
@@ -2246,6 +2645,136 @@ document.addEventListener('DOMContentLoaded', () => {
     }, true);
 
     /**
+     * Fill the ranked cards table body (#ranked-cards-container) with cards from the current update pointsList.
+     *
+     * Rows contain:
+     * - Card key
+     * - Calculated points (via `${prefix}CalculatePointsForCardInPointsList`)
+     * - Mana Value
+     * - CI icons/spans
+     */
+    const renderRankedCardsContainer = () => {
+        if (!(rankedCardsTbodyEl instanceof HTMLTableSectionElement)) {
+            return;
+        }
+
+        const currentFormatChoiceValues = getCurrentFormatChoiceValues();
+
+        /** @type {*} */
+        const pointsList = updates?.updates?.[currentFormatChoiceValues.update]?.pointsList ?? null;
+
+        /** @type {*} */
+        const ranked = pointsList?.ranked ?? null;
+
+        rankedCardsTbodyEl.innerHTML = '';
+
+        if (typeof ranked !== 'object' || ranked.length === 0) {
+            return;
+        }
+
+        const calculatorJsFunctionPrefix =
+            updates?.updates?.[currentFormatChoiceValues.update]?.pointsList?.calculatorJsFunctionPrefix ?? null;
+
+        if (typeof calculatorJsFunctionPrefix !== 'string' || calculatorJsFunctionPrefix.trim() === '') {
+            return;
+        }
+
+        const calculatePointsForCardInPointsListFn =
+            window[calculatorJsFunctionPrefix + 'CalculatePointsForCardInPointsList'];
+
+        if (typeof calculatePointsForCardInPointsListFn !== 'function') {
+            return;
+        }
+
+        const documentFragment = document.createDocumentFragment();
+
+        for (const [key, value] of Object.entries(ranked)) {
+            const cardData = value ?? null;
+
+            const cardname = String(key).trim();
+            if (!cardname) continue;
+
+            const cardPoints = calculatePointsForCardInPointsListFn(
+                cardname,
+                pointsList,
+                currentFormatChoiceValues,
+                'maindeck'
+            );
+
+            if (cardPoints.status === 'found') {
+                const tr = document.createElement('tr');
+                const tdKey = document.createElement('td');
+                const cardImageUrl = (
+                    cardPoints?.status === 'unknown'
+                    || typeof cardPoints.imageurl !== 'string'
+                    || cardPoints.imageurl === ''
+                )
+                    ? unknownImageUrl
+                    : cardPoints.imageurl;
+
+                // Card Name (+ image and search link)
+                tdKey.innerHTML =
+                    `<strong class="${ cardPoints.status }">
+                             <a href="https://scryfall.com/search?q=${ encodeURIComponent(cardname) }" data-imageurl="${ escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                                <span class="icon-search"></span> ${ cardPoints?.name ?? cardname }
+                            </a>
+                    </strong>`
+                ;
+                // Add it to the main row
+                tr.setAttribute('data-commander-name', cardPoints?.name ?? cardname);
+
+                // Card ranking in points
+                const tdPoints = document.createElement('td');
+                tdPoints.innerHTML = `<strong class="commander-budget font-bold text-lg ${ Number(cardPoints.points) > 0 ? 'red-text' : Number(cardPoints.points) < 0 ? 'green-text' : 'gray-text' }">${ String(cardPoints?.points ?? '') }</strong>`;
+
+                // CEDH Ranking on EDHRec
+                const tdEDHRecRank = document.createElement('td');
+                tdEDHRecRank.innerHTML = Number(cardData?.cedhrank) > 0 ? '#' + (cardData?.cedhrank ?? '') : '';
+
+                // Mana Value
+                const tdMv = document.createElement('td');
+                tdMv.innerHTML = String(cardData?.mv ?? '');
+
+                // Color Identity
+                const tdCi = document.createElement('td');
+                const ci = cardData?.ci;
+                let rawCi = '';
+
+                if (Array.isArray(ci) && ci.length > 0) {
+                    for (const v of ci) {
+                        const c = String(v ?? '').trim().toUpperCase();
+                        if (!c) continue;
+
+                        tr.setAttribute('data-color-' + c, 'true');
+                        const span = document.createElement('span');
+                        rawCi += c;
+                        span.title = c;
+                        span.className = `color-identity color-identity-${ String(c).toLowerCase() }`;
+                        span.textContent = c;
+
+                        tdCi.appendChild(span);
+                    }
+                }
+
+                tr.setAttribute('data-color-identity', String(rawCi).toUpperCase());
+
+                // Maximum Timeline
+                tr.setAttribute('data-maximum-timeline', cardData?.timeline);
+
+                tr.appendChild(tdKey);
+                tr.appendChild(tdPoints);
+                tr.appendChild(tdEDHRecRank);
+                tr.appendChild(tdMv);
+                tr.appendChild(tdCi);
+
+                documentFragment.appendChild(tr);
+            }
+        }
+
+        rankedCardsTbodyEl.appendChild(documentFragment);
+    };
+
+    /**
      * Update the format names and points results when any of the format choice inputs change.
      *
      * @param {Event} e
@@ -2275,13 +2804,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (target.matches('input, select')) {
             updateFormatNames();
             throttledUpdatePointsResultsAndSummaries();
+            renderRankedCardsContainer();
 
             if (target === updateSelectEl) {
                 recalculateChooseCommanderTableBudgets();
             }
         }
     };
-
     // Use capture so it still works even if something stops propagation on inner nodes
     root.addEventListener('change', onControlChange, true);
     root.addEventListener('input', onControlChange, true);
@@ -2342,10 +2871,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.requestAnimationFrame(() => {
         updatePointsResultsAndSummaries();
+        renderRankedCardsContainer();
 
         if (CHOOSE_COMMANDER_TABLE.getTableEl()) {
             initChooseCommanderTableSorting();
             initChooseCommanderTableFiltering();
+        }
+
+        CHOOSE_CARDS_TABLE.init();
+        if (CHOOSE_CARDS_TABLE.getTableEl()) {
+            initChooseCardsTableSorting();
+            initChooseCardsTableFiltering();
         }
 
         window.__chooseCommanderBudgetAbortController = new AbortController();

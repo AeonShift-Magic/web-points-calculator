@@ -23,23 +23,25 @@ var VanillaTilt = function () {
         }
 
         addEventListeners() {
-            this.onMouseEnterBind = this.onMouseEnter.bind(this), this.onMouseMoveBind = this.onMouseMove.bind(this), this.onMouseLeaveBind = this.onMouseLeave.bind(this), this.onWindowResizeBind = this.onWindowResize.bind(this), this.onDeviceOrientationBind = this.onDeviceOrientation.bind(this), this.elementListener.addEventListener('mouseenter', this.onMouseEnterBind), this.elementListener.addEventListener('mouseleave', this.onMouseLeaveBind), this.elementListener.addEventListener('mousemove', this.onMouseMoveBind), (this.glare || this.fullPageListening) && window.addEventListener('resize', this.onWindowResizeBind), this.gyroscope && window.addEventListener('deviceorientation', this.onDeviceOrientationBind);
+            this.onMouseEnterBind = this.onMouseEnter.bind(this),
+            this.onMouseMoveBind = this.onMouseMove.bind(this),
+            this.onMouseLeaveBind = this.onMouseLeave.bind(this),
+            this.onWindowResizeBind = this.onWindowResize.bind(this),
+            this.elementListener.addEventListener('mouseenter', this.onMouseEnterBind),
+            this.elementListener.addEventListener('mouseleave', this.onMouseLeaveBind),
+            this.elementListener.addEventListener('mousemove', this.onMouseMoveBind),
+            (this.glare || this.fullPageListening) && window.addEventListener('resize', this.onWindowResizeBind);
         }
 
         removeEventListeners() {
-            this.elementListener.removeEventListener('mouseenter', this.onMouseEnterBind), this.elementListener.removeEventListener('mouseleave', this.onMouseLeaveBind), this.elementListener.removeEventListener('mousemove', this.onMouseMoveBind), this.gyroscope && window.removeEventListener('deviceorientation', this.onDeviceOrientationBind), (this.glare || this.fullPageListening) && window.removeEventListener('resize', this.onWindowResizeBind);
+            this.elementListener.removeEventListener('mouseenter', this.onMouseEnterBind),
+            this.elementListener.removeEventListener('mouseleave', this.onMouseLeaveBind),
+            this.elementListener.removeEventListener('mousemove', this.onMouseMoveBind),
+            (this.glare || this.fullPageListening) && window.removeEventListener('resize', this.onWindowResizeBind);
         }
 
         destroy() {
             clearTimeout(this.transitionTimeout), null !== this.updateCall && cancelAnimationFrame(this.updateCall), this.element.style.willChange = '', this.element.style.transition = '', this.element.style.transform = '', this.resetGlare(), this.removeEventListeners(), this.element.vanillaTilt = null, delete this.element.vanillaTilt, this.element = null;
-        }
-
-        onDeviceOrientation(t) {
-            if (null === t.gamma || null === t.beta) return;
-            this.updateElementPosition(), this.gyroscopeSamples > 0 && (this.lastgammazero = this.gammazero, this.lastbetazero = this.betazero, null === this.gammazero ? (this.gammazero = t.gamma, this.betazero = t.beta) : (this.gammazero = (t.gamma + this.lastgammazero) / 2, this.betazero = (t.beta + this.lastbetazero) / 2), this.gyroscopeSamples -= 1);
-            const e = this.settings.gyroscopeMaxAngleX - this.settings.gyroscopeMinAngleX, i = this.settings.gyroscopeMaxAngleY - this.settings.gyroscopeMinAngleY, s = e / this.width, n = i / this.height, l = (t.gamma - (this.settings.gyroscopeMinAngleX + this.gammazero)) / s,
-                a = (t.beta - (this.settings.gyroscopeMinAngleY + this.betazero)) / n;
-            null !== this.updateCall && cancelAnimationFrame(this.updateCall), this.event = { clientX: l + this.left, clientY: a + this.top }, this.updateCall = requestAnimationFrame(this.updateBind);
         }
 
         onMouseEnter() {
