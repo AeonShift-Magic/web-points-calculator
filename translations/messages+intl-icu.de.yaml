@@ -478,76 +478,76 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG - Aktivitätsverlauf der Kartenquelle'
-                    title: 'MTG - Aktivitätsverlauf der Kartenquelle'
+                    label: 'Magic The Gathering™ - Aktivitätsverlauf der Kartenquelle'
+                    title: 'Magic The Gathering™ - Aktivitätsverlauf der Kartenquelle'
             pointslist:
                 index:
-                    label: 'MTG - Punkte-Listen'
-                    title: 'MTG - Punkte-Listen'
+                    label: 'Magic The Gathering™ - Punkte-Listen'
+                    title: 'Magic The Gathering™ - Punkte-Listen'
                 new:
                     label: '➕ MTG Punkte-Liste erstellen'
                     title: 'MTG Punkte-Liste erstellen'
                 edit:
-                    label: 'MTG - Punkte-Liste bearbeiten "{name}"'
-                    title: 'MTG - Punkte-Liste bearbeiten "{name}"'
+                    label: 'Magic The Gathering™ - Punkte-Liste bearbeiten "{name}"'
+                    title: 'Magic The Gathering™ - Punkte-Liste bearbeiten "{name}"'
                 show:
-                    label: 'MTG - Punkte-Liste "{name}" Details'
-                    title: 'MTG - Punkte-Liste "{name}" Details'
+                    label: 'Magic The Gathering™ - Punkte-Liste "{name}" Details'
+                    title: 'Magic The Gathering™ - Punkte-Liste "{name}" Details'
                 import:
-                    label: 'MTG - Punkte für Liste "{name}" importieren'
-                    title: 'MTG - Punkte für Liste "{name}" importieren'
+                    label: 'Magic The Gathering™ - Punkte für Liste "{name}" importieren'
+                    title: 'Magic The Gathering™ - Punkte für Liste "{name}" importieren'
             pointslistcard:
                 index:
-                    label: 'MTG - Punkte-Listen-Karten'
-                    title: 'MTG - Punkte-Listen-Karten'
+                    label: 'Magic The Gathering™ - Punkte-Listen-Karten'
+                    title: 'Magic The Gathering™ - Punkte-Listen-Karten'
                 new:
                     label: '➕ MTG Punkte-Listen-Karte erstellen'
                     title: 'MTG Punkte-Listen-Karte erstellen'
                 edit:
-                    label: 'MTG - Punkte-Listen-Karte bearbeiten "{name}"'
-                    title: 'MTG - Punkte-Listen-Karte bearbeiten "{name}"'
+                    label: 'Magic The Gathering™ - Punkte-Listen-Karte bearbeiten "{name}"'
+                    title: 'Magic The Gathering™ - Punkte-Listen-Karte bearbeiten "{name}"'
                 show:
-                    title: 'MTG - Details zur Punkte-Listen-Karte "{name}"'
-                    label: 'MTG - Details zur Punkte-Listen-Karte "{name}"'
+                    title: 'Magic The Gathering™ - Details zur Punkte-Listen-Karte "{name}"'
+                    label: 'Magic The Gathering™ - Details zur Punkte-Listen-Karte "{name}"'
             update:
                 index:
-                    label: 'MTG - Updates'
-                    title: 'MTG - Updates'
+                    label: 'Magic The Gathering™ - Updates'
+                    title: 'Magic The Gathering™ - Updates'
                 new:
                     label: '➕ MTG Update erstellen'
                     title: 'MTG Update erstellen'
                 show:
-                    title: 'MTG - Details zum Update/zur Ankündigung "{name}"'
-                    label: 'MTG - Details zum Update/zur Ankündigung "{name}"'
+                    title: 'Magic The Gathering™ - Details zum Update/zur Ankündigung "{name}"'
+                    label: 'Magic The Gathering™ - Details zum Update/zur Ankündigung "{name}"'
                 edit:
-                    label: 'MTG - Update/Ankündigung bearbeiten "{name}"'
-                    title: 'MTG - Update/Ankündigung bearbeiten "{name}"'
+                    label: 'Magic The Gathering™ - Update/Ankündigung bearbeiten "{name}"'
+                    title: 'Magic The Gathering™ - Update/Ankündigung bearbeiten "{name}"'
             dbupdate:
                 index:
-                    title: 'MTG - Datenbank-Updates'
-                    label: 'MTG - Datenbank-Updates'
+                    title: 'Magic The Gathering™ - Datenbank-Updates'
+                    label: 'Magic The Gathering™ - Datenbank-Updates'
                 latest:
-                    label: 'MTG - Letzter Stand der Quell-Datenbankaktualisierung'
+                    label: 'Magic The Gathering™ - Letzter Stand der Quell-Datenbankaktualisierung'
                 startnew:
-                    label: 'MTG - Manuelles Starten einer neuen Quell-Datenbankaktualisierung'
+                    label: 'Magic The Gathering™ - Manuelles Starten einer neuen Quell-Datenbankaktualisierung'
             source:
                 index:
-                    title: 'MTG - Quelle herunterladen / importieren'
-                    label: 'MTG - Quelle herunterladen / importieren'
+                    title: 'Magic The Gathering™ - Quelle herunterladen / importieren'
+                    label: 'Magic The Gathering™ - Quelle herunterladen / importieren'
             sourcedownload:
                 index:
-                    label: 'MTG - Status des Quellen-Downloads'
+                    label: 'Magic The Gathering™ - Status des Quellen-Downloads'
                 latest:
-                    label: 'MTG - Letzter Stand des Quellen-Downloads'
+                    label: 'Magic The Gathering™ - Letzter Stand des Quellen-Downloads'
                 startnew:
-                    label: 'MTG - Manuelles Starten eines neuen Quellen-Downloads'
+                    label: 'Magic The Gathering™ - Manuelles Starten eines neuen Quellen-Downloads'
             sourcecard:
                 index:
-                    title: 'MTG - Quellkarten'
-                    label: 'MTG - Quellkarten'
+                    title: 'Magic The Gathering™ - Quellkarten'
+                    label: 'Magic The Gathering™ - Quellkarten'
                 show:
-                    title: 'MTG - Details zur Quellkarte "{name}"'
-                    label: 'MTG - Details zur Quellkarte "{name}"'
+                    title: 'Magic The Gathering™ - Details zur Quellkarte "{name}"'
+                    label: 'Magic The Gathering™ - Details zur Quellkarte "{name}"'
         cardsourceactivityhistory:
             index:
                 label: 'Aktivitätsverlauf der Kartenquellen'
@@ -582,7 +582,7 @@ admin:
                 fileremoved: 'Die angeforderte Logdatei existiert nicht mehr.'
         pointslistcard:
             points:
-                label: 'ROH-Punkte (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'ROH-Punkte (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
         update:
             publish: 'Veröffentlichen'
             unpublish: 'Veröffentlichung aufheben'
@@ -695,6 +695,10 @@ front:
             dccalculator:
                 title: 'Duel Commander Rechner'
                 label: 'Duel Commander Rechner'
+            view:
+                title: 'Punkteliste für Update: {update} anzeigen'
+                label: 'Punkteliste für dieses Update anzeigen'
+                link: 'Punkteliste für dieses Update anzeigen'
         resetpassword:
             label: 🛡️ Zurücksetzen
             title: Passwort zurücksetzen
@@ -794,6 +798,8 @@ front:
                 cardpoints:
                     description: 'Dies sind die Ranglistenkarten, basierend auf Ihrer oben gewählten Formatauswahl.'
                     text: 'Ranglistenkarten'
+                viewpoints:
+                    text: 'Ranglistenpunkte anzeigen'
         form:
             title: '🎛️ Format anpassen'
             formtitle: 'Sie spielen:'
@@ -806,8 +812,8 @@ front:
                     Unterstützte Textlisten-Systeme: Magic The Gathering™ Online Import, Magic The Gathering™ Arena Import, Moxfield Plain Text, Archidekt Text Generic Headers, TappedOut MTGA, MTGTop8 MTGO Export. 
                     <strong>Ihre Deckliste MUSS auf Englisch sein, mit dem EXAKTEN Kartennamen (Groß-/Kleinschreibung und Satzzeichen prüfen). Zeilen sollten so aussehen: <code>1 Ruhan of the Fomori</code></strong>
                 placeholder: |
-                    1 Black Lotus                        
-                    1 Library of Alexandria                        
+                    1 Black Lotus
+                    1 Library of Alexandria
                     1 Lightning Bolt
                     1 Mana Leak
                     1 Counterspell

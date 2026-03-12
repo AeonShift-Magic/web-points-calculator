@@ -5,25 +5,30 @@
         </li>
         <li>
             <a tabindex="0" href="{{ url('front_mtg_points_index') }}" title="{{ 'front.nav.mtg.index.title'|trans }}">
-                <span class="icon-docs"></span> {{ 'front.nav.mtg.index.label'|trans }}</a>
+                <span class="icon-docs"></span> {{ 'front.nav.mtg.index.label'|trans }}
+            </a>
             <ul class="">
                 <li>
                     <a tabindex="0" href="{{ url('front_mtg_points_calculator') }}" title="{{ 'front.nav.mtg.calculator.title'|trans }}">
-                        <span class="icon-chart-bar"></span> {{ 'front.nav.mtg.calculator.label'|trans }}</a>
+                        <span class="icon-chart-bar"></span> {{ 'front.nav.mtg.calculator.label'|trans }}
+                    </a>
                 </li>
                 <li>
                     <a tabindex="0" href="{{ url('front_mtg_points_calculator', {'slug': 'duel-commander'}) }}" title="{{ 'front.nav.mtg.dccalculator.title'|trans }}">
-                        <span class="icon-chart-bar"></span> {{ 'front.nav.mtg.dccalculator.label'|trans }}</a>
+                        <span class="icon-chart-bar"></span> {{ 'front.nav.mtg.dccalculator.label'|trans }}
+                    </a>
                 </li>
                 <li>
-                    <a tabindex="0" href="{{ url('front_mtg_points_download') }}" title="{{ 'front.nav.mtg.download.title'|trans }}">
-                        <span class="icon-download-cloud"></span> {{ 'front.nav.mtg.download.label'|trans }}</a>
+                    <a tabindex="0" href="{{ url('front_mtg_updates_index') }}" title="{{ 'admin.nav.mtg.update.index.title'|trans }}">
+                        {{ 'admin.nav.mtg.update.index.label'|trans }}
+                    </a>
                 </li>
             </ul>
         </li>
         <li>
             <a tabindex="0" href="https://play.aeonshift.games" title="{{ 'front.nav.learnmore.title'|trans }}" target="_blank">
-                <span class="icon-question"></span> {{ 'front.nav.learnmore.label'|trans }}</a>
+                <span class="icon-question"></span> {{ 'front.nav.learnmore.label'|trans }}
+            </a>
         </li>
         <li id="locales">
             {% if supported_locales is defined and supported_locales is iterable %}

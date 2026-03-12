@@ -1,0 +1,304 @@
+{% extends 'front/front_layout.html.twig' %}
+
+{% block title %}{% if update_object is defined %}{{ 'front.nav.mtg.view.title'|trans({'update': update_object.titleEN}) }}{% endif %}{% endblock %}
+
+{% block body_attributes %}data-no-stimulus{% endblock %}
+
+{% block body %}
+    {% if update_object is defined %}
+        <section class="main-column main-content">
+            <h1 class="font-bold text-5xl w-full lg:w-3/4 leading-normal text-center py-2 lg:my-4 tracking-wide spark-title spot-title">
+                {{ 'front.nav.mtg.view.title'|trans({'update': update_object.titleEN}) }}
+            </h1>
+        </section>
+
+        {% if breadcrumb is defined %}
+            <div class="main-column">
+                {{ include('front/_breadcrumb.html.twig') }}
+            </div>
+        {% endif %}
+
+        {% if update_data_array.updates[update_object.id] is defined %}
+            <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full">
+                <div class="flex flex-col">
+                    <img src="{{ asset('images/aeonshift-logo-transparent-format.png') }}" alt="AeonShiftlogo" class="w-auto h-10 m-4">
+                    <div class="flex flex-row">
+                        <a title="{{ 'global.back'|trans|e('html_attr') }}" class="btn btn-gray btn-contour inline-flex flex-col justify-center items-center" href="{{ url('front_mtg_updates_index') }}">
+                            {{ 'global.back'|trans }}
+                        </a>
+                        <a title="{{ 'front.nav.mtg.download.updatelink'|trans|e('html_attr') }}" class="btn btn-green btn-contour inline-flex flex-col justify-center items-center" target="_blank" href="{{ url('front_mtg_updates_index_update', {'MTGUpdate': update_object.id}) }}">
+                            <span class="icon-download-cloud"></span>
+                            {{ 'front.nav.mtg.download.updatelink'|trans }}
+                        </a>
+                    </div>
+                </div>
+                <article class="page-content">
+                    <div class="table-wrapper">
+                        <table class="table center header-highlight-table rounded-xl">
+                            <tbody>
+                                {% if update_data_array.updates[update_object.id].startingAtTimestamp is defined and update_data_array.updates[update_object.id].endingAtTimestamp is defined %}
+                                    <tr>
+                                        <td class="font-bold green-text">
+                                            <h2>{{ update_data_array.updates[update_object.id].startingAtTimestamp|format_datetime('full', 'short')|capitalize }}</h2>
+                                        </td>
+                                        <td class="text-2xl">
+                                            &rarr;
+                                        </td>
+                                        <td class="font-bold green-text">
+                                            <h2>{{ update_data_array.updates[update_object.id].endingAtTimestamp|format_datetime('full', 'short')|capitalize }}</h2>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-wrapper mt-10">
+                        <table class="table center header-highlight-table rounded-xl">
+                            <tbody>
+                                {% if update_data_array.updates[update_object.id].pointsList.timelineprecedences is defined and update_data_array.updates[update_object.id].pointsList.timelineprecedences is iterable %}
+                                    <tr>
+                                        <th>
+                                            {{ 'admin.form.mtg.sourcecard.create.maximumtimelinelegality.label'|trans }}
+                                        </th>
+                                        <td colspan="2" class="font-bold green-text">
+                                            {% for timeline, value in update_data_array.updates[update_object.id].pointsList.timelineprecedences %}
+                                                {{ timeline|capitalize }}
+                                                {% if not loop.last %} &gt; {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-wrapper mt-10">
+                        <table class="table center header-highlight-table rounded-xl">
+                            <tbody>
+                                {% if update_data_array.updates[update_object.id].pointsList.pvalues is defined %}
+                                    <tr>
+                                        <td>
+                                            <table class="table center border border-solid border-gray-500 table-auto">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2">{{ 'admin.form.mtg.pointslist.import.pvalues.header.standardplay.text'|trans }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.basesingleton.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseSingletonStandardPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.basequadruples.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseQuadruplesStandardPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.duelcommander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.duelCommanderStandardPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.commander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.commanderStandardPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.highlander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.highlanderStandardPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.modern.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.modernStandardPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.pioneer.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.pioneerStandardPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.standard.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.standardStandardPlay }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+
+                                        <td>
+                                            <table class="table center border border-solid border-gray-500 table-auto">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2">{{ 'admin.form.mtg.pointslist.import.pvalues.header.liteplay.text'|trans }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.basesingleton.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseSingletonLitePlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.basequadruples.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseQuadruplesLitePlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.duelcommander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.duelCommanderLitePlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.commander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.commanderLitePlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.highlander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.highlanderLitePlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.modern.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.modernLitePlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.pioneer.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.pioneerLitePlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.standard.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.standardLitePlay }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <table class="table center border border-solid border-gray-500 table-auto">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2">{{ 'admin.form.mtg.pointslist.import.pvalues.header.powerplay.text'|trans }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.basesingleton.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseSingletonPowerPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.basequadruples.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseQuadruplesPowerPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.duelcommander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.duelCommanderPowerPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.commander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.commanderPowerPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.highlander.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.highlanderPowerPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.modern.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.modernPowerPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.pioneer.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.pioneerPowerPlay }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.standard.text'|trans }}</td>
+                                                        <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.standardPowerPlay }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-wrapper mt-10">
+                        <table class="table center header-highlight-table rounded-xl">
+                            <tbody>
+                                <tr>
+                                    <th><h3>{{ 'admin.form.mtg.pointslist.create.currentnbcards.label'|trans }}</h3></th>
+                                    <td colspan="2"><h3>{{ points_list.MTGPointListCards|length }}</h3></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="m-0! p-0!">
+                                        {% if points_list.MTGPointListCards|length > 0 %}
+                                            <table class="table center header-highlight-table mt-4 table-auto">
+                                                <thead>
+                                                    <tr>
+                                                        <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
+                                                        <th colspan="8w">{{ 'admin.mtg.pointslistcard.points.label'|trans }}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for points_list_card in points_list.MTGPointListCards %}
+                                                        <tr>
+                                                            <td>
+                                                                <a href="https://scryfall.com/search?q={{ points_list_card.nameEN|e('url') }}" target="_blank" title="Scryfall Search">{{ points_list_card.nameEN }}</a>
+                                                            </td>
+                                                            {# Points (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard) #}
+                                                            <td>
+                                                                <span class="text-blue-300">
+                                                                    {% if points_list_card.pointsBaseSingleton > 0 %}<strong>{% endif %}{{ points_list_card.pointsBaseSingleton|default('-') }}{% if points_list_card.pointsBaseSingleton > 0 %}</strong>{% endif %}
+                                                                    /
+                                                                    {% if points_list_card.pointsBaseQuadruples > 0 %}<strong>{% endif %}{{ points_list_card.pointsBaseQuadruples|default('-') }}{% if points_list_card.pointsBaseQuadruples > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-orange-300">
+                                                                    {% if points_list_card.pointsDuelCommander > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelCommander|default('-') }}{% if points_list_card.pointsDuelCommander > 0 %}</strong>{% endif %}
+                                                                    /
+                                                                    {% if points_list_card.pointsDuelCommanderSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelCommanderSpecial|default('-') }}{% if points_list_card.pointsDuelCommanderSpecial > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-amber-300">
+                                                                    {% if points_list_card.pointsCommander > 0 %}<strong>{% endif %}{{ points_list_card.pointsCommander|default('-') }}{% if points_list_card.pointsCommander > 0 %}</strong>{% endif %}
+                                                                    /
+                                                                    {% if points_list_card.pointsCommanderSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsCommanderSpecial|default('-') }}{% if points_list_card.pointsCommanderSpecial > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-emerald-300">
+                                                                    {% if points_list_card.points2hg > 0 %}<strong>{% endif %}{{ points_list_card.points2hg|default('-') }}{% if points_list_card.points2hg > 0 %}</strong>{% endif %}
+                                                                    /
+                                                                    {% if points_list_card.points2hgSpecial > 0 %}<strong>{% endif %}{{ points_list_card.points2hgSpecial|default('-') }}{% if points_list_card.points2hgSpecial > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-sky-300">
+                                                                    {% if points_list_card.pointsHighlander > 0 %}<strong>{% endif %}{{ points_list_card.pointsHighlander|default('-') }}{% if points_list_card.pointsHighlander > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-sky-300">
+                                                                    {% if points_list_card.pointsModern > 0 %}<strong>{% endif %}{{ points_list_card.pointsModern|default('-') }}{% if points_list_card.pointsModern > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-sky-300">
+                                                                    {% if points_list_card.pointsPioneer > 0 %}<strong>{% endif %}{{ points_list_card.pointsPioneer|default('-') }}{% if points_list_card.pointsPioneer > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <span class="text-sky-300">
+                                                                    {% if points_list_card.pointsStandard > 0 %}<strong>{% endif %}{{ points_list_card.pointsStandard|default('-') }}{% if points_list_card.pointsStandard > 0 %}</strong>{% endif %}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+

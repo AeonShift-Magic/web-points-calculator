@@ -478,76 +478,76 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG - Storico attività sorgente carte'
-                    title: 'MTG - Storico attività sorgente carte'
+                    label: 'Magic The Gathering™ - Storico attività sorgente carte'
+                    title: 'Magic The Gathering™ - Storico attività sorgente carte'
             pointslist:
                 index:
-                    label: 'MTG - Liste punti'
-                    title: 'MTG - Liste punti'
+                    label: 'Magic The Gathering™ - Liste punti'
+                    title: 'Magic The Gathering™ - Liste punti'
                 new:
                     label: '➕ Crea una lista punti MTG'
                     title: 'Crea una lista punti MTG'
                 edit:
-                    label: 'MTG - Modifica lista punti "{name}"'
-                    title: 'MTG - Modifica lista punti "{name}"'
+                    label: 'Magic The Gathering™ - Modifica lista punti "{name}"'
+                    title: 'Magic The Gathering™ - Modifica lista punti "{name}"'
                 show:
-                    label: 'MTG - Dettagli lista punti "{name}"'
-                    title: 'MTG - Dettagli lista punti "{name}"'
+                    label: 'Magic The Gathering™ - Dettagli lista punti "{name}"'
+                    title: 'Magic The Gathering™ - Dettagli lista punti "{name}"'
                 import:
-                    label: 'MTG - Importa punti per la lista "{name}"'
-                    title: 'MTG - Importa punti per la lista "{name}"'
+                    label: 'Magic The Gathering™ - Importa punti per la lista "{name}"'
+                    title: 'Magic The Gathering™ - Importa punti per la lista "{name}"'
             pointslistcard:
                 index:
-                    label: 'MTG - Carte lista punti'
-                    title: 'MTG - Carte lista punti'
+                    label: 'Magic The Gathering™ - Carte lista punti'
+                    title: 'Magic The Gathering™ - Carte lista punti'
                 new:
                     label: '➕ Crea una carta lista punti MTG'
                     title: 'Crea una carta lista punti MTG'
                 edit:
-                    label: 'MTG - Modifica carta lista punti "{name}"'
-                    title: 'MTG - Modifica carta lista punti "{name}"'
+                    label: 'Magic The Gathering™ - Modifica carta lista punti "{name}"'
+                    title: 'Magic The Gathering™ - Modifica carta lista punti "{name}"'
                 show:
-                    title: 'MTG - Dettagli carta lista punti "{name}"'
-                    label: 'MTG - Dettagli carta lista punti "{name}"'
+                    title: 'Magic The Gathering™ - Dettagli carta lista punti "{name}"'
+                    label: 'Magic The Gathering™ - Dettagli carta lista punti "{name}"'
             update:
                 index:
-                    label: 'MTG - Aggiornamenti'
-                    title: 'MTG - Aggiornamenti'
+                    label: 'Magic The Gathering™ - Aggiornamenti'
+                    title: 'Magic The Gathering™ - Aggiornamenti'
                 new:
                     label: '➕ Crea un aggiornamento MTG'
                     title: 'Crea un aggiornamento MTG'
                 show:
-                    title: 'MTG - Dettagli aggiornamento/annuncio "{name}"'
-                    label: 'MTG - Dettagli aggiornamento/annuncio "{name}"'
+                    title: 'Magic The Gathering™ - Dettagli aggiornamento/annuncio "{name}"'
+                    label: 'Magic The Gathering™ - Dettagli aggiornamento/annuncio "{name}"'
                 edit:
-                    label: 'MTG - Modifica aggiornamento/annuncio "{name}"'
-                    title: 'MTG - Modifica aggiornamento/annuncio "{name}"'
+                    label: 'Magic The Gathering™ - Modifica aggiornamento/annuncio "{name}"'
+                    title: 'Magic The Gathering™ - Modifica aggiornamento/annuncio "{name}"'
             dbupdate:
                 index:
-                    title: 'MTG - Aggiornamenti database'
-                    label: 'MTG - Aggiornamenti database'
+                    title: 'Magic The Gathering™ - Aggiornamenti database'
+                    label: 'Magic The Gathering™ - Aggiornamenti database'
                 latest:
-                    label: 'MTG - Ultimo stato di aggiornamento del database sorgente'
+                    label: 'Magic The Gathering™ - Ultimo stato di aggiornamento del database sorgente'
                 startnew:
-                    label: 'MTG - Avvio manuale di un nuovo aggiornamento del database sorgente'
+                    label: 'Magic The Gathering™ - Avvio manuale di un nuovo aggiornamento del database sorgente'
             source:
                 index:
-                    title: 'MTG - Download / Import sorgente'
-                    label: 'MTG - Download / Import sorgente'
+                    title: 'Magic The Gathering™ - Download / Import sorgente'
+                    label: 'Magic The Gathering™ - Download / Import sorgente'
             sourcedownload:
                 index:
-                    label: 'MTG - Stato download sorgente'
+                    label: 'Magic The Gathering™ - Stato download sorgente'
                 latest:
-                    label: 'MTG - Ultimo stato download sorgente'
+                    label: 'Magic The Gathering™ - Ultimo stato download sorgente'
                 startnew:
-                    label: 'MTG - Avvio manuale di un nuovo download sorgente'
+                    label: 'Magic The Gathering™ - Avvio manuale di un nuovo download sorgente'
             sourcecard:
                 index:
-                    title: 'MTG - Carte sorgente'
-                    label: 'MTG - Carte sorgente'
+                    title: 'Magic The Gathering™ - Carte sorgente'
+                    label: 'Magic The Gathering™ - Carte sorgente'
                 show:
-                    title: 'MTG - Dettagli carta sorgente "{name}"'
-                    label: 'MTG - Dettagli carta sorgente "{name}"'
+                    title: 'Magic The Gathering™ - Dettagli carta sorgente "{name}"'
+                    label: 'Magic The Gathering™ - Dettagli carta sorgente "{name}"'
         cardsourceactivityhistory:
             index:
                 label: 'Storico attività sorgenti carte'
@@ -582,7 +582,7 @@ admin:
                 fileremoved: 'Il file di log richiesto non esiste più.'
         pointslistcard:
             points:
-                label: 'Punti GREZZI (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'Punti GREZZI (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
         update:
             publish: 'Pubblica'
             unpublish: 'Annulla pubblicazione'
@@ -695,6 +695,10 @@ front:
             dccalculator:
                 title: 'Calcolatore Duel Commander'
                 label: 'Calcolatore Duel Commander'
+            view:
+                title: 'Visualizza l''elenco dei punti per l''aggiornamento: {update}'
+                label: 'Visualizza l''elenco dei punti per questo aggiornamento'
+                link: 'Visualizza l''elenco dei punti per questo aggiornamento'
         resetpassword:
             label: 🛡️ Reimposta
             title: Reimposta la password
@@ -794,6 +798,8 @@ front:
                 cardpoints:
                     description: 'Queste sono le carte classificate in base al formato selezionato sopra.'
                     text: 'Carte classificate'
+                viewpoints:
+                    text: 'Visualizza i punti delle carte classificate'
         form:
             title: '🎛️ Personalizza il tuo formato'
             formtitle: 'Stai giocando:'

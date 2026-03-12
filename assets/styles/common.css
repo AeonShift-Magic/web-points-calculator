@@ -945,7 +945,7 @@ table ul {
 .header-highlight-table thead {
     box-shadow: 0 2px 5px var(--theme-neutral-dark);
     position: sticky;
-    top: 45px;
+    top: 0;
     z-index: 10;
 }
 

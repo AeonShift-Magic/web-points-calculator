@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Controller\Front\MTG;
 
 use App\Entity\MTG\MTGUpdate;
+use App\Model\AeonShift\PointsList\MTG\MTGPointsListManager;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
 use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;
@@ -79,35 +80,7 @@ final class PointsController extends AbstractController
         return $this->render('front/mtg/points/index.html.twig');
     }
 
-    /**
-     * Points route - View points from a list.
-     *
-     * @return Response
-     */
-    #[Route('/pointslist/view', name: 'front_mtg_points_list', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'])]
-    public function mtgPointsList(): Response
-    {
-        return $this->render('front/mtg/points/list.html.twig');
-    }
-
-    #[Route('/pointslist/download', name: 'front_mtg_points_download', methods: ['GET'])]
-    public function mtgPointsListDownload(MTGUpdateRepository $MTGUpdateRepository): Response
-    {
-        $updates = $MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
-
-        if (count($updates) === 0) {
-            throw $this->createNotFoundException();
-        }
-
-        return $this->render(
-            'front/mtg/points/download.html.twig',
-            [
-                'updates' => $updates,
-            ]
-        );
-    }
-
-    #[Route('/pointslist/download/{MTGUpdate}', name: 'front_mtg_points_download_update', requirements: ['MTGUpdate' => '\d+'], methods: ['GET'])]
+    #[Route('/updates/pointslist/{MTGUpdate}/download', name: 'front_mtg_updates_index_update', requirements: ['MTGUpdate' => '\d+'], methods: ['GET'])]
     public function mtgPointsListDownloadUpdate(
         #[MapEntity(MTGUpdate::class)]
         MTGUpdate $MTGUpdate,
@@ -140,5 +113,53 @@ final class PointsController extends AbstractController
         );
 
         return $pointsListModel->generateCSVResponseForList($MTGUpdate->getPointsList());
+    }
+
+    #[Route('/updates', name: 'front_mtg_updates_index', methods: ['GET'])]
+    public function mtgPointsListUpdates(MTGUpdateRepository $MTGUpdateRepository): Response
+    {
+        $updates = $MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
+
+        if (count($updates) === 0) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render(
+            'front/mtg/points/updates.html.twig',
+            [
+                'updates' => $updates,
+            ]
+        );
+    }
+
+    /**
+     * Points route - View points from a list.
+     *
+     * @param MTGUpdate $MTGUpdate
+     * @param MTGPointsListManager $MTGPointsListManager
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return Response
+     */
+    #[Route('/updates/pointslist/{MTGUpdate}/view', name: 'front_mtg_points_list_view', requirements: ['MTGUpdate' => '\d+'])]
+    public function mtgPointsListView(
+        #[MapEntity(MTGUpdate::class)]
+        MTGUpdate $MTGUpdate,
+        MTGPointsListManager $MTGPointsListManager,
+    ): Response
+    {
+        if ($MTGUpdate->isPublic() === false || $MTGUpdate->getPointsList() === null) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render(
+            'front/mtg/points/viewupdate.html.twig',
+            [
+                'update_object'     => $MTGUpdate,
+                'points_list'       => $MTGUpdate->getPointsList(),
+                'update_data_array' => $MTGPointsListManager->getUpdatePointListsAsArray($MTGUpdate),
+            ]
+        );
     }
 }

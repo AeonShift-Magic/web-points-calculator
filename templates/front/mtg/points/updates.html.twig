@@ -1,13 +1,13 @@
 {% extends 'front/front_layout.html.twig' %}
 
-{% block title %}{{ 'front.nav.mtg.download.title'|trans }}{% endblock %}
+{% block title %}{{ 'admin.nav.mtg.update.index.title'|trans }}{% endblock %}
 
 {% block body_attributes %}data-no-stimulus{% endblock %}
 
 {% block body %}
     <section class="main-column main-content">
         <h1 class="font-bold text-5xl w-full lg:w-3/4 leading-normal text-center py-2 lg:my-4 tracking-wide spark-title spot-title">
-            {{ 'front.nav.mtg.download.title'|trans }}
+            {{ 'admin.nav.mtg.update.index.title'|trans }}
         </h1>
     </section>
 
@@ -22,7 +22,7 @@
         {% if updates is defined %}
             <article class="page-content">
                 <div class="table-wrapper">
-                    <table class="table center header-highlight-table">
+                    <table class="table center header-highlight-table border border-solid border-gray-600 rounded-lg">
                         <thead>
                             <tr>
                                 <th>{{ 'admin.form.abstract.update.create.titleen.label'|trans }}</th>
@@ -34,24 +34,34 @@
                         </thead>
                         <tbody>
                             {% for update in updates %}
+                                {% if loop.index == 2 %}
+                                    <tr>
+                                        <td colspan="5" class="text-center bg-gray-400 h-2"></td>
+                                    </tr>
+                                {% endif %}
                                 <tr>
-                                    <td>
+                                    <td class="{% if loop.index == 1 %}green-text{% else %}gray-text{% endif %}">
                                         <h2 class="text-base">{{ update.titleEN }}</h2>
                                         {% if loop.index == 1 %}
                                             <span class="flashy-tag">{{ 'front.nav.mtg.download.latest'|trans }}</span>
                                         {% endif %}
                                     </td>
-                                    <td>
+                                    <td class="{% if loop.index == 1 %}green-text{% else %}gray-text{% endif %}">
                                         {{ update.startingAt|date('Y-m-d H:i') }}
                                     </td>
-                                    <td>
+                                    <td class="{% if loop.index == 1 %}green-text{% else %}gray-text{% endif %}">
                                         {{ update.endingAt|date('Y-m-d H:i') }}
                                     </td>
                                     <td>
-                                        {{ update.descriptionEN|striptags|slice(0, 200) }}[...]
+                                        <cite>{{ update.descriptionEN|raw }}</cite>
                                     </td>
                                     <td>
-                                        <a title="{{ 'front.nav.mtg.download.updatelink'|trans|e('html_attr') }}" class="btn btn-green btn-contour" target="_blank" href="{{ url('front_mtg_points_download_update', {'MTGUpdate': update.id}) }}">
+                                        <a title="{{ 'front.nav.mtg.view.link'|trans|e('html_attr') }}" class="btn btn-green btn-contour" href="{{ url('front_mtg_points_list_view', {'MTGUpdate': update.id}) }}">
+                                            <span class="icon-th-list"></span>
+                                            {{ 'front.nav.mtg.view.link'|trans }}
+                                        </a>
+                                        <br>
+                                        <a title="{{ 'front.nav.mtg.download.updatelink'|trans|e('html_attr') }}" class="btn btn-green btn-contour" target="_blank" href="{{ url('front_mtg_updates_index_update', {'MTGUpdate': update.id}) }}">
                                             <span class="icon-download-cloud"></span>
                                             {{ 'front.nav.mtg.download.updatelink'|trans }}
                                         </a>

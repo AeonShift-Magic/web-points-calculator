@@ -206,7 +206,7 @@
                                             <td>
                                                 <a href="{{ url('admin_mtg_points_list_card_show', {'id': points_list_card.id}) }}" title="">{{ points_list_card.nameEN }}</a>
                                             </td>
-                                            {# Points (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard) #}
+                                            {# Points (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard) #}
                                             <td>
                                                 <span class="text-blue-300">
                                                     {% if points_list_card.pointsBaseSingleton > 0 %}<strong>{% endif %}{{ points_list_card.pointsBaseSingleton }}{% if points_list_card.pointsBaseSingleton > 0 %}</strong>{% endif %}

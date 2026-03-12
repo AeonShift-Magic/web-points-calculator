@@ -478,76 +478,76 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG - Card Source Activity History'
-                    title: 'MTG - Card Source Activity History'
+                    label: 'Magic The Gathering™ - Card Source Activity History'
+                    title: 'Magic The Gathering™ - Card Source Activity History'
             pointslist:
                 index:
-                    label: 'MTG - Point Lists'
-                    title: 'MTG - Point Lists'
+                    label: 'Magic The Gathering™ - Point Lists'
+                    title: 'Magic The Gathering™ - Point Lists'
                 new:
                     label: '➕ Gumawa ng MTG Point List'
                     title: 'Gumawa ng MTG Point List'
                 edit:
-                    label: 'MTG - I-edit ang Point List "{name}"'
-                    title: 'MTG - I-edit ang Point List "{name}"'
+                    label: 'Magic The Gathering™ - I-edit ang Point List "{name}"'
+                    title: 'Magic The Gathering™ - I-edit ang Point List "{name}"'
                 show:
-                    label: 'MTG - Detalye ng Point List "{name}"'
-                    title: 'MTG - Detalye ng Point List "{name}"'
+                    label: 'Magic The Gathering™ - Detalye ng Point List "{name}"'
+                    title: 'Magic The Gathering™ - Detalye ng Point List "{name}"'
                 import:
-                    label: 'MTG - Mag-import ng points para sa List "{name}"'
-                    title: 'MTG - Mag-import ng points para sa List "{name}"'
+                    label: 'Magic The Gathering™ - Mag-import ng points para sa List "{name}"'
+                    title: 'Magic The Gathering™ - Mag-import ng points para sa List "{name}"'
             pointslistcard:
                 index:
-                    label: 'MTG - Point List Cards'
-                    title: 'MTG - Point List Cards'
+                    label: 'Magic The Gathering™ - Point List Cards'
+                    title: 'Magic The Gathering™ - Point List Cards'
                 new:
                     label: '➕ Gumawa ng MTG Point List Card'
                     title: 'Gumawa ng MTG Point List Card'
                 edit:
-                    label: 'MTG - I-edit ang Point List Card "{name}"'
-                    title: 'MTG - I-edit ang Point List Card "{name}"'
+                    label: 'Magic The Gathering™ - I-edit ang Point List Card "{name}"'
+                    title: 'Magic The Gathering™ - I-edit ang Point List Card "{name}"'
                 show:
-                    title: 'MTG - Detalye ng Point List Card "{name}"'
-                    label: 'MTG - Detalye ng Point List Card "{name}"'
+                    title: 'Magic The Gathering™ - Detalye ng Point List Card "{name}"'
+                    label: 'Magic The Gathering™ - Detalye ng Point List Card "{name}"'
             update:
                 index:
-                    label: 'MTG - Updates'
-                    title: 'MTG - Updates'
+                    label: 'Magic The Gathering™ - Updates'
+                    title: 'Magic The Gathering™ - Updates'
                 new:
                     label: '➕ Gumawa ng MTG Update'
                     title: 'Gumawa ng MTG Update'
                 show:
-                    title: 'MTG - Detalye ng update/anunsyo "{name}"'
-                    label: 'MTG - Detalye ng update/anunsyo "{name}"'
+                    title: 'Magic The Gathering™ - Detalye ng update/anunsyo "{name}"'
+                    label: 'Magic The Gathering™ - Detalye ng update/anunsyo "{name}"'
                 edit:
-                    label: 'MTG - I-edit ang update/anunsyo "{name}"'
-                    title: 'MTG - I-edit ang update/anunsyo "{name}"'
+                    label: 'Magic The Gathering™ - I-edit ang update/anunsyo "{name}"'
+                    title: 'Magic The Gathering™ - I-edit ang update/anunsyo "{name}"'
             dbupdate:
                 index:
-                    title: 'MTG - Database Updates'
-                    label: 'MTG - Database Updates'
+                    title: 'Magic The Gathering™ - Database Updates'
+                    label: 'Magic The Gathering™ - Database Updates'
                 latest:
-                    label: 'MTG - Latest source database update state'
+                    label: 'Magic The Gathering™ - Latest source database update state'
                 startnew:
-                    label: 'MTG - Manual start of a new source database update'
+                    label: 'Magic The Gathering™ - Manual start of a new source database update'
             source:
                 index:
-                    title: 'MTG - Source Download / Import'
-                    label: 'MTG - Source Download / Import'
+                    title: 'Magic The Gathering™ - Source Download / Import'
+                    label: 'Magic The Gathering™ - Source Download / Import'
             sourcedownload:
                 index:
-                    label: 'MTG - Source Download Status'
+                    label: 'Magic The Gathering™ - Source Download Status'
                 latest:
-                    label: 'MTG - Latest source download state'
+                    label: 'Magic The Gathering™ - Latest source download state'
                 startnew:
-                    label: 'MTG - Manual start of a new source download'
+                    label: 'Magic The Gathering™ - Manual start of a new source download'
             sourcecard:
                 index:
-                    title: 'MTG - Source Cards'
-                    label: 'MTG - Source Cards'
+                    title: 'Magic The Gathering™ - Source Cards'
+                    label: 'Magic The Gathering™ - Source Cards'
                 show:
-                    title: 'MTG - Detalye ng source card "{name}"'
-                    label: 'MTG - Detalye ng source card "{name}"'
+                    title: 'Magic The Gathering™ - Detalye ng source card "{name}"'
+                    label: 'Magic The Gathering™ - Detalye ng source card "{name}"'
         cardsourceactivityhistory:
             index:
                 label: 'Card sources activity history'
@@ -582,7 +582,7 @@ admin:
                 fileremoved: 'Wala na ang hinihinging log file.'
         pointslistcard:
             points:
-                label: 'RAW Points (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'RAW Points (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
         update:
             publish: 'I-publish'
             unpublish: 'I-unpublish'
@@ -695,6 +695,10 @@ front:
             dccalculator:
                 title: 'Duel Commander Calculator'
                 label: 'Duel Commander Calculator'
+            view:
+                title: 'Tingnan ang Listahan ng mga Punto para sa Update: {update}'
+                label: 'Tingnan ang Listahan ng mga Punto para sa Update na ito'
+                link: 'Tingnan ang Listahan ng mga Punto para sa Update na ito'
         resetpassword:
             label: 🛡️ Reset
             title: I-reset ang password
@@ -794,6 +798,8 @@ front:
                 cardpoints:
                     description: 'Ito ang mga naka-rank na card, batay sa napili mong format sa itaas.'
                     text: 'Mga Niraranggo na Kard'
+                viewpoints:
+                    text: 'Tingnan ang Mga Puntos ng Ranggo ng Card'
         form:
             title: '🎛️ I-customize ang iyong format'
             formtitle: 'Ikaw ay naglalaro:'

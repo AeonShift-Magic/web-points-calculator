@@ -478,76 +478,76 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG - カードソース活動履歴'
-                    title: 'MTG - カードソース活動履歴'
+                    label: 'Magic The Gathering™ - カードソース活動履歴'
+                    title: 'Magic The Gathering™ - カードソース活動履歴'
             pointslist:
                 index:
-                    label: 'MTG - ポイントリスト'
-                    title: 'MTG - ポイントリスト'
+                    label: 'Magic The Gathering™ - ポイントリスト'
+                    title: 'Magic The Gathering™ - ポイントリスト'
                 new:
                     label: '➕ MTGポイントリストを作成'
                     title: 'MTGポイントリストを作成'
                 edit:
-                    label: 'MTG - ポイントリストを編集 "{name}"'
-                    title: 'MTG - ポイントリストを編集 "{name}"'
+                    label: 'Magic The Gathering™ - ポイントリストを編集 "{name}"'
+                    title: 'Magic The Gathering™ - ポイントリストを編集 "{name}"'
                 show:
-                    label: 'MTG - ポイントリスト "{name}" の詳細'
-                    title: 'MTG - ポイントリスト "{name}" の詳細'
+                    label: 'Magic The Gathering™ - ポイントリスト "{name}" の詳細'
+                    title: 'Magic The Gathering™ - ポイントリスト "{name}" の詳細'
                 import:
-                    label: 'MTG - リスト "{name}" にポイントをインポート'
-                    title: 'MTG - リスト "{name}" にポイントをインポート'
+                    label: 'Magic The Gathering™ - リスト "{name}" にポイントをインポート'
+                    title: 'Magic The Gathering™ - リスト "{name}" にポイントをインポート'
             pointslistcard:
                 index:
-                    label: 'MTG - ポイントリストカード'
-                    title: 'MTG - ポイントリストカード'
+                    label: 'Magic The Gathering™ - ポイントリストカード'
+                    title: 'Magic The Gathering™ - ポイントリストカード'
                 new:
                     label: '➕ MTGポイントリストカードを作成'
                     title: 'MTGポイントリストカードを作成'
                 edit:
-                    label: 'MTG - ポイントリストカードを編集 "{name}"'
-                    title: 'MTG - ポイントリストカードを編集 "{name}"'
+                    label: 'Magic The Gathering™ - ポイントリストカードを編集 "{name}"'
+                    title: 'Magic The Gathering™ - ポイントリストカードを編集 "{name}"'
                 show:
-                    title: 'MTG - ポイントリストカード "{name}" の詳細'
-                    label: 'MTG - ポイントリストカード "{name}" の詳細'
+                    title: 'Magic The Gathering™ - ポイントリストカード "{name}" の詳細'
+                    label: 'Magic The Gathering™ - ポイントリストカード "{name}" の詳細'
             update:
                 index:
-                    label: 'MTG - 更新'
-                    title: 'MTG - 更新'
+                    label: 'Magic The Gathering™ - 更新'
+                    title: 'Magic The Gathering™ - 更新'
                 new:
                     label: '➕ MTG更新を作成'
                     title: 'MTG更新を作成'
                 show:
-                    title: 'MTG - 更新/告知 "{name}" の詳細'
-                    label: 'MTG - 更新/告知 "{name}" の詳細'
+                    title: 'Magic The Gathering™ - 更新/告知 "{name}" の詳細'
+                    label: 'Magic The Gathering™ - 更新/告知 "{name}" の詳細'
                 edit:
-                    label: 'MTG - 更新/告知 "{name}" を編集'
-                    title: 'MTG - 更新/告知 "{name}" を編集'
+                    label: 'Magic The Gathering™ - 更新/告知 "{name}" を編集'
+                    title: 'Magic The Gathering™ - 更新/告知 "{name}" を編集'
             dbupdate:
                 index:
-                    title: 'MTG - データベース更新'
-                    label: 'MTG - データベース更新'
+                    title: 'Magic The Gathering™ - データベース更新'
+                    label: 'Magic The Gathering™ - データベース更新'
                 latest:
-                    label: 'MTG - ソースデータベース更新の最新状態'
+                    label: 'Magic The Gathering™ - ソースデータベース更新の最新状態'
                 startnew:
-                    label: 'MTG - ソースデータベース更新を手動開始'
+                    label: 'Magic The Gathering™ - ソースデータベース更新を手動開始'
             source:
                 index:
-                    title: 'MTG - ソースのダウンロード/インポート'
-                    label: 'MTG - ソースのダウンロード/インポート'
+                    title: 'Magic The Gathering™ - ソースのダウンロード/インポート'
+                    label: 'Magic The Gathering™ - ソースのダウンロード/インポート'
             sourcedownload:
                 index:
-                    label: 'MTG - ソースダウンロード状況'
+                    label: 'Magic The Gathering™ - ソースダウンロード状況'
                 latest:
-                    label: 'MTG - ソースダウンロードの最新状態'
+                    label: 'Magic The Gathering™ - ソースダウンロードの最新状態'
                 startnew:
-                    label: 'MTG - ソースダウンロードを手動開始'
+                    label: 'Magic The Gathering™ - ソースダウンロードを手動開始'
             sourcecard:
                 index:
-                    title: 'MTG - ソースカード'
-                    label: 'MTG - ソースカード'
+                    title: 'Magic The Gathering™ - ソースカード'
+                    label: 'Magic The Gathering™ - ソースカード'
                 show:
-                    title: 'MTG - ソースカード "{name}" の詳細'
-                    label: 'MTG - ソースカード "{name}" の詳細'
+                    title: 'Magic The Gathering™ - ソースカード "{name}" の詳細'
+                    label: 'Magic The Gathering™ - ソースカード "{name}" の詳細'
         cardsourceactivityhistory:
             index:
                 label: 'カードソース活動履歴'
@@ -582,7 +582,7 @@ admin:
                 fileremoved: '要求されたログファイルは既に存在しません。'
         pointslistcard:
             points:
-                label: 'RAW Points（Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard）'
+                label: 'RAW Points（Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard）'
         update:
             publish: '公開'
             unpublish: '非公開'
@@ -695,6 +695,10 @@ front:
             dccalculator:
                 title: 'Duel Commander 計算機'
                 label: 'Duel Commander 計算機'
+            view:
+                title: '更新: {update} のポイントリストを表示'
+                label: 'この更新のポイントリストを表示'
+                link: 'この更新のポイントリストを表示'
         resetpassword:
             label: 🛡️ リセット
             title: パスワードをリセット
@@ -794,6 +798,8 @@ front:
                 cardpoints:
                     description: 'これらは、上記のフォーマット選択に基づいてランク付けされたカードです。'
                     text: 'ランクカード'
+                viewpoints:
+                    text: 'ランク付けされたカードポイントを表示'
         form:
             title: '🎛️ フォーマットをカスタマイズ'
             formtitle: 'プレイ中:'

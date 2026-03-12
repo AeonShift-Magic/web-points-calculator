@@ -478,76 +478,76 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG - Historie aktivity zdroje karet'
-                    title: 'MTG - Historie aktivity zdroje karet'
+                    label: 'Magic The Gathering™ - Historie aktivity zdroje karet'
+                    title: 'Magic The Gathering™ - Historie aktivity zdroje karet'
             pointslist:
                 index:
-                    label: 'MTG - Seznamy bodů'
-                    title: 'MTG - Seznamy bodů'
+                    label: 'Magic The Gathering™ - Seznamy bodů'
+                    title: 'Magic The Gathering™ - Seznamy bodů'
                 new:
                     label: '➕ Vytvořit MTG seznam bodů'
                     title: 'Vytvořit MTG seznam bodů'
                 edit:
-                    label: 'MTG - Upravit seznam bodů "{name}"'
-                    title: 'MTG - Upravit seznam bodů "{name}"'
+                    label: 'Magic The Gathering™ - Upravit seznam bodů "{name}"'
+                    title: 'Magic The Gathering™ - Upravit seznam bodů "{name}"'
                 show:
-                    label: 'MTG - Detaily seznamu bodů "{name}"'
-                    title: 'MTG - Detaily seznamu bodů "{name}"'
+                    label: 'Magic The Gathering™ - Detaily seznamu bodů "{name}"'
+                    title: 'Magic The Gathering™ - Detaily seznamu bodů "{name}"'
                 import:
-                    label: 'MTG - Importovat body pro seznam "{name}"'
-                    title: 'MTG - Importovat body pro seznam "{name}"'
+                    label: 'Magic The Gathering™ - Importovat body pro seznam "{name}"'
+                    title: 'Magic The Gathering™ - Importovat body pro seznam "{name}"'
             pointslistcard:
                 index:
-                    label: 'MTG - Karty seznamu bodů'
-                    title: 'MTG - Karty seznamu bodů'
+                    label: 'Magic The Gathering™ - Karty seznamu bodů'
+                    title: 'Magic The Gathering™ - Karty seznamu bodů'
                 new:
                     label: '➕ Vytvořit MTG kartu seznamu bodů'
                     title: 'Vytvořit MTG kartu seznamu bodů'
                 edit:
-                    label: 'MTG - Upravit kartu seznamu bodů "{name}"'
-                    title: 'MTG - Upravit kartu seznamu bodů "{name}"'
+                    label: 'Magic The Gathering™ - Upravit kartu seznamu bodů "{name}"'
+                    title: 'Magic The Gathering™ - Upravit kartu seznamu bodů "{name}"'
                 show:
-                    title: 'MTG - Detaily karty seznamu bodů "{name}"'
-                    label: 'MTG - Detaily karty seznamu bodů "{name}"'
+                    title: 'Magic The Gathering™ - Detaily karty seznamu bodů "{name}"'
+                    label: 'Magic The Gathering™ - Detaily karty seznamu bodů "{name}"'
             update:
                 index:
-                    label: 'MTG - Aktualizace'
-                    title: 'MTG - Aktualizace'
+                    label: 'Magic The Gathering™ - Aktualizace'
+                    title: 'Magic The Gathering™ - Aktualizace'
                 new:
                     label: '➕ Vytvořit MTG aktualizaci'
                     title: 'Vytvořit MTG aktualizaci'
                 show:
-                    title: 'MTG - Detaily aktualizace/oznámení "{name}"'
-                    label: 'MTG - Detaily aktualizace/oznámení "{name}"'
+                    title: 'Magic The Gathering™ - Detaily aktualizace/oznámení "{name}"'
+                    label: 'Magic The Gathering™ - Detaily aktualizace/oznámení "{name}"'
                 edit:
-                    label: 'MTG - Upravit aktualizaci/oznámení "{name}"'
-                    title: 'MTG - Upravit aktualizaci/oznámení "{name}"'
+                    label: 'Magic The Gathering™ - Upravit aktualizaci/oznámení "{name}"'
+                    title: 'Magic The Gathering™ - Upravit aktualizaci/oznámení "{name}"'
             dbupdate:
                 index:
-                    title: 'MTG - Aktualizace databáze'
-                    label: 'MTG - Aktualizace databáze'
+                    title: 'Magic The Gathering™ - Aktualizace databáze'
+                    label: 'Magic The Gathering™ - Aktualizace databáze'
                 latest:
-                    label: 'MTG - Poslední stav aktualizace zdrojové databáze'
+                    label: 'Magic The Gathering™ - Poslední stav aktualizace zdrojové databáze'
                 startnew:
-                    label: 'MTG - Ruční spuštění nové aktualizace zdrojové databáze'
+                    label: 'Magic The Gathering™ - Ruční spuštění nové aktualizace zdrojové databáze'
             source:
                 index:
-                    title: 'MTG - Stažení / Import zdroje'
-                    label: 'MTG - Stažení / Import zdroje'
+                    title: 'Magic The Gathering™ - Stažení / Import zdroje'
+                    label: 'Magic The Gathering™ - Stažení / Import zdroje'
             sourcedownload:
                 index:
-                    label: 'MTG - Stav stahování zdroje'
+                    label: 'Magic The Gathering™ - Stav stahování zdroje'
                 latest:
-                    label: 'MTG - Poslední stav stažení zdroje'
+                    label: 'Magic The Gathering™ - Poslední stav stažení zdroje'
                 startnew:
-                    label: 'MTG - Ruční spuštění nového stažení zdroje'
+                    label: 'Magic The Gathering™ - Ruční spuštění nového stažení zdroje'
             sourcecard:
                 index:
-                    title: 'MTG - Zdrojové karty'
-                    label: 'MTG - Zdrojové karty'
+                    title: 'Magic The Gathering™ - Zdrojové karty'
+                    label: 'Magic The Gathering™ - Zdrojové karty'
                 show:
-                    title: 'MTG - Detaily zdrojové karty "{name}"'
-                    label: 'MTG - Detaily zdrojové karty "{name}"'
+                    title: 'Magic The Gathering™ - Detaily zdrojové karty "{name}"'
+                    label: 'Magic The Gathering™ - Detaily zdrojové karty "{name}"'
         cardsourceactivityhistory:
             index:
                 label: 'Historie aktivity zdrojů karet'
@@ -582,7 +582,7 @@ admin:
                 fileremoved: 'Požadovaný soubor logu již neexistuje.'
         pointslistcard:
             points:
-                label: 'HRUBÉ body (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'HRUBÉ body (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
         update:
             publish: 'Publikovat'
             unpublish: 'Zrušit publikování'
@@ -695,6 +695,10 @@ front:
             dccalculator:
                 title: 'Kalkulačka Duel Commander'
                 label: 'Kalkulačka Duel Commander'
+            view:
+                title: 'Zobrazit seznam bodů pro aktualizaci: {update}'
+                label: 'Zobrazit seznam bodů pro tuto aktualizaci'
+                link: 'Zobrazit seznam bodů pro tuto aktualizaci'
         resetpassword:
             label: 🛡️ Reset
             title: Resetovat heslo
@@ -794,6 +798,8 @@ front:
                 cardpoints:
                     description: 'Toto jsou karty seřazené podle formátu, který jste si vybrali výše.'
                     text: 'Hodnocené karty'
+                viewpoints:
+                    text: 'Zobrazit body hodnocených karet'
         form:
             title: '🎛️ Přizpůsobit formát'
             formtitle: 'Hrajete:'

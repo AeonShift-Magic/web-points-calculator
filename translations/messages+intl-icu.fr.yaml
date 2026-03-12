@@ -478,76 +478,76 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG - Historique d’activité des cartes sources'
-                    title: 'MTG - Historique d’activité des cartes sources'
+                    label: 'Magic The Gathering™ - Historique d’activité des cartes sources'
+                    title: 'Magic The Gathering™ - Historique d’activité des cartes sources'
             pointslist:
                 index:
-                    label: 'MTG - Point Lists'
-                    title: 'MTG - Point Lists'
+                    label: 'Magic The Gathering™ - Point Lists'
+                    title: 'Magic The Gathering™ - Point Lists'
                 new:
                     label: '➕ Créer une MTG Point List'
                     title: 'Créer une MTG Point List'
                 edit:
-                    label: 'MTG - Modifier la Point List "{name}"'
-                    title: 'MTG - Modifier la Point List "{name}"'
+                    label: 'Magic The Gathering™ - Modifier la Point List "{name}"'
+                    title: 'Magic The Gathering™ - Modifier la Point List "{name}"'
                 show:
-                    label: 'MTG - Détails de la Point List "{name}"'
-                    title: 'MTG - Détails de la Point List "{name}"'
+                    label: 'Magic The Gathering™ - Détails de la Point List "{name}"'
+                    title: 'Magic The Gathering™ - Détails de la Point List "{name}"'
                 import:
-                    label: 'MTG - Importer les points pour la liste "{name}"'
-                    title: 'MTG - Importer les points pour la liste "{name}"'
+                    label: 'Magic The Gathering™ - Importer les points pour la liste "{name}"'
+                    title: 'Magic The Gathering™ - Importer les points pour la liste "{name}"'
             pointslistcard:
                 index:
-                    label: 'MTG - Cartes de la Point List'
-                    title: 'MTG - Cartes de la Point List'
+                    label: 'Magic The Gathering™ - Cartes de la Point List'
+                    title: 'Magic The Gathering™ - Cartes de la Point List'
                 new:
                     label: '➕ Créer une carte de MTG Point List'
                     title: 'Créer une carte de MTG Point List'
                 edit:
-                    label: 'MTG - Modifier la carte de Point List "{name}"'
-                    title: 'MTG - Modifier la carte de Point List "{name}"'
+                    label: 'Magic The Gathering™ - Modifier la carte de Point List "{name}"'
+                    title: 'Magic The Gathering™ - Modifier la carte de Point List "{name}"'
                 show:
-                    title: 'MTG - Détails de la carte de Point List "{name}"'
-                    label: 'MTG - Détails de la carte de Point List "{name}"'
+                    title: 'Magic The Gathering™ - Détails de la carte de Point List "{name}"'
+                    label: 'Magic The Gathering™ - Détails de la carte de Point List "{name}"'
             update:
                 index:
-                    label: 'MTG - Mises à jour'
-                    title: 'MTG - Mises à jour'
+                    label: 'Magic The Gathering™ - Mises à jour'
+                    title: 'Magic The Gathering™ - Mises à jour'
                 new:
                     label: '➕ Créer une mise à jour MTG'
                     title: 'Créer une mise à jour MTG'
                 show:
-                    title: 'MTG - Détails de la mise à jour/annonce "{name}"'
-                    label: 'MTG - Détails de la mise à jour/annonce "{name}"'
+                    title: 'Magic The Gathering™ - Détails de la mise à jour/annonce "{name}"'
+                    label: 'Magic The Gathering™ - Détails de la mise à jour/annonce "{name}"'
                 edit:
-                    label: 'MTG - Modifier la mise à jour/annonce "{name}"'
-                    title: 'MTG - Modifier la mise à jour/annonce "{name}"'
+                    label: 'Magic The Gathering™ - Modifier la mise à jour/annonce "{name}"'
+                    title: 'Magic The Gathering™ - Modifier la mise à jour/annonce "{name}"'
             dbupdate:
                 index:
-                    title: 'MTG - Mises à jour de la base de données'
-                    label: 'MTG - Mises à jour de la base de données'
+                    title: 'Magic The Gathering™ - Mises à jour de la base de données'
+                    label: 'Magic The Gathering™ - Mises à jour de la base de données'
                 latest:
-                    label: 'MTG - Dernier état de mise à jour de la base source'
+                    label: 'Magic The Gathering™ - Dernier état de mise à jour de la base source'
                 startnew:
-                    label: 'MTG - Démarrage manuel d’une nouvelle mise à jour de la base source'
+                    label: 'Magic The Gathering™ - Démarrage manuel d’une nouvelle mise à jour de la base source'
             source:
                 index:
-                    title: 'MTG - Téléchargement / Import des sources'
-                    label: 'MTG - Téléchargement / Import des sources'
+                    title: 'Magic The Gathering™ - Téléchargement / Import des sources'
+                    label: 'Magic The Gathering™ - Téléchargement / Import des sources'
             sourcedownload:
                 index:
-                    label: 'MTG - Statut du téléchargement des sources'
+                    label: 'Magic The Gathering™ - Statut du téléchargement des sources'
                 latest:
-                    label: 'MTG - Dernier état du téléchargement des sources'
+                    label: 'Magic The Gathering™ - Dernier état du téléchargement des sources'
                 startnew:
-                    label: 'MTG - Démarrage manuel d’un nouveau téléchargement des sources'
+                    label: 'Magic The Gathering™ - Démarrage manuel d’un nouveau téléchargement des sources'
             sourcecard:
                 index:
-                    title: 'MTG - Cartes sources'
-                    label: 'MTG - Cartes sources'
+                    title: 'Magic The Gathering™ - Cartes sources'
+                    label: 'Magic The Gathering™ - Cartes sources'
                 show:
-                    title: 'MTG - Détails de la carte source "{name}"'
-                    label: 'MTG - Détails de la carte source "{name}"'
+                    title: 'Magic The Gathering™ - Détails de la carte source "{name}"'
+                    label: 'Magic The Gathering™ - Détails de la carte source "{name}"'
         cardsourceactivityhistory:
             index:
                 label: 'Historique d’activité des sources de cartes'
@@ -582,7 +582,7 @@ admin:
                 fileremoved: 'Le fichier journal demandé n’existe plus.'
         pointslistcard:
             points:
-                label: 'Points BRUTS (Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'Points BRUTS (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
         update:
             publish: 'Publier'
             unpublish: 'Dépublier'
@@ -683,6 +683,10 @@ front:
             dccalculator:
                 title: 'Calculateur Duel Commander'
                 label: 'Calculateur Duel Commander'
+            view:
+                title: 'Voir la liste de points de la mise à jour : {update}'
+                label: 'Voir la liste de points de cette mise à jour'
+                link: 'Voir la liste de points de cette mise à jour'
         resetpassword:
             label: 🛡️ Réinitialiser
             title: Réinitialiser votre mot de passe
@@ -712,6 +716,8 @@ front:
             title: 'Choisissez un <strong class="green-text">Format Star AeonShift</strong> ci-dessous'
             text: 'Vous jouez à <strong class="green-text">AeonShift Magic The Gathering™</strong>.'
             links:
+                viewpoints:
+                    text: 'Afficher les points des cartes classées'
                 choosecommander:
                     text: 'Trouver un Commandant'
                     title: 'Aidez-moi à trouver un Commandant.'

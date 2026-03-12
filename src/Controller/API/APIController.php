@@ -83,7 +83,7 @@ final class APIController extends AbstractController
         MTGPointsListManager $MTGPointsListManager
     ): JsonResponse
     {
-        $publishedUpdates = $MTGPointsListManager->getAllPointsListsAndUpdatesAsArray();
+        $publishedUpdates = $MTGPointsListManager->getAllPointListAndUpdatesAsArray();
 
         return new JsonResponse(
             data: $publishedUpdates,

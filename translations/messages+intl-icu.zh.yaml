@@ -478,76 +478,76 @@ admin:
         mtg:
             cardsourceactivityhistory:
                 index:
-                    label: 'MTG - 卡牌来源活动历史'
-                    title: 'MTG - 卡牌来源活动历史'
+                    label: 'Magic The Gathering™ - 卡牌来源活动历史'
+                    title: 'Magic The Gathering™ - 卡牌来源活动历史'
             pointslist:
                 index:
-                    label: 'MTG - 积分表'
-                    title: 'MTG - 积分表'
+                    label: 'Magic The Gathering™ - 积分表'
+                    title: 'Magic The Gathering™ - 积分表'
                 new:
                     label: '➕ 创建 MTG 积分表'
                     title: '创建 MTG 积分表'
                 edit:
-                    label: 'MTG - 编辑积分表“{name}”'
-                    title: 'MTG - 编辑积分表“{name}”'
+                    label: 'Magic The Gathering™ - 编辑积分表“{name}”'
+                    title: 'Magic The Gathering™ - 编辑积分表“{name}”'
                 show:
-                    label: 'MTG - 积分表“{name}”详情'
-                    title: 'MTG - 积分表“{name}”详情'
+                    label: 'Magic The Gathering™ - 积分表“{name}”详情'
+                    title: 'Magic The Gathering™ - 积分表“{name}”详情'
                 import:
-                    label: 'MTG - 为列表“{name}”导入点数'
-                    title: 'MTG - 为列表“{name}”导入点数'
+                    label: 'Magic The Gathering™ - 为列表“{name}”导入点数'
+                    title: 'Magic The Gathering™ - 为列表“{name}”导入点数'
             pointslistcard:
                 index:
-                    label: 'MTG - 积分表卡牌'
-                    title: 'MTG - 积分表卡牌'
+                    label: 'Magic The Gathering™ - 积分表卡牌'
+                    title: 'Magic The Gathering™ - 积分表卡牌'
                 new:
                     label: '➕ 创建 MTG 积分表卡牌'
                     title: '创建 MTG 积分表卡牌'
                 edit:
-                    label: 'MTG - 编辑积分表卡牌“{name}”'
-                    title: 'MTG - 编辑积分表卡牌“{name}”'
+                    label: 'Magic The Gathering™ - 编辑积分表卡牌“{name}”'
+                    title: 'Magic The Gathering™ - 编辑积分表卡牌“{name}”'
                 show:
-                    title: 'MTG - 积分表卡牌“{name}”详情'
-                    label: 'MTG - 积分表卡牌“{name}”详情'
+                    title: 'Magic The Gathering™ - 积分表卡牌“{name}”详情'
+                    label: 'Magic The Gathering™ - 积分表卡牌“{name}”详情'
             update:
                 index:
-                    label: 'MTG - 更新'
-                    title: 'MTG - 更新'
+                    label: 'Magic The Gathering™ - 更新'
+                    title: 'Magic The Gathering™ - 更新'
                 new:
                     label: '➕ 创建 MTG 更新'
                     title: '创建 MTG 更新'
                 show:
-                    title: 'MTG - 更新/公告“{name}”详情'
-                    label: 'MTG - 更新/公告“{name}”详情'
+                    title: 'Magic The Gathering™ - 更新/公告“{name}”详情'
+                    label: 'Magic The Gathering™ - 更新/公告“{name}”详情'
                 edit:
-                    label: 'MTG - 编辑更新/公告“{name}”'
-                    title: 'MTG - 编辑更新/公告“{name}”'
+                    label: 'Magic The Gathering™ - 编辑更新/公告“{name}”'
+                    title: 'Magic The Gathering™ - 编辑更新/公告“{name}”'
             dbupdate:
                 index:
-                    title: 'MTG - 数据库更新'
-                    label: 'MTG - 数据库更新'
+                    title: 'Magic The Gathering™ - 数据库更新'
+                    label: 'Magic The Gathering™ - 数据库更新'
                 latest:
-                    label: 'MTG - 最新源数据库更新状态'
+                    label: 'Magic The Gathering™ - 最新源数据库更新状态'
                 startnew:
-                    label: 'MTG - 手动启动新的源数据库更新'
+                    label: 'Magic The Gathering™ - 手动启动新的源数据库更新'
             source:
                 index:
-                    title: 'MTG - 源数据下载 / 导入'
-                    label: 'MTG - 源数据下载 / 导入'
+                    title: 'Magic The Gathering™ - 源数据下载 / 导入'
+                    label: 'Magic The Gathering™ - 源数据下载 / 导入'
             sourcedownload:
                 index:
-                    label: 'MTG - 源数据下载状态'
+                    label: 'Magic The Gathering™ - 源数据下载状态'
                 latest:
-                    label: 'MTG - 最新源数据下载状态'
+                    label: 'Magic The Gathering™ - 最新源数据下载状态'
                 startnew:
-                    label: 'MTG - 手动启动新的源数据下载'
+                    label: 'Magic The Gathering™ - 手动启动新的源数据下载'
             sourcecard:
                 index:
-                    title: 'MTG - 源卡牌'
-                    label: 'MTG - 源卡牌'
+                    title: 'Magic The Gathering™ - 源卡牌'
+                    label: 'Magic The Gathering™ - 源卡牌'
                 show:
-                    title: 'MTG - 源卡牌“{name}”详情'
-                    label: 'MTG - 源卡牌“{name}”详情'
+                    title: 'Magic The Gathering™ - 源卡牌“{name}”详情'
+                    label: 'Magic The Gathering™ - 源卡牌“{name}”详情'
         cardsourceactivityhistory:
             index:
                 label: '卡牌来源活动历史'
@@ -582,7 +582,7 @@ admin:
                 fileremoved: '请求的日志文件已不存在。'
         pointslistcard:
             points:
-                label: 'RAW Points（Base S/Q - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard）'
+                label: 'RAW Points（Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard）'
         update:
             publish: '发布'
             unpublish: '取消发布'
@@ -695,6 +695,10 @@ front:
             dccalculator:
                 title: 'Duel Commander 计算器'
                 label: 'Duel Commander 计算器'
+            view:
+                title: '查看更新 {update} 的要点列表'
+                label: '查看本次更新的要点列表'
+                link: '查看本次更新的要点列表'
         resetpassword:
             label: 🛡️ 重置
             title: 重置你的密码
@@ -794,6 +798,8 @@ front:
                 cardpoints:
                     description: '以下是根据您上方选择的格式对卡牌进行的排名。'
                     text: '排名卡牌'
+                viewpoints:
+                    text: '查看排名卡牌积分'
         form:
             title: '🎛️ 自定义你的格式'
             formtitle: '你正在游玩：'
