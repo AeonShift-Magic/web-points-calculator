@@ -116,7 +116,7 @@
 
             <div class="w-full lg:w-2/3 py-4">
                 <div class="lg:pl-4">
-                    <div class="text-3xl inline-block w-full mb-4 blue-text uppercase" id="total{{ i }}" data-decklist-total-title="{{ i }}">
+                    <div class="text-2xl inline-block w-full mb-4 blue-text uppercase" id="total{{ i }}" data-decklist-total-title="{{ i }}">
                         <span class="icon-chart-bar mr-2"></span> {{ ('front.mtg.form.results.decklist' ~ i ~ '.label')|trans }}
                     </div>
 
@@ -133,14 +133,14 @@
                             </a>
                         </div>
 
-                        <div class="text-2xl w-full red-text hidden" id="decklist{{ i }}-illegal" data-decklist-illegal="{{ i }}">
+                        <div class="text-xl w-full red-text hidden" id="decklist{{ i }}-illegal" data-decklist-illegal="{{ i }}">
                             <span class="icon-cancel"></span> {{ 'front.mtg.form.results.legal.no.label'|trans|raw }}
                         </div>
 
-                        <div class="text-2xl w-full mt-2 red-text decklist-errors hidden" id="decklist{{ i }}-errors" data-decklist-errors="{{ i }}"></div>
+                        <div class="text-xl w-full mt-2 red-text decklist-errors hidden" id="decklist{{ i }}-errors" data-decklist-errors="{{ i }}"></div>
                     </div>
 
-                    <div class="text-2xl inline-flex w-full mt-6 mb-2 blue-text uppercase">
+                    <div class="text-xl inline-flex w-full mt-6 mb-2 blue-text uppercase">
                         &darr; {{ 'front.mtg.form.results.breakdown.title'|trans|raw }}
                     </div>
 

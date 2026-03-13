@@ -11,19 +11,19 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  *
  * @small
  */
-final class StatusCodeTest extends WebTestCase
+final class StatusCodeTestCase extends WebTestCase
 {
     public function testExistingResourceReturns200(): void
     {
         $client = self::createClient();
         $client->request('GET', '/path/that/exists');
-        $this->assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeSame(200);
     }
 
     public function testMissingResourceReturns404(): void
     {
         $client = self::createClient();
         $client->request('GET', '/path/that/does-not-exist');
-        $this->assertResponseStatusCodeSame(404);
+        self::assertResponseStatusCodeSame(404);
     }
 }

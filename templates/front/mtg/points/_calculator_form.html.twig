@@ -34,7 +34,7 @@
     <div class="main-column no-shadow lg:pt-4 min-h-screen">
 
         <div class="flex flex-col items-center align-center">
-            <h2 class="w-auto beta text-center pt-6 mt-6 mb-1 text-4xl">{{ 'front.mtg.calculator.title'|trans }}</h2>
+            <h2 class="w-auto beta text-center pt-4 mt-4 mb-1 text-4xl">{{ 'front.mtg.calculator.title'|trans }}</h2>
             <p class="w-full text-center text-sm gray-text mt-1 mb-6">{{ 'front.mtg.calculator.subtitle'|trans }}</p>
         </div>
 
@@ -67,6 +67,26 @@
                                 <span class="tooltip-content clearfix">
                                     <span class="tooltip-text">
                                         {{ 'front.mtg.calculator.fullnameformat.text'|trans|raw }}
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="flex flex-col lg:flex-row items-center justify-around text-left">
+                    <div class="w-full lg:w-1/2 lg:pr-6">
+                        <p class="text-base text-center lg:text-right my-2" id="total1">{{ 'front.mtg.quiz.question8.label'|trans }}</p>
+                    </div>
+                    <div class="w-full lg:w-1/2 text-center lg:text-left flex flex-col">
+                        <span class="inline-block text-base green-text mr-6">
+                            <span id="format-current-update">Latest</span>
+                            <span class="tooltip">
+                                <span class="tooltip-item">
+                                    <span class="icon-info"></span>
+                                </span>
+                                <span class="tooltip-content clearfix">
+                                    <span class="tooltip-text text-sm">
+                                        {{ 'front.mtg.quiz.question8.text'|trans }}
                                     </span>
                                 </span>
                             </span>

@@ -1474,7 +1474,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         // Skip cards with lang != en and printed_name != name.
         // to ensure that the card image is in english.
-        if(isset($card['lang']) && $card['lang'] !== 'en' && isset($card['printed_name']) && $card['printed_name'] !== $card['name']) {
+        if(isset($card['lang'], $card['printed_name']) && $card['lang'] !== 'en' && $card['printed_name'] !== $card['name']) {
             return null;
         }
 

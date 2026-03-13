@@ -49,12 +49,10 @@
             const item = e.target && (e.target.closest ? e.target.closest('[data-value]') : null);
             if (!item) return;
 
-            // "No results found" is non-selectable
             if (item.hasAttribute('data-disabled')) return;
 
-            e.preventDefault(); // prevent blur-before-select
+            e.preventDefault();
 
-            // Prevent the debounced "input" handler from reopening the dropdown.
             dd._suppressNextOpen = true;
 
             input.value = item.getAttribute('data-value') || '';
@@ -84,11 +82,42 @@
         openDropdown = dd;
     };
 
+    const getSelectableItems = (dd) => {
+        if (!dd) return [];
+        const all = Array.from(dd.querySelectorAll('[data-value]'));
+        return all.filter((el) => !el.hasAttribute('data-disabled'));
+    };
+
+    const setActiveIndex = (dd, index, { syncValue = false } = {}) => {
+        const items = getSelectableItems(dd);
+        if (!items.length) {
+            dd._activeIndex = -1;
+            return;
+        }
+
+        const next = Math.max(0, Math.min(index, items.length - 1));
+        dd._activeIndex = next;
+
+        for (let i = 0; i < items.length; i++) {
+            items[i].classList.toggle('datalist-option-active', i === next);
+        }
+
+        const active = items[next];
+        if (active && typeof active.scrollIntoView === 'function') {
+            active.scrollIntoView({ block: 'nearest' });
+        }
+
+        if (syncValue && dd.input) {
+            dd.input.value = active.getAttribute('data-value') || '';
+        }
+    };
+
     const renderResults = (dd, results, input) => {
-        // Very cheap DOM update: replace children once per search
         dd.textContent = '';
 
         if (!results || !results.length) {
+            dd._activeIndex = -1;
+
             const item = document.createElement('div');
             item.setAttribute('data-disabled', '1');
             item.classList.add('datalist-option', 'datalist-option-no-results');
@@ -98,6 +127,7 @@
         }
 
         var calculatorJsFunctionPrefix;
+
         for (let i = 0; i < results.length; i++) {
             const cardName = results[i];
 
@@ -106,7 +136,6 @@
             item.classList.add('datalist-option');
             let textContent = '';
 
-            // Also, try to add the current value of the card
             if (typeof window.AeonShiftCalculator.getCurrentFormatChoiceValues === 'function' && typeof input.dataset.forzone === 'string') {
                 let currentFormatChoiceValues = window.AeonShiftCalculator.getCurrentFormatChoiceValues();
 
@@ -131,13 +160,13 @@
                             input.dataset.forzone
                         );
 
-                        if (typeof currentPointsValue.points !== undefined) {
+                        if (typeof currentPointsValue.points !== 'undefined') {
                             if (currentPointsValue.points === 0) {
-                                textContent = `${ cardName } <span class="gray-text font-bold">(${ currentPointsValue.points })</span>`;
+                                textContent = `${cardName} <span class="gray-text font-bold">(${currentPointsValue.points})</span>`;
                             } else if (currentPointsValue.points > 0) {
-                                textContent = `${ cardName } <span class="red-text font-bold">(-${ currentPointsValue.points })</span>`;
+                                textContent = `${cardName} <span class="red-text font-bold">(-${currentPointsValue.points})</span>`;
                             } else {
-                                textContent = `${ cardName } <span class="green-text font-bold">(+${ currentPointsValue.points })</span>`;
+                                textContent = `${cardName} <span class="green-text font-bold">(+${currentPointsValue.points})</span>`;
                             }
                         }
                     }
@@ -151,12 +180,14 @@
             item.innerHTML = textContent;
             dd.appendChild(item);
         }
+
+        dd._activeIndex = 0;
+        setActiveIndex(dd, 0, { syncValue: false });
     };
 
     const searchTopN = (values, valuesLC, qLC) => {
         const out = [];
 
-        // Fast path: stop scanning once we collected enough results.
         for (let i = 0; i < valuesLC.length; i++) {
             if (valuesLC[i].includes(qLC)) {
                 out.push(values[i]);
@@ -173,7 +204,6 @@
 
         const dd = ensureDropdown(input);
 
-        // If we just selected an item, do not immediately reopen the dropdown.
         if (dd._suppressNextOpen) {
             dd._suppressNextOpen = false;
             hideDropdown(dd);
@@ -191,7 +221,6 @@
 
         const results = searchTopN(idx.values, idx.valuesLC, qLC);
 
-        // Instead of hiding, show a "No results found" placeholder item.
         renderResults(dd, results, input);
         showDropdown(input, dd);
     };
@@ -204,13 +233,13 @@
             const list = input.list;
             input.datalist = list;
 
-            // Keep the native datalist out of the way; we use it only as a data source.
             input.removeAttribute('list');
             list.style.display = 'none';
 
             input._datalistWired = true;
 
             let timer = 0;
+
             input.addEventListener('input', () => {
                 if (timer) clearTimeout(timer);
                 timer = window.setTimeout(() => onInputDebounced(input), DEBOUNCE_MS);
@@ -218,19 +247,50 @@
 
             input.addEventListener('blur', () => {
                 const dd = input._asDropdown;
-                // allow mousedown selection to run first
                 setTimeout(() => hideDropdown(dd), 0);
             });
 
-            // Escape hides
             input.addEventListener('keydown', (e) => {
+                const dd = input._asDropdown;
+
                 if (e.key === 'Escape' || e.keyCode === 27) {
-                    hideDropdown(input._asDropdown);
+                    hideDropdown(dd);
+                    return;
+                }
+
+                if (!dd || !dd._open) return;
+
+                if (e.key === 'ArrowDown' || e.keyCode === 40) {
+                    e.preventDefault();
+                    const cur = typeof dd._activeIndex === 'number' ? dd._activeIndex : -1;
+                    setActiveIndex(dd, cur + 1, { syncValue: true });
+                    return;
+                }
+
+                if (e.key === 'ArrowUp' || e.keyCode === 38) {
+                    e.preventDefault();
+                    const cur = typeof dd._activeIndex === 'number' ? dd._activeIndex : 0;
+                    setActiveIndex(dd, cur - 1, { syncValue: true });
+                    return;
+                }
+
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    const items = getSelectableItems(dd);
+                    const idx = typeof dd._activeIndex === 'number' ? dd._activeIndex : -1;
+                    const active = items[idx];
+                    if (!active) return;
+
+                    e.preventDefault();
+
+                    dd._suppressNextOpen = true;
+
+                    input.value = active.getAttribute('data-value') || '';
+                    hideDropdown(dd);
+
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.dispatchEvent(new Event('change', { bubbles: true }));
                 }
             });
         }
     });
 })();
-
-
-

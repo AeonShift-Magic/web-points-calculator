@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cache DOM lookups once
     const formatNameEl = root.querySelector('#format-name');
     const formatFullNameEl = root.querySelector('#format-full-name');
+    const formatCurrentUpdateEl = root.querySelector('#format-current-update');
     const deckList1Container2El = root.querySelector('#decklist-container-2');
     const deckList1Container3El = root.querySelector('#decklist-container-3');
     const deckList1El = root.querySelector('#decklist1');
@@ -175,13 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const deckList1StartEl = root.querySelector('#decklist1-start');
     const deckList2StartEl = root.querySelector('#decklist2-start');
     const deckList3StartEl = root.querySelector('#decklist3-start');
+    const body = document.body;
 
     // Also cache non-root selectors once
+    let currentDownloadTargetId = null;
     const calculatorEl = document.getElementById('calculator');
     const quizEl = document.getElementById('quiz');
     const multistepContainersEls = document.querySelectorAll('.multistep-form-part-container');
     const quizQuestionEls = document.querySelectorAll('[id^="quiz-question-"]');
-    let currentDownloadTargetId = null;
     const pad2 = (n) => String(n).padStart(2, '0');
     const commanderChoiceContainerEl = document.getElementById('choose-commander');
     const commanderYesEl = document.getElementById('commander-yes');
@@ -1916,6 +1918,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deckList1Container3El) {
             deckList1Container3El.classList.toggle('hidden', !show3);
         }
+
+        // Toggle global body class to show all decklists when Team Trio is selected
+        if (body) {
+            body.classList.toggle('show-all-decklists', playersValue === 'teamtrio');
+        }
     };
 
     /**
@@ -1941,7 +1948,15 @@ document.addEventListener('DOMContentLoaded', () => {
             formatFullNameEl.innerHTML = parts.join(' ');
         }
 
+        // Update the current update with the selected name from the select option value
+        if (formatCurrentUpdateEl) {
+            formatCurrentUpdateEl.innerHTML = updateSelectEl?.selectedOptions[0]?.innerText ?? '';
+        }
+
+        // Make sure to show/hide additional decklists
         updateDecklistVisibility();
+
+        // Make sure to show/hide the Commanders choice depending on format choice
         updateChooseCommanderVisibility();
 
         // Re-apply commander table filters because timeline/update choices can change.
@@ -2029,53 +2044,34 @@ document.addEventListener('DOMContentLoaded', () => {
     attachDatalistAutocomplete(deckList2NameEl, CARD_NAMES);
     attachDatalistAutocomplete(deckList3NameEl, CARD_NAMES);
 
+    // Keep a reference to the latest computed decklist structures for external updates
+    const CURRENT_DECKLIST_DATA = { 1: null, 2: null, 3: null };
+
     /**
-     * Insert a card line into a decklist textarea under the requested zone heading.
+     * Add a card to the in-memory deck structure for the given deck index and zone.
      *
-     * Rules:
-     * - If the zone heading exists, insert the card line immediately after it.
-     * - If not, append the zone heading then the card line.
-     * - Card line format: `${copies} ${name}` (copies comes from "X ", requirement).
-     *
-     * @param {HTMLTextAreaElement|null} textareaEl
-     * @param {string} zoneKey
-     * @param {number} copies
-     * @param {string} name
+     * @param {1|2|3|number} deckIndex
+     * @param {string} zone
+     * @param {string} cardName
+     * @param {number} [copies=1]
      */
-    const insertCardIntoTextareaByZone = (textareaEl, zoneKey, copies, name) => {
-        if (!textareaEl) return;
+    const addCardToDeckStructure = (deckIndex, zone, cardName, copies = 1) => {
+        const listId = Number(deckIndex);
+        const deckList = CURRENT_DECKLIST_DATA[listId];
 
-        const zoneLabel = zonesAsText[zoneKey];
-        if (!zoneLabel) return;
+        if (!deckList || !zone || !cardName) return;
 
-        const safeCopies = Number.isFinite(copies) && copies > 0 ? Math.floor(copies) : 1;
-        const safeName = String(name ?? '').trim();
-        if (!safeName) return;
-
-        const cardLine = `${ safeCopies } ${ safeName }`;
-
-        const raw = String(textareaEl.value ?? '');
-        const normalized = raw.replace(/\r\n/g, '\n');
-        const lines = normalized.split('\n');
-
-        const headerIndex = lines.findIndex(l => l.trim() === zoneLabel);
-
-        if (headerIndex >= 0) {
-            lines.splice(headerIndex + 1, 0, cardLine);
-        } else {
-            // Ensure a clean separation when appending a new zone
-            while (lines.length > 0 && lines[lines.length - 1].trim() === '') {
-                lines.pop();
-            }
-            if (lines.length > 0) {
-                lines.push('');
-                lines.push('');
-            }
-            lines.push(zoneLabel);
-            lines.push(cardLine);
+        if (!Array.isArray(deckList[zone])) {
+            deckList[zone] = [];
         }
 
-        textareaEl.value = lines.join('\n').replace(/\s*$/, '') + '\n';
+        // If already present, just update the quantity
+        if(deckList[zone].find(c => c.name === cardName) !== undefined) {
+            deckList[zone].find(c => c.name === cardName).copies += copies;
+            return;
+        }
+
+        deckList[zone].push({ copies: Number.isFinite(copies) && copies > 0 ? Math.floor(copies) : 1, name: String(cardName).trim() });
     };
 
     /**
@@ -2139,16 +2135,20 @@ document.addEventListener('DOMContentLoaded', () => {
          *
          * @param {HTMLTextAreaElement|null} textareaEl
          * @param {Object<string, *>} deckListData
+         * @param {boolean} force
          */
-        const rewriteTextareaIfParsable = (textareaEl, deckListData) => {
+        const rewriteTextareaIfParsable = (textareaEl, deckListData, force = false) => {
             if (!textareaEl) return;
-            if (deckListData?.errors?.length > 0) return;
+            if (deckListData?.errors?.length > 0 && force === false) return;
 
             const formatted = buildMTGOLikeDeckText(deckListData);
             if (!formatted) return;
 
             textareaEl.value = formatted + '\n';
         };
+        // Expose for external callers (e.g., add-to-deck handler)
+        window.AeonShiftCalculator = window.AeonShiftCalculator || {};
+        window.AeonShiftCalculator.rewriteTextareaIfParsable = rewriteTextareaIfParsable;
 
         // First, identify the form chosen model
         // Then apply modulations from current rules, according to the update points list
@@ -2447,6 +2447,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Expose latest decklist structures for other interactions (e.g., "add to deck" links)
+        CURRENT_DECKLIST_DATA[1] = deckList1Data;
+        CURRENT_DECKLIST_DATA[2] = deckList2Data;
+        CURRENT_DECKLIST_DATA[3] = deckList3Data;
+
         // Allow other scripts to plug in without tight coupling
         root.dispatchEvent(new CustomEvent('aeonshift:points-calculator:update', { detail: calculationInput }));
     }
@@ -2457,45 +2462,58 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {HTMLInputElement|null} nameEl
      * @param {HTMLSelectElement|null} zoneEl
      * @param {HTMLInputElement|null} copiesEl
-     * @param {HTMLTextAreaElement|null} textareaEl
+     * @param {integer|null} id
      */
-    const handleDecklistAdd = (nameEl, zoneEl, copiesEl, textareaEl) => {
-        if (!nameEl || !zoneEl || !copiesEl || !textareaEl) return;
+    const handleDecklistAdd = (nameEl, zoneEl, copiesEl, id) => {
+        // Also: return if the name, zone, or copies are not filled.
+        if (!nameEl || nameEl.value === '' || !zoneEl || zoneEl.value === '' || !copiesEl || copiesEl.value === '' || !id) return;
 
+        const intId = Number(id ?? 0);
         const name = String(nameEl.value ?? '').trim();
         const zoneKey = String(zoneEl.value ?? '').trim();
         const copies = Number(copiesEl.value ?? 1);
 
-        insertCardIntoTextareaByZone(textareaEl, zoneKey, copies, name);
+        addCardToDeckStructure(intId, zoneKey, name, copies);
+
+        // Force-reformatting the list using the shared formatter
+        const textarea = intId === 1 ? deckList1El : intId === 2 ? deckList2El : deckList3El;
+        const deckData = CURRENT_DECKLIST_DATA[intId];
+        const rewriteFn = window.AeonShiftCalculator && window.AeonShiftCalculator.rewriteTextareaIfParsable;
+        if (typeof rewriteFn === 'function' && textarea && deckData) {
+            rewriteFn(textarea, deckData, true);
+        }
 
         // Optional: clear and refocus
         nameEl.value = '';
         nameEl.focus();
 
         updatePointsResultsAndSummaries();
+
+        // Success feedback
+        showFlash();
     };
 
     /**
      * Make both clicking "Add" and submitting the form behave the same.
      */
-    const bindDecklistAdd = (addEl, formEl, nameEl, zoneEl, copiesEl, textareaEl) => {
+    const bindDecklistAdd = (addEl, formEl, nameEl, zoneEl, copiesEl, id) => {
         if (addEl) {
             addEl.addEventListener('click', () => {
-                handleDecklistAdd(nameEl, zoneEl, copiesEl, textareaEl);
+                handleDecklistAdd(nameEl, zoneEl, copiesEl, id);
             });
         }
 
         if (formEl) {
             formEl.addEventListener('submit', (e) => {
                 e.preventDefault();
-                handleDecklistAdd(nameEl, zoneEl, copiesEl, textareaEl);
+                handleDecklistAdd(nameEl, zoneEl, copiesEl, id);
             });
         }
     };
 
-    bindDecklistAdd(deckList1AddEl, deckList1AddFormEl, deckList1NameEl, deckList1CardZoneEl, deckList1CopiesEl, deckList1El);
-    bindDecklistAdd(deckList2AddEl, deckList2AddFormEl, deckList2NameEl, deckList2CardZoneEl, deckList2CopiesEl, deckList2El);
-    bindDecklistAdd(deckList3AddEl, deckList3AddFormEl, deckList3NameEl, deckList3CardZoneEl, deckList3CopiesEl, deckList3El);
+    bindDecklistAdd(deckList1AddEl, deckList1AddFormEl, deckList1NameEl, deckList1CardZoneEl, deckList1CopiesEl, 1);
+    bindDecklistAdd(deckList2AddEl, deckList2AddFormEl, deckList2NameEl, deckList2CardZoneEl, deckList2CopiesEl, 2);
+    bindDecklistAdd(deckList3AddEl, deckList3AddFormEl, deckList3NameEl, deckList3CardZoneEl, deckList3CopiesEl, 3);
 
     /**
      * Throttle: ensures the function runs at most once per `waitMs` (leading + trailing).
@@ -2529,12 +2547,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 timeoutId = null;
                 lastRunAt = Date.now();
                 fn();
+                showFlash();
             }, remaining);
         };
     };
 
     // Static binding to updatePointsResultsAndSummaries() to avoid recreating the function on every event
     const throttledUpdatePointsResultsAndSummaries = throttle(updatePointsResultsAndSummaries, 400);
+
+    /**
+     * Show a transient success flash for ~1s.
+     * @param {string} [message='Success']
+     */
+    const showFlash = (message = '&#10004; {{ 'global.savesuccess.text'|trans|raw }}') => {
+        const el = document.createElement('div');
+        el.className = 'aeonshift-flash';
+        el.innerHTML = String(message);
+        document.body.appendChild(el);
+        window.setTimeout(() => {
+            try { el.remove(); } catch (_) {}
+        }, 1400);
+    };
 
     /**
      * Click handling for:
@@ -2547,6 +2580,35 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
         const target = e.target;
         if (!(target instanceof Element)) {
+            return;
+        }
+
+        // Handle "Add to deck" actions coming from ranked cards or other lists
+        const addToDeckLink = target.closest('a[data-addtodeck]');
+        if (addToDeckLink) {
+            e.preventDefault();
+            const deckIndex = Number(addToDeckLink.getAttribute('data-addtodeck'));
+            const zone = String(addToDeckLink.getAttribute('data-zone') || 'maindeck').trim();
+            const cardName = String(addToDeckLink.getAttribute('data-card') || '').trim();
+
+            if ((deckIndex === 1 || deckIndex === 2 || deckIndex === 3) && cardName) {
+                // Update in-memory structure
+                addCardToDeckStructure(deckIndex, zone, cardName, 1);
+
+                // Force-reformatting the list using the shared formatter
+                const textarea = deckIndex === 1 ? deckList1El : deckIndex === 2 ? deckList2El : deckList3El;
+                const deckData = CURRENT_DECKLIST_DATA[deckIndex];
+                const rewriteFn = window.AeonShiftCalculator && window.AeonShiftCalculator.rewriteTextareaIfParsable;
+                if (typeof rewriteFn === 'function' && textarea && deckData) {
+                    rewriteFn(textarea, deckData, true);
+                }
+
+                // Success feedback
+                showFlash();
+
+                // Recalculate summaries based on the new deck contents
+                updatePointsResultsAndSummaries();
+            }
             return;
         }
 
@@ -2715,9 +2777,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Card Name (+ image and search link)
                 tdKey.innerHTML =
                     `<strong class="${ cardPoints.status }">
-                             <a href="https://scryfall.com/search?q=${ encodeURIComponent(cardname) }" data-imageurl="${ escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
-                                <span class="icon-search"></span> ${ cardPoints?.name ?? cardname }
-                            </a>
+                         <a href="https://scryfall.com/search?q=${ encodeURIComponent(cardname) }" data-imageurl="${ escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                            <span class="icon-search"></span> ${ cardPoints?.name ?? cardname }
+                        </a>
                     </strong>`
                 ;
                 // Add it to the main row
@@ -2726,6 +2788,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Card ranking in points
                 const tdPoints = document.createElement('td');
                 tdPoints.innerHTML = `<strong class="commander-budget font-bold text-lg ${ Number(cardPoints.points) > 0 ? 'red-text' : Number(cardPoints.points) < 0 ? 'green-text' : 'gray-text' }">${ String(cardPoints?.points ?? '') }</strong>`;
+
+                // Add to deck buttons
+                const tdAddToDeck = document.createElement('td');
+                tdAddToDeck.innerHTML = `
+                    <a data-card="${ cardname }" data-addtodeck="1" data-zone="maindeck" class="btn btn-green text-sm addtodeck1 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 1"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 1</a>
+                    <a data-card="${ cardname }" data-addtodeck="2" data-zone="maindeck" class="btn btn-blue text-sm addtodeck2 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 2"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 2</a>
+                    <a data-card="${ cardname }" data-addtodeck="3" data-zone="maindeck" class="btn btn-yellow text-sm addtodeck3 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 3"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 3</a>
+                `;
 
                 // CEDH Ranking on EDHRec
                 const tdEDHRecRank = document.createElement('td');
@@ -2763,6 +2833,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 tr.appendChild(tdKey);
                 tr.appendChild(tdPoints);
+                tr.appendChild(tdAddToDeck);
                 tr.appendChild(tdEDHRecRank);
                 tr.appendChild(tdMv);
                 tr.appendChild(tdCi);

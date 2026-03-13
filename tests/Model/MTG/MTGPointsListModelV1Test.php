@@ -19,13 +19,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class MTGPointsListModelV1Test extends TestCase
 {
-    private EntityManagerInterface $entityManager;
 
     private MTGPointsListModelV1 $model;
-
-    private SourceItemsRepositoryInterface $repository;
-
-    private Security $security;
 
     private TranslatorInterface $translator;
 
@@ -81,16 +76,16 @@ final class MTGPointsListModelV1Test extends TestCase
 
     protected function setUp(): void
     {
-        $this->entityManager = self::createStub(EntityManagerInterface::class);
+        $entityManager = self::createStub(EntityManagerInterface::class);
         $this->translator = self::createStub(TranslatorInterface::class);
-        $this->repository = self::createStub(SourceItemsRepositoryInterface::class);
-        $this->security = self::createStub(Security::class);
+        $repository = self::createStub(SourceItemsRepositoryInterface::class);
+        $security = self::createStub(Security::class);
 
         $this->model = new MTGPointsListModelV1(
-            $this->entityManager,
+            $entityManager,
             $this->translator,
-            $this->repository,
-            $this->security
+            $repository,
+            $security
         );
     }
 

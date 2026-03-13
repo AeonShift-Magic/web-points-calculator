@@ -1,6 +1,9 @@
 <?php
 
 declare(strict_types = 1);
+
+namespace App\Tests\Controller\Admin;
+
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -15,7 +18,7 @@ final class HomeControllerTest extends WebTestCase
         $client = self::createClient();
         $client->request('GET', '/en/admin');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 
     public function testHomePageLoadsFR(): void
@@ -23,6 +26,6 @@ final class HomeControllerTest extends WebTestCase
         $client = self::createClient();
         $client->request('GET', '/fr/admin');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
     }
 }

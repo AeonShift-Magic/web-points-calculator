@@ -18,8 +18,7 @@
                     <span class="top-left"></span>
                     <span class="top-right"></span>
                     <span class="title">
-                        <span class="icon-chart-bar"></span>
-                        {{ 'front.mtg.choose.links.gotoform.text'|trans }}
+                        <span class="icon-ok"></span> {{ 'front.mtg.choose.links.gotoform.back'|trans }}
                     </span>
                     <span class="bottom-left"></span>
                     <span class="bottom-right"></span>
@@ -86,11 +85,12 @@
                 <table class="table center header-highlight-table w-full m-0 p-0 sortable-table" style="margin: 0 !important;" id="choose-cards-table">
                     <thead class="top-0" style="top: 0 !important;">
                         <tr>
-                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 270px;">{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans }} {{ ux_icon('flag:gb-4x3') }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0">{{ 'front.mtg.choose.links.choosecommander.table.nameen.label'|trans }} {{ ux_icon('flag:gb-4x3') }}</th>
                             <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 100px;">{{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans }}</th>
-                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.cedh.label'|trans }}</th>
-                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 70px;">{{ 'front.mtg.choose.links.choosecommander.table.mv.label'|trans }}</th>
-                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 140px;">{{ 'front.mtg.choose.links.choosecommander.table.coloridentity.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans }}">{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 270px;">{{ 'front.mtg.choose.links.choosecommander.table.rankingindex.cedh.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 115px;">{{ 'front.mtg.choose.links.choosecommander.table.mv.label'|trans }}</th>
+                            <th title="{{ 'front.mtg.choose.links.choosecommander.table.sort.label'|trans|e('html_attr') }}" class="sortable" role="button" tabindex="0" style="width: 145px;">{{ 'front.mtg.choose.links.choosecommander.table.coloridentity.label'|trans }}</th>
                         </tr>
                     </thead>
                     <tbody data-update-ranked-cards id="ranked-cards-container">

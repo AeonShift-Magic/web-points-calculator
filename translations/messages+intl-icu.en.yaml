@@ -783,8 +783,12 @@ front:
                             placeholder: '80'
                         points:
                             label: 'Points'
+                        addtodeck:
+                            label: 'Deck'
+                            title: 'Add to your deck'
                 gotoform:
                     text: 'Use our calculator'
+                    back: 'Back to the decklists'
                     title: 'Simply go to the <strong>calculator</strong> form, with all the options to choose from.'
                 freeform:
                     text: 'I don''t need a format'
