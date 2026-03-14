@@ -9,7 +9,7 @@ admin:
         roles:
             label: 'Rol(es)/Permiso(s) en este sitio:'
         username:
-            help: Tu nombre de usuario en este sitio web. Debe ser único y no estar siendo usado actualmente por otra persona.
+            help: 'Tu nombre de usuario en este sitio web. Debe ser único y no estar siendo usado actualmente por otra persona.'
             label: 'Nombre de usuario:'
             placeholder: JohnDoe84
     customblock:
@@ -19,7 +19,7 @@ admin:
         customblock:
             create:
                 blockkey:
-                    help: Si ya está usado, todos los bloques con el idioma y la ubicación correctos se mostrarán en orden ascendente de peso.
+                    help: 'Si ya está usado, todos los bloques con el idioma y la ubicación correctos se mostrarán en orden ascendente de peso.'
                     label: Ubicación del bloque
                     placeholder: Selecciona una ubicación
                 contents:
@@ -39,19 +39,19 @@ admin:
                         <strong>Ten cuidado con el HTML y su validez</strong>: puede romper la apariencia del sitio o no mostrarse correctamente.</strong>
                     label: Contenido
                 language:
-                    help: El idioma en el que se mostrará esta página.
+                    help: 'El idioma en el que se mostrará esta página.'
                     label: Idioma
                 slug:
-                    help: Déjalo en blanco para generar automáticamente un slug basado en el título.
+                    help: 'Déjalo en blanco para generar automáticamente un slug basado en el título.'
                     label: Slug
                 title:
-                    help: El título de la página, que se mostrará en el encabezado y en los resultados de búsqueda.
+                    help: 'El título de la página, que se mostrará en el encabezado y en los resultados de búsqueda.'
                     label: Título
                 weight:
-                    help: Entre -100 y 100. Si ya está usado, todas las páginas con el idioma y la ubicación correctos se mostrarán en orden ascendente de peso.
+                    help: 'Entre -100 y 100. Si ya está usado, todas las páginas con el idioma y la ubicación correctos se mostrarán en orden ascendente de peso.'
                     label: Peso
                 zone:
-                    help: La zona en la que se mostrará esta página. Por ejemplo, "header" para el encabezado, "footer" para el pie de página, etc.
+                    help: 'La zona en la que se mostrará esta página. Por ejemplo, "header" para el encabezado, "footer" para el pie de página, etc.'
                     label: Zona
             legends:
                 info: 'Detalles de la página'
@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Puntos base de Quadruples'
                         help: 'Los puntos base para esta carta en Quadruples.'
+                    types:
+                        label: 'Tipos'
+                    oracletext:
+                        label: 'Texto Oracle'
+                    maxcopies:
+                        label: 'Copias máximas'
+                    partnertype:
+                        label: 'Habilidades de socio'
                 legends:
                     info: 'Detalles de la carta de lista de puntos'
             update:
@@ -783,7 +791,14 @@ front:
                             placeholder: '80'
                         points:
                             label: 'Puntos'
+                        addtodeck:
+                            label: 'Mazo'
+                            title: 'Añadir a tu mazo'
+                        removefromdeck:
+                            label: ''
+                            title: 'Eliminar todo de tu mazo'
                 gotoform:
+                    back: 'Volver a las listas de mazos'
                     text: 'Usar nuestra calculadora'
                     title: 'Ve simplemente al formulario de la <strong>calculadora</strong>, con todas las opciones para elegir.'
                 freeform:
@@ -1118,6 +1133,8 @@ front:
                 text: '¿Qué actualización de lista de puntos debería usarse? Usa siempre la más reciente salvo que estés revisando decklists pasadas.'
             previous:
                 text: '⬅️ Pregunta anterior'
+        visuallist:
+            title: 'Lista visual'
 global:
     actions:
         label: Acciones
@@ -1314,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: Jugar AeonShift Modern Highlander
                     subtitle: <strong>2 jugadores</strong>, <strong>20</strong> vidas, Singleton de <strong>100 cartas</strong>, <strong>dos</strong> partidas ganadas, timeline <strong>Modern</strong>
+    types:
+        artifact: Artefacto
+        attraction: Attraction
+        battle: Batalla
+        contraption: Contraption
+        creature: Criatura
+        conspiracy: Conspiracy
+        enchantment: Encantamiento
+        instant: Instantáneo
+        land: Tierra
+        sorcery: Conjuro
+        sticker: Sticker
+        planeswalker: Planeswalker
+        tribal: Estirpe
+        kinded: Estirpe
 page:
     position:
         footer:
@@ -1344,3 +1376,4 @@ user:
             label: Administrador
         user:
             label: Usuario estándar
+'': ''

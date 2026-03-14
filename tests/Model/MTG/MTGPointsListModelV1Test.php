@@ -19,7 +19,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class MTGPointsListModelV1Test extends TestCase
 {
-
     private MTGPointsListModelV1 $model;
 
     private TranslatorInterface $translator;
@@ -37,7 +36,7 @@ final class MTGPointsListModelV1Test extends TestCase
         self::assertStringStartsWith('AeonShift_MTG_List_42_', $filename);
         self::assertStringEndsWith('_Points.csv', $filename);
 
-        $sanitized = mb_substr((string)preg_replace('/[^a-zA-Z0-9]/', '_', $pointsList->getTitle()), 0, 50);
+        $sanitized = mb_substr(preg_replace('/[^a-zA-Z0-9]/', '_', $pointsList->getTitle()), 0, 50);
         self::assertStringContainsString($sanitized, $filename);
     }
 

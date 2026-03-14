@@ -338,6 +338,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
      *              flavorofnameen: string|null,
      *              alternatenameen: string|null,
      *              imageurl: string|null,
+     *              types: string,
      *              mv: float,
      *              multicztype: string,
      *              ci: string[],
@@ -376,6 +377,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
      *          flavorofnameen: null,
      *          alternatenameen: string|null,
      *          imageurl: string|null,
+     *          types: string,
      *          mv: float,
      *          multicztype: string,
      *          ci: string[],
@@ -489,6 +491,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
                 'flavorofnameen'   => $sourceCard->getFlavorOfNameEN(),
                 'alternatenameen'  => $sourceCard->getAlternateNameEN(),
                 'imageurl'         => $sourceCard->getImageURL(),
+                'types'            => $sourceCard->getTypes(),
                 'mv'               => $sourceCard->getManaValue(),
                 'multicztype'      => $sourceCard->getMultiCZType(),
                 'ci'               => $sourceCard->getColorIdentity(),
@@ -543,6 +546,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
                     'flavorofnameen'             => null,
                     'alternatenameen'            => '',
                     'imageurl'                   => '',
+                    'types'                      => '',
                     'mv'                         => 0.0,
                     'multicztype'                => '',
                     'ci'                         => [],
@@ -685,7 +689,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '');
 
         if (
             count($CSVlineContentsAsArray) < 11

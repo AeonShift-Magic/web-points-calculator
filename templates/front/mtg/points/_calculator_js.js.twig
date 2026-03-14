@@ -28,6 +28,46 @@
 
 let unknownImageUrl = '{{ asset('images/unranked.jpg') }}';
 
+// This doesn't need i18n
+let zonesAsText = {
+    commandzone: 'Command Zone',
+    companions: 'Companions',
+    maindeck: 'Main Deck',
+    sideboard: 'Sideboard',
+    attractions: 'Attractions',
+    stickers: 'Sticker Packs',
+    contraptions: 'Contraptions'
+};
+
+// This doesn't need i18n
+let deckZonesAsText = {
+    commandzone: 'Commander',
+    companions: 'Companion',
+    maindeck: 'Maindeck',
+    sideboard: 'Sideboard',
+    attractions: 'Attractions',
+    stickers: 'Stickers',
+    contraptions: 'Contraptions'
+};
+
+// Canonical order
+let zoneOrder = ['Commander', 'Companion', 'Maindeck', 'Sideboard', 'Attractions', 'Stickers', 'Contraptions'];
+
+let typesOrder = {
+    creature: '{{ 'mtg.types.creature'|trans|raw }}',
+    planeswalker: '{{ 'mtg.types.planeswalker'|trans|raw }}',
+    battle: '{{ 'mtg.types.battle'|trans|raw }}',
+    artifact: '{{ 'mtg.types.artifact'|trans|raw }}',
+    enchantment: '{{ 'mtg.types.enchantment'|trans|raw }}',
+    sorcery: '{{ 'mtg.types.sorcery'|trans|raw }}',
+    instant: '{{ 'mtg.types.instant'|trans|raw }}',
+    land: '{{ 'mtg.types.land'|trans|raw }}',
+    conspiracy: '{{ 'mtg.types.conspiracy'|trans|raw }}',
+    sticker: '{{ 'mtg.types.sticker'|trans|raw }}',
+    attraction: '{{ 'mtg.types.attraction'|trans|raw }}',
+    contraption: '{{ 'mtg.types.contraption'|trans|raw }}'
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('calculator-form');
     if (!root) {
@@ -86,17 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'deckList2',
         'deckList3'
     ]);
-
-    // This doesn't need i18n
-    const zonesAsText = {
-        commandzone: 'Commander',
-        companions: 'Companion',
-        maindeck: 'Maindeck',
-        sideboard: 'Sideboard',
-        attractions: 'Attractions',
-        stickers: 'Stickers',
-        contraptions: 'Contraptions'
-    };
 
     /**
      * Canonical order for the displayed "full name"
@@ -176,6 +205,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const deckList1StartEl = root.querySelector('#decklist1-start');
     const deckList2StartEl = root.querySelector('#decklist2-start');
     const deckList3StartEl = root.querySelector('#decklist3-start');
+    const deckList1VisualListEl = root.querySelector('#decklist1-visual');
+    const deckList2VisualListEl = root.querySelector('#decklist2-visual');
+    const deckList3VisualListEl = root.querySelector('#decklist3-visual');
     const body = document.body;
 
     // Also cache non-root selectors once
@@ -364,6 +396,156 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return { getKey, invalidateKey, compareKeys };
     })();
+
+    /**
+     * Build a lookup map for all containers:
+     * zone → type → elements
+     */
+    const buildContainerMap = (targetVisualContainer) => {
+        const map = {};
+
+        targetVisualContainer
+            .querySelectorAll('.visual-list-zone-container')
+            .forEach(zoneEl => {
+                const zone = zoneEl.dataset.zone;
+                map[zone] = {};
+
+                zoneEl.querySelectorAll('.visual-list-type-container').forEach(typeEl => {
+                    const type = typeEl.dataset.type;
+
+                    map[zone][type] = {
+                        zoneEl,
+                        typeEl,
+                        cardsContainer: typeEl.querySelector('.visual-list-cards-container'),
+                        totalEl: typeEl.querySelector(`[data-type-total="${ type }"]`),
+                        total: 0
+                    };
+                });
+            });
+
+        return map;
+    };
+
+    /**
+     * Fill the visual decklist container based on the decklist structure.
+     */
+    const fillVisualList = (deckListStructure, targetVisualContainer) => {
+
+        if (!deckListStructure || !targetVisualContainer) return;
+        if (!(targetVisualContainer instanceof HTMLElement)) return;
+
+        const containerMap = buildContainerMap(targetVisualContainer);
+
+        const typePriority = Object.keys(typesOrder);
+
+        // Reset containers + totals
+        Object.values(containerMap).forEach(zone =>
+            Object.values(zone).forEach(container => {
+                const { cardsContainer, typeEl, zoneEl, totalEl } = container;
+
+                cardsContainer.innerHTML = '';
+                typeEl.classList.add('hidden');
+                zoneEl.classList.add('hidden');
+
+                container.total = 0;
+                if (totalEl) totalEl.textContent = '';
+            })
+        );
+
+        let finalCount = 0;
+
+        Object.keys(zonesAsText).forEach(zone => {
+
+            const zoneCards = deckListStructure[zone];
+            if (!zoneCards || !containerMap[zone]) return;
+
+            // Sort cards by mana value then name
+            const sortedCards = [...zoneCards].sort((a, b) => {
+                const mvDiff = (a.mv ?? 0) - (b.mv ?? 0);
+                if (mvDiff !== 0) return mvDiff;
+                return (a.name ?? '').localeCompare(b.name ?? '', undefined, { sensitivity: 'base' });
+            });
+
+            for (const card of sortedCards) {
+
+                if (!card.types) continue;
+
+                const mainTypes = card.types
+                    .split('//')[0]
+                    .toLowerCase();
+
+                let matchedType = null;
+
+                for (const type of typePriority) {
+                    if (
+                        (mainTypes.includes(type) && !mainTypes.includes('land') && type !== 'land') ||
+                        (type === 'land' && mainTypes.includes('land'))
+                    ) {
+                        matchedType = type;
+                        break;
+                    }
+                }
+
+                if (!matchedType) continue;
+
+                const container = containerMap[zone][matchedType];
+                if (!container) continue;
+
+                const { zoneEl, typeEl, cardsContainer } = container;
+
+                const cardHTML = `
+                <div class="decklist-card-container">
+                    <figure data-imageurl="${ escapeHtmlAttr(card.imageurl) }">
+                        <img src="${ card.imageurl ? card.imageurl : unknownImageUrl }" alt="${ card.name }">
+                        <span class="card-copies">${ card.copies }</span>
+                        <figcaption>
+                            <a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }"
+                               data-imageurl="${ escapeHtmlAttr(card.imageurl) }"
+                               title="Scryfall Search"
+                               target="_blank">
+                                <span class="icon-search"></span> ${ card.name }
+                            </a>
+                            <a data-card="${ card.name }" data-addtodeck="${ deckListStructure.id }" data-zone="${ zone }" data-copies="0" class="text-sm cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.removefromdeck.title'|trans }} 1"><span class="icon-minus-circled"></span></a>
+                            ${
+                                card.points > 0
+                                    ? '<span class="card-points red-text">' + card.points + ' {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }}</span>'
+                                    : card.points < 0
+                                        ? '<span class="card-points green-text">' + card.points + ' {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }}</span>'
+                                        : ''
+                            }
+                        </figcaption>
+                    </figure>
+                </div>
+            `;
+
+                cardsContainer.insertAdjacentHTML('beforeend', cardHTML);
+
+                // increment totals (respect card copies)
+                container.total += card.copies ?? 1;
+
+                typeEl.classList.remove('hidden');
+                zoneEl.classList.remove('hidden');
+
+                finalCount++;
+            }
+        });
+
+        // Write totals into legends
+        Object.values(containerMap).forEach(zone =>
+            Object.values(zone).forEach(container => {
+                if (container.totalEl && container.total > 0) {
+                    container.totalEl.textContent = `(${ container.total })`;
+                }
+            })
+        );
+
+        // Show or hide the whole visual decklist
+        if (finalCount === 0) {
+            targetVisualContainer.classList.add('hidden');
+        } else {
+            targetVisualContainer.classList.remove('hidden');
+        }
+    };
 
     /**
      * Sort rows of #choose-commander-table by a column index and direction.
@@ -609,6 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!commanderName) continue;
 
             const deckListStructure = {
+                id: 0,
                 total: 1,
                 maindeck: [],
                 commandzone: [{ copies: 1, name: commanderName, points: null, imageurl: '' }],
@@ -840,7 +1023,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nameTimer = window.setTimeout(() => {
                 nameTimer = null;
                 applyChooseCommanderFilters();
-            }, 150);
+            }, 100);
         };
 
         for (const el of fields) {
@@ -1257,7 +1440,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nameTimer = window.setTimeout(() => {
                 nameTimer = null;
                 applyChooseCardsFilters();
-            }, 150);
+            }, 100);
         };
 
         for (const el of fields) {
@@ -1367,9 +1550,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const generatedAt = formatLocalDateTime(new Date());
 
         const zones = parseDecklistTextareaToZones(decklistRaw);
-
-        // Canonical order
-        const zoneOrder = ['Commander', 'Companion', 'Maindeck', 'Sideboard', 'Attractions', 'Stickers', 'Contraptions'];
 
         const lines = [];
         lines.push('-------------------------------------------------------------------------------------------------');
@@ -1486,7 +1666,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newWindow.focus();
             setTimeout(() => {
                 newWindow.print();
-            }, 150);
+            }, 100);
             newWindow.onafterprint = () => newWindow.close();
         };
     };
@@ -2065,13 +2245,26 @@ document.addEventListener('DOMContentLoaded', () => {
             deckList[zone] = [];
         }
 
-        // If already present, just update the quantity
-        if(deckList[zone].find(c => c.name === cardName) !== undefined) {
-            deckList[zone].find(c => c.name === cardName).copies += copies;
-            return;
-        }
+        if (copies >= 1) {
+            // Adding copies
+            // If already present, just update the quantity
+            if (deckList[zone].find(c => c.name === cardName) !== undefined) {
+                deckList[zone].find(c => c.name === cardName).copies += copies;
+                return;
+            }
 
-        deckList[zone].push({ copies: Number.isFinite(copies) && copies > 0 ? Math.floor(copies) : 1, name: String(cardName).trim() });
+            deckList[zone].push({ copies: Number.isFinite(copies) && copies > 0 ? Math.floor(copies) : 1, name: String(cardName).trim() });
+        } else {
+            // Removing all copies from deck
+            Object.keys(zonesAsText).forEach(zone => {
+                for (let i = deckList[zone].length - 1; i >= 0; i--) {
+                    if (deckList[zone][i].name === cardName) {
+                        deckList[zone].splice(i, 1);
+                        return;
+                    }
+                }
+            });
+        }
     };
 
     /**
@@ -2111,7 +2304,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!Array.isArray(cards) || cards.length === 0) continue;
 
                 const lines = [];
-                lines.push(zonesAsText[zone] ?? zone);
+                lines.push(deckZonesAsText[zone]);
 
                 for (const card of cards) {
                     const copies = Number(card?.copies ?? 0);
@@ -2146,6 +2339,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             textareaEl.value = formatted + '\n';
         };
+
         // Expose for external callers (e.g., add-to-deck handler)
         window.AeonShiftCalculator = window.AeonShiftCalculator || {};
         window.AeonShiftCalculator.rewriteTextareaIfParsable = rewriteTextareaIfParsable;
@@ -2155,6 +2349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let calculatorJsFunctionPrefix = null;
         let pvalue = 100;
         let deckList1Data = {
+            id: 1,
             total: 0,
             maindeck: [],
             commandzone: [],
@@ -2174,6 +2369,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let deckList2Data = {
+            id: 2,
             total: 0,
             maindeck: [],
             commandzone: [],
@@ -2193,6 +2389,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         let deckList3Data = {
+            id: 3,
             total: 0,
             maindeck: [],
             commandzone: [],
@@ -2235,9 +2432,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     [deckList1Data, deckList2Data, deckList3Data].forEach(decklistData => decklistData?.errors?.push(MESSAGES.internalerror + ' (C0003)'));
                 } else {
                     let pvalue = window[calculatorJsFunctionPrefix + 'GetPValueFromFormFields'](updates, currentFormatChoiceValues);
-                    deckList1Data = window[calculatorJsFunctionPrefix + 'ParseDecklist'](deckList1, currentFormatChoiceValues, pvalue);
-                    deckList2Data = window[calculatorJsFunctionPrefix + 'ParseDecklist'](deckList2, currentFormatChoiceValues, pvalue);
-                    deckList3Data = window[calculatorJsFunctionPrefix + 'ParseDecklist'](deckList3, currentFormatChoiceValues, pvalue);
+                    deckList1Data = window[calculatorJsFunctionPrefix + 'ParseDecklist'](deckList1, currentFormatChoiceValues, pvalue, deckList1Data);
+                    deckList2Data = window[calculatorJsFunctionPrefix + 'ParseDecklist'](deckList2, currentFormatChoiceValues, pvalue, deckList2Data);
+                    deckList3Data = window[calculatorJsFunctionPrefix + 'ParseDecklist'](deckList3, currentFormatChoiceValues, pvalue, deckList3Data);
                 }
             }
         }
@@ -2249,7 +2446,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3El, successDOMElement: deckList3FixedEl }
         ].forEach(({ deckListData, targetDOMElement, successDOMElement }) => {
             if (!targetDOMElement || !successDOMElement) return;
+
             rewriteTextareaIfParsable(targetDOMElement, deckListData);
+
             if (deckListData.total > 0 && deckListData.errors.length === 0) {
                 successDOMElement.classList.remove('hidden');
             } else {
@@ -2271,7 +2470,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3ModulationsEl }
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
+
             targetDOMElement.innerHTML = '';
+
             if (deckListData?.modulations?.length > 0) {
                 deckListData?.modulations?.forEach(modulation => targetDOMElement.insertAdjacentHTML('beforeend', `<li>${ modulation }</li>`));
             } else {
@@ -2286,7 +2487,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3PointsUsageEl }
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
+
             targetDOMElement.innerHTML = '';
+
             if (deckListData?.breakdown?.length > 0) {
                 deckListData?.breakdown?.forEach(breakdown => targetDOMElement.insertAdjacentHTML('beforeend', `<li>${ breakdown }</li>`));
             } else {
@@ -2301,7 +2504,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3ErrorsEl }
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
+
             targetDOMElement.innerHTML = '';
+
             if (deckListData?.errors?.length > 0) {
                 deckListData?.errors?.forEach(error => targetDOMElement.insertAdjacentHTML('beforeend', `<li>${ error }</li>`));
             } else {
@@ -2316,6 +2521,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3BudgetPointsEl }
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
+
             targetDOMElement.innerHTML = '';
             targetDOMElement.insertAdjacentHTML('beforeend', `${ deckListData?.budget } 🧺`);
         });
@@ -2326,7 +2532,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3RemainingPointsEl }
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
+
             targetDOMElement.innerHTML = '';
+
             if (deckListData?.remaining === 'N/A') {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="gray-text">N/A</span>`);
             } else if (deckListData?.remaining > 0) {
@@ -2345,7 +2553,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3MvaluesEl }
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
+
             targetDOMElement.innerHTML = '';
+
             if (Array.isArray(deckListData.mvalues) && deckListData.mvalues.length > 0) {
                 deckListData?.mvalues?.forEach(breakdown => targetDOMElement.insertAdjacentHTML('beforeend', `<li>${ breakdown }</li>`));
             }
@@ -2358,7 +2568,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { deckListData: deckList3Data, targetDOMElement: deckList3MvalueEl }
         ].forEach(({ deckListData, targetDOMElement }) => {
             if (!targetDOMElement) return;
+
             targetDOMElement.innerHTML = '';
+
             if (typeof deckListData.mvalue === 'number' && deckListData.mvalue > 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `${ Math.round(deckListData?.mvalue * 100) / 100 }`);
             }
@@ -2376,16 +2588,7 @@ document.addEventListener('DOMContentLoaded', () => {
             targetListDOMElement.innerHTML = '';
             targetTotalDOMElement.innerHTML = '';
             const zones = ['commandzone', 'companions', 'maindeck', 'sideboard', 'attractions', 'stickers', 'contraptions'];
-            // This doesn't need i18n
-            const zonesAsText = {
-                commandzone: 'Command Zone',
-                companions: 'Companions',
-                maindeck: 'Main Deck',
-                sideboard: 'Sideboard',
-                attractions: 'Attractions',
-                stickers: 'Sticker Packs',
-                contraptions: 'Contraptions'
-            };
+
             let total = 0;
 
             for (const zone of zones) {
@@ -2404,7 +2607,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 : unknownImageUrl;
                             targetListDOMElement.insertAdjacentHTML(
                                 'beforeend',
-                                `<li><a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" data-imageurl="${ escapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ card.name }</a> <span class="help-text">(x${ card.copies })</span></li>`
+                                `<li>
+                                    <a href="https://scryfall.com/search?q=${ encodeURIComponent(card.name) }" data-imageurl="${ escapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank">
+                                        <span class="icon-search"></span> ${ card.name }
+                                    </a> <span class="help-text">(x${ card.copies })</span>
+                                    <a data-card="${ card.name }" data-addtodeck="${ deckListData.id }" data-zone="${ zone }" data-copies="0" class="text-sm cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.removefromdeck.title'|trans }} 1"><span class="icon-minus-circled"></span></a>
+                                </li>`
                             );
                         }
                     }
@@ -2445,6 +2653,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetDOMElementErrors.classList.add('hidden');
                 targetDOMElementStart.classList.remove('hidden');
             }
+        });
+
+        // Update the visual decklists
+        [
+            { deckListData: deckList1Data, targetDOMElement: deckList1VisualListEl },
+            { deckListData: deckList2Data, targetDOMElement: deckList2VisualListEl },
+            { deckListData: deckList3Data, targetDOMElement: deckList3VisualListEl }
+        ].forEach(({ deckListData, targetDOMElement }) => {
+            if (!targetDOMElement) return;
+
+            fillVisualList(deckListData, targetDOMElement);
         });
 
         // Expose latest decklist structures for other interactions (e.g., "add to deck" links)
@@ -2553,7 +2772,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Static binding to updatePointsResultsAndSummaries() to avoid recreating the function on every event
-    const throttledUpdatePointsResultsAndSummaries = throttle(updatePointsResultsAndSummaries, 400);
+    const throttledUpdatePointsResultsAndSummaries = throttle(updatePointsResultsAndSummaries, 300);
 
     /**
      * Show a transient success flash for ~1s.
@@ -2565,7 +2784,10 @@ document.addEventListener('DOMContentLoaded', () => {
         el.innerHTML = String(message);
         document.body.appendChild(el);
         window.setTimeout(() => {
-            try { el.remove(); } catch (_) {}
+            try {
+                el.remove();
+            } catch (_) {
+            }
         }, 1400);
     };
 
@@ -2590,10 +2812,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const deckIndex = Number(addToDeckLink.getAttribute('data-addtodeck'));
             const zone = String(addToDeckLink.getAttribute('data-zone') || 'maindeck').trim();
             const cardName = String(addToDeckLink.getAttribute('data-card') || '').trim();
+            const cardCopies = Number(addToDeckLink.getAttribute('data-copies') || 1);
 
             if ((deckIndex === 1 || deckIndex === 2 || deckIndex === 3) && cardName) {
                 // Update in-memory structure
-                addCardToDeckStructure(deckIndex, zone, cardName, 1);
+                addCardToDeckStructure(deckIndex, zone, cardName, cardCopies);
 
                 // Force-reformatting the list using the shared formatter
                 const textarea = deckIndex === 1 ? deckList1El : deckIndex === 2 ? deckList2El : deckList3El;
@@ -2792,9 +3015,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Add to deck buttons
                 const tdAddToDeck = document.createElement('td');
                 tdAddToDeck.innerHTML = `
-                    <a data-card="${ cardname }" data-addtodeck="1" data-zone="maindeck" class="btn btn-green text-sm addtodeck1 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 1"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 1</a>
-                    <a data-card="${ cardname }" data-addtodeck="2" data-zone="maindeck" class="btn btn-blue text-sm addtodeck2 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 2"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 2</a>
-                    <a data-card="${ cardname }" data-addtodeck="3" data-zone="maindeck" class="btn btn-yellow text-sm addtodeck3 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 3"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 3</a>
+                    <a data-card="${ cardname }" data-addtodeck="1" data-zone="maindeck" data-copies="1" class="btn btn-green text-sm addtodeck1 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 1"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 1</a>
+                    <a data-card="${ cardname }" data-addtodeck="2" data-zone="maindeck" data-copies="1" class="btn btn-blue text-sm addtodeck2 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 2"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 2</a>
+                    <a data-card="${ cardname }" data-addtodeck="3" data-zone="maindeck" data-copies="1" class="btn btn-yellow text-sm addtodeck3 cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 3"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 3</a>
                 `;
 
                 // CEDH Ranking on EDHRec

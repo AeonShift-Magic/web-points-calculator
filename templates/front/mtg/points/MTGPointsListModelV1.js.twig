@@ -91,29 +91,11 @@ function MTGPointsListModelV1FailParsing(deckListStructure) {
  * @param {string} deckListAsString
  * @param {CurrentFormatChoiceValues} currentFormatChoiceValues
  * @param {number} pvalue
+ * @param {Object} deckListStructure
  *
  * @returns {Object}
  */
-function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoiceValues, pvalue) {
-    const deckListStructure = {
-        total: 0,
-        maindeck: [],
-        commandzone: [],
-        sideboard: [],
-        companions: [],
-        attractions: [],
-        contraptions: [],
-        stickers: [],
-        modulations: [],
-        breakdown: [],
-        errors: [],
-        budget: 0,
-        remaining: 0,
-        mvalue: 0.0,
-        mvalues: [],
-        pvalue: pvalue
-    };
-
+function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoiceValues, pvalue, deckListStructure) {
     /**
      * Tests if a decklist has exactly one line with "Commander" (case insensitive).
      *
@@ -354,15 +336,15 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
         for (const zone of zones) {
             for (let i = 0; i < deckListStructure[zone].length; i++) {
                 const card = deckListStructure[zone][i];
-                const pointListCard = MTGPointsListModelV1FindCardByNameInUpdatePointsList(card?.name, currentFormatChoiceValues);
+                const sourceCard = MTGPointsListModelV1FindCardByNameInUpdatePointsList(card?.name, currentFormatChoiceValues);
 
-                if (pointListCard?.status === 'unknown') {
+                if (sourceCard?.status === 'unknown') {
                     const nameForError = String(card?.name || '').trim();
                     if (nameForError && !unknownCardNamesSet.has(nameForError)) {
                         unknownCardNamesSet.add(nameForError);
                         unknownCardNames.push(nameForError);
                     }
-                    deckListStructure[zone][i].status = pointListCard?.status ?? 'unknown';
+                    deckListStructure[zone][i].status = sourceCard?.status ?? 'unknown';
                     deckListStructure.total = Math.max(0, deckListStructure.total - (deckListStructure[zone][i].copies ?? 1));
                 }
             }
@@ -584,7 +566,9 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
         deckListStructure[zone].push({
             copies: Number(copies),
             name: cardName,
+            mv: 0,
             points: null,
+            types: '',
             imageurl: ''
         });
         deckListStructure.total += Number(copies);
@@ -874,7 +858,7 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 : unknownImageUrl;
 
             deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ escapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ PARTNER_TYPES.choose_a_background })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ escapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }} <span class="gray-text">(${ PARTNER_TYPES.choose_a_background })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
             );
             budgetChanges.push(budgetChange);
             // Mana Value Factor is set to 0.1 for Choose a Background / Background (10% malus)
@@ -889,7 +873,7 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 : unknownImageUrl;
 
             deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ escapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ (partner1type in PARTNER_TYPES) ? PARTNER_TYPES[partner1type] : PARTNER_TYPES.default })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ escapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }} <span class="gray-text">(${ (partner1type in PARTNER_TYPES) ? PARTNER_TYPES[partner1type] : PARTNER_TYPES.default })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.multiplecommanderstext })</help>`
             );
             budgetChanges.push(budgetChange);
             // Mana Value Factor is set to 0.05 for all other Partner Abilities (5% malus)
@@ -941,7 +925,7 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 : unknownImageUrl;
 
             deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ escapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange }</strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl0) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a> + <a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[1].name) }" data-imageurl="${ escapeHtmlAttr(imageUrl1) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[1].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange }</strong> {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }} <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
             );
         } else if (deckListStructure.commandzone.length === 1) {
             const imageUrl = (typeof deckListStructure.commandzone[0].imageurl === 'string' && deckListStructure.commandzone[0].imageurl)
@@ -949,7 +933,7 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 : unknownImageUrl;
 
             deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> points <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[0].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[0].name }</a></strong> &rarr; <strong class="green-text">+${ budgetChange } </strong> {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }} <span class="gray-text">(${ mostRecentFirstPrintYear })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.firstprinttext })</help>`
             );
         }
 
@@ -987,7 +971,7 @@ function MTGPointsListModelV1ApplyModulations(deckListStructure, currentFormatCh
                 : unknownImageUrl;
 
             deckListStructure.modulations.push(
-                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[i].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[i].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> points <span class="gray-text">(${ deckListStructure.commandzone[i].mv })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.manavaluetext })</help>`
+                `<strong><a href="https://scryfall.com/search?q=${ encodeURIComponent(deckListStructure.commandzone[i].name) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(imageUrl) }" title="Scryfall Search" target="_blank"><span class="icon-search"></span> ${ deckListStructure.commandzone[i].name }</a></strong> &rarr; <strong class="red-text">${ budgetChange }</strong> {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }} <span class="gray-text">(${ deckListStructure.commandzone[i].mv })</span><br><em class="help-text">(${ MODULATIONS_MESSAGES.manavaluetext })</help>`
             );
             budgetChanges.push(budgetChange);
         }
@@ -1063,6 +1047,9 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
                 : foundCardData.imageurl;
             deckListStructure[zone][i].imageurl = cardImageUrl;
             deckListStructure[zone][i].status = foundCardData?.status ?? 'unknown';
+            deckListStructure[zone][i].types = foundCardData?.types ?? '';
+            deckListStructure[zone][i].points = cardPoints.points * card.copies;
+            deckListStructure[zone][i].mv = cardPoints.mv;
             deckListStructure.total = Math.max(0, deckListStructure.total - (deckListStructure[zone][i].copies ?? 1));
 
             if ('points' in cardPoints && 'copies' in card && cardPoints.points !== 0 && typeof cardPoints.points === 'number') {
@@ -1077,10 +1064,10 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
                         // Known card modulation
                         deckListStructure.modulations.push(`
                         <strong class="${ cardPoints.status }">
-                             <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                            <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
                                 <span class="icon-search"></span> ${ finalCardName }
                             </a>
-                        </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> points <br><em class="help-text">(${ POINTS_MESSAGES.rankedcommander })</help>`
+                        </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }} <br><em class="help-text">(${ POINTS_MESSAGES.rankedcommander })</help>`
                             + (
                                 cardPoints.status === 'unranked'
                                     ? ` <br><em class="help-text">${ POINTS_MESSAGES.unranked }</em>`
@@ -1091,14 +1078,17 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
                         // Unknown card modulation
                         deckListStructure.modulations.push(`
                         <strong class="${ cardPoints.status }">
-                             <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                            <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
                                 <span class="icon-search"></span> ${ finalCardName }
                             </a>
                         </strong>
                         <br>
-                        <em class="help-text">${ POINTS_MESSAGES.unknown }</em>`);
+                        <em class="help-text">${ POINTS_MESSAGES.unknown }</em>
+                        <a data-card="${ finalCardName }" data-addtodeck="${ deckListStructure.id }" data-zone="${ zone }" data-copies="0" class="text-sm cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.removefromdeck.title'|trans }} 1"><span class="icon-minus-circled"></span></a>`
+                        );
                     }
                 } else {
+                    // Card points outside modulation zones
                     if (cardPoints.status !== 'unknown') {
                         // Known card breakdown entry
                         breakdownEntries.push({
@@ -1106,15 +1096,16 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
                             zone,
                             html:
                                 `<strong class="${ cardPoints.status }">
-                                 <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
-                                    <span class="icon-search"></span> ${ finalCardName }
-                                </a>
-                            </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> points`
+                                    <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                                        <span class="icon-search"></span> ${ finalCardName }
+                                    </a>
+                                </strong> &rarr; <strong class="red-text">${ cardPoints.points * card.copies }</strong> {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }}`
                                 + (
                                     cardPoints.status === 'unranked'
                                         ? ` <br><em class="help-text">${ POINTS_MESSAGES.unranked }</em>`
                                         : ''
                                 )
+                                + `<a data-card="${ finalCardName }" data-addtodeck="${ deckListStructure.id }" data-zone="${ zone }" data-copies="0" class="text-sm cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.removefromdeck.title'|trans }} 1"><span class="icon-minus-circled"></span></a>`
                         });
                     } else {
                         // Unknown card breakdown entry
@@ -1123,12 +1114,13 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
                             zone,
                             html:
                                 `<strong class="${ cardPoints.status }">
-                                 <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
-                                    <span class="icon-search"></span> ${ finalCardName }
-                                </a>
+                                    <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                                        <span class="icon-search"></span> ${ finalCardName }
+                                    </a>
                                 </strong>
                                 <br>
-                                <em class="help-text">${ POINTS_MESSAGES.unknown }</em>`
+                                <em class="help-text">${ POINTS_MESSAGES.unknown }</em>
+                                <a data-card="${ finalCardName }" data-addtodeck="${ deckListStructure.id }" data-zone="${ zone }" data-copies="0" class="text-sm cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.removefromdeck.title'|trans }} 1"><span class="icon-minus-circled"></span></a>`
                         });
                     }
                 }
@@ -1140,10 +1132,11 @@ function MTGPointsListModelV1ApplyPoints(deckListStructure, currentFormatChoiceV
                     mvalue: Number.parseFloat(foundCardData.mvalue),
                     html: `
                     <strong class="${ cardPoints.status }">
-                         <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
+                        <a href="https://scryfall.com/search?q=${ encodeURIComponent(finalCardName) }" data-imageurl="${ window.AeonShiftCalculator.escapeHtmlAttr(cardImageUrl) }" title="Scryfall Search" target="_blank">
                             <span class="icon-search"></span> ${ finalCardName }
                         </a>
-                    </strong> &rarr; M-Value <strong class="blue-text">${ foundCardData.mvalue }</strong>`
+                    </strong> &rarr; M-Value <strong class="blue-text">${ foundCardData.mvalue }</strong>
+                    <a data-card="${ finalCardName }" data-addtodeck="${ deckListStructure.id }" data-zone="${ zone }" data-copies="0" class="text-sm cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.removefromdeck.title'|trans }} 1"><span class="icon-minus-circled"></span></a>`
                 });
                 deckListStructure.mvalue += Number.parseFloat(foundCardData.mvalue);
             }
@@ -1195,6 +1188,8 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
     ) {
         return {
             points: 0,
+            types: '',
+            mv: 0,
             status: 'unknown',
             imageurl: unknownImageUrl
         };
@@ -1204,7 +1199,9 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
     if ('name' in pointsListCard && pointsListCard.name === '((unknown))') {
         return {
             points: 0,
+            types: '',
             name: pointsListCard.name,
+            mv: 0,
             status: 'unknown',
             imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : unknownImageUrl
         };
@@ -1225,6 +1222,8 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
     ) {
         return {
             points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
+            types: pointsListCard.types ? pointsListCard.types : '',
+            mv: pointsListCard.mv ? pointsListCard.mv : 0,
             name: pointsListCard.name ? pointsListCard.name : cardName,
             status: 'unranked',
             imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : unknownImageUrl
@@ -1234,6 +1233,8 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
     if (updates?.updates?.[currentFormatChoiceValues.update]?.pointsList.cards[pointsListCard.name ? pointsListCard.name : cardName].firstprintedon > updates?.updates?.[currentFormatChoiceValues.update].startingAtTimestamp) {
         return {
             points: MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFormatChoiceValues, deckZone),
+            types: pointsListCard.types ? pointsListCard.types : '',
+            mv: pointsListCard.mv ? pointsListCard.mv : 0,
             name: pointsListCard.name ? pointsListCard.name : cardName,
             status: 'unranked',
             imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : unknownImageUrl
@@ -1317,6 +1318,8 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
 
     return {
         points: Number.parseInt(points),
+        types: pointsListCard.types ? pointsListCard.types : '',
+        mv: pointsListCard.mv ? pointsListCard.mv : 0,
         name: pointsListCard.name ? pointsListCard.name : cardName,
         imageurl: pointsListCard.imageurl ? pointsListCard.imageurl : unknownImageUrl,
         status: 'found'
@@ -1667,149 +1670,3 @@ function MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFor
     MTGPointsListModelV1UnrankedListCardPointsByContext[contextKey] = result;
     return result;
 }
-
-/**
- * Show card image under cursor when hovering links with a non-empty data-imageurl attribute.
- * Performance notes:
- * - uses pointer events (covers mouse + touch/pen)
- * - only runs move logic while a preview is active
- * - coalesces move events via requestAnimationFrame
- * - avoids repeated DOM queries/styles when nothing changes
- */
-document.addEventListener('DOMContentLoaded', () => {
-    /** @type {HTMLImageElement|null} */
-    let hoverImgEl = null;
-    /** @type {HTMLAnchorElement|null} */
-    let activeLinkEl = null;
-    /** @type {string} */
-    let activeUrl = '';
-
-    let rafId = 0;
-    let lastX = 0;
-    let lastY = 0;
-
-    const ensureHoverImg = () => {
-        if (hoverImgEl) return hoverImgEl;
-
-        hoverImgEl = document.createElement('img');
-        hoverImgEl.alt = '';
-        hoverImgEl.decoding = 'async';
-        hoverImgEl.loading = 'eager';
-        hoverImgEl.classList.add('mtg-card-hover-image');
-        hoverImgEl.style.position = 'fixed';
-        hoverImgEl.style.left = '0';
-        hoverImgEl.style.top = '0';
-        hoverImgEl.style.transform = 'translate3d(-9999px, -9999px, 0)';
-        hoverImgEl.style.pointerEvents = 'none';
-        hoverImgEl.style.zIndex = '999999';
-        hoverImgEl.style.maxWidth = '260px';
-        hoverImgEl.style.maxHeight = '360px';
-        hoverImgEl.style.background = '#111';
-        document.body.appendChild(hoverImgEl);
-
-        return hoverImgEl;
-    };
-
-    const hideHoverImg = () => {
-        activeLinkEl = null;
-        activeUrl = '';
-
-        if (rafId) {
-            cancelAnimationFrame(rafId);
-            rafId = 0;
-        }
-
-        if (hoverImgEl) {
-            hoverImgEl.style.transform = 'translate3d(-9999px, -9999px, 0)';
-        }
-    };
-
-    const scheduleReposition = () => {
-        if (!hoverImgEl || !activeLinkEl) return;
-        if (rafId) return;
-
-        rafId = requestAnimationFrame(() => {
-            rafId = 0;
-            if (!hoverImgEl || !activeLinkEl) return;
-
-            const offsetX = 14;
-            const offsetY = 18;
-
-            const rect = hoverImgEl.getBoundingClientRect();
-            const viewportW = window.innerWidth;
-            const viewportH = window.innerHeight;
-
-            let x = lastX + offsetX;
-            let y = lastY + offsetY;
-
-            // Keep inside viewport
-            if (x + rect.width > viewportW - 8) x = viewportW - rect.width - 8;
-            if (y + rect.height > viewportH - 8) y = viewportH - rect.height - 8;
-            if (x < 8) x = 8;
-            if (y < 8) y = 8;
-
-            hoverImgEl.style.transform = `translate3d(${ x }px, ${ y }px, 0)`;
-        });
-    };
-
-    document.addEventListener('pointerover', (e) => {
-        const target = e.target;
-        if (!(target instanceof Element)) return;
-
-        // Fast path: if the event target is itself a link, avoid closest()
-        const link = (target instanceof HTMLAnchorElement)
-            ? target
-            : target.closest('a[data-imageurl]');
-
-        if (!(link instanceof HTMLAnchorElement)) return;
-
-        const url = (link.getAttribute('data-imageurl') || '').trim();
-        if (!url) return;
-
-        // If already active on same link+url, do nothing
-        if (activeLinkEl === link && activeUrl === url) return;
-
-        const img = ensureHoverImg();
-        activeLinkEl = link;
-        activeUrl = url;
-
-        if (img.src !== url) {
-            img.src = url;
-        }
-
-        lastX = e.clientX;
-        lastY = e.clientY;
-        scheduleReposition();
-    }, true);
-
-    document.addEventListener('pointermove', (e) => {
-        if (!activeLinkEl || !hoverImgEl) return;
-
-        lastX = e.clientX;
-        lastY = e.clientY;
-        scheduleReposition();
-    }, { capture: true, passive: true });
-
-    document.addEventListener('pointerout', (e) => {
-        if (!activeLinkEl) return;
-
-        const target = e.target;
-        if (!(target instanceof Element)) return;
-
-        const fromLink = (target instanceof HTMLAnchorElement)
-            ? target
-            : target.closest('a[data-imageurl]');
-
-        if (fromLink !== activeLinkEl) return;
-
-        // If moving to another element inside the same link, keep showing
-        const related = e.relatedTarget;
-        if (related instanceof Node && activeLinkEl.contains(related)) return;
-
-        hideHoverImg();
-    }, true);
-
-    // Hide on scroll/blur to avoid "stuck" previews
-    window.addEventListener('scroll', hideHoverImg, { passive: true });
-    window.addEventListener('blur', hideHoverImg);
-});

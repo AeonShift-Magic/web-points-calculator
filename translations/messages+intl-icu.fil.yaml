@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Base Quadruples points'
                         help: 'Ang base points para sa card na ito sa Quadruples.'
+                    types:
+                        label: 'Mga Uri'
+                    oracletext:
+                        label: 'Teksto ng Oracle'
+                    maxcopies:
+                        label: 'Pinakamataas na kopya'
+                    partnertype:
+                        label: 'Kakayahan ng Kasosyo'
                 legends:
                     info: 'Detalye ng Point List Card'
             update:
@@ -783,7 +791,14 @@ front:
                             placeholder: '80'
                         points:
                             label: 'Mga Puntos'
+                        addtodeck:
+                            label: 'Deck'
+                            title: 'Idagdag sa iyong deck'
+                        removefromdeck:
+                            label: ''
+                            title: 'Alisin lahat mula sa iyong deck'
                 gotoform:
+                    back: 'Bumalik sa mga decklist'
                     text: 'Gamitin ang aming calculator'
                     title: 'Pumunta lang sa <strong>calculator</strong> form, kasama ang lahat ng pagpipilian.'
                 freeform:
@@ -1118,6 +1133,8 @@ front:
                 text: 'Aling Point List update ang dapat gamitin? Laging gamitin ang pinakabago maliban kung sinusuri ang lumang decklists.'
             previous:
                 text: '⬅️ Nakaraang tanong'
+        visuallist:
+            title: 'Visual na Listahan'
 global:
     actions:
         label: Mga aksyon
@@ -1314,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: Maglaro ng AeonShift Modern Highlander
                     subtitle: <strong>2 players</strong>, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>dalawang</strong> panalong games, <strong>Modern</strong> timeline
+    types:
+        artifact: Artifact
+        attraction: Attraction
+        battle: Battle
+        contraption: Contraption
+        creature: Creature
+        conspiracy: Conspiracy
+        enchantment: Enchantment
+        instant: Instant
+        land: Land
+        sorcery: Sorcery
+        sticker: Sticker
+        planeswalker: Planeswalker
+        tribal: Kindred
+        kinded: Kindred
 page:
     position:
         footer:
@@ -1344,3 +1376,4 @@ user:
             label: Administrator
         user:
             label: Regular User
+'': ''

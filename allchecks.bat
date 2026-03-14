@@ -5,4 +5,5 @@ call .\psalm.bat
 call .\phpstan.bat
 call .\security.bat
 call .\unit.bat
+call .\trans.bat
 @echo All checks completed.

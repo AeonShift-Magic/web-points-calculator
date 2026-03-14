@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Basis-Quadruples-Punkte'
                         help: 'Die Basispunkte für diese Karte in Quadruples.'
+                    types:
+                        label: 'Typen'
+                    oracletext:
+                        label: 'Oracle-Text'
+                    maxcopies:
+                        label: 'Maximale Kopien'
+                    partnertype:
+                        label: 'Partner-Fähigkeiten'
                 legends:
                     info: 'Punkte-Listen-Karten-Details'
             update:
@@ -783,7 +791,14 @@ front:
                             placeholder: '80'
                         points:
                             label: 'Punkte'
+                        addtodeck:
+                            label: 'Deck'
+                            title: 'Zu deinem Deck hinzufügen'
+                        removefromdeck:
+                            label: ''
+                            title: 'Alles aus deinem Deck entfernen'
                 gotoform:
+                    back: 'Zurück zu den Decklisten'
                     text: 'Unseren Rechner nutzen'
                     title: 'Gehen Sie einfach zum <strong>Rechner</strong>-Formular mit allen auswählbaren Optionen.'
                 freeform:
@@ -1118,6 +1133,8 @@ front:
                 text: 'Welches Punkte-Listen-Update soll verwendet werden? Verwenden Sie immer das neueste, außer Sie prüfen ältere Decklisten.'
             previous:
                 text: '⬅️ Vorherige Frage'
+        visuallist:
+            title: 'Visuelle Liste'
 global:
     actions:
         label: Aktionen
@@ -1314,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: AeonShift Modern Highlander spielen
                     subtitle: <strong>2 Spieler</strong>, <strong>20</strong> Leben, <strong>100-Karten</strong> Singleton, <strong>zwei</strong> gewonnene Spiele, <strong>Modern</strong>-Timeline
+    types:
+        artifact: Artefakt
+        attraction: Attraction
+        battle: Schlacht
+        contraption: Contraption
+        creature: Kreatur
+        conspiracy: Conspiracy
+        enchantment: Verzauberung
+        instant: Spontanzauber
+        land: Land
+        sorcery: Hexerei
+        sticker: Sticker
+        planeswalker: Planeswalker
+        tribal: Stammes
+        kinded: Stammes
 page:
     position:
         footer:
@@ -1344,3 +1376,4 @@ user:
             label: Administrator
         user:
             label: Standardnutzer
+'': ''

@@ -18,7 +18,7 @@
                     <span class="top-left"></span>
                     <span class="top-right"></span>
                     <span class="title">
-                        <span class="icon-ok"></span> {{ 'front.mtg.choose.links.gotoform.back'|trans }}
+                        <span class="icon-up-big"></span> {{ 'front.mtg.choose.links.gotoform.back'|trans }}
                     </span>
                     <span class="bottom-left"></span>
                     <span class="bottom-right"></span>
@@ -197,9 +197,9 @@
                                     </td>
                                     <td class="commander-budget font-bold text-lg" data-field="budget">0</td>
                                     <td>
-                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="1" data-zone="commandzone" class="btn btn-green text-sm addtodeck1 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 1"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 1</a>
-                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="2" data-zone="commandzone" class="btn btn-blue text-sm addtodeck2 cursor-pointer py-0! mt-1! mb-1! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 2"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 2</a>
-                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="3" data-zone="commandzone" class="btn btn-yellow text-sm addtodeck3 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 3"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 3</a>
+                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="1" data-zone="commandzone" data-copies="1" class="btn btn-green text-sm addtodeck1 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 1"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 1</a>
+                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="2" data-zone="commandzone" data-copies="1" class="btn btn-blue text-sm addtodeck2 cursor-pointer py-0! mt-1! mb-1! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 2"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 2</a>
+                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="3" data-zone="commandzone" data-copies="1" class="btn btn-yellow text-sm addtodeck3 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 3"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 3</a>
                                     </td>
                                     <td data-field="status"></td>
                                     <td>{{ ranking_decorator(commander.duelRank, 750) }}</td>

@@ -37,7 +37,11 @@
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.imageurl.label'|trans }}</th>
-                    <td>{{ source_card.imageURL }}</td>
+                    <td>
+                        <a href="{{ source_card.imageURL }}" target=_blank>{{ source_card.imageURL }}</a>
+                        <br>
+                        <img src="{{ source_card.imageURL }}" alt="{{ source_card.nameEN }}" width="300px" height="auto" class="mt-2">
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.scryfalluri.label'|trans }}</th>
@@ -103,6 +107,27 @@
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.manavalue.label'|trans }}</th>
                     <td>{{ source_card.manaValue }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.types.label'|trans }}</th>
+                    <td>{{ source_card.types }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.oracletext.label'|trans }}</th>
+                    <td>{{ source_card.oracleText }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.maxcopies.label'|trans }}</th>
+                    <td>{{ source_card.maxCopies }}</td>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.partnertype.label'|trans }}</th>
+                    <td>
+                        {{ source_card.partnerType|default('global.none.label'|trans) }}
+                        <br>
+                        (Background: {{ ('global.' ~ source_card.chooseABackground|default(0) ~ '.label')|trans }})
+                        <br>
+                        (Doctor: {{ ('global.' ~ source_card.aDoctor|default(0) ~ '.label')|trans }})
+                    </td>
                 </tr>
                 <tr>
                     <th colspan="2" class="bg-slate-400"></th>

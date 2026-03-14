@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Základní body Quadruples'
                         help: 'Základní body pro tuto kartu v Quadruples.'
+                    types:
+                        label: 'Typy'
+                    oracletext:
+                        label: 'Text Oracle'
+                    maxcopies:
+                        label: 'Maximální počet kopií'
+                    partnertype:
+                        label: 'Schopnosti partnera'
                 legends:
                     info: 'Detaily karty seznamu bodů'
             update:
@@ -783,7 +791,14 @@ front:
                             placeholder: '80'
                         points:
                             label: 'Body'
+                        addtodeck:
+                            label: 'Balíček'
+                            title: 'Přidat do vašeho balíčku'
+                        removefromdeck:
+                            label: ''
+                            title: 'Odstranit vše z vašeho balíčku'
                 gotoform:
+                    back: 'Zpět k seznamům balíčků'
                     text: 'Použít naši kalkulačku'
                     title: 'Jednoduše přejděte do formuláře <strong>kalkulačky</strong> se všemi možnostmi výběru.'
                 freeform:
@@ -1118,6 +1133,8 @@ front:
                 text: 'Která aktualizace seznamu bodů se má použít? Vždy používejte nejnovější, pokud nekontrolujete starší decklisty.'
             previous:
                 text: '⬅️ Předchozí otázka'
+        visuallist:
+            title: 'Vizualní seznam'
 global:
     actions:
         label: Akce
@@ -1314,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: Hrát AeonShift Modern Highlander
                     subtitle: <strong>2 hráči</strong>, <strong>20</strong> životů, Singleton <strong>100 karet</strong>, <strong>dvě</strong> vítězné hry, timeline <strong>Modern</strong>
+    types:
+        artifact: Artifact
+        attraction: Attraction
+        battle: Battle
+        contraption: Contraption
+        creature: Creature
+        conspiracy: Conspiracy
+        enchantment: Enchantment
+        instant: Instant
+        land: Land
+        sorcery: Sorcery
+        sticker: Sticker
+        planeswalker: Planeswalker
+        tribal: Kindred
+        kinded: Kindred
 page:
     position:
         footer:
@@ -1344,3 +1376,4 @@ user:
             label: Administrátor
         user:
             label: Běžný uživatel
+'': ''

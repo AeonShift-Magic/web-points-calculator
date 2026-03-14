@@ -1,0 +1,146 @@
+
+/**
+ * Show card image under cursor when hovering links with a non-empty data-imageurl attribute.
+ * Performance notes:
+ * - uses pointer events (covers mouse + touch/pen)
+ * - only runs move logic while a preview is active
+ * - coalesces move events via requestAnimationFrame
+ * - avoids repeated DOM queries/styles when nothing changes
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    /** @type {HTMLImageElement|null} */
+    let hoverImgEl = null;
+    /** @type {HTMLAnchorElement|null} */
+    let activeLinkEl = null;
+    /** @type {string} */
+    let activeUrl = '';
+
+    let rafId = 0;
+    let lastX = 0;
+    let lastY = 0;
+
+    const ensureHoverImg = () => {
+        if (hoverImgEl) return hoverImgEl;
+
+        hoverImgEl = document.createElement('img');
+        hoverImgEl.alt = '';
+        hoverImgEl.decoding = 'async';
+        hoverImgEl.loading = 'eager';
+        hoverImgEl.classList.add('mtg-card-hover-image');
+        hoverImgEl.style.position = 'fixed';
+        hoverImgEl.style.left = '0';
+        hoverImgEl.style.top = '0';
+        hoverImgEl.style.transform = 'translate3d(-9999px, -9999px, 0)';
+        hoverImgEl.style.pointerEvents = 'none';
+        hoverImgEl.style.zIndex = '999999';
+        hoverImgEl.style.maxWidth = '260px';
+        hoverImgEl.style.maxHeight = '360px';
+        hoverImgEl.style.background = '#111';
+        document.body.appendChild(hoverImgEl);
+
+        return hoverImgEl;
+    };
+
+    const hideHoverImg = () => {
+        activeLinkEl = null;
+        activeUrl = '';
+
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = 0;
+        }
+
+        if (hoverImgEl) {
+            hoverImgEl.style.transform = 'translate3d(-9999px, -9999px, 0)';
+        }
+    };
+
+    const scheduleReposition = () => {
+        if (!hoverImgEl || !activeLinkEl) return;
+        if (rafId) return;
+
+        rafId = requestAnimationFrame(() => {
+            rafId = 0;
+            if (!hoverImgEl || !activeLinkEl) return;
+
+            const offsetX = 14;
+            const offsetY = 18;
+
+            const rect = hoverImgEl.getBoundingClientRect();
+            const viewportW = window.innerWidth;
+            const viewportH = window.innerHeight;
+
+            let x = lastX + offsetX;
+            let y = lastY + offsetY;
+
+            // Keep inside viewport
+            if (x + rect.width > viewportW - 8) x = viewportW - rect.width - 8;
+            if (y + rect.height > viewportH - 8) y = viewportH - rect.height - 8;
+            if (x < 8) x = 8;
+            if (y < 8) y = 8;
+
+            hoverImgEl.style.transform = `translate3d(${ x }px, ${ y }px, 0)`;
+        });
+    };
+
+    document.addEventListener('pointerover', (e) => {
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+
+        // Fast path: if the event target is itself a link, avoid closest()
+        const link = (target instanceof HTMLAnchorElement)
+            ? target
+            : target.closest('[data-imageurl]');
+
+        if (!(link instanceof HTMLElement)) return;
+
+        const url = (link.getAttribute('data-imageurl') || '').trim();
+        if (!url) return;
+
+        // If already active on same link+url, do nothing
+        if (activeLinkEl === link && activeUrl === url) return;
+
+        const img = ensureHoverImg();
+        activeLinkEl = link;
+        activeUrl = url;
+
+        if (img.src !== url) {
+            img.src = url;
+        }
+
+        lastX = e.clientX;
+        lastY = e.clientY;
+        scheduleReposition();
+    }, true);
+
+    document.addEventListener('pointermove', (e) => {
+        if (!activeLinkEl || !hoverImgEl) return;
+
+        lastX = e.clientX;
+        lastY = e.clientY;
+        scheduleReposition();
+    }, { capture: true, passive: true });
+
+    document.addEventListener('pointerout', (e) => {
+        if (!activeLinkEl) return;
+
+        const target = e.target;
+        if (!(target instanceof Element)) return;
+
+        const fromLink = (target instanceof HTMLAnchorElement)
+            ? target
+            : target.closest('[data-imageurl]');
+
+        if (fromLink !== activeLinkEl) return;
+
+        // If moving to another element inside the same link, keep showing
+        const related = e.relatedTarget;
+        if (related instanceof Node && activeLinkEl.contains(related)) return;
+
+        hideHoverImg();
+    }, true);
+
+    // Hide on scroll/blur to avoid "stuck" previews
+    window.addEventListener('scroll', hideHoverImg, { passive: true });
+    window.addEventListener('blur', hideHoverImg);
+});

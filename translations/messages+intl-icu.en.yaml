@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Base Quadruples points'
                         help: 'The Base points for this card in Quadruples.'
+                    types:
+                        label: 'Types'
+                    oracletext:
+                        label: 'Oracle Text'
+                    maxcopies:
+                        label: 'Maximum copies'
+                    partnertype:
+                        label: 'Partner Abilities'
                 legends:
                     info: 'Point List Card details'
             update:
@@ -786,6 +794,9 @@ front:
                         addtodeck:
                             label: 'Deck'
                             title: 'Add to your deck'
+                        removefromdeck:
+                            label: ''
+                            title: 'Remove all from your deck'
                 gotoform:
                     text: 'Use our calculator'
                     back: 'Back to the decklists'
@@ -1118,10 +1129,12 @@ front:
                     label: 'Yes'
                     help: 'You''playing original cards only, but you have a money constraint on decks, and want to use our M-value for that. <em class="comingsoon">Coming Soon!</em>'
             question8:
-                label: 'Point List Update to use:'
+                label: 'Point List Update in use:'
                 text: 'Which Point List update should be used? Always use the latest one unless checking past decklists.'
             previous:
                 text: '⬅️ Previous question'
+        visuallist:
+            title: 'Visual List'
 global:
     actions:
         label: Actions
@@ -1318,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: Play AeonShift Modern Highlander
                     subtitle: <strong>2</strong> players, <strong>20</strong> life, <strong>100-card</strong> Singleton, <strong>two</strong> winning games, <strong>Modern</strong> timeline
+    types:
+        artifact: Artifact
+        attraction: Attraction
+        battle: Battle
+        contraption: Contraption
+        creature: Creature
+        conspiracy: Conspiracy
+        enchantment: Enchantment
+        instant: Instant
+        land: Land
+        sorcery: Sorcery
+        sticker: Sticker
+        planeswalker: Planeswalker
+        tribal: Kindred
+        kinded: Kindred
 page:
     position:
         footer:
@@ -1348,3 +1376,4 @@ user:
             label: Administrator
         user:
             label: Regular User
+'': ''

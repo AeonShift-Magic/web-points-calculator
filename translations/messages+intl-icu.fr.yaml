@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Points Base Quadruples'
                         help: 'Les points de base de cette carte en Quadruples.'
+                    types:
+                        label: 'Types'
+                    oracletext:
+                        label: 'Texte Oracle'
+                    maxcopies:
+                        label: 'Nombre maximum'
+                    partnertype:
+                        label: 'Capacités de partenaire'
                 legends:
                     info: 'Détails de la carte de la Point List'
             update:
@@ -773,7 +781,14 @@ front:
                             placeholder: '80'
                         points:
                             label: 'Points'
+                        addtodeck:
+                            label: 'Deck'
+                            title: 'Ajouter à votre deck'
+                        removefromdeck:
+                            label: ''
+                            title: 'Supprimer tout de votre deck'
                 gotoform:
+                    back: 'Retour aux decklists'
                     text: 'Utiliser notre calculateur'
                     title: 'Accéder simplement au formulaire du <strong>calculateur</strong>, avec toutes les options à choisir.'
                 freeform:
@@ -1106,6 +1121,8 @@ front:
                 text: 'Quelle mise à jour de liste de points doit être utilisée ? Utilisez toujours la plus récente sauf pour analyser d’anciens decks.'
             previous:
                 text: '⬅️ Question précédente'
+        visuallist:
+            title: 'Liste visuelle'
 global:
     actions:
         label: Actions
@@ -1302,6 +1319,22 @@ mtg:
                     label: Modern Highlander
                     title: Jouer à AeonShift Modern Highlander
                     subtitle: <strong>2 joueurs</strong>, <strong>20</strong> points de vie, Singleton <strong>100 cartes</strong>, <strong>deux</strong> manches gagnantes, chronologie <strong>Modern</strong>
+    types:
+        artifact: Artefact
+        attraction: Attraction
+        battle: Bataille
+        contraption: Contraption
+        creature: Créature
+        conspiracy: Conspiracy
+        enchantment: Enchantement
+        instant: Éphémère
+        land: Terrain
+        sorcery: Rituel
+        sticker: Sticker
+        planeswalker: Planeswalker
+        tribal: De Clan
+        kinded: De clan
+
 page:
     position:
         footer:
@@ -1363,3 +1396,4 @@ customblock:
             name: Légal (EN 🇬🇧)
         fr:
             name: Légal (FR 🇫🇷)
+'': ''

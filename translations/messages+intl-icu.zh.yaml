@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: '基础 Quadruples 点数'
                         help: '该卡在 Quadruples 中的基础点数。'
+                    types:
+                        label: '类型'
+                    oracletext:
+                        label: 'Oracle文本'
+                    maxcopies:
+                        label: '最大数量'
+                    partnertype:
+                        label: '伙伴能力'
                 legends:
                     info: '积分表卡牌详情'
             update:
@@ -783,7 +791,14 @@ front:
                             placeholder: '80'
                         points:
                             label: '积分'
+                        addtodeck:
+                            label: '套牌'
+                            title: '添加到你的套牌'
+                        removefromdeck:
+                            label: ''
+                            title: '从你的套牌中移除所有'
                 gotoform:
+                    back: '返回牌组列表'
                     text: '使用计算器'
                     title: '直接前往 <strong>calculator</strong> 表单，那里有所有可选项。'
                 freeform:
@@ -1118,6 +1133,8 @@ front:
                 text: '应使用哪次积分表更新？除非你在核对旧牌表，否则总是使用最新版本。'
             previous:
                 text: '⬅️ 上一题'
+        visuallist:
+            title: '可视化列表'
 global:
     actions:
         label: 操作
@@ -1314,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: 游玩 AeonShift Modern Highlander
                     subtitle: <strong>2</strong> 名玩家，<strong>20</strong> 生命，<strong>100 张</strong> Singleton，<strong>两</strong>局胜利，<strong>Modern</strong> 时间线
+    types:
+        artifact: '神器'
+        attraction: Attraction
+        battle: '战役 '
+        contraption: Contraption
+        creature: '生物'
+        conspiracy: Conspiracy
+        enchantment: '结界'
+        instant: '瞬间'
+        land: '地'
+        sorcery: '法术'
+        sticker: Sticker
+        planeswalker: '鹏洛客'
+        tribal: '亲属'
+        kinded: '亲属'
 page:
     position:
         footer:
@@ -1344,3 +1376,4 @@ user:
             label: 管理员
         user:
             label: 普通用户
+'': ''

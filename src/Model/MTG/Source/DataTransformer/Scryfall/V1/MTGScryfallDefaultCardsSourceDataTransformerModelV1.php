@@ -554,8 +554,26 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
      */
     private function collectLowestAveragePriceByNameFromRawScryfallCard(array &$lowestAveragePricesByName, array $card): void
     {
-        // Discard this card as a price candidate if it doesn't have a name or is a gold-bordered card (exception to prices, as they're all cheaper illegal versions of the same card)
+        // Discard this card as a price candidate if it doesn't have a name
         if (! isset($card['name']) || ! is_string($card['name']) || $card['name'] === '') {
+            return;
+        }
+
+        // Discard this card as a price candidate if it is a gold-bordered card (exception to prices, as they're all cheaper illegal versions of the same card)'
+        if (isset($card['border_color']) && ($card['border_color'] === 'gold' || $card['border_color'] === 'yellow')) {
+            return;
+        }
+
+        // Discard this card if it is from a very, overly rare set that only has reprints and has unstable prices
+        $set = isset($card['set']) && is_string($card['set']) ? $card['set'] : '';
+        // Note: we're still including the gold-bordered sets, as a double-failsafe
+        if (in_array($set, ['sum', 'ced', 'cei', 'wc97', 'wc98', 'wc99', 'wc00', 'wc01', 'wc02', 'wc03', 'wc04', '30a', 'pjjt'], true)) {
+            return;
+        }
+
+        // Also exclude by Scryfall set type
+        $setType = isset($card['set_type']) && is_string($card['set_type']) ? $card['set_type'] : '';
+        if (in_array($setType, ['treasure_chest', 'memorabilia'], true)) {
             return;
         }
 
@@ -629,7 +647,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             ];
         }
 
-        if (isset($card['border_color'], $card['set_type']) && $card['border_color'] !== 'gold' && ! in_array($card['set_type'], ['alchemy', 'token', 'memorabilia', 'minigame'], true)) {
+        if (isset($card['border_color'], $card['set_type']) && ! in_array($card['set_type'], ['alchemy', 'token', 'memorabilia', 'minigame'], true)) {
             // AVG
             if (
                 bccomp($avg, '0.00', 2) === 1
@@ -1300,6 +1318,11 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             if ($existingValue !== $newValue) {
                 $updateData[$field] = $newValue;
             }
+
+            // Don't change imageurl if it's empty
+            if ($field === 'image_url' && ((empty($newValue) && ! empty($existingDBCard[$field])) || (isset($currentSourceCard['digital']) && (bool)$currentSourceCard['digital'] === true))) {
+                unset($updateData[$field]);
+            }
         }
 
         // Only add updated_at timestamp if there are actual changes
@@ -1474,7 +1497,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         // Skip cards with lang != en and printed_name != name.
         // to ensure that the card image is in english.
-        if(isset($card['lang'], $card['printed_name']) && $card['lang'] !== 'en' && $card['printed_name'] !== $card['name']) {
+        if (isset($card['lang'], $card['printed_name']) && $card['lang'] !== 'en' && $card['printed_name'] !== $card['name']) {
             return null;
         }
 
@@ -1516,14 +1539,20 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         $scryfallUri = $card['scryfall_uri'] ?? '';
         $releasedAt = $card['released_at'] ?? '';
-        // The image URL is the main image from Scryfall (normal size), otherwise the first face image if defined
-        $imageURL = (array_key_exists('image_uris', $card) && is_array($card['image_uris']) && ! empty($card['image_uris']['normal']))
-            ? $card['image_uris']['normal']
-            : (
-                (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && array_key_exists('image_uris', $card['card_faces'][0]) && is_array($card['card_faces'][0]['image_uris']) && ! empty($card['card_faces'][0]['image_uris']['normal'])) // @phpstan-ignore-line
-                ? $card['card_faces'][0]['image_uris']['normal']
-                : ''
-            );
+        $borderColor = isset($card['border_color']) && is_string($card['border_color']) ? $card['border_color'] : '';
+
+        if ($borderColor !== 'gold' && $borderColor !== 'yellow') {
+            // The image URL is the main image from Scryfall (normal size), otherwise the first face image if defined
+            $imageURL = (array_key_exists('image_uris', $card) && is_array($card['image_uris']) && ! empty($card['image_uris']['normal']))
+                ? $card['image_uris']['normal']
+                : (
+                    (isset($card['card_faces'][0]) && is_array($card['card_faces'][0]) && array_key_exists('image_uris', $card['card_faces'][0]) && is_array($card['card_faces'][0]['image_uris']) && ! empty($card['card_faces'][0]['image_uris']['normal'])) // @phpstan-ignore-line
+                    ? $card['card_faces'][0]['image_uris']['normal']
+                    : ''
+                );
+        } else {
+            $imageURL = '';
+        }
 
         // Invalid color identity entry, skip the card
         if (array_any($colorIdentity, static fn ($identity) => ! is_string($identity))) {

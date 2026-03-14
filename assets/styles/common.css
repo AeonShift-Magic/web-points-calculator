@@ -621,6 +621,10 @@ select option:checked {
     display: none;
 }
 
+.dark-background {
+    background-color: var(--theme-neutral-dark-hover);
+}
+
 .dark-alt-background {
     background-color: var(--theme-neutral-dark-alt);
     background-image: url('../images/section-bg.jpg');
@@ -2466,6 +2470,109 @@ iframe {
     content: '󨁐';
 }
 
+/* '' */
+/*noinspection ALL*/
+.icon-down-big:before {
+    content: '\e82c';
+}
+
+/* '' */
+/*noinspection ALL*/
+.icon-left-big:before {
+    content: '\e82d';
+}
+
+/* '' */
+/*noinspection ALL*/
+.icon-right-big:before {
+    content: '\e82e';
+}
+
+/* '' */
+/*noinspection ALL*/
+.icon-up-big:before {
+    content: '\e82f';
+}
+
+/* '' */
+/*noinspection ALL*/
+.icon-minus-circled:before {
+    content: '\e829';
+}
+
+.visual-list-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 11px;
+    align-content: space-evenly;
+    align-items: start;
+}
+
+.decklist-card-container img {
+    max-width: 185px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.decklist-card-container figure {
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.decklist-card-container figcaption {
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.decklist-card-container img {
+    max-width: 180px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 5px var(--theme-neutral-dark);
+    transition: all 0.2s ease-in-out;
+}
+
+.decklist-card-container img:hover {
+    box-shadow: 0 0 5px var(--theme-neutral-light);
+}
+
+.visual-list-type-container {
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.decklist-card-container {
+    max-width: 180px;
+}
+
+.visual-list-zone-container h4 {
+    padding: 1.5em 1em 0.5em 1em;
+}
+
+.card-copies {
+    position: absolute;
+    left: 0;
+    top: 220px;
+    border-radius: 500px;
+    background-color: var(--theme-blue-dark);
+    width: 2em;
+    height: 2em;
+    text-align: center;
+    line-height: 2em;
+    opacity: 0.88;
+    box-shadow: 0 4px 3px 2px var(--theme-neutral-dark);
+    font-weight: bold;
+    font-size: 0.85em;
+}
+
+.card-points {
+    width: 100%;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 0.4em;
+}
+
 /*noinspection ALL*/
 .pulse, .pulse1 {
     animation: pulse-glow 2.1s infinite;
@@ -2695,7 +2802,6 @@ iframe {
     position: absolute;
     top: 0;
     width: 180%;
-    will-change: transform;
 }
 
 .format-help {
@@ -2717,7 +2823,7 @@ iframe {
     transform-style: preserve-3d;
     transition: 0.15s all ease-out;
     width: 350px;
-    will-change: transform, box-shadow;
+    will-change: box-shadow;
 }
 
 .format-card:hover {
@@ -3290,9 +3396,15 @@ iframe {
 }
 
 @keyframes aeonshift-glow {
-    0%   { box-shadow: 0 0 0 var(--theme-green-light); }
-    50%  { box-shadow: 0 0 25px var(--theme-green-light); }
-    100% { box-shadow: 0 0 0 var(--theme-green-light); }
+    0% {
+        box-shadow: 0 0 0 var(--theme-green-light);
+    }
+    50% {
+        box-shadow: 0 0 25px var(--theme-green-light);
+    }
+    100% {
+        box-shadow: 0 0 0 var(--theme-green-light);
+    }
 }
 
 /*noinspection ALL*/

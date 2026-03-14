@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Punti base Quadruples'
                         help: 'I punti base per questa carta in Quadruples.'
+                    types:
+                        label: 'Tipi'
+                    oracletext:
+                        label: 'Testo Oracle'
+                    maxcopies:
+                        label: 'Copie massime'
+                    partnertype:
+                        label: 'Abilità del partner'
                 legends:
                     info: 'Dettagli carta lista punti'
             update:
@@ -783,7 +791,14 @@ front:
                             placeholder: '80'
                         points:
                             label: 'Punti'
+                        addtodeck:
+                            label: 'Mazzo'
+                            title: 'Aggiungi al tuo mazzo'
+                        removefromdeck:
+                            label: ''
+                            title: 'Rimuovi tutto dal tuo mazzo'
                 gotoform:
+                    back: 'Torna alle liste dei mazzi'
                     text: 'Usa il nostro calcolatore'
                     title: 'Vai semplicemente al modulo del <strong>calcolatore</strong>, con tutte le opzioni tra cui scegliere.'
                 freeform:
@@ -1118,6 +1133,8 @@ front:
                 text: 'Quale aggiornamento della lista punti dovrebbe essere usato? Usa sempre l’ultimo salvo che tu stia controllando decklist passate.'
             previous:
                 text: '⬅️ Domanda precedente'
+        visuallist:
+            title: 'Lista Visiva'
 global:
     actions:
         label: Azioni
@@ -1314,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: Gioca AeonShift Modern Highlander
                     subtitle: <strong>2 giocatori</strong>, <strong>20</strong> vite, Singleton <strong>100 carte</strong>, <strong>due</strong> partite vinte, timeline <strong>Modern</strong>
+    types:
+        artifact: Artefatto
+        attraction: Attraction
+        battle: Battaglia
+        contraption: Contraption
+        creature: Creatura
+        conspiracy: Conspiracy
+        enchantment: Incantesimo
+        instant: Istantaneo
+        land: Terra
+        sorcery: Stregoneria
+        sticker: Sticker
+        planeswalker: Planeswalker
+        tribal: Affine
+        kinded: Affine
 page:
     position:
         footer:
@@ -1344,3 +1376,4 @@ user:
             label: Amministratore
         user:
             label: Utente standard
+'': ''

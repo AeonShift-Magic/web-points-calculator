@@ -326,6 +326,14 @@ admin:
                     pointsbasequadruples:
                         label: 'Base Quadruples のポイント'
                         help: 'Quadruples におけるこのカードのベースポイント。'
+                    types:
+                        label: 'タイプ'
+                    oracletext:
+                        label: 'オラクルテキスト'
+                    maxcopies:
+                        label: '最大枚数'
+                    partnertype:
+                        label: 'パートナー能力'
                 legends:
                     info: 'ポイントリストカードの詳細'
             update:
@@ -783,7 +791,14 @@ front:
                             placeholder: '80'
                         points:
                             label: 'ポイント'
+                        addtodeck:
+                            label: 'デッキ'
+                            title: 'あなたのデッキに追加'
+                        removefromdeck:
+                            label: ''
+                            title: 'デッキからすべて削除'
                 gotoform:
+                    back: 'デッキリストに戻る'
                     text: '計算機を使う'
                     title: 'すべての選択肢がある <strong>calculator</strong> フォームへ進んでください。'
                 freeform:
@@ -1118,6 +1133,8 @@ front:
                 text: 'どのポイントリスト更新を使いますか？過去のデッキリストを確認する場合を除き、常に最新を使用してください。'
             previous:
                 text: '⬅️ 前の質問'
+        visuallist:
+            title: 'ビジュアルリスト'
 global:
     actions:
         label: アクション
@@ -1314,6 +1331,21 @@ mtg:
                     label: Modern Highlander
                     title: AeonShift Modern Highlander をプレイ
                     subtitle: <strong>2人</strong>、<strong>20</strong>ライフ、Singleton<strong>100枚</strong>、<strong>2</strong>本先取、タイムライン<strong>Modern</strong>
+    types:
+        artifact: 'アーティファクト'
+        attraction: Attraction
+        battle: 'バトル'
+        contraption: Contraption
+        creature: 'クリーチャー'
+        conspiracy: Conspiracy
+        enchantment: 'エンチャント'
+        instant: 'インスタント'
+        land: '土地'
+        sorcery: 'ソーサリー'
+        sticker: Sticker
+        planeswalker: 'プレインズウォーカー'
+        tribal: '同族'
+        kinded: '同族'
 page:
     position:
         footer:
@@ -1344,3 +1376,4 @@ user:
             label: 管理者
         user:
             label: 一般ユーザー
+'': ''

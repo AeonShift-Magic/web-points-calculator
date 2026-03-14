@@ -59,12 +59,12 @@
 
     {# Format choice quiz #}
     {{ include('front/mtg/points/_format_choice_quiz.html.twig') }}
-
 {% endblock %}
 
 {% block endbody %}
     <script>{{ include('front/mtg/points/_vanilla_tilt.js.twig') }}</script>
     <script>{{ include('front/mtg/points/_datalist.js.twig') }}</script>
+    <script>{{ include('front/mtg/points/_imagehover.js.twig') }}</script>
     {# Inline the calculator JavaScript #}
     <script>{{ include('front/mtg/points/_pointslists.js.twig') }}</script>
     <script async>{{ include('front/mtg/points/_calculator_js.js.twig') }}</script>
