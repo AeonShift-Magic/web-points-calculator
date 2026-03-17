@@ -68,6 +68,22 @@ let typesOrder = {
     contraption: '{{ 'mtg.types.contraption'|trans|raw }}'
 };
 
+/**
+ * Escape a string for safe inclusion in an HTML attribute.
+ *
+ * @param {*} v
+ *
+ * @returns {string}
+ */
+function escapeHtmlAttr(v) {
+    return String(v ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('calculator-form');
     if (!root) {
@@ -2031,21 +2047,6 @@ document.addEventListener('DOMContentLoaded', () => {
         mvalue: checkedByGroup.mvalue?.value,
         update: updateSelectEl?.value
     });
-
-    /**
-     * Escape a string for safe inclusion in an HTML attribute.
-     *
-     * @param {*} v
-     *
-     * @returns {string}
-     */
-    function escapeHtmlAttr(v) {
-        return String(v ?? '')
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-    }
 
     window.AeonShiftCalculator = window.AeonShiftCalculator || {};
     window.AeonShiftCalculator.getCurrentFormatChoiceValues = getCurrentFormatChoiceValues;
