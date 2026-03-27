@@ -1027,6 +1027,8 @@ front:
                         help: 'Your commander is ranked in the current Point List.'
                 start:
                     label: 'Start adding cards to your decklist on the left, using our "Add a Card" form, or by pasting a decklist from another site in the text zone on the left while following instructions below.'
+                share:
+                    label: 'Share the decklist(s)'
             decklist:
                 addcard:
                     label: 'Add a card'

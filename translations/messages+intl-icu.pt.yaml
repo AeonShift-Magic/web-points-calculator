@@ -1027,6 +1027,8 @@ front:
                         help: 'O seu commander está classificado na Lista de Pontos atual.'
                 start:
                     label: 'Comece a adicionar cartas à sua decklist à esquerda usando o nosso formulário "Adicionar uma carta", ou colando uma decklist de outro site na área de texto à esquerda seguindo as instruções abaixo.'
+                share:
+                    label: 'Compartilhar a(s) decklist(s)'
             decklist:
                 addcard:
                     label: 'Adicionar uma carta'

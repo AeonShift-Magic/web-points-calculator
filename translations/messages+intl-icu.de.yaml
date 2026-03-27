@@ -1027,6 +1027,8 @@ front:
                         help: 'Ihr Commander ist in der aktuellen Punkte-Liste gerankt.'
                 start:
                     label: 'Beginnen Sie links, Karten zu Ihrer Deckliste hinzuzufügen – mit unserem Formular „Karte hinzufügen“ – oder indem Sie eine Deckliste von einer anderen Website in das Textfeld links einfügen und den Anweisungen unten folgen.'
+                share:
+                    label: 'Deckliste(n) teilen'
             decklist:
                 addcard:
                     label: 'Karte hinzufügen'

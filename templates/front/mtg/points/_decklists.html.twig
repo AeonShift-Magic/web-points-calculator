@@ -17,10 +17,10 @@
 
                     <div class="flex flex-row items-center justify-around flex-wrap w-full">
                         <a data-action="choose-commander-incentive" class="btn btn-blue mb-2 mt-4 text-xl" href="#choose-commander">
-                            <span class="icon-diamond mr-3"></span> {{ 'front.mtg.choose.links.choosecommander.text'|trans }}
+                            <span class="icon-diamond mr-1"></span> {{ 'front.mtg.choose.links.choosecommander.text'|trans }}
                         </a>
                         <a data-action="choose-cards-incentive" class="btn btn-blue mb-2 mt-4 text-xl" href="#card-rankings">
-                            <span class="icon-docs mr-3"></span> {{ 'front.mtg.choose.links.viewpoints.text'|trans }}
+                            <span class="icon-docs mr-1"></span> {{ 'front.mtg.choose.links.viewpoints.text'|trans }}
                         </a>
                     </div>
 
@@ -121,24 +121,31 @@
                         <span class="icon-chart-bar mr-2"></span> {{ ('front.mtg.form.results.decklist' ~ i ~ '.label')|trans }}
                     </div>
 
-                    <div class="dark-alt-background flex flex-col my-2 text-lg w-full rounded-lg p-4">
-                        <div class="text-xl w-full green-text" id="decklist{{ i }}-start">
-                            <span class="icon-thumbs-up-alt m-0"></span> {{ 'front.mtg.form.results.start.label'|trans|raw }}
-                        </div>
+                    <div class="dark-alt-background flex flex-col lg:flex-row my-2 text-lg w-full rounded-lg p-4">
+                        <div class="w-full lg:w-3/4 flex flex-col justify-start items-start">
+                            <div class="text-xl w-full green-text" id="decklist{{ i }}-start">
+                                <span class="icon-thumbs-up-alt m-0"></span> {{ 'front.mtg.form.results.start.label'|trans|raw }}
+                            </div>
 
-                        <div class="text-xl w-full green-text hidden" id="decklist{{ i }}-legal" data-decklist-legal="{{ i }}">
-                            <span class="icon-ok m-0"></span> {{ 'front.mtg.form.results.legal.yes.label'|trans|raw }}
-                            <br>
-                            <a class="btn btn-green cursor-pointer text-base mt-2" data-class="decklist-download-link" data-target="decklist{{ i }}" title="{{ 'front.mtg.form.results.legal.download.label.link.label'|trans|e('html_attr') }}">
-                                <span class="icon-share"></span> {{ 'front.mtg.form.results.legal.download.label.link.label'|trans }}
+                            <div class="text-xl w-full green-text hidden" id="decklist{{ i }}-legal" data-decklist-legal="{{ i }}">
+                                <span class="icon-ok m-0"></span> {{ 'front.mtg.form.results.legal.yes.label'|trans|raw }}
+                                <br>
+                                <a class="btn btn-green cursor-pointer text-base mt-2" data-class="decklist-download-link" data-target="decklist{{ i }}" title="{{ 'front.mtg.form.results.legal.download.label.link.label'|trans|e('html_attr') }}">
+                                    <span class="icon-download-cloud mr-1"></span> {{ 'front.mtg.form.results.legal.download.label.link.label'|trans }}
+                                </a>
+                            </div>
+
+                            <div class="text-xl w-full red-text hidden" id="decklist{{ i }}-illegal" data-decklist-illegal="{{ i }}">
+                                <span class="icon-cancel mr-1"></span> {{ 'front.mtg.form.results.legal.no.label'|trans|raw }}
+                            </div>
+
+                            <div class="text-xl w-full mt-2 red-text decklist-errors hidden" id="decklist{{ i }}-errors" data-decklist-errors="{{ i }}"></div>
+                        </div>
+                        <div class="w-full lg:w-1/4 flex flex-col justify-center items-center">
+                            <a class="btn btn-blue cursor-pointer text-base" data-sharedecklists="" title="{{ 'front.mtg.form.results.share.label'|trans|e('html_attr') }}">
+                                <span class="icon-clone mr-1"></span> {{ 'front.mtg.form.results.share.label'|trans }}
                             </a>
                         </div>
-
-                        <div class="text-xl w-full red-text hidden" id="decklist{{ i }}-illegal" data-decklist-illegal="{{ i }}">
-                            <span class="icon-cancel"></span> {{ 'front.mtg.form.results.legal.no.label'|trans|raw }}
-                        </div>
-
-                        <div class="text-xl w-full mt-2 red-text decklist-errors hidden" id="decklist{{ i }}-errors" data-decklist-errors="{{ i }}"></div>
                     </div>
 
                     <div class="text-xl inline-flex w-full mt-6 mb-2 blue-text uppercase">
@@ -312,7 +319,9 @@
                                 <h4 class="green-text">{{ ('front.mtg.form.results.breakdown.cardzones.' ~ zone)|trans }}</h4>
                                 {% for maintype in ['creature', 'planeswalker', 'battle', 'conspiracy', 'sticker', 'attraction', 'contraption', 'artifact', 'enchantment', 'sorcery', 'instant', 'land'] %}
                                     <fieldset class="visual-list-type-container dark-alt-background hidden" data-type="{{ maintype }}">
-                                        <legend class="blue-text">{{ maintype }} <span data-type-total="{{ maintype }}"></span></legend>
+                                        <legend class="blue-text">{{ maintype }}
+                                            <span data-type-total="{{ maintype }}"></span>
+                                        </legend>
                                         <div class="visual-list-cards-container"></div>
                                     </fieldset>
                                 {% endfor %}

@@ -1027,6 +1027,8 @@ front:
                         help: 'Váš commander je hodnocen v aktuálním seznamu bodů.'
                 start:
                     label: 'Začněte přidávat karty do decklistu vlevo pomocí našeho formuláře „Přidat kartu“, nebo vložením decklistu z jiného webu do textové oblasti vlevo podle pokynů níže.'
+                share:
+                    label: 'Sdílet decklist(y)'
             decklist:
                 addcard:
                     label: 'Přidat kartu'

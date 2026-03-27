@@ -1027,6 +1027,8 @@ front:
                         help: 'Ranked ang commander mo sa kasalukuyang Point List.'
                 start:
                     label: 'Simulan ang pagdagdag ng cards sa decklist mo sa kaliwa gamit ang aming "Add a Card" form, o sa pamamagitan ng pag-paste ng decklist mula sa ibang site sa text zone sa kaliwa habang sinusunod ang mga tagubilin sa ibaba.'
+                share:
+                    label: 'Ibahagi ang decklist(s)'
             decklist:
                 addcard:
                     label: 'Magdagdag ng card'

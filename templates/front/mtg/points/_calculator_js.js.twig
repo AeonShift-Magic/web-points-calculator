@@ -1,32 +1,26 @@
 /**
  * @typedef {Object} CurrentFormatChoiceValues
  *
- * @property {string} [players]
- *   Selected value for the "players" group.
+ * @property {'2hg' | 'teamtrio' | 'duel'} players - Players structure: "2hg", "teamtrio" or "duel".
  *
- * @property {string} [copies]
- *   Selected value for the "copies" group.
+ * @property {'singleton' | 'quadruples'} copies - Copies: "singleton" or "quadruples".
  *
- * @property {string} [structure]
- *   Selected value for the "structure" group.
+ * @property {'highlander' | 'mtg'} structure - Deck structure: "highlander" or "mtg".
  *
- * @property {string} [commander]
- *   Selected value for the "commander" group.
+ * @property {'yes' | 'no'} commander - Using Commanders/Command Zones: "yes" or "no".
  *
- * @property {string} [timeline]
- *   Selected value for the "timeline" group.
+ * @property {'printed' | 'funny' | 'eternal' | 'modern' | 'pioneer' | 'standard'} timeline - The maximum timeline to check against: broader is ok, narrower is not.
  *
- * @property {string} [pvalue]
- *   Selected primary value.
+ * @property {'standard' | 'lite' | 'power'} pvalue - The primary value to check against: standard, lite, or power.
  *
- * @property {string} [mvalue]
- *   Selected secondary value.
+ * @property {'yes' | 'no'} mvalue - The "yes" or "no" choice for the "M-value" check.
  *
- * @property {string|number|undefined} update
- *   Current value of the update select element.
+ * @property {string|number|undefined} update - Current value of the update select element.
  */
 
 let unknownImageUrl = '{{ asset('images/unranked.jpg') }}';
+
+let currentURL = '{{ app.request.uri }}';
 
 // This doesn't need i18n
 let zonesAsText = {
@@ -83,6 +77,159 @@ function escapeHtmlAttr(v) {
         .replace(/>/g, '&gt;');
 }
 
+/**
+ * Star Formats: single source of truth for detection + slug shortcut application
+ */
+const STAR_FORMATS = [
+    // Printed timeline
+    {
+        key: 'printed',
+        title: '★ AeonShift All-Time',
+        values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'printed' },
+        slugs: ['aeonshift-printed']
+    },
+    {
+        key: 'printed-duel-commander',
+        title: '★ AeonShift All-Time Duel Commander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'printed' },
+        slugs: ['aeonshift-printed-duel-commander']
+    },
+    {
+        key: 'printed-commander',
+        title: '★ AeonShift All-Time Commander (or cEDH)',
+        values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'printed' },
+        slugs: ['aeonshift-printed-commander']
+    },
+    {
+        key: 'printed-highlander',
+        title: '★ AeonShift All-Time Highlander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'printed' },
+        slugs: ['aeonshift-printed-highlander']
+    },
+    // Funny timeline
+    {
+        key: 'funny',
+        title: '★ AeonShift Funny',
+        values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'funny' },
+        slugs: ['aeonshift-funny']
+    },
+    {
+        key: 'funny-duel-commander',
+        title: '★ AeonShift Funny Duel Commander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'funny' },
+        slugs: ['aeonshift-funny-duel-commander']
+    },
+    {
+        key: 'funny-commander',
+        title: '★ AeonShift Funny Commander (or cEDH)',
+        values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'funny' },
+        slugs: ['aeonshift-funny-commander']
+    },
+    {
+        key: 'funny-highlander',
+        title: '★ AeonShift Funny Highlander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'funny' },
+        slugs: ['aeonshift-funny-highlander']
+    },
+    // Eternal timeline
+    {
+        key: 'duel-commander',
+        title: '★ AeonShift Duel Commander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
+        slugs: ['aeonshift-duel-commander']
+    },
+    {
+        key: 'commander',
+        title: '★ AeonShift Commander (or cEDH)',
+        values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
+        slugs: ['aeonshift-commander']
+    },
+    {
+        key: 'team-trio-duel-commander',
+        title: '★ AeonShift Team Trio Duel Commander',
+        values: { players: 'teamtrio', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
+        slugs: ['aeonshift-team-trio-duel-commander']
+    },
+    {
+        key: 'team-trio-eternal',
+        title: '★ AeonShift Team Trio Eternal',
+        values: { players: 'teamtrio', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
+        slugs: ['aeonshift-team-trio-eternal']
+    },
+    {
+        key: 'eternal',
+        title: '★ AeonShift Eternal',
+        values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'eternal' },
+        slugs: ['aeonshift-eternal']
+    },
+    // Modern timeline
+    {
+        key: 'modern-duel-commander',
+        title: '★ AeonShift Modern Duel Commander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
+        slugs: ['aeonshift-modern-duel-commander']
+    },
+    {
+        key: 'modern-commander',
+        title: '★ AeonShift Modern Commander (or Modern cEDH)',
+        values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
+        slugs: ['aeonshift-modern-commander']
+    },
+    {
+        key: 'highlander',
+        title: '★ AeonShift Highlander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'eternal' },
+        slugs: ['aeonshift-highlander']
+    },
+    {
+        key: 'modern-highlander',
+        title: '★ AeonShift Modern Highlander',
+        values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'modern' },
+        slugs: ['aeonshift-modern-highlander']
+    },
+    {
+        key: 'modern',
+        title: '★ AeonShift Modern',
+        values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
+        slugs: ['aeonshift-modern']
+    },
+    {
+        key: 'team-trio-modern',
+        title: '★ AeonShift Team Trio Modern',
+        values: { players: 'teamtrio', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
+        slugs: ['aeonshift-team-trio-modern']
+    },
+    {
+        key: 'team-trio-modern-duel-commander',
+        title: '★ AeonShift Team Trio Modern Duel Commander',
+        values: { players: 'teamtrio', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
+        slugs: ['aeonshift-team-trio-modern-duel-commander']
+    },
+    // Pioneer timeline
+    {
+        key: 'pioneer',
+        title: '★ AeonShift Pioneer',
+        values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'pioneer' },
+        slugs: ['aeonshift-pioneer']
+    },
+    // Standard timeline
+    {
+        key: 'standard',
+        title: '★ AeonShift Standard',
+        values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'standard' },
+        slugs: ['aeonshift-standard']
+    }
+];
+
+const presetBySlug = (() => {
+    const map = Object.create(null);
+    for (const preset of STAR_FORMATS) {
+        for (const s of preset.slugs) {
+            map[s] = preset;
+        }
+    }
+    return map;
+})();
 
 document.addEventListener('DOMContentLoaded', () => {
     const root = document.getElementById('calculator-form');
@@ -414,6 +561,48 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
     /**
+     * Check for decklist query parameters and populate textareas with base64 decoded content.
+     */
+    function loadDecklistsFromQueryParams() {
+        const url = new URL(window.location.href);
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Check for decklist1 parameter
+        const decklist1Param = urlParams.get('decklist1');
+        if (decklist1Param && deckList1El) {
+            try {
+                deckList1El.value = atob(decklist1Param);
+            } catch (e) {
+                console.error('Failed to decode decklist1 parameter:', e);
+            }
+        }
+
+        // Check for decklist2 parameter
+        const decklist2Param = urlParams.get('decklist2');
+        if (decklist2Param && deckList2El) {
+            try {
+                deckList2El.value = atob(decklist2Param);
+            } catch (e) {
+                console.error('Failed to decode decklist2 parameter:', e);
+            }
+        }
+
+        // Check for decklist3 parameter
+        const decklist3Param = urlParams.get('decklist3');
+        if (decklist3Param && deckList3El) {
+            try {
+                deckList3El.value = atob(decklist3Param);
+            } catch (e) {
+                console.error('Failed to decode decklist3 parameter:', e);
+            }
+        }
+
+        // Remove decklist parameters from URL
+        ['decklist1', 'decklist2', 'decklist3'].forEach(param => urlParams.delete(param));
+        history.replaceState(null, '', url.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '') + url.hash);
+    }
+
+    /**
      * Build a lookup map for all containers:
      * zone → type → elements
      */
@@ -523,12 +712,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             </a>
                             <a data-card="${ card.name }" data-addtodeck="${ deckListStructure.id }" data-zone="${ zone }" data-copies="0" class="text-sm cursor-pointer py-0! my-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.removefromdeck.title'|trans }} 1"><span class="icon-minus-circled"></span></a>
                             ${
-                                card.points > 0
-                                    ? '<span class="card-points red-text">' + card.points + ' {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }}</span>'
-                                    : card.points < 0
-                                        ? '<span class="card-points green-text">' + card.points + ' {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }}</span>'
-                                        : ''
-                            }
+                    card.points > 0
+                        ? '<span class="card-points red-text">' + card.points + ' {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }}</span>'
+                        : card.points < 0
+                            ? '<span class="card-points green-text">' + card.points + ' {{ 'front.mtg.choose.links.choosecommander.table.points.label'|trans|raw }}</span>'
+                            : ''
+                }
                         </figcaption>
                     </figure>
                 </div>
@@ -1867,160 +2056,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const formFieldsEls = root.querySelectorAll('input, textarea, select');
 
-    /**
-     * Star Formats: single source of truth for detection + slug shortcut application
-     */
-    const STAR_FORMATS = [
-        // Printed timeline
-        {
-            key: 'printed',
-            title: '★ AeonShift All-Time',
-            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'printed' },
-            slugs: ['aeonshift-printed']
-        },
-        {
-            key: 'printed-duel-commander',
-            title: '★ AeonShift All-Time Duel Commander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'printed' },
-            slugs: ['aeonshift-printed-duel-commander']
-        },
-        {
-            key: 'printed-commander',
-            title: '★ AeonShift All-Time Commander (or cEDH)',
-            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'printed' },
-            slugs: ['aeonshift-printed-commander']
-        },
-        {
-            key: 'printed-highlander',
-            title: '★ AeonShift All-Time Highlander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'printed' },
-            slugs: ['aeonshift-printed-highlander']
-        },
-        // Funny timeline
-        {
-            key: 'funny',
-            title: '★ AeonShift Funny',
-            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'funny' },
-            slugs: ['aeonshift-funny']
-        },
-        {
-            key: 'funny-duel-commander',
-            title: '★ AeonShift Funny Duel Commander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'funny' },
-            slugs: ['aeonshift-funny-duel-commander']
-        },
-        {
-            key: 'funny-commander',
-            title: '★ AeonShift Funny Commander (or cEDH)',
-            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'funny' },
-            slugs: ['aeonshift-funny-commander']
-        },
-        {
-            key: 'funny-highlander',
-            title: '★ AeonShift Funny Highlander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'funny' },
-            slugs: ['aeonshift-funny-highlander']
-        },
-        // Eternal timeline
-        {
-            key: 'duel-commander',
-            title: '★ AeonShift Duel Commander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
-            slugs: ['aeonshift-duel-commander']
-        },
-        {
-            key: 'commander',
-            title: '★ AeonShift Commander (or cEDH)',
-            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
-            slugs: ['aeonshift-commander']
-        },
-        {
-            key: 'team-trio-duel-commander',
-            title: '★ AeonShift Team Trio Duel Commander',
-            values: { players: 'teamtrio', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'eternal' },
-            slugs: ['aeonshift-team-trio-duel-commander']
-        },
-        {
-            key: 'team-trio-eternal',
-            title: '★ AeonShift Team Trio Eternal',
-            values: { players: 'teamtrio', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
-            slugs: ['aeonshift-team-trio-eternal']
-        },
-        {
-            key: 'eternal',
-            title: '★ AeonShift Eternal',
-            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'eternal' },
-            slugs: ['aeonshift-eternal']
-        },
-        // Modern timeline
-        {
-            key: 'modern-duel-commander',
-            title: '★ AeonShift Modern Duel Commander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
-            slugs: ['aeonshift-modern-duel-commander']
-        },
-        {
-            key: 'modern-commander',
-            title: '★ AeonShift Modern Commander (or Modern cEDH)',
-            values: { players: 'multiffa', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
-            slugs: ['aeonshift-modern-commander']
-        },
-        {
-            key: 'highlander',
-            title: '★ AeonShift Highlander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'eternal' },
-            slugs: ['aeonshift-highlander']
-        },
-        {
-            key: 'modern-highlander',
-            title: '★ AeonShift Modern Highlander',
-            values: { players: 'duel', copies: 'singleton', structure: 'highlander', commander: 'no', timeline: 'modern' },
-            slugs: ['aeonshift-modern-highlander']
-        },
-        {
-            key: 'modern',
-            title: '★ AeonShift Modern',
-            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
-            slugs: ['aeonshift-modern']
-        },
-        {
-            key: 'team-trio-modern',
-            title: '★ AeonShift Team Trio Modern',
-            values: { players: 'teamtrio', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'modern' },
-            slugs: ['aeonshift-team-trio-modern']
-        },
-        {
-            key: 'team-trio-modern-duel-commander',
-            title: '★ AeonShift Team Trio Modern Duel Commander',
-            values: { players: 'teamtrio', copies: 'singleton', structure: 'highlander', commander: 'yes', timeline: 'modern' },
-            slugs: ['aeonshift-team-trio-modern-duel-commander']
-        },
-        // Pioneer timeline
-        {
-            key: 'pioneer',
-            title: '★ AeonShift Pioneer',
-            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'pioneer' },
-            slugs: ['aeonshift-pioneer']
-        },
-        // Standard timeline
-        {
-            key: 'standard',
-            title: '★ AeonShift Standard',
-            values: { players: 'duel', copies: 'quadruples', structure: 'mtg', commander: 'no', timeline: 'standard' },
-            slugs: ['aeonshift-standard']
-        }
-    ];
-
-    const presetBySlug = (() => {
-        const map = Object.create(null);
-        for (const preset of STAR_FORMATS) {
-            for (const s of preset.slugs) {
-                map[s] = preset;
-            }
-        }
-        return map;
-    })();
-
     // Cache the current "checked" element per group once, then keep it updated via events
     const checkedByGroup = Object.create(null);
     for (const groupName of namePartGroupsInOrder) {
@@ -2796,11 +2831,14 @@ document.addEventListener('DOMContentLoaded', () => {
      * Click handling for:
      * - links with data-format-switch: apply matching preset by slug
      * - links with data-quiz-target: optional form value change, optional multistep toggle, then scroll
+     * - "add to deck" form submission
+     * - download button click
+     * - decklists export
      * Use capture so it still works even if something stops propagation on inner nodes
      *
      * @param {Event} e
      */
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', async (e) => {
         const target = e.target;
         if (!(target instanceof Element)) {
             return;
@@ -2845,88 +2883,120 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const link = target.closest('a[data-format-switch], a[data-quiz-target]');
-        if (!link) {
-            return;
-        }
+        if (link) {
+            const formatSwitch = link.getAttribute('data-format-switch');
+            if (formatSwitch && presetBySlug[formatSwitch]) {
+                e.preventDefault();
+                const preset = presetBySlug[formatSwitch];
 
-        const formatSwitch = link.getAttribute('data-format-switch');
-        if (formatSwitch && presetBySlug[formatSwitch]) {
-            e.preventDefault();
-            const preset = presetBySlug[formatSwitch];
+                setRadio('players', preset.values.players);
+                setRadio('copies', preset.values.copies);
+                setRadio('structure', preset.values.structure);
+                setRadio('commander', preset.values.commander);
+                setRadio('timeline', preset.values.timeline);
 
-            setRadio('players', preset.values.players);
-            setRadio('copies', preset.values.copies);
-            setRadio('structure', preset.values.structure);
-            setRadio('commander', preset.values.commander);
-            setRadio('timeline', preset.values.timeline);
+                updateFormatNames();
 
-            updateFormatNames();
-
-            if (calculatorEl) {
-                calculatorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
-        const quizTarget = link.getAttribute('data-quiz-target') || '';
-        if (quizTarget) {
-            // Prevent default navigation if it's an anchor link (we handle scrolling ourselves)
-            e.preventDefault();
-
-            const formChangeName = link.getAttribute('data-form-change');
-            const formValue = link.getAttribute('data-form-value');
-
-            if (formChangeName && formValue !== null) {
-                const fields = fieldsByName[formChangeName] ?? [];
-                if (fields.length > 0) {
-                    for (const field of fields) {
-                        const tag = field.tagName.toLowerCase();
-                        const type = (field.getAttribute('type') || '').toLowerCase();
-
-                        if (tag === 'input' && type === 'radio') {
-                            field.checked = field.value === formValue;
-                            if (field.checked && formChangeName in checkedByGroup) {
-                                checkedByGroup[formChangeName] = field;
-                            }
-                            continue;
-                        }
-
-                        if (tag === 'input' && type === 'checkbox') {
-                            field.checked = !(formValue === '0' || formValue === 'false' || formValue === 'off' || formValue === '');
-                            continue;
-                        }
-
-                        if ('value' in field) {
-                            field.value = formValue;
-                        }
-                    }
-
-                    // Trigger existing listeners so format names etc. refresh
-                    const checkedRadio = (checkedByGroup[formChangeName] instanceof Element) ? checkedByGroup[formChangeName] : null;
-                    const eventTarget = checkedRadio || fields[0];
-                    eventTarget.dispatchEvent(new Event('input', { bubbles: true }));
-                    eventTarget.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-            }
-
-            if (quizTarget.includes('quiz-question')) {
-                for (const el of multistepContainersEls) {
-                    el.classList.remove('multistep-form-part-container-visible');
-                }
-                const targetEl = quizQuestionById[quizTarget];
-                if (targetEl) {
-                    targetEl.classList.add('multistep-form-part-container-visible');
-                }
-            }
-
-            if (quizTarget === 'calculator') {
                 if (calculatorEl) {
                     calculatorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-            } else if (quizTarget === 'quiz-question-1') {
-                if (quizEl) {
-                    quizEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+
+                return;
             }
+
+            const quizTarget = link.getAttribute('data-quiz-target') || '';
+            if (quizTarget) {
+                // Prevent default navigation if it's an anchor link (we handle scrolling ourselves)
+                e.preventDefault();
+
+                const formChangeName = link.getAttribute('data-form-change');
+                const formValue = link.getAttribute('data-form-value');
+
+                if (formChangeName && formValue !== null) {
+                    const fields = fieldsByName[formChangeName] ?? [];
+                    if (fields.length > 0) {
+                        for (const field of fields) {
+                            const tag = field.tagName.toLowerCase();
+                            const type = (field.getAttribute('type') || '').toLowerCase();
+
+                            if (tag === 'input' && type === 'radio') {
+                                field.checked = field.value === formValue;
+                                if (field.checked && formChangeName in checkedByGroup) {
+                                    checkedByGroup[formChangeName] = field;
+                                }
+                                continue;
+                            }
+
+                            if (tag === 'input' && type === 'checkbox') {
+                                field.checked = !(formValue === '0' || formValue === 'false' || formValue === 'off' || formValue === '');
+                                continue;
+                            }
+
+                            if ('value' in field) {
+                                field.value = formValue;
+                            }
+                        }
+
+                        // Trigger existing listeners so format names etc. refresh
+                        const checkedRadio = (checkedByGroup[formChangeName] instanceof Element) ? checkedByGroup[formChangeName] : null;
+                        const eventTarget = checkedRadio || fields[0];
+                        eventTarget.dispatchEvent(new Event('input', { bubbles: true }));
+                        eventTarget.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                }
+
+                if (quizTarget.includes('quiz-question')) {
+                    for (const el of multistepContainersEls) {
+                        el.classList.remove('multistep-form-part-container-visible');
+                    }
+                    const targetEl = quizQuestionById[quizTarget];
+                    if (targetEl) {
+                        targetEl.classList.add('multistep-form-part-container-visible');
+                    }
+                }
+
+                if (quizTarget === 'calculator') {
+                    if (calculatorEl) {
+                        calculatorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                } else if (quizTarget === 'quiz-question-1') {
+                    if (quizEl) {
+                        quizEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+
+                return;
+            }
+        }
+
+        const shareDecklists = target.closest('a[data-sharedecklists]');
+        if (shareDecklists) {
+            e.preventDefault();
+            const finalURL = new URL(currentURL);
+
+            // Generate a Base-64 encoded string from each of the 3 textarea content
+            [deckList1El, deckList2El, deckList3El].forEach((textareaEl, i) => {
+                finalURL.searchParams.set('decklist' + (i + 1), btoa(String.fromCharCode(...new TextEncoder().encode(textareaEl.value))));
+            });
+
+            await navigator.clipboard.writeText(finalURL.toString());
+
+            // Animate the clicked button
+            const iconSpan = shareDecklists.querySelector('span');
+            if (iconSpan) {
+                const origAClass = shareDecklists.className;
+                const origSpanClass = iconSpan.className;
+                shareDecklists.className = origAClass.replace('btn-blue', 'btn-green');
+                iconSpan.className = origSpanClass.replace('icon-clone', 'icon-ok');
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                shareDecklists.className = origAClass;
+                iconSpan.className = origSpanClass;
+            }
+
+            // Success feedback
+            showFlash();
         }
     }, true);
 
@@ -3165,6 +3235,9 @@ document.addEventListener('DOMContentLoaded', () => {
     CHOOSE_COMMANDER_TABLE.init();
 
     window.requestAnimationFrame(() => {
+        // Load decklists from query parameters
+        loadDecklistsFromQueryParams();
+
         updatePointsResultsAndSummaries();
         renderRankedCardsContainer();
 

@@ -1027,6 +1027,8 @@ front:
                         help: '你的 Commander 在当前积分表中有排名。'
                 start:
                     label: '在左侧使用我们的“添加卡牌”表单开始往你的牌表添加卡牌，或将其他网站的牌表粘贴到左侧文本区域，并遵循下方说明。'
+                share:
+                    label: '分享套牌列表'
             decklist:
                 addcard:
                     label: '添加卡牌'
