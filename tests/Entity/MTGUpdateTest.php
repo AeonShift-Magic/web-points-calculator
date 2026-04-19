@@ -48,7 +48,7 @@ final class MTGUpdateTest extends TestCase
     public function testIsPublic(): void
     {
         $update = new MTGUpdate();
-²
+
         $update->setIsPublic(true);
         self::assertTrue($update->isPublic());
 
