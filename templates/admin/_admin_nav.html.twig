@@ -49,6 +49,14 @@
                             </span>
                         {% endif %}
                     </li>
+                    <li>
+                        <a href="{{ url('admin_mtg_points_list_mvalue_index') }}" title="{{ 'admin.nav.mtg.pointslistmvalue.index.label'|trans }}">{{ 'admin.nav.mtg.pointslistmvalue.index.label'|trans }}</a>
+                        {% if extended_view is defined and extended_view is same as(true) %}
+                            <span class="inline-block px-2 pb-2 text-center">
+                                {{ 'admin.nav.mtg.pointslistmvalue.index.label'|trans }}
+                            </span>
+                        {% endif %}
+                    </li>
                     <li class="menu-separator"></li>
                     <li>
                         <a href="{{ url('admin_mtg_points_list_card_index') }}" title="{{ 'admin.nav.mtg.pointslistcard.index.title'|trans }}">{{ 'admin.nav.mtg.pointslistcard.index.label'|trans }}</a>

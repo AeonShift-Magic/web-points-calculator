@@ -1,0 +1,112 @@
+{% set paginator_route = 'admin_mtg_points_list_mvalue_index' %}
+{% set paginator_route_params = app.request.query.all() %}
+
+<div class="flex flex-col items-center justify-items-center">
+
+    {% if pointsListMValues.totalItemCount is defined %}
+        <h3 class="text-center w-full">
+            {{ 'global.total.label'|trans({'%elements%': pointsListMValues.totalItemCount})|raw }}
+            {% if pointsListMValues.totalItemCount / pointsListMValues.itemNumberPerPage > 1 %} - {{ 'global.pagenumber'|trans({'current': pointsListMValues.currentPageNumber, 'total': (pointsListMValues.totalItemCount / pointsListMValues.itemNumberPerPage)|round(0, 'ceil')})|raw }}{% endif %}
+        </h3>
+    {% else %}
+        <h3 class="text-center w-full">
+            {{ 'global.total.label'|trans({'elements': pointsListMValues|length})|raw }}
+        </h3>
+        <h5 class="text-center w-full">
+            {{ 'global.max.label'|trans }}
+        </h5>
+    {% endif %}
+
+    {% if filtersActive is defined and not filtersActive and pointsListMValues is defined and pointsListMValues is iterable %}
+        <div class="navigation center">
+            {{ knp_pagination_render(
+                pointsListMValues,
+                'admin/mtg/points_list_mvalue/_sliding.html.twig',
+                {},
+                {
+                    pageParameterName: 'page',
+                    static_route: paginator_route, routeParams: paginator_route_params,
+                }
+            ) }}
+        </div>
+    {% endif %}
+
+    <div class="table-wrapper">
+        <table class="table center header-highlight-table">
+            <thead>
+                <tr>
+                    <th class="table-id-column">{{ 'global.id.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistcard.create.pointslist.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.sourcecard.create.latestmvalue.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslistmvalue.create.mvaluepoints.label'|trans }}</th>
+                    <th>{{ 'global.dates.label'|trans }}</th>
+                    <th>{{ 'global.users.label'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for points_list_mvalue in pointsListMValues %}
+                    <tr>
+                        <td>{{ points_list_mvalue.id }}</td>
+                        <td>
+                            {% if points_list_mvalue.nameEn|lower is not same as('((unranked))'|lower) %}
+                                <a href="https://scryfall.com/search?q={{ points_list_mvalue.nameEn|e('url') }}" target="_blank">
+                                    <span class="icon-search"></span>
+                                    {{ points_list_mvalue.nameEn }}
+                                </a>
+                            {% else %}
+                                {{ points_list_mvalue.nameEn }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if points_list_mvalue.pointsList is defined and points_list_mvalue.pointsList is not null %}
+                                <strong>
+                                    <a href="{{ url('admin_mtg_points_list_show', {'id': points_list_mvalue.pointsList.id}) }}" title="{{ 'admin.nav.mtg.pointslistcard.show.title'|trans({'name': points_list_mvalue.pointsList.title}) }}">
+                                        {{ points_list_mvalue.pointsList.title|default('global.none.label'|trans) }}
+                                    </a>
+                                </strong>
+                            {% else %}
+                                {{ 'global.none.label'|trans }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ points_list_mvalue.MValueTrend }}
+                        </td>
+                        <td>
+                            {% if points_list_mvalue.valuePoints > 0 %}
+                                <span class="blue-text">{{ points_list_mvalue.valuePoints }}</span>
+                            {% else %}
+                                <span class="gray-text">{{ points_list_mvalue.valuePoints }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ points_list_mvalue.createdAt ? points_list_mvalue.createdAt|date('Y-m-d') : '' }} / {{ points_list_mvalue.updatedAt ? points_list_mvalue.updatedAt|date('Y-m-d') : '' }}
+                        </td>
+                        <td>
+                            {{ points_list_mvalue.createdBy ? points_list_mvalue.createdBy.username|raw : 'N/A' }} / {{ points_list_mvalue.updatedBy ? points_list_mvalue.updatedBy.username|raw : 'N/A' }}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">{{ 'global.noelements.label'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if filtersActive is defined and not filtersActive and pointsListMValues is defined and pointsListMValues is iterable %}
+        <div class="navigation center">
+            {{ knp_pagination_render(
+                pointsListMValues,
+                'admin/mtg/points_list_mvalue/_sliding.html.twig',
+                {},
+                {
+                    pageParameterName: 'page',
+                    static_route: paginator_route, routeParams: paginator_route_params,
+                }
+            ) }}
+        </div>
+    {% endif %}
+
+</div>

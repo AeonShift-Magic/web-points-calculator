@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: 'Regelmodell'
                         help: 'Das anzuwendende Regelmodell'
+                    mvaluescount:
+                        label: 'M-Values-Anzahl und letztes Sperrdatum'
+                    factors:
+                        label: 'M-Values-Faktoren'
+                    shipping:
+                        label: 'M-Value Versand-Untergrenze // Obergrenze // Multiplikator'
                 import:
                     firstline:
                         text: '⚠️ Die ersten 5 Zeilen dieses Dokuments werden beim Import ignoriert; nutzen Sie sie für Metadaten'
@@ -241,6 +247,13 @@ admin:
                     info: 'Punkte-Import'
                 legends:
                     info: 'Punkte-Listen-Details'
+                setmvalues:
+                    title: '💵 M-Values festlegen'
+                    label: '💵 M-Values festlegen'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values erfolgreich festgelegt, {count} Elemente aktualisiert.'
             pointslistcard:
                 create:
                     pointslist:
@@ -366,6 +379,10 @@ admin:
                         help: 'Die Regelvorlage, die bei Verwendung dieser Liste angewendet wird'
                     relatedpointslist:
                         label: 'Zugehörige Punkte-Liste(n)'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'M-Value-Punkte'
             sourcecard:
                 create:
                     nameen:
@@ -556,6 +573,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - Details zur Quellkarte "{name}"'
                     label: 'Magic The Gathering™ - Details zur Quellkarte "{name}"'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - Punkte-Listen M-Values'
         cardsourceactivityhistory:
             index:
                 label: 'Aktivitätsverlauf der Kartenquellen'
@@ -974,7 +994,7 @@ front:
                     cznoteligibleonecommander:
                         text: 'Ihre Command Zone ist nicht gültig; Ihr Commander muss als Commander geeignet sein.'
                     cznoteligiblemulticommander:
-                        text: 'Eine der Karten in Ihrer Command Zone ist nicht als Commander geeignet (mehrere Commander) für diese Karten: '
+                        text: 'Eine oder mehrere Karten in deiner Kommandozone sind nicht für die Verwendung mehrerer Kommandeure geeignet: '
                     cznotvalidmulticztypenotthesame:
                         text: 'Alle Ihre Commander müssen denselben Partner-Fähigkeitstyp haben (z. B. Partner, Friends forever, usw.).'
                     coloridentitymissmatch:

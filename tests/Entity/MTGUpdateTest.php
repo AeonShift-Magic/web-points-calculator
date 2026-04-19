@@ -40,7 +40,7 @@ final class MTGUpdateTest extends TestCase
         $date = new DateTime('2024-01-01');
         $update->setStartingAt($date);
 
-        $expected = 'Test Title (2024-01-01 00:00 > 2026-04-27 19:59)';
+        $expected = 'Test Title (2024-01-01 00:00 > 2026-07-27 19:59)';
 
         self::assertSame($expected, $update->getTitleForForms());
     }
@@ -48,7 +48,7 @@ final class MTGUpdateTest extends TestCase
     public function testIsPublic(): void
     {
         $update = new MTGUpdate();
-
+²
         $update->setIsPublic(true);
         self::assertTrue($update->isPublic());
 

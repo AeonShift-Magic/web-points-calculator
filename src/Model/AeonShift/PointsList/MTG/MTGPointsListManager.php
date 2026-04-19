@@ -6,6 +6,7 @@ namespace App\Model\AeonShift\PointsList\MTG;
 
 use App\Entity\MTG\MTGUpdate;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
+use App\Repository\MTG\MTGPointsListMValueRepository;
 use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,6 +27,7 @@ final class MTGPointsListManager
     public function __construct(
         private MTGUpdateRepository $MTGUpdateRepository,
         private MTGSourceCardRepository $MTGSourceCardRepository,
+        private MTGPointsListMValueRepository $MTGPointsListMValueRepository,
         private CacheInterface $pool,
         private TranslatorInterface $translator,
         private EntityManagerInterface $entityManager,
@@ -134,26 +136,17 @@ final class MTGPointsListManager
                     $rulesModelClassString = $MTGUpdate->getPointsList()?->getRulesModel();
 
                     if (class_exists($rulesModelClassString)) {
-                        $rulesModel = new $rulesModelClassString(
-                            $this->entityManager,
-                            $this->translator,
-                            $this->MTGSourceCardRepository,
-                            $this->security
-                        );
-
-                        if ($rulesModel instanceof PointsListModelInterface && method_exists($rulesModel, 'mergeMTGSourceAndPointsListAsArray')) {
-                            $outputArray['updates'] = [
-                                $MTGUpdate->id => [
-                                    'title'                => $count === 1 ? $this->translator->trans('front.mtg.pointslist.latest.label', ['name' => $MTGUpdate->getTitleEN()]) : $this->translator->trans('front.mtg.pointslist.choice.label', ['name' => $MTGUpdate->getTitleEN(), 'datestart' => $MTGUpdate->getStartingAt()->format('Y-m-d h:i'), 'dateend' => $MTGUpdate->getEndingAt()->format('Y-m-d h:i')]),
-                                    'startingAtSimplified' => $MTGUpdate->getStartingAt()->format('Y-m-d'),
-                                    'endingAtSimplified'   => $count === 1 ? null : $MTGUpdate->getEndingAt()->format('Y-m-d'),
-                                    'startingAtDate'       => $MTGUpdate->getStartingAt()->format('Y-m-d\TH:i:s\Z'),
-                                    'endingAtDate'         => $MTGUpdate->getEndingAt()->format('Y-m-d\TH:i:s\Z'),
-                                    'startingAtTimestamp'  => $MTGUpdate->getStartingAt()->getTimestamp(),
-                                    'endingAtTimestamp'    => $count === 1 ? null : $MTGUpdate->getEndingAt()->getTimestamp(),
-                                ],
-                            ];
-                        }
+                        $outputArray['updates'] = [
+                            $MTGUpdate->id => [
+                                'title'                => $count === 1 ? $this->translator->trans('front.mtg.pointslist.latest.label', ['name' => $MTGUpdate->getTitleEN()]) : $this->translator->trans('front.mtg.pointslist.choice.label', ['name' => $MTGUpdate->getTitleEN(), 'datestart' => $MTGUpdate->getStartingAt()->format('Y-m-d h:i'), 'dateend' => $MTGUpdate->getEndingAt()->format('Y-m-d h:i')]),
+                                'startingAtSimplified' => $MTGUpdate->getStartingAt()->format('Y-m-d'),
+                                'endingAtSimplified'   => $count === 1 ? null : $MTGUpdate->getEndingAt()->format('Y-m-d'),
+                                'startingAtDate'       => $MTGUpdate->getStartingAt()->format('Y-m-d\TH:i:s\Z'),
+                                'endingAtDate'         => $MTGUpdate->getEndingAt()->format('Y-m-d\TH:i:s\Z'),
+                                'startingAtTimestamp'  => $MTGUpdate->getStartingAt()->getTimestamp(),
+                                'endingAtTimestamp'    => $count === 1 ? null : $MTGUpdate->getEndingAt()->getTimestamp(),
+                            ],
+                        ];
                         ++$count;
                     }
                 }
@@ -262,6 +255,7 @@ final class MTGPointsListManager
                     $this->entityManager,
                     $this->translator,
                     $this->MTGSourceCardRepository,
+                    $this->MTGPointsListMValueRepository,
                     $this->security
                 );
 

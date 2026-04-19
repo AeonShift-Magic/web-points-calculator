@@ -6,6 +6,7 @@ namespace App\Tests\Model\MTG;
 
 use App\Entity\MTG\MTGPointsList;
 use App\Model\AeonShift\PointsList\MTG\V1\MTGPointsListModelV1;
+use App\Repository\MValueItemsRepositoryInterface;
 use App\Repository\SourceItemsRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
@@ -78,12 +79,14 @@ final class MTGPointsListModelV1Test extends TestCase
         $entityManager = self::createStub(EntityManagerInterface::class);
         $this->translator = self::createStub(TranslatorInterface::class);
         $repository = self::createStub(SourceItemsRepositoryInterface::class);
+        $repository2 = self::createStub(MValueItemsRepositoryInterface::class);
         $security = self::createStub(Security::class);
 
         $this->model = new MTGPointsListModelV1(
             $entityManager,
             $this->translator,
             $repository,
+            $repository2,
             $security
         );
     }

@@ -1316,6 +1316,11 @@ function MTGPointsListModelV1CalculatePointsForCardInPointsList(cardName, points
         }
     }
 
+    // Modulate through M-Value Points if required by format choices
+    if(currentFormatChoiceValues.mvalue === 'yes' && typeof pointsListCard.mvaluepoints === 'number' && typeof deckZone === 'string' && deckZone !== 'commandzone')  {
+        points = Math.floor(Math.min(points, Number.parseFloat(pointsListCard.mvaluepoints)) / 2.0) + Math.max(points, Number.parseFloat(pointsListCard.mvaluepoints));
+    }
+
     return {
         points: Number.parseInt(points),
         types: pointsListCard.types ? pointsListCard.types : '',
@@ -1666,7 +1671,7 @@ function MTGPointsListModelGetPointsForUnrankedCardInList(pointsList, currentFor
         }
     }
 
-    const result = Number.parseInt(computed ?? '0');
+    let result = Number.parseInt(computed ?? '0');
     MTGPointsListModelV1UnrankedListCardPointsByContext[contextKey] = result;
     return result;
 }

@@ -145,6 +145,8 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
     }
 
     /**
+     * @psalm-suppress PossiblyUnusedReturnValue
+     *
      * @return array<int, MTGSourceCard>
      */
     #[Override]
@@ -156,7 +158,7 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
             ->createQueryBuilder()
             ->select('c')
             ->from(MTGSourceCard::class, 'c')
-            ->where('c.isDigitalOnly = :false')
+            ->andWhere('c.isDigitalOnly = :false')
             ->setParameter('false', false)
             ->orderBy('c.nameEN')
             ->getQuery()
@@ -178,7 +180,7 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
                 ->createQueryBuilder()
                 ->select('c.nameEN')
                 ->from(MTGSourceCard::class, 'c')
-                ->where('c.isDigitalOnly = :false')
+                ->andWhere('c.isDigitalOnly = :false')
                 ->setParameter('false', false)
                 ->orderBy('c.nameEN')
                 ->getQuery()

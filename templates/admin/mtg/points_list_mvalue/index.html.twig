@@ -1,0 +1,15 @@
+{% extends 'admin/admin_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.mtg.pointslistmvalue.index.label'|trans }}{% endblock %}
+
+{% block body %}
+    <h1>{{ 'admin.nav.mtg.pointslistmvalue.index.label'|trans }}</h1>
+
+    {{ component('AdminMTGPointsListMValueIndexFormComponent', {
+        nameEN: filters.name|default(null),
+        pointsList: filters.pointsList|default(null),
+        page: app.request.attributes.get('page')|default(1),
+        filtersActive: initialFiltersActive
+    }) }}
+
+{% endblock %}

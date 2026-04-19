@@ -8,12 +8,15 @@ namespace App\Model\AeonShift\PointsList\MTG\V1;
 
 use App\Entity\MTG\MTGPointsList;
 use App\Entity\MTG\MTGPointsListCard;
+use App\Entity\MTG\MTGPointsListMValue;
 use App\Entity\MTG\MTGSourceCard;
 use App\Entity\PointsListInterface;
 use App\Entity\User;
 use App\Model\AeonShift\PointsList\AbstractPointsListModel;
 use App\Model\AeonShift\PointsList\MTGPointsListModelInterface;
+use App\Repository\MValueItemsRepositoryInterface;
 use App\Repository\SourceItemsRepositoryInterface;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use const JSON_THROW_ON_ERROR;
@@ -60,6 +63,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         private EntityManagerInterface $entityManager,
         private TranslatorInterface $translator,
         private SourceItemsRepositoryInterface $MTGSourceCardRepository,
+        private MValueItemsRepositoryInterface $MValueItemsRepository,
         private Security $security
     )
     {
@@ -450,6 +454,8 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         $sourceCards = $entityRepository->getAllItemsAsArray();
         /** @var array<int, MTGPointsListCard> $pointListCards */
         $pointListCards = $pointsList->getItems();
+        /** @var array<int, MTGPointsListMValue> $pointListMValues */
+        $pointListMValues = $this->MValueItemsRepository->getAllItemsAsArray($pointsList);
 
         $pointsListCardsArray = [
             'cards'                      => [],
@@ -603,6 +609,19 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
 
                     // Also add it to the list of ranked cards for this list
                     $pointsListCardsArray['ranked'][$sourceCardName] = $pointsListCardsArray['cards'][$sourceCardName];
+
+                    continue 2;
+                }
+            }
+        }
+
+        // Third, add M-Value points to each identified card
+        foreach (array_keys($pointsListCardsArray['cards']) as $sourceCardName) {
+            // Default 0.0 value if not found in the list of M-Value points
+            $pointsListCardsArray['cards'][$sourceCardName]['mvaluepoints'] = 0.0;
+            foreach ($pointListMValues as $pointListMValue) {
+                if ($sourceCardName === $pointListMValue->getNameEN()) {
+                    $pointsListCardsArray['cards'][$sourceCardName]['mvaluepoints'] = $pointListMValue->getValuePoints();
 
                     continue 2;
                 }
@@ -1006,5 +1025,62 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
             'status'  => 'success',
             'message' => $this->translator->trans('admin.form.mtg.pointslist.import.updated.success', ['number' => ($processingLine - 5)]),
         ];
+    }
+
+    #[Override]
+    public function setMValuesForPointsList(MTGPointsList $pointsList): int
+    {
+        $updatedCount = 0;
+
+        // First, delete all existing M-Values for this Points List
+        $this->entityManager->getRepository(MTGPointsListMValue::class)->eraseAllForMTGPointsList($pointsList);
+
+        // Then, for each currently present MTGSourceCard, create a new M-Value entry
+        $sourceCards = $this->entityManager->getRepository(MTGSourceCard::class)->findAll();
+
+        /** @var User $currentUser */
+        $currentUser = $this->security->getUser();
+
+        foreach ($sourceCards as $sourceCard) {
+            // Set basic info
+            $MTGPointsListMValue = MTGSourceCardToPointsListMValueTransformer::fromMTGSourceCard($sourceCard, $pointsList);
+            $MTGPointsListMValue->setCreatedBy($currentUser);
+            $MTGPointsListMValue->setUpdatedBy($currentUser);
+
+            // The final card value is its value + the factor modifier, modulated by floor and ceiling
+            // At best the ceiling value...
+            $shippingCostValue = min(
+            // At least the floor value...
+                max(
+                // Here, the multiplier is based on how much it applies to the base M-Value, i.e. 1.2 = 120% of the M-Value as a final price
+                // So we basically deduce the M-Value once applied, and apply 0 minimum value as a failsafe in case the form is filled with weird values
+                    max($pointsList->getMValueShippingMultiplier() * $sourceCard->getMValueAsFloat() - $sourceCard->getMValueAsFloat(), 0),
+                    $pointsList->getMValueShippingFloor()
+                ),
+                $pointsList->getMValueShippingCeiling()
+            );
+
+            // Set the card final financial value
+            $finalValue = $sourceCard->getMValueAsFloat() + $shippingCostValue;
+            $MTGPointsListMValue->setMValueTrend((string)$finalValue);
+
+            // Set the card points value, based on the financial value, modulated by a 2-degree (x^0, X^1 and X^2) polynomial function
+            $pointsValue = floor(
+                $pointsList->getMValueFactor0() * ($finalValue ** 0)
+                + $pointsList->getMValueFactor1() * ($finalValue ** 1)
+                + $pointsList->getMValueFactor2() * ($finalValue ** 2)
+            );
+            $MTGPointsListMValue->setValuePoints($pointsValue);
+
+            $this->entityManager->persist($MTGPointsListMValue);
+            ++$updatedCount;
+        }
+
+        $pointsList->setMValuesSetAt(new DateTime());
+        $this->entityManager->persist($pointsList);
+
+        $this->entityManager->flush();
+
+        return $updatedCount;
     }
 }

@@ -5,9 +5,9 @@ declare(strict_types = 1);
 namespace App\Twig\Components;
 
 use App\Entity\MTG\MTGPointsList;
-use App\Entity\MTG\MTGPointsListCard;
-use App\Form\Admin\MTG\AdminMTGPointsListCardIndexFormComponentType;
-use App\Repository\MTG\MTGPointsListCardRepository;
+use App\Entity\MTG\MTGPointsListMValue;
+use App\Form\Admin\MTG\AdminMTGPointsListMValueIndexFormComponentType;
+use App\Repository\MTG\MTGPointsListMValueRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -22,8 +22,8 @@ use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: '/admin/mtg/points_list_card/admin_mtg_points_list_card_index_form_component.html.twig')]
-final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
+#[AsLiveComponent(template: '/admin/mtg/points_list_mvalue/admin_mtg_points_list_mvalue_index_form_component.html.twig')]
+final class AdminMTGPointsListMValueIndexFormComponent extends AbstractController
 {
     use ComponentWithFormTrait;
     use DefaultActionTrait;
@@ -43,7 +43,7 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
     public ?int $pointsList = null;
 
     public function __construct(
-        private MTGPointsListCardRepository $MTGPointsListCardRepository,
+        private MTGPointsListMValueRepository $MTGPointsListMValueRepository,
         private PaginatorInterface $paginator,
         private EntityManagerInterface $entityManager,
     )
@@ -53,16 +53,15 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
     /**
      * @throws ORMException
      *
-     * @return array<int, MTGPointsListCard>|PaginationInterface<int, mixed>
+     * @return array<int, MTGPointsListMValue>|PaginationInterface<int, mixed>
      */
-    public function getSourceCards(): PaginationInterface|array
+    public function getpointsListMValues(): PaginationInterface|array
     {
         $queryBuilder = $this
-            ->MTGPointsListCardRepository
+            ->MTGPointsListMValueRepository
             ->createQueryBuilder('c')
             ->leftJoin('c.pointsList', 'l')
-            ->addSelect('l')
-            ->orderBy('c.updatedAt', 'DESC');
+            ->addSelect('l');
 
         if (is_numeric($this->pointsList)) {
             $queryBuilder
@@ -72,8 +71,8 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
 
         if ($this->nameEN !== null && $this->nameEN !== '') {
             $queryBuilder
-                ->andWhere('c.nameEN LIKE :nameEN')
-                ->setParameter('nameEN', '%' . $this->nameEN . '%');
+                ->andWhere('c.nameEN = :nameEN')
+                ->setParameter('nameEN', $this->nameEN);
         }
 
         if ($this->filtersActive === false) {
@@ -126,12 +125,12 @@ final class AdminMTGPointsListCardIndexFormComponent extends AbstractController
     #[Override]
     protected function instantiateForm(): FormInterface
     {
-        $formData = new MTGPointsListCard();
+        $formData = new MTGPointsListMValue();
 
         $formData->setNameEN((string)$this->nameEN);
         $formData->setPointsList($this->pointsList !== null ? $this->entityManager->getReference(MTGPointsList::class, $this->pointsList) : null);
 
-        $form = $this->createForm(AdminMTGPointsListCardIndexFormComponentType::class, $formData, [
+        $form = $this->createForm(AdminMTGPointsListMValueIndexFormComponentType::class, $formData, [
             'method'          => 'GET',
             'csrf_protection' => false,
         ]);

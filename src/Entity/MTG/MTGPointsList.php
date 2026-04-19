@@ -11,6 +11,7 @@ use App\Repository\MTG\MTGPointsListRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Override;
 use RuntimeException;
@@ -46,6 +47,17 @@ class MTGPointsList implements PointsListInterface, Stringable
     private Collection $MTGPointListCards;
 
     /**
+     * @var Collection<int, MTGPointsListMValue>
+     */
+    #[ORM\OneToMany(
+        targetEntity: MTGPointsListMValue::class,
+        mappedBy: 'pointsList',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $MTGPointListMValues;
+
+    /**
      * @var Collection<int, MTGUpdate>
      */
     #[ORM\OneToMany(
@@ -62,6 +74,33 @@ class MTGPointsList implements PointsListInterface, Stringable
     #[Assert\NotNull]
     #[ORM\Column(type: 'datetime')]
     private DateTime $lastUploadedAt;
+
+    #[Assert\Type(type: 'numeric')]
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
+    private string $mValueFactor0 = '0.0';
+
+    #[Assert\Type(type: 'numeric')]
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
+    private string $mValueFactor1 = '0.0';
+
+    #[Assert\Type(type: 'numeric')]
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
+    private string $mValueFactor2 = '0.0';
+
+    #[Assert\Type(type: 'numeric')]
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
+    private string $mValueShippingCeiling = '0.1';
+
+    #[Assert\Type(type: 'numeric')]
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
+    private string $mValueShippingFloor = '50.0';
+
+    #[Assert\Type(type: 'numeric')]
+    #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
+    private string $mValueShippingMultiplier = '1.2';
+
+    #[ORM\Column(type: 'datetime', nullable: true, options: ['default' => null])]
+    private ?DateTime $mValuesSetAt = null;
 
     #[Assert\NotNull]
     #[ORM\Column]
@@ -189,6 +228,7 @@ class MTGPointsList implements PointsListInterface, Stringable
         $this->validityStartingAt = new DateTime();
         $this->MTGPointListCards = new ArrayCollection();
         $this->MTGUpdates = new ArrayCollection();
+        $this->MTGPointListMValues = new ArrayCollection();
     }
 
     #[Override]
@@ -221,9 +261,49 @@ class MTGPointsList implements PointsListInterface, Stringable
         return $this->MTGPointListCards;
     }
 
+    public function getMTGPointListMValues(): Collection
+    {
+        return $this->MTGPointListMValues;
+    }
+
     public function getMTGUpdates(): Collection
     {
         return $this->MTGUpdates;
+    }
+
+    public function getMValueFactor0(): float
+    {
+        return (float)$this->mValueFactor0;
+    }
+
+    public function getMValueFactor1(): float
+    {
+        return (float)$this->mValueFactor1;
+    }
+
+    public function getMValueFactor2(): float
+    {
+        return (float)$this->mValueFactor2;
+    }
+
+    public function getMValueShippingCeiling(): float
+    {
+        return (float)$this->mValueShippingCeiling;
+    }
+
+    public function getMValueShippingFloor(): float
+    {
+        return (float)$this->mValueShippingFloor;
+    }
+
+    public function getMValueShippingMultiplier(): float
+    {
+        return (float)$this->mValueShippingMultiplier;
+    }
+
+    public function getMValuesSetAt(): ?DateTime
+    {
+        return $this->mValuesSetAt;
     }
 
     public function getNumberOfUploadedCards(): int
@@ -405,9 +485,65 @@ class MTGPointsList implements PointsListInterface, Stringable
         return $this;
     }
 
+    public function setMTGPointListMValues(Collection $MTGPointListMValues): self
+    {
+        $this->MTGPointListMValues = $MTGPointListMValues;
+
+        return $this;
+    }
+
     public function setMTGUpdates(Collection $MTGUpdates): self
     {
         $this->MTGUpdates = $MTGUpdates;
+
+        return $this;
+    }
+
+    public function setMValueFactor0(float $mValueFactor0): self
+    {
+        $this->mValueFactor0 = (string)$mValueFactor0;
+
+        return $this;
+    }
+
+    public function setMValueFactor1(float $mValueFactor1): self
+    {
+        $this->mValueFactor1 = (string)$mValueFactor1;
+
+        return $this;
+    }
+
+    public function setMValueFactor2(float $mValueFactor2): self
+    {
+        $this->mValueFactor2 = (string)$mValueFactor2;
+
+        return $this;
+    }
+
+    public function setMValueShippingCeiling(float $mValueShippingCeiling): self
+    {
+        $this->mValueShippingCeiling = (string)$mValueShippingCeiling;
+
+        return $this;
+    }
+
+    public function setMValueShippingFloor(float $mValueShippingFloor): self
+    {
+        $this->mValueShippingFloor = (string)$mValueShippingFloor;
+
+        return $this;
+    }
+
+    public function setMValueShippingMultiplier(float $mValueShippingMultiplier): self
+    {
+        $this->mValueShippingMultiplier = (string)$mValueShippingMultiplier;
+
+        return $this;
+    }
+
+    public function setMValuesSetAt(?DateTime $mValuesSetAt): self
+    {
+        $this->mValuesSetAt = $mValuesSetAt;
 
         return $this;
     }

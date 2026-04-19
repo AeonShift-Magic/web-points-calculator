@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: '规则模型'
                         help: '要应用的规则模型'
+                    mvaluescount:
+                        label: 'M-Values 计数和最后锁定日期'
+                    factors:
+                        label: 'M-Values 因子'
+                    shipping:
+                        label: 'M-Value 运费下限 // 上限 // 乘数'
                 import:
                     firstline:
                         text: '⚠️ 导入时将忽略该文档的前 5 行，可用于填写元数据'
@@ -241,6 +247,13 @@ admin:
                     info: '点数导入'
                 legends:
                     info: '积分表详情'
+                setmvalues:
+                    title: '💵 设置 M-Values'
+                    label: '💵 设置 M-Values'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values 设置成功，已更新 {count} 个项目。'
             pointslistcard:
                 create:
                     pointslist:
@@ -366,6 +379,10 @@ admin:
                         help: '使用此列表时要应用的规则模板'
                     relatedpointslist:
                         label: '关联积分表'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'M-Value 点数'
             sourcecard:
                 create:
                     nameen:
@@ -556,6 +573,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - 源卡牌“{name}”详情'
                     label: 'Magic The Gathering™ - 源卡牌“{name}”详情'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - 积分表 M-Values'
         cardsourceactivityhistory:
             index:
                 label: '卡牌来源活动历史'

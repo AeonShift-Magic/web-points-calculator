@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: 'ルールモデル'
                         help: '適用するルールモデル'
+                    mvaluescount:
+                        label: 'M-Values の件数と最終ロック日'
+                    factors:
+                        label: 'M-Values の係数'
+                    shipping:
+                        label: 'M-Value 送料 下限 // 上限 // 乗数'
                 import:
                     firstline:
                         text: '⚠️ インポート時、このドキュメントの最初の5行は無視されます。メタデータに利用してください。'
@@ -241,6 +247,13 @@ admin:
                     info: 'ポイントのインポート'
                 legends:
                     info: 'ポイントリストの詳細'
+                setmvalues:
+                    title: '💵 M-Values を設定'
+                    label: '💵 M-Values を設定'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values を正常に設定しました。{count} 件を更新しました。'
             pointslistcard:
                 create:
                     pointslist:
@@ -427,6 +440,10 @@ admin:
                         label: '最新のM-Value'
                     mvaluecount:
                         label: 'M-Value数（現在使用中の価格数）'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'M-Value ポイント'
         user:
             account:
                 roles:
@@ -556,6 +573,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - ソースカード "{name}" の詳細'
                     label: 'Magic The Gathering™ - ソースカード "{name}" の詳細'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - ポイントリスト M-Values'
         cardsourceactivityhistory:
             index:
                 label: 'カードソース活動履歴'

@@ -573,7 +573,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         // Also exclude by Scryfall set type
         $setType = isset($card['set_type']) && is_string($card['set_type']) ? $card['set_type'] : '';
-        if (in_array($setType, ['treasure_chest', 'memorabilia'], true)) {
+        if (in_array($setType, ['treasure_chest', 'memorabilia', 'treasure_chest', 'alchemy', 'token', 'minigame'], true)) {
             return;
         }
 
@@ -590,19 +590,17 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
          */
         $prices = is_array($card['prices'] ?? null) ? $card['prices'] : [];
 
-        $finalPriceEUR = (float)(
+        $finalPriceEUR =
             $prices['eur']
             ?? $prices['eur_foil']
             ?? $prices['eur_etched']
-            ?? 0.0
-        );
+            ?? '0.00';
 
-        $finalPriceUSD = (float)(
+        $finalPriceUSD =
             $prices['usd']
             ?? $prices['usd_foil']
             ?? $prices['usd_etched']
-            ?? 0.0
-        );
+            ?? '0.00';
 
         if (isset($prices['eur_foil']) && $prices['eur_foil'] < $finalPriceEUR) {
             $finalPriceEUR = $prices['eur_foil'];
@@ -612,6 +610,10 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             $finalPriceEUR = $prices['eur_etched'];
         }
 
+        if (isset($prices['usd_foil']) && $prices['usd_foil'] < $finalPriceUSD) {
+            $finalPriceUSD = $prices['usd_foil'];
+        }
+
         if (isset($prices['usd_etched']) && $prices['usd_etched'] < $finalPriceUSD) {
             $finalPriceUSD = $prices['usd_etched'];
         }
@@ -619,17 +621,17 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
         $usd = $this->normalizePriceToNumericString($finalPriceUSD);
         $eur = $this->normalizePriceToNumericString($finalPriceEUR);
         $tix = $this->normalizePriceToNumericString($prices['tix'] ?? null);
-        $usdVsZero = bccomp($usd, '0', 2);
-        $eurVsZero = bccomp($eur, '0', 2);
+        $isUsdGTZero = bccomp($usd, '0.00', 2);
+        $isEurGTZero = bccomp($eur, '0.00', 2);
 
         // Do not collect / store any price candidate if prices are all 0.
-        if ($usdVsZero === 0 && $eurVsZero === 0 && (float)$tix === 0.0) {
+        if ($isUsdGTZero === 0 && $isEurGTZero === 0 && (float)$tix === 0.0) {
             return;
         }
 
-        if ($usdVsZero <= 0 && $eurVsZero > 0) {
+        if ($isUsdGTZero <= 0 && $isEurGTZero > 0) {
             $avg = $eur;
-        } elseif ($usdVsZero > 0 && $eurVsZero <= 0) {
+        } elseif ($isUsdGTZero > 0 && $isEurGTZero <= 0) {
             $avg = $usd;
         } else {
             $sum = bcadd($usd, $eur, 2);
@@ -647,39 +649,37 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             ];
         }
 
-        if (isset($card['border_color'], $card['set_type']) && ! in_array($card['set_type'], ['alchemy', 'token', 'memorabilia', 'minigame'], true)) {
-            // AVG
-            if (
-                bccomp($avg, '0.00', 2) === 1
-                && (
-                    bccomp($lowestAveragePricesByName[$name]['avg'], '0.00', 2) === 0
-                    || bccomp($avg, $lowestAveragePricesByName[$name]['avg'], 2) === -1
-                )
-            ) {
-                $lowestAveragePricesByName[$name]['avg'] = $avg;
-            }
+        // AVG
+        if (
+            bccomp($avg, '0.00', 2) === 1
+            && (
+                bccomp($lowestAveragePricesByName[$name]['avg'], '0.00', 2) === 0
+                || bccomp($avg, $lowestAveragePricesByName[$name]['avg'], 2) === -1
+            )
+        ) {
+            $lowestAveragePricesByName[$name]['avg'] = $avg;
+        }
 
-            // USD
-            if (
-                bccomp($usd, '0.00', 2) === 1
-                && (
-                    bccomp($lowestAveragePricesByName[$name]['usd'], '0.00', 2) === 0
-                    || bccomp($usd, $lowestAveragePricesByName[$name]['usd'], 2) === -1
-                )
-            ) {
-                $lowestAveragePricesByName[$name]['usd'] = $usd;
-            }
+        // USD
+        if (
+            bccomp($usd, '0.00', 2) === 1
+            && (
+                bccomp($lowestAveragePricesByName[$name]['usd'], '0.00', 2) === 0
+                || bccomp($usd, $lowestAveragePricesByName[$name]['usd'], 2) === -1
+            )
+        ) {
+            $lowestAveragePricesByName[$name]['usd'] = $usd;
+        }
 
-            // EUR
-            if (
-                bccomp($eur, '0.00', 2) === 1
-                && (
-                    bccomp($lowestAveragePricesByName[$name]['eur'], '0.00', 2) === 0
-                    || bccomp($eur, $lowestAveragePricesByName[$name]['eur'], 2) === -1
-                )
-            ) {
-                $lowestAveragePricesByName[$name]['eur'] = $eur;
-            }
+        // EUR
+        if (
+            bccomp($eur, '0.00', 2) === 1
+            && (
+                bccomp($lowestAveragePricesByName[$name]['eur'], '0.00', 2) === 0
+                || bccomp($eur, $lowestAveragePricesByName[$name]['eur'], 2) === -1
+            )
+        ) {
+            $lowestAveragePricesByName[$name]['eur'] = $eur;
         }
 
         // TIX (independent of borders)
@@ -711,7 +711,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
 
         $oracleText = isset($sourceCard['oracle_text']) && is_string($sourceCard['oracle_text']) ? $sourceCard['oracle_text'] : '';
         $typeLine = isset($sourceCard['type_line']) && is_string($sourceCard['type_line']) ? $sourceCard['type_line'] : '';
-        $partnerKeywords = ['Partner', 'Friends forever', 'Choose a Background'];
+        $partnerKeywords = ['Partner', 'Friends forever', 'Choose a Background', 'Doctor\'s companion'];
 
         if (array_any($partnerKeywords, static fn ($keyword) => mb_stripos($oracleText, $keyword) !== false)) {
             return true;
@@ -1670,7 +1670,7 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             return '0.00';
         }
 
-        return bcadd($value, '0', 2);
+        return bcadd($value, '0.00', 2);
     }
 
     /**

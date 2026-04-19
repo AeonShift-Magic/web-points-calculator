@@ -10,6 +10,7 @@
         <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_export', {'id': points_list.id}) }}" title="{{ 'global.export.title'|trans }}">{{ 'global.export.label'|trans }}</a>
         <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_import', {'id': points_list.id}) }}" title="{{ 'global.import.title'|trans }}">{{ 'global.import.label'|trans }}</a>
         <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+        <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_set_mvalues', {'id': points_list.id}) }}" title="{{ 'admin.form.mtg.pointslist.setmvalues.title'|trans }}">{{ 'admin.form.mtg.pointslist.setmvalues.label'|trans }}</a>
 
         <div>
             {{ include('admin/mtg/points_list/_delete_form.html.twig') }}
@@ -51,6 +52,30 @@
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslist.create.lastuploadedat.label'|trans }}</th>
                     <td>{{ points_list.lastUploadedAt|date('Y-m-d H:i') }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslist.create.mvaluescount.label'|trans }}</th>
+                    <td>
+                        {{ points_list.MTGPointListMValues|length|default(0) }}
+                        <br>
+                        {% if points_list.mValuesSetAt is defined and points_list.mValuesSetAt is not empty %}
+                            {{ points_list.mValuesSetAt|date('Y-m-d H:i') }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslist.create.factors.label'|trans }}</th>
+                    <td>
+                        <strong>{{ points_list.mValueFactor0 }}</strong> // <strong>{{ points_list.mValueFactor1 }}</strong> // <strong>{{ points_list.mValueFactor2 }}</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'admin.form.mtg.pointslist.create.shipping.label'|trans }}</th>
+                    <td>
+                        <strong>{{ points_list.mValueShippingFloor }}</strong> // <strong>{{ points_list.mValueShippingCeiling }}</strong> // <strong>x{{ points_list.mValueShippingMultiplier }}</strong>
+                    </td>
                 </tr>
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslist.import.pvalues.text'|trans }}</th>
@@ -283,6 +308,7 @@
         <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_export', {'id': points_list.id}) }}" title="{{ 'global.export.title'|trans }}">{{ 'global.export.label'|trans }}</a>
         <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_import', {'id': points_list.id}) }}" title="{{ 'global.import.title'|trans }}">{{ 'global.import.label'|trans }}</a>
         <a class="btn btn-green" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+        <a class="btn btn-blue" href="{{ url('admin_mtg_points_list_set_mvalues', {'id': points_list.id}) }}" title="{{ 'admin.form.mtg.pointslist.setmvalues.title'|trans }}">{{ 'admin.form.mtg.pointslist.setmvalues.label'|trans }}</a>
 
         <div>
             {{ include('admin/mtg/points_list/_delete_form.html.twig') }}

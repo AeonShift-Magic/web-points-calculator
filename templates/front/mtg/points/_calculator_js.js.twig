@@ -770,25 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (rows.length <= 1) return;
 
         // The "Color Identity" column is icons in the cell, but the sortable value is stored on the row.
-        const COLOR_IDENTITY_COL_INDEX = 6;
-
-        const filterFormEl = document.getElementById('choose-commander-filter');
-        const selectedIdentity = (() => {
-            if (!(filterFormEl instanceof HTMLFormElement)) return '';
-
-            const checked = Array
-                .from(filterFormEl.querySelectorAll('input[type="checkbox"][data-update-commanders][data-color]'))
-                .filter(el => el instanceof HTMLInputElement && el.checked)
-                .map(el => String(el.value ?? '').trim().toUpperCase())
-                .filter(Boolean);
-
-            if (checked.length === 0) return '';
-
-            const set = new Set(checked);
-            // Canonical order for identity strings
-            const order = ['W', 'U', 'B', 'R', 'G', 'C'];
-            return order.filter(c => set.has(c)).join('');
-        })();
+        const COLOR_IDENTITY_COL_INDEX = 7;
 
         const decorated = rows.map((rowEl, idx) => {
             if (colIndex === COLOR_IDENTITY_COL_INDEX) {
@@ -823,25 +805,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Color identity sorting:
             // If the user selected colors, put rows that CONTAIN ALL selected colors first.
-            // Then: 1) by size (len), 2) by canonical identity string (WUBRGC presence order).
+            // Then: 1) by size (len), 2) by fixed presence priority W, U, R, B, G, C.
             if (colIndex === COLOR_IDENTITY_COL_INDEX) {
                 const aId = String(a.colorIdentity ?? '').trim().toUpperCase();
                 const bId = String(b.colorIdentity ?? '').trim().toUpperCase();
 
-                if (selectedIdentity !== '') {
-                    const aMatches = selectedIdentity.split('').every(c => aId.includes(c));
-                    const bMatches = selectedIdentity.split('').every(c => bId.includes(c));
-                    if (aMatches !== bMatches) return aMatches ? -1 : 1;
-                }
-
+                // 1) Primary: by color identity length (ascending for ASC, descending for DESC)
                 if (aId.length !== bId.length) {
-                    return (aId.length < bId.length ? -1 : 1) * dir;
+                    return (aId.length - bId.length) * dir;
                 }
 
-                if (aId !== bId) {
-                    return (aId < bId ? -1 : 1) * dir;
+                // 2) Tie-break: presence order W, then U, then B, then R, then G, then C
+                const ORDER = ['W', 'U', 'B', 'R', 'G', 'C'];
+                for (const c of ORDER) {
+                    const ap = aId.includes(c) ? 0 : 1;
+                    const bp = bId.includes(c) ? 0 : 1;
+                    if (ap !== bp) {
+                        return ap - bp;
+                    }
                 }
 
+                // 3) Stable fallback
                 return a.idx - b.idx;
             }
 
@@ -1448,24 +1432,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rows = Array.from(tbody.rows).filter(r => r instanceof HTMLTableRowElement);
         if (rows.length <= 1) return;
 
-        const COLOR_IDENTITY_COL_INDEX = 4;
-
-        const filterFormEl = document.getElementById('choose-card-filter');
-        const selectedIdentity = (() => {
-            if (!(filterFormEl instanceof HTMLFormElement)) return '';
-
-            const checked = Array
-                .from(filterFormEl.querySelectorAll('input[type="checkbox"][name="choose-card-color-identity[]"]'))
-                .filter(el => el instanceof HTMLInputElement && el.checked)
-                .map(el => String(el.value ?? '').trim().toUpperCase())
-                .filter(Boolean);
-
-            if (checked.length === 0) return '';
-
-            const set = new Set(checked);
-            const order = ['W', 'U', 'B', 'R', 'G', 'C'];
-            return order.filter(c => set.has(c)).join('');
-        })();
+        const COLOR_IDENTITY_COL_INDEX = 5;
 
         const canonicalizeIdentity = (raw) => {
             const s = String(raw ?? '').trim().toUpperCase();
@@ -1509,26 +1476,29 @@ document.addEventListener('DOMContentLoaded', () => {
             // Always push empty cells to the bottom (regardless of ASC/DESC)
             const aEmpty = isEmptyKey(a.key);
             const bEmpty = isEmptyKey(b.key);
+
             if (aEmpty !== bEmpty) return aEmpty ? 1 : -1;
 
             if (colIndex === COLOR_IDENTITY_COL_INDEX) {
                 const aId = String(a.colorIdentity ?? '').trim().toUpperCase();
                 const bId = String(b.colorIdentity ?? '').trim().toUpperCase();
 
-                if (selectedIdentity !== '') {
-                    const aMatches = selectedIdentity.split('').every(c => aId.includes(c));
-                    const bMatches = selectedIdentity.split('').every(c => bId.includes(c));
-                    if (aMatches !== bMatches) return aMatches ? -1 : 1;
-                }
-
+                // 1) Primary: by color identity length (ascending for ASC, descending for DESC)
                 if (aId.length !== bId.length) {
-                    return (aId.length < bId.length ? -1 : 1) * dir;
+                    return (aId.length - bId.length) * dir;
                 }
 
-                if (aId !== bId) {
-                    return (aId < bId ? -1 : 1) * dir;
+                // 2) Tie-break: presence order W, then U, then B, then R, then G, then C
+                const ORDER = ['W', 'U', 'B', 'R', 'G', 'C'];
+                for (const c of ORDER) {
+                    const ap = aId.includes(c) ? 0 : 1;
+                    const bp = bId.includes(c) ? 0 : 1;
+                    if (ap !== bp) {
+                        return ap - bp;
+                    }
                 }
 
+                // 3) Stable fallback
                 return a.idx - b.idx;
             }
 
@@ -2573,7 +2543,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (deckListData?.remaining === 'N/A') {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="gray-text">N/A</span>`);
-            } else if (deckListData?.remaining > 0) {
+            } else if (deckListData?.remaining >= 0) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="green-text">${ deckListData?.remaining } <span class="icon-ok"></span></span>`);
             } else if (!Number.isFinite(deckListData?.remaining)) {
                 targetDOMElement.insertAdjacentHTML('beforeend', `<span class="red-text">?<span class="icon-cancel"></span></span>`);
@@ -2874,6 +2844,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Handle "Download your list" event
         const downloadLink = target.closest('[data-class="decklist-download-link"]');
         if (downloadLink) {
             e.preventDefault();
@@ -2882,6 +2853,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Handle card-clicked and quiz-finished format switches
         const link = target.closest('a[data-format-switch], a[data-quiz-target]');
         if (link) {
             const formatSwitch = link.getAttribute('data-format-switch');
@@ -2896,6 +2868,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setRadio('timeline', preset.values.timeline);
 
                 updateFormatNames();
+                renderRankedCardsContainer();
 
                 if (calculatorEl) {
                     calculatorEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -2969,6 +2942,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Handle "share decklist" through URL events
         const shareDecklists = target.closest('a[data-sharedecklists]');
         if (shareDecklists) {
             e.preventDefault();
@@ -3189,6 +3163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setRadio('commander', forcedPreset.values.commander);
         setRadio('timeline', forcedPreset.values.timeline);
         updateFormatNames();
+        renderRankedCardsContainer();
         return;
     }
 

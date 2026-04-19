@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: 'Rules model'
                         help: 'Ang rules model na ilalapat'
+                    mvaluescount:
+                        label: 'Bilang ng M-Values at Huling Petsa ng Pag-lock'
+                    factors:
+                        label: 'Mga Salik ng M-Values'
+                    shipping:
+                        label: 'M-Value Shipping Pinakamababa // Pinakamataas // Multiplier'
                 import:
                     firstline:
                         text: '⚠️ Ang unang 5 linya ng dokumentong ito ay hindi isasama sa pag-import; gamitin ang mga ito para sa metadata'
@@ -241,6 +247,13 @@ admin:
                     info: 'Points Import'
                 legends:
                     info: 'Detalye ng Point List'
+                setmvalues:
+                    title: '💵 Itakda ang M-Values'
+                    label: '💵 Itakda ang M-Values'
+                mvalues:
+                    set:
+                        success:
+                            text: 'Matagumpay na naitakda ang M-Values, {count} item ang na-update.'
             pointslistcard:
                 create:
                     pointslist:
@@ -427,6 +440,10 @@ admin:
                         label: 'Latest M-Value'
                     mvaluecount:
                         label: 'M-Value Count (bilang ng mga presyong ginagamit ngayon)'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'Mga Puntos ng M-Value'
         user:
             account:
                 roles:
@@ -556,6 +573,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - Detalye ng source card "{name}"'
                     label: 'Magic The Gathering™ - Detalye ng source card "{name}"'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - Point List M-Values'
         cardsourceactivityhistory:
             index:
                 label: 'Card sources activity history'
@@ -974,7 +994,7 @@ front:
                     cznoteligibleonecommander:
                         text: 'Hindi valid ang iyong Command Zone; dapat eligible ang commander mo na maging commander.'
                     cznoteligiblemulticommander:
-                        text: 'Isa sa mga card sa Command Zone mo ay hindi eligible na maging commander (multiple commanders) para sa mga card na ito: '
+                        text: 'Isa o higit pa sa mga card sa iyong Command Zone ay hindi karapat-dapat para sa paggamit ng maraming commander: '
                     cznotvalidmulticztypenotthesame:
                         text: 'Dapat pare-pareho ang Partner Ability type ng lahat ng commander mo (tulad ng Partner, Friends forever, atbp.).'
                     coloridentitymissmatch:

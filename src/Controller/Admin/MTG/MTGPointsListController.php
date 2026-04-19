@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Form\Admin\MTG\AdminMTGPointsListImportType;
 use App\Form\Admin\MTG\AdminMTGPointsListType;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
+use App\Repository\MTG\MTGPointsListMValueRepository;
 use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -60,7 +61,7 @@ final class MTGPointsListController extends AbstractController
             $pointsList->setUpdatedBy($currentUser);
 
             // Update the model with its real name
-            if(class_exists($pointsList->getRulesModel()) && method_exists($pointsList->getRulesModel(), 'getName')) {
+            if (class_exists($pointsList->getRulesModel()) && method_exists($pointsList->getRulesModel(), 'getName')) {
                 /** @var class-string $class */
                 $class = $pointsList->getRulesModel();
                 /** @var string $fullName */
@@ -203,7 +204,7 @@ final class MTGPointsListController extends AbstractController
             $entityManager->persist($pointsList);
 
             // Update the model with its real name
-            if(class_exists($pointsList->getRulesModel()) && method_exists($pointsList->getRulesModel(), 'getName')) {
+            if (class_exists($pointsList->getRulesModel()) && method_exists($pointsList->getRulesModel(), 'getName')) {
                 /** @var class-string $class */
                 $class = $pointsList->getRulesModel();
                 /** @var string $fullName */
@@ -269,6 +270,35 @@ final class MTGPointsListController extends AbstractController
         );
 
         return $pointsListModel->generateCSVResponseForList($MTGPointsList);
+    }
+
+    #[Route('/{id}/set-mvalues', name: 'admin_mtg_points_list_set_mvalues', methods: ['GET'])]
+    public function setMValues(#[MapEntity(id: 'id')] MTGPointsList $pointsList, EntityManagerInterface $entityManager, TranslatorInterface $translator, MTGSourceCardRepository $MTGSourceCardRepository, MTGPointsListMValueRepository $MTGPointsListMValueRepository, Security $security): Response
+    {
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+        $pointsList->setUpdatedBy($currentUser);
+
+        // Update the M-Values for this Points List
+        if (class_exists($pointsList->getRulesModel()) && method_exists($pointsList->getRulesModel(), 'setMValuesForPointsList')) {
+            $rulesModelClassString = $pointsList->getRulesModel();
+            if (class_exists($rulesModelClassString)) {
+                $rulesModel = new $rulesModelClassString(
+                    $entityManager,
+                    $translator,
+                    $MTGSourceCardRepository,
+                    $MTGPointsListMValueRepository,
+                    $security
+                );
+
+                if ($rulesModel instanceof PointsListModelInterface) {
+                    $updatedCount = $rulesModel->setMValuesForPointsList($pointsList);
+                    $this->addFlash('success', $translator->trans('admin.form.mtg.pointslist.mvalues.set.success.text', ['count' => $updatedCount]));
+                }
+            }
+        }
+
+        return $this->redirectToRoute('admin_mtg_points_list_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}', name: 'admin_mtg_points_list_show', methods: ['GET'])]

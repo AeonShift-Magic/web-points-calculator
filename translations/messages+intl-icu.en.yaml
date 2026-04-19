@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: 'Rules model'
                         help: 'The rules model to apply'
+                    mvaluescount:
+                        label: 'M-Values Count and Last Locked Date'
+                    factors:
+                        label: 'M-Values Factors'
+                    shipping:
+                        label: 'M-Value Shipping Floor // Ceiling // Multiplier'
                 import:
                     firstline:
                         text: '⚠️ The first 5 Lines of this document will be ignored while importing, use them for metadata'
@@ -241,6 +247,13 @@ admin:
                     info: 'Points Import'
                 legends:
                     info: 'Point List details'
+                setmvalues:
+                    title: '💵 Set M-Values'
+                    label: '💵 Set M-Values'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values successfully set, {count} updated items.'
             pointslistcard:
                 create:
                     pointslist:
@@ -427,6 +440,10 @@ admin:
                         label: 'Latest M-Value'
                     mvaluecount:
                         label: 'M-Value Count (number of prices used currently)'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'M-Value Points'
         user:
             account:
                 roles:
@@ -504,6 +521,8 @@ admin:
                 import:
                     label: 'Magic The Gathering™ - Import Points for List "{name}"'
                     title: 'Magic The Gathering™ - Import Points for List "{name}"'
+                mvalues:
+                    title: 'messages'
             pointslistcard:
                 index:
                     label: 'Magic The Gathering™ - Point List Cards'
@@ -556,6 +575,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - Details on source card "{name}"'
                     label: 'Magic The Gathering™ - Details on source card "{name}"'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - Point List M-Values'
         cardsourceactivityhistory:
             index:
                 label: 'Card sources activity history'
@@ -974,7 +996,7 @@ front:
                     cznoteligibleonecommander:
                         text: 'Your Command Zone is not valid, your commander must be eligible to be a commander.'
                     cznoteligiblemulticommander:
-                        text: 'One of the card in your Command Zone is not eligible to be a commander (multiple commanders) for these cards: '
+                        text: 'One or more of the cards in your Command Zone are not eligible for using multiple commanders: '
                     cznotvalidmulticztypenotthesame:
                         text: 'All of your commanders must be of the same Partner Ability type (such as Partner, Friends forever, etc.).'
                     coloridentitymissmatch:

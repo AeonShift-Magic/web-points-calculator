@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: 'Modello di regole'
                         help: 'Il modello di regole da applicare'
+                    mvaluescount:
+                        label: 'Conteggio M-Values e ultima data di blocco'
+                    factors:
+                        label: 'Fattori M-Values'
+                    shipping:
+                        label: 'M-Value Spedizione Minimo // Massimo // Moltiplicatore'
                 import:
                     firstline:
                         text: '⚠️ Le prime 5 righe di questo documento verranno ignorate durante l’import; usale per i metadati'
@@ -241,6 +247,13 @@ admin:
                     info: 'Importazione punti'
                 legends:
                     info: 'Dettagli della lista punti'
+                setmvalues:
+                    title: '💵 Imposta M-Values'
+                    label: '💵 Imposta M-Values'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values impostati con successo, {count} elemento/i aggiornato/i.'
             pointslistcard:
                 create:
                     pointslist:
@@ -427,6 +440,10 @@ admin:
                         label: 'Ultimo M-Value'
                     mvaluecount:
                         label: 'Conteggio M-Value (numero di prezzi usati attualmente)'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'Punti M-Value'
         user:
             account:
                 roles:
@@ -556,6 +573,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - Dettagli carta sorgente "{name}"'
                     label: 'Magic The Gathering™ - Dettagli carta sorgente "{name}"'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - M-Values della lista punti'
         cardsourceactivityhistory:
             index:
                 label: 'Storico attività sorgenti carte'
@@ -974,7 +994,7 @@ front:
                     cznoteligibleonecommander:
                         text: 'La tua Command Zone non è valida: il tuo commander deve essere idoneo a essere un commander.'
                     cznoteligiblemulticommander:
-                        text: 'Una delle carte nella tua Command Zone non è idonea a essere un commander (commander multipli) per queste carte: '
+                        text: 'Una o più carte nella tua Zona di Comando non possono essere utilizzate da più comandanti: '
                     cznotvalidmulticztypenotthesame:
                         text: 'Tutti i tuoi commander devono essere dello stesso tipo di abilità Partner (come Partner, Friends forever, ecc.).'
                     coloridentitymissmatch:

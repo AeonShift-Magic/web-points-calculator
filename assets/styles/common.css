@@ -1030,7 +1030,7 @@ table ul {
 
 .table-id-column {
     text-align: center;
-    width: 4em;
+    width: 4.5em;
 }
 
 table .btn {
@@ -3686,8 +3686,8 @@ iframe {
     }
 
     .table-id-column {
-        min-width: 3em;
-        width: 3em;
+        min-width: 3.5em;
+        width: 3.5em;
     }
 
     .header-highlight-table thead {

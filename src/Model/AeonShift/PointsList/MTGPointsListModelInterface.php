@@ -50,4 +50,14 @@ interface MTGPointsListModelInterface extends PointsListModelInterface
      * }
      */
     public function mergeMTGSourceAndPointsListAsArray(SourceItemsRepositoryInterface $entityRepository, PointsListInterface $pointsList): array;
+
+    /**
+     * This will set the M-Values for the given Points List.
+     * Deleting, then re-adding the M-Values in the table, based on current Source Cards.
+     *
+     * @param MTGPointsList $pointsList the Points List to set the M-Values for
+     *
+     * @return int the number of updated items
+     */
+    public function setMValuesForPointsList(MTGPointsList $pointsList): int;
 }

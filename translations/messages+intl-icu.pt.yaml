@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: 'Modelo de regras'
                         help: 'O modelo de regras a aplicar'
+                    mvaluescount:
+                        label: 'Contagem de M-Values e última data de bloqueio'
+                    factors:
+                        label: 'Fatores de M-Values'
+                    shipping:
+                        label: 'M-Value Piso de envio // Teto // Multiplicador'
                 import:
                     firstline:
                         text: '⚠️ As primeiras 5 linhas deste documento serão ignoradas durante a importação; use-as para metadados'
@@ -241,6 +247,13 @@ admin:
                     info: 'Importação de pontos'
                 legends:
                     info: 'Detalhes da Lista de Pontos'
+                setmvalues:
+                    title: '💵 Definir M-Values'
+                    label: '💵 Definir M-Values'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values definidos com sucesso, {count} itens atualizados.'
             pointslistcard:
                 create:
                     pointslist:
@@ -427,6 +440,10 @@ admin:
                         label: 'Último M-Value'
                     mvaluecount:
                         label: 'Contagem de M-Value (número de preços usados atualmente)'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'Pontos M-Value'
         user:
             account:
                 roles:
@@ -556,6 +573,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - Detalhes da carta fonte "{name}"'
                     label: 'Magic The Gathering™ - Detalhes da carta fonte "{name}"'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - M-Values da lista de pontos'
         cardsourceactivityhistory:
             index:
                 label: 'Histórico de atividade das fontes de cartas'
@@ -974,7 +994,7 @@ front:
                     cznoteligibleonecommander:
                         text: 'A sua Command Zone não é válida; o seu commander deve ser elegível para ser commander.'
                     cznoteligiblemulticommander:
-                        text: 'Uma das cartas na sua Command Zone não é elegível para ser commander (múltiplos commanders) para estas cartas: '
+                        text: 'Uma ou mais cartas na sua Zona de Comando não são elegíveis para uso por múltiplos comandantes: '
                     cznotvalidmulticztypenotthesame:
                         text: 'Todos os seus commanders devem ser do mesmo tipo de habilidade Partner (como Partner, Friends forever, etc.).'
                     coloridentitymissmatch:
@@ -1378,4 +1398,30 @@ user:
             label: Administrador
         user:
             label: Utilizador regular
+    form:
+        mtg:
+            pointslist:
+                create:
+                    mvaluescount:
+                        label: 'Contagem de M-Values e última data de bloqueio'
+                    factors:
+                        label: 'Fatores M-Values'
+                    shipping:
+                        label: 'M-Value Piso de envio // Teto // Multiplicador'
+                setmvalues:
+                    title: '💵 Definir M-Values'
+                    label: '💵 Definir M-Values'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values definidos com sucesso, {count} itens atualizados.'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'Pontos M-Value'
+    nav:
+        mtg:
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - M-Values da lista de pontos'
 '': ''

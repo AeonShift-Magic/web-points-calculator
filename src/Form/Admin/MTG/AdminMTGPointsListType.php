@@ -10,6 +10,7 @@ use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -60,15 +61,100 @@ final class AdminMTGPointsListType extends AbstractType implements AdminMTGFormT
                 'rulesModel',
                 ChoiceType::class,
                 [
-                    'required'    => true,
-                    'empty_data'  => '',
-                    'choices'     => $this->pointsListModelDetectorModel->getPointsListModelsForForms(self::LICENCE),
-                    'constraints' => [
+                    'required'                  => true,
+                    'empty_data'                => '',
+                    'choices'                   => $this->pointsListModelDetectorModel->getPointsListModelsForForms(self::LICENCE),
+                    'constraints'               => [
                         new NotNull(),
                     ],
                     'choice_translation_domain' => false,
                     'label'                     => 'admin.form.abstract.update.create.rulesmodel.label',
                     'help'                      => 'admin.form.abstract.update.create.rulesmodel.help',
+                ]
+            )
+            ->add(
+                'mValueFactor0',
+                NumberType::class,
+                [
+                    'required'           => true,
+                    'empty_data'         => 0.0,
+                    'scale'              => 8,
+                    'label'              => 'M-Value Factor 0',
+                    'help'               => 'x^0',
+                    'translation_domain' => false,
+                    'constraints'        => [
+                        new NotNull(),
+                    ],
+                ]
+            )
+            ->add(
+                'mValueFactor1',
+                NumberType::class,
+                [
+                    'required'    => true,
+                    'empty_data'  => 0.0,
+                    'label'       => 'M-Value Factor 1',
+                    'help'        => 'x^1',
+                    'scale'       => 8,
+                    'constraints' => [
+                        new NotNull(),
+                    ],
+                ]
+            )
+            ->add(
+                'mValueFactor2',
+                NumberType::class,
+                [
+                    'required'    => true,
+                    'empty_data'  => 0.0,
+                    'label'       => 'M-Value Factor 2',
+                    'help'        => 'x^2',
+                    'scale'       => 8,
+                    'constraints' => [
+                        new NotNull(),
+                    ],
+                ]
+            )
+            ->add(
+                'mValueShippingFloor',
+                NumberType::class,
+                [
+                    'required'    => true,
+                    'empty_data'  => 50.0,
+                    'label'       => 'M-Value Shipping Floor',
+                    'help'        => 'Min value for shipping added price.',
+                    'scale'       => 8,
+                    'constraints' => [
+                        new NotNull(),
+                    ],
+                ]
+            )
+            ->add(
+                'mValueShippingCeiling',
+                NumberType::class,
+                [
+                    'required'    => true,
+                    'empty_data'  => 0.1,
+                    'label'       => 'M-Value Shipping Ceiling',
+                    'help'        => 'Max value for shipping added price.',
+                    'scale'       => 8,
+                    'constraints' => [
+                        new NotNull(),
+                    ],
+                ]
+            )
+            ->add(
+                'mValueShippingMultiplier',
+                NumberType::class,
+                [
+                    'required'    => true,
+                    'empty_data'  => 1.2,
+                    'label'       => 'M-Value Shipping Multiplier',
+                    'help'        => 'Multiplier value for shipping added price ([Base M-Value] * [This multiplier] = [Final Price For Financial Points]).',
+                    'scale'       => 8,
+                    'constraints' => [
+                        new NotNull(),
+                    ],
                 ]
             );
     }

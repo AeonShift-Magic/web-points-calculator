@@ -124,6 +124,12 @@ admin:
                     rulesmodel:
                         label: 'Model pravidel'
                         help: 'Model pravidel, který se má použít'
+                    mvaluescount:
+                        label: 'Počet M-Values a datum posledního uzamčení'
+                    factors:
+                        label: 'Faktory M-Values'
+                    shipping:
+                        label: 'M-Value Dolní mez dopravy // Horní mez // Násobitel'
                 import:
                     firstline:
                         text: '⚠️ Prvních 5 řádků tohoto dokumentu bude při importu ignorováno; použijte je pro metadata'
@@ -241,6 +247,13 @@ admin:
                     info: 'Import bodů'
                 legends:
                     info: 'Detaily seznamu bodů'
+                setmvalues:
+                    title: '💵 Nastavit M-Values'
+                    label: '💵 Nastavit M-Values'
+                mvalues:
+                    set:
+                        success:
+                            text: 'M-Values úspěšně nastaveny, {count} položek aktualizováno.'
             pointslistcard:
                 create:
                     pointslist:
@@ -427,6 +440,10 @@ admin:
                         label: 'Poslední M-Value'
                     mvaluecount:
                         label: 'Počet M-Value (počet aktuálně použitých cen)'
+            pointslistmvalue:
+                create:
+                    mvaluepoints:
+                        label: 'M-Value Points'
         user:
             account:
                 roles:
@@ -556,6 +573,9 @@ admin:
                 show:
                     title: 'Magic The Gathering™ - Detaily zdrojové karty "{name}"'
                     label: 'Magic The Gathering™ - Detaily zdrojové karty "{name}"'
+            pointslistmvalue:
+                index:
+                    label: 'Magic The Gathering™ - M-Values seznamu bodů'
         cardsourceactivityhistory:
             index:
                 label: 'Historie aktivity zdrojů karet'
@@ -596,6 +616,10 @@ admin:
             unpublish: 'Zrušit publikování'
             published: 'Aktualizace byla úspěšně publikována.'
             unpublished: 'Publikování aktualizace bylo úspěšně zrušeno.'
+        pointslistmvalue:
+            create:
+                mvaluepoints:
+                    label: 'Body M-Value'
 customblock:
     footer:
         en:
@@ -974,7 +998,7 @@ front:
                     cznoteligibleonecommander:
                         text: 'Vaše Command Zone není platná; váš commander musí být způsobilý být commanderem.'
                     cznoteligiblemulticommander:
-                        text: 'Jedna z karet ve vaší Command Zone není způsobilá být commanderem (více commanderů) pro tyto karty: '
+                        text: 'Jedna nebo více karet ve vaší velitelské zóně nemůže být použito pro více velitelů: '
                     cznotvalidmulticztypenotthesame:
                         text: 'Všichni vaši commanderi musí být stejného typu Partner schopnosti (např. Partner, Friends forever atd.).'
                     coloridentitymissmatch:

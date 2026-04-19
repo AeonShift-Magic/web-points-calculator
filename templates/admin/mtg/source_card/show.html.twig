@@ -122,11 +122,15 @@
                 <tr>
                     <th>{{ 'admin.form.mtg.pointslistcard.create.partnertype.label'|trans }}</th>
                     <td>
-                        {{ source_card.partnerType|default('global.none.label'|trans) }}
+                        (Partner &mdash;: {{ source_card.partnerType|default('global.none.label'|trans) }})
+                        <br>
+                        (Choose a Background: {{ ('global.' ~ source_card.chooseABackground|default(0) ~ '.label')|trans }})
                         <br>
                         (Background: {{ ('global.' ~ source_card.chooseABackground|default(0) ~ '.label')|trans }})
                         <br>
                         (Doctor: {{ ('global.' ~ source_card.aDoctor|default(0) ~ '.label')|trans }})
+                        <br>
+                        (Doctor's Companion: {{ ('global.' ~ source_card.doctorsCompanion|default(0) ~ '.label')|trans }})
                     </td>
                 </tr>
                 <tr>

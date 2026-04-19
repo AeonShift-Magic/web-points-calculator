@@ -28,6 +28,7 @@
                     <th>{{ 'admin.form.mtg.pointslist.create.filename.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.pointslist.create.lastuploadedat.label'|trans }}</th>
                     <th>{{ 'admin.form.mtg.pointslist.create.uploadnbcards.label'|trans }}</th>
+                    <th>{{ 'admin.form.mtg.pointslist.create.mvaluescount.label'|trans }}</th>
                     <th>{{ 'global.dates.label'|trans }}</th>
                     <th>{{ 'global.users.label'|trans }}</th>
                     <th class="actions-column">{{ 'global.actions.label'|trans }}</th>
@@ -57,6 +58,21 @@
                         <td>{{ points_list.lastUploadedAt|date('Y-m-d H:i') }}</td>
                         <td>{{ points_list.numberOfUploadedCards }}</td>
                         <td>
+                            {% if points_list.MTGPointListMValues|length > 0 %}
+                                <span class="blue-text">
+                                    {{ points_list.MTGPointListMValues|length }}
+                                    <br>
+                                    {% if points_list.mValuesSetAt is defined and points_list.mValuesSetAt is not empty %}
+                                        {{ points_list.mValuesSetAt|date('Y-m-d H:i') }}
+                                    {% else %}
+                                        --
+                                    {% endif %}
+                                </span>
+                            {% else %}
+                                <span class="gray-text">--</span>
+                            {% endif %}
+                        </td>
+                        <td>
                             {{ points_list.createdAt ? points_list.createdAt|date('Y-m-d') : '' }} / {{ points_list.updatedAt ? points_list.updatedAt|date('Y-m-d') : '' }}
                         </td>
                         <td>
@@ -67,6 +83,7 @@
                             <a class="btn btn-blue w-full" href="{{ url('admin_mtg_points_list_export', {'id': points_list.id}) }}" title="{{ 'global.export.title'|trans }}">{{ 'global.export.label'|trans }}</a>
                             <a class="btn btn-blue w-full" href="{{ url('admin_mtg_points_list_import', {'id': points_list.id}) }}" title="{{ 'global.import.title'|trans }}">{{ 'global.import.label'|trans }}</a>
                             <a class="btn btn-green w-full" href="{{ url('admin_mtg_points_list_edit', {'id': points_list.id}) }}" title="{{ 'global.editbutton.title'|trans }}">{{ 'global.editbutton.label'|trans }}</a>
+                            <a class="btn btn-blue w-full" href="{{ url('admin_mtg_points_list_set_mvalues', {'id': points_list.id}) }}" title="{{ 'admin.form.mtg.pointslist.setmvalues.title'|trans }}">{{ 'admin.form.mtg.pointslist.setmvalues.label'|trans }}</a>
                         </td>
                     </tr>
                 {% else %}
