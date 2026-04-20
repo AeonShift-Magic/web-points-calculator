@@ -1065,7 +1065,7 @@ front:
                 title: 'Bumalik sa nakaraang tanong'
             help:
                 text1: 'Tutulungan ka naming hanapin ang format mo.'
-                text2: 'Sagutin lang ang 5 mabilis na tanong na ito. ↓'
+                text2: 'Sagutin lang ang 7 mabilis na tanong na ito. ↓'
             question1:
                 label: 'Players/teams/life:'
                 text: 'Ilang players (teams) at life points ang gusto mo?'
@@ -1149,7 +1149,7 @@ front:
                     help: 'Naglalaro ka gamit ang original cards lang (o pinapayagan ang proxies).'
                 answer2:
                     label: 'Oo'
-                    help: 'Naglalaro ka gamit ang original cards lang, pero may money constraint ka sa decks at gusto mong gamitin ang aming M-Value para dito. <em class="comingsoon">Parating na!</em>'
+                    help: 'Naglalaro ka gamit ang original cards lang, pero may money constraint ka sa decks at gusto mong gamitin ang aming M-Value para dito.'
             question8:
                 label: 'Point List Update na gagamitin:'
                 text: 'Aling Point List update ang dapat gamitin? Laging gamitin ang pinakabago maliban kung sinusuri ang lumang decklists.'

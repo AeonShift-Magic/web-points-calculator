@@ -1067,7 +1067,7 @@ front:
                 title: 'Go back to the previous question'
             help:
                 text1: 'Let''s help you find your format.'
-                text2: 'Just answer these 5 quick questions. ↓'
+                text2: 'Just answer these 7 quick questions. ↓'
             question1:
                 label: 'Players/teams/life:'
                 text: 'How many players (teams) and life points do you want?'
@@ -1151,7 +1151,7 @@ front:
                     help: 'You''re playing with original cards only (or allowing proxies).'
                 answer2:
                     label: 'Yes'
-                    help: 'You''playing original cards only, but you have a money constraint on decks, and want to use our M-value for that. <em class="comingsoon">Coming Soon!</em>'
+                    help: 'You''playing original cards only, but you have a money constraint on decks, and want to use our M-value for that.'
             question8:
                 label: 'Point List Update in use:'
                 text: 'Which Point List update should be used? Always use the latest one unless checking past decklists.'

@@ -1065,7 +1065,7 @@ front:
                 title: 'Torna alla domanda precedente'
             help:
                 text1: 'Ti aiutiamo a trovare il tuo formato.'
-                text2: 'Rispondi semplicemente a queste 5 domande rapide. ↓'
+                text2: 'Rispondi semplicemente a queste 7 domande rapide. ↓'
             question1:
                 label: 'Giocatori/squadre/vita:'
                 text: 'Quanti giocatori (squadre) e punti vita vuoi?'
@@ -1149,7 +1149,7 @@ front:
                     help: 'Stai giocando solo con carte originali (o consentendo proxy).'
                 answer2:
                     label: 'Sì'
-                    help: 'Stai giocando solo con carte originali, ma hai un vincolo economico sui deck e vuoi usare la nostra M-Value per questo. <em class="comingsoon">In arrivo!</em>'
+                    help: 'Stai giocando solo con carte originali, ma hai un vincolo economico sui deck e vuoi usare la nostra M-Value per questo.'
             question8:
                 label: 'Aggiornamento della lista punti da usare:'
                 text: 'Quale aggiornamento della lista punti dovrebbe essere usato? Usa sempre l’ultimo salvo che tu stia controllando decklist passate.'

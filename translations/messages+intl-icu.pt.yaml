@@ -1065,7 +1065,7 @@ front:
                 title: 'Voltar à pergunta anterior'
             help:
                 text1: 'Vamos ajudá-lo a encontrar o seu formato.'
-                text2: 'Basta responder a estas 5 perguntas rápidas. ↓'
+                text2: 'Basta responder a estas 7 perguntas rápidas. ↓'
             question1:
                 label: 'Jogadores/equipas/vida:'
                 text: 'Quantos jogadores (equipas) e pontos de vida quer?'
@@ -1149,7 +1149,7 @@ front:
                     help: 'Está a jogar apenas com cartas originais (ou a permitir proxies).'
                 answer2:
                     label: 'Sim'
-                    help: 'Está a jogar apenas com cartas originais, mas tem uma restrição financeira nos decks e quer usar o nosso M-Value para isso. <em class="comingsoon">Em breve!</em>'
+                    help: 'Está a jogar apenas com cartas originais, mas tem uma restrição financeira nos decks e quer usar o nosso M-Value para isso.'
             question8:
                 label: 'Atualização da Lista de Pontos a usar:'
                 text: 'Que atualização da Lista de Pontos deve ser usada? Use sempre a mais recente, a menos que esteja a verificar decklists antigas.'

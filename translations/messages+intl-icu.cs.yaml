@@ -1069,7 +1069,7 @@ front:
                 title: 'Vrátit se na předchozí otázku'
             help:
                 text1: 'Pomůžeme vám najít váš formát.'
-                text2: 'Stačí odpovědět na těchto 5 rychlých otázek. ↓'
+                text2: 'Stačí odpovědět na těchto 7 rychlých otázek. ↓'
             question1:
                 label: 'Hráči/týmy/životy:'
                 text: 'Kolik hráčů (týmů) a životů chcete?'
@@ -1153,7 +1153,7 @@ front:
                     help: 'Hrajete pouze s originálními kartami (nebo povolujete proxy).'
                 answer2:
                     label: 'Ano'
-                    help: 'Hrajete pouze s originálními kartami, ale máte finanční limit na decky a chcete k tomu použít naši M-Value. <em class="comingsoon">Již brzy!</em>'
+                    help: 'Hrajete pouze s originálními kartami, ale máte finanční limit na decky a chcete k tomu použít naši M-Value.'
             question8:
                 label: 'Kterou aktualizaci seznamu bodů použít:'
                 text: 'Která aktualizace seznamu bodů se má použít? Vždy používejte nejnovější, pokud nekontrolujete starší decklisty.'
