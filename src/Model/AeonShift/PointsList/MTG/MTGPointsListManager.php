@@ -13,13 +13,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_UNICODE;
 use JsonException;
+use Override;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class MTGPointsListManager
+final class MTGPointsListManager implements MTGPointsListProviderInterface
 {
     /** @var string self-identifier for model grouping per license */
     public const string LICENSE = 'MTG';
@@ -104,6 +105,7 @@ final class MTGPointsListManager
      *
      * @return string
      */
+    #[Override]
     public function getAllPointsListsAndUpdatesAsJSONArray(): string
     {
         return (string)json_encode($this->getAllPointListAndUpdatesAsArray(), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);

@@ -6,7 +6,7 @@ declare(strict_types = 1);
 
 namespace App\Tests\Twig;
 
-use App\Model\AeonShift\PointsList\MTG\MTGPointsListManager;
+use App\Model\AeonShift\PointsList\MTG\MTGPointsListProviderInterface;
 use App\Twig\MTGCalculatorExtension;
 use JsonException;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -23,7 +23,8 @@ final class MTGCalculatorExtensionTest extends TestCase
 {
     public function testGetFunctionsReturnsExpectedTwigFunction(): void
     {
-        $manager = self::createStub(MTGPointsListManager::class);
+        /** @var MockObject&MTGPointsListProviderInterface $manager */
+        $manager = self::createStub(MTGPointsListProviderInterface::class);
 
         $extension = new MTGCalculatorExtension($manager);
 
@@ -40,8 +41,8 @@ final class MTGCalculatorExtensionTest extends TestCase
      */
     public function testGetUpdatesAndPointsListsAsJSONReturnsManagerResult(): void
     {
-        /** @var MockObject&MTGPointsListManager $manager */
-        $manager = $this->createMock(MTGPointsListManager::class);
+        /** @var MockObject&MTGPointsListProviderInterface $manager */
+        $manager = self::createMock(MTGPointsListProviderInterface::class);
         $manager
             ->expects(self::once())
             ->method('getAllPointsListsAndUpdatesAsJSONArray')

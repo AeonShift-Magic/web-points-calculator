@@ -1,0 +1,303 @@
+let unknownImageUrl = '{{ asset('images/unranked.jpg') }}';
+
+// Property headers for sub-tables
+let PROPERTY_HEADERS = [
+    'pointsBaseQuadruples',
+    'pointsBaseSingleton',
+    'pointsCommander',
+    'pointsCommanderSpecial',
+    'pointsDuelCommander',
+    'pointsDuelCommanderSpecial',
+    'pointsHighlander',
+    'pointsModern',
+    'pointsPioneer',
+    'pointsStandard'
+];
+
+// Property headers texts for sub-tables
+let PROPERTY_HEADER_TEXTS = {
+    'pointsBaseQuadruples': 'Base 4x',
+    'pointsBaseSingleton': 'Base 1x',
+    'pointsCommander': 'Commander',
+    'pointsCommanderSpecial': 'Commander Special',
+    'pointsDuelCommander': 'DC',
+    'pointsDuelCommanderSpecial': 'DC Special',
+    'pointsHighlander': 'Highlander',
+    'pointsModern': 'Modern',
+    'pointsPioneer': 'Pioneer',
+    'pointsStandard': 'Standard'
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Messages, localized
+    const MESSAGES = {
+        none: '{{ 'global.none.label'|trans|raw }}',
+        unranked: '{{ 'front.mtg.choose.links.choosecommander.table.status.unranked'|trans|raw }}'
+    };
+
+    const root = document.getElementById('compare-container');
+    if (!root) {
+        return;
+    }
+
+    // Cache DOM lookups once
+    const update1 = root.querySelector('#update1');
+    const update2 = root.querySelector('#update2');
+    if (!update1 || !update2) {
+        return;
+    }
+
+    window.requestAnimationFrame(() => {
+        const compareTableBody = document.getElementById('compare-table-body');
+        if (!compareTableBody) {
+            return;
+        }
+
+        /**
+         * Get card data for a specific update and card name
+         */
+        function getCardData(updateId, cardName) {
+            if (!updateId || !cardName || !window.updates || !window.updates.updates) {
+                return null;
+            }
+            const update = window.updates.updates[updateId];
+            if (!update || !update.pointsList || !update.pointsList.ranked) {
+                return null;
+            }
+            return update.pointsList.ranked[cardName] || null;
+        }
+
+        /**
+         * Collect all unique card names from both selected updates
+         */
+        function getAllUniqueCardNames(updateId1, updateId2) {
+            const cardNames = new Set();
+
+            if (updateId1 && window.updates && window.updates.updates && window.updates.updates[updateId1]) {
+                const update1Data = window.updates.updates[updateId1];
+                if (update1Data.pointsList && update1Data.pointsList.ranked) {
+                    Object.keys(update1Data.pointsList.ranked).forEach(name => cardNames.add(name));
+                }
+            }
+
+            if (updateId2 && window.updates && window.updates.updates && window.updates.updates[updateId2]) {
+                const update2Data = window.updates.updates[updateId2];
+                if (update2Data.pointsList && update2Data.pointsList.ranked) {
+                    Object.keys(update2Data.pointsList.ranked).forEach(name => cardNames.add(name));
+                }
+            }
+
+            return Array.from(cardNames).sort();
+        }
+
+        /**
+         * Compare two values and determine if they're different
+         */
+        function areValuesDifferent(val1, val2) {
+            // Both null/undefined are considered same
+            if ((val1 === null || val1 === undefined) && (val2 === null || val2 === undefined)) {
+                return false;
+            }
+            // One is null/undefined, other is not
+            if ((val1 === null || val1 === undefined) !== (val2 === null || val2 === undefined)) {
+                return true;
+            }
+            // Compare actual values
+            return val1 !== val2;
+        }
+
+        /**
+         * Create a sub-table for a card's properties
+         */
+        function createSubTable(cardData1, cardData2, isFirstColumn) {
+            const table = document.createElement('table');
+            table.className = 'w-full text-sm table center m-0!';
+
+            // Create header row
+            const thead = document.createElement('thead');
+            thead.style.backgroundColor = 'transparent';
+            thead.style.boxShadow = 'none';
+            const headerRow = document.createElement('tr');
+            headerRow.style.backgroundColor = 'transparent';
+
+            PROPERTY_HEADERS.forEach(header => {
+                const th = document.createElement('th');
+                th.style.backgroundColor = 'transparent';
+                th.style.wordWrap = 'normal';
+                th.style.borderWidth = '0';
+                th.className = 'px-0! py-0! text-xs font-normal text-wrap break-normal';
+                th.textContent = PROPERTY_HEADER_TEXTS[header];
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+
+            // Create body row
+            const tbody = document.createElement('tbody');
+            const bodyRow = document.createElement('tr');
+            bodyRow.style.backgroundColor = 'transparent';
+
+            PROPERTY_HEADERS.forEach(header => {
+                const td = document.createElement('td');
+                td.className = 'px-0! py-0! text-center';
+
+                const currentData = isFirstColumn ? cardData1 : cardData2;
+                const otherData = isFirstColumn ? cardData2 : cardData1;
+
+                const currentValue = currentData && currentData[header] !== null && currentData[header] !== undefined
+                    ? currentData[header]
+                    : null;
+                const otherValue = otherData && otherData[header] !== null && otherData[header] !== undefined
+                    ? otherData[header]
+                    : null;
+
+                if (currentValue !== null) {
+                    td.textContent = currentValue;
+
+                    // Apply color based on comparison
+                    if (areValuesDifferent(currentValue, otherValue)) {
+                        td.style.backgroundColor = '#005d1f';
+                        td.style.color = '#00ff57';
+                        td.style.fontWeight = 'bold';
+                    } else {
+                        td.style.backgroundColor = 'transparent';
+                        td.style.color = '#919191';
+                    }
+                } else {
+                    // No value - apply gray if other is also null, green if other has value
+                    if (otherValue !== null) {
+                        td.style.backgroundColor = '#005d1f';
+                        td.style.color = '#00ff57';
+                        td.style.fontWeight = 'bold';
+                    } else {
+                        td.style.backgroundColor = 'transparent';
+                        td.style.color = '#919191';
+                    }
+                }
+
+                bodyRow.appendChild(td);
+            });
+
+            tbody.appendChild(bodyRow);
+            table.appendChild(tbody);
+
+            return table;
+        }
+
+        /**
+         * Update the comparison table based on selected updates
+         */
+        function updateComparisonTable() {
+            const updateId1 = update1.value;
+            const updateId2 = update2.value;
+
+            // Clear existing rows
+            compareTableBody.innerHTML = '';
+
+            // If neither update is selected, show placeholder
+            if (!updateId1 && !updateId2) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 3;
+                cell.className = 'text-center';
+                cell.textContent = '...';
+                row.appendChild(cell);
+                compareTableBody.appendChild(row);
+                return;
+            }
+
+            // Get all unique card names
+            const cardNames = getAllUniqueCardNames(updateId1, updateId2);
+
+            if (cardNames.length === 0) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 3;
+                cell.className = 'text-center';
+                cell.textContent = MESSAGES.none;
+                row.appendChild(cell);
+                compareTableBody.appendChild(row);
+                return;
+            }
+
+            // Create rows for each card
+            cardNames.forEach(cardName => {
+                const row = document.createElement('tr');
+
+                // Cell 1: Card name
+                const nameCell = document.createElement('td');
+                nameCell.className = 'px-0! py-0! font-semibold border-l border-gray-600';
+                let imageUrl = null;
+                if (typeof window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.imageurl === 'string' && window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.imageurl !== '') {
+                    imageUrl = window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.imageurl;
+                } else if (typeof window.updates?.updates?.[updateId2]?.pointsList?.ranked?.[cardName]?.imageurl === 'string' && window.updates?.updates?.[updateId2]?.pointsList?.ranked?.[cardName]?.imageurl !== '') {
+                    imageUrl = window.updates?.updates?.[updateId2]?.pointsList?.ranked?.[cardName]?.imageurl;
+                }
+
+                if (typeof imageUrl === 'string') {
+                    nameCell.innerHTML = `<a href="https://scryfall.com/search?q=${ encodeURIComponent(cardName) }" data-imageurl="${ imageUrl }" title="Scryfall Search" target="_blank">
+                                                <span class="icon-search"></span> ${ cardName }
+                                          </a>`;
+                } else {
+                    nameCell.textContent = cardName;
+                }
+
+                let ci = null;
+
+                if (typeof window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.ci === 'object') {
+                    ci = window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.ci;
+                } else if (typeof window.updates?.updates?.[updateId2]?.pointsList?.ranked?.[cardName]?.ci === 'object') {
+                    ci = window.updates?.updates?.[updateId2]?.pointsList?.ranked?.[cardName]?.ci;
+                }
+
+                if (ci !== null && Array.isArray(ci) && ci.length > 0) {
+                    const spans = ci.map(value =>
+                        `<span title="{${ value }}" class="color-identity color-identity-${ value.toLowerCase() }">{${ value }}</span>`
+                    ).join('');
+
+                    nameCell.innerHTML += `
+                        <span class="text-lg flex flex-row items-center justify-center w-full h-full">
+                            ${ spans }
+                        </span>
+                    `;
+                }
+                row.appendChild(nameCell);
+
+                // Get card data from both updates
+                const cardData1 = getCardData(updateId1, cardName);
+                const cardData2 = getCardData(updateId2, cardName);
+
+                // Cell 2: Update 1 data
+                const cell1 = document.createElement('td');
+                cell1.className = 'px-0! py-0! border-l border-r border-gray-600';
+                cell1.style.backgroundColor = 'rgba(0,118,255,0.1)';
+                if (cardData1) {
+                    cell1.appendChild(createSubTable(cardData1, cardData2, true));
+                }
+                row.appendChild(cell1);
+
+                // Cell 3: Update 2 data
+                const cell2 = document.createElement('td');
+                cell2.className = 'px-0! py-0! border-r border-gray-600';
+                cell2.style.backgroundColor = 'rgba(61,0,255,0.1)';
+                if (cardData2) {
+                    cell2.appendChild(createSubTable(cardData1, cardData2, false));
+                }
+                row.appendChild(cell2);
+
+                compareTableBody.appendChild(row);
+            });
+        }
+
+        // Add event listeners to both selects
+        update1.addEventListener('change', updateComparisonTable);
+        update2.addEventListener('change', updateComparisonTable);
+
+        // Handle page load and back/forward cache
+        window.addEventListener('pageshow', updateComparisonTable);
+
+        // Initial update on page load
+        updateComparisonTable();
+    });
+});

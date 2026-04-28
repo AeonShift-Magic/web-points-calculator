@@ -547,6 +547,9 @@ admin:
                 edit:
                     label: 'Magic The Gathering™ - Modifier la mise à jour/annonce "{name}"'
                     title: 'Magic The Gathering™ - Modifier la mise à jour/annonce "{name}"'
+                compare:
+                    title: 'Magic The Gathering™ - Comparer les mises à jour/annonces'
+                    label: 'Magic The Gathering™ - Comparer les mises à jour/annonces'
             dbupdate:
                 index:
                     title: 'Magic The Gathering™ - Mises à jour de la base de données'
@@ -1042,6 +1045,20 @@ front:
                     label: 'Ajouter une carte'
                 noresult:
                     label: 'Aucun résultat trouvé.'
+                    compare:
+                        update1:
+                            label: 'Mise à jour 1 : '
+                        update2:
+                            label: 'Mise à jour 2 : '
+                        choose:
+                            label: 'Choisir les mises à jour à comparer :'
+            compare:
+                update1:
+                    label: 'Mise à jour 1 : '
+                update2:
+                    label: 'Mise à jour 2 : '
+                choose:
+                    label: 'Choisir les mises à jour à comparer :'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'

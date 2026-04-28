@@ -547,6 +547,9 @@ admin:
                 edit:
                     label: 'Magic The Gathering™ - 编辑更新/公告“{name}”'
                     title: 'Magic The Gathering™ - 编辑更新/公告“{name}”'
+                compare:
+                    title: 'Magic The Gathering™ - 比较更新/公告'
+                    label: 'Magic The Gathering™ - 比较更新/公告'
             dbupdate:
                 index:
                     title: 'Magic The Gathering™ - 数据库更新'
@@ -1054,6 +1057,13 @@ front:
                     label: '添加卡牌'
                 noresult:
                     label: '未找到结果。'
+            compare:
+                update1:
+                    label: '更新1: '
+                update2:
+                    label: '更新2: '
+                choose:
+                    label: '选择要比较的更新:'
         pointslist:
             choice:
                 label: '{name}（{datestart} → {dateend}）'

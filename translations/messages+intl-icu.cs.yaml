@@ -547,6 +547,9 @@ admin:
                 edit:
                     label: 'Magic The Gathering™ - Upravit aktualizaci/oznámení "{name}"'
                     title: 'Magic The Gathering™ - Upravit aktualizaci/oznámení "{name}"'
+                compare:
+                    title: 'Magic The Gathering™ - Porovnat aktualizace/oznámení'
+                    label: 'Magic The Gathering™ - Porovnat aktualizace/oznámení'
             dbupdate:
                 index:
                     title: 'Magic The Gathering™ - Aktualizace databáze'
@@ -1058,6 +1061,13 @@ front:
                     label: 'Přidat kartu'
                 noresult:
                     label: 'Nebyly nalezeny žádné výsledky.'
+            compare:
+                update1:
+                    label: 'Aktualizace 1: '
+                update2:
+                    label: 'Aktualizace 2: '
+                choose:
+                    label: 'Vyberte aktualizace k porovnání:'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'

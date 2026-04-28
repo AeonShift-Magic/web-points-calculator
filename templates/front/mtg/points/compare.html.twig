@@ -1,0 +1,77 @@
+{% extends 'front/front_layout.html.twig' %}
+
+{% block title %}{{ 'admin.nav.mtg.update.compare.title'|trans }}{% endblock %}
+
+{% block body_attributes %}data-no-stimulus{% endblock %}
+
+{% block link_canonical %}
+    <link rel="canonical" href="{{ url('front_mtg_points_list_compare') }}">
+{% endblock %}
+
+{% block body %}
+    <section class="main-column main-content">
+        <h1 class="font-bold text-5xl w-full lg:w-3/4 leading-normal text-center py-2 lg:my-4 tracking-wide spark-title spot-title">
+            {{ 'admin.nav.mtg.update.compare.title'|trans }}
+        </h1>
+    </section>
+
+    {% if breadcrumb is defined %}
+        <div class="main-column">
+            {{ include('front/_breadcrumb.html.twig') }}
+        </div>
+    {% endif %}
+
+    <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full">
+        <img src="{{ asset('images/aeonshift-logo-transparent-format.png') }}" alt="AeonShiftlogo" class="w-auto h-10 m-4">
+    </div>
+
+    <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full" id="compare-container">
+        {% if updates is defined and updates is iterable %}
+            {# Points list update #}
+            <table class="table center header-highlight-table w-full">
+                <thead>
+                    <tr class="border border-gray-600">
+                        <th class="md:w-[250px] lg:w-[350px]">
+                            <h5 class="break-words!">{{ 'front.mtg.form.compare.choose.label'|trans }}</h5>
+                        </th>
+                        <th>
+                            <label for="update1">{{ 'front.mtg.form.compare.update1.label'|trans }}</label>
+                            <select name="update1" id="update1">
+                                <option value="" disabled="disabled" selected="selected">{{ 'global.none.label'|trans }}</option>
+                                {% for title_and_date, id in updates %}
+                                    <option value="{{ id }}">{{ title_and_date }}</option>
+                                {% else %}
+                                    <option value="" disabled="disabled">{{ 'global.none.label'|trans }}</option>
+                                {% endfor %}
+                            </select>
+                        </th>
+                        <th>
+                            <label for="update2">{{ 'front.mtg.form.compare.update2.label'|trans }}</label>
+                            <select name="update2" id="update2">
+                                <option value="" disabled="disabled" selected="selected">{{ 'global.none.label'|trans }}</option>
+                                {% for title_and_date, id in updates %}
+                                    <option value="{{ id }}">{{ title_and_date }}</option>
+                                {% else %}
+                                    <option value="" disabled="disabled">{{ 'global.none.label'|trans }}</option>
+                                {% endfor %}
+                            </select>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="compare-table-body">
+                    <tr>
+                        <td colspan="3" class="text-center">...</td>
+                    </tr>
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}
+
+
+{% block endbody %}
+    <script>{{ include('front/mtg/points/_imagehover.js.twig') }}</script>
+    {# Inline the calculator JavaScript #}
+    <script>{{ include('front/mtg/points/_pointslists.js.twig') }}</script>
+    <script>{{ include('front/mtg/points/_compare_js.js.twig') }}</script>
+{% endblock %}

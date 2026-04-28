@@ -547,6 +547,9 @@ admin:
                 edit:
                     label: 'Magic The Gathering™ - 更新/告知 "{name}" を編集'
                     title: 'Magic The Gathering™ - 更新/告知 "{name}" を編集'
+                compare:
+                    title: 'Magic The Gathering™ - アップデート/お知らせを比較'
+                    label: 'Magic The Gathering™ - アップデート/お知らせを比較'
             dbupdate:
                 index:
                     title: 'Magic The Gathering™ - データベース更新'
@@ -1054,6 +1057,13 @@ front:
                     label: 'カードを追加'
                 noresult:
                     label: '結果が見つかりませんでした。'
+            compare:
+                update1:
+                    label: 'アップデート1: '
+                update2:
+                    label: 'アップデート2: '
+                choose:
+                    label: '比較するアップデートを選択:'
         pointslist:
             choice:
                 label: '{name}（{datestart} → {dateend}）'

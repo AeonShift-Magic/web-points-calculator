@@ -40,12 +40,7 @@ final class SourceHistoryExtensionTest extends TestCase
         $urlGenerator->method('generate')->willReturn('generated_url');
 
         // Create a subclass to override file_exists
-        $extension = new class($this->projectDir, $this->scryfallCardsSourceDir, $urlGenerator) extends SourceHistoryExtension {
-            protected function fileExists(string $path): bool
-            {
-                return true; // pretend the file exists
-            }
-        };
+        $extension = new SourceHistoryExtension($this->projectDir, $this->scryfallCardsSourceDir, $urlGenerator);
 
         $history = self::createStub(MTGCardSourceActivityHistory::class);
         $history->id = 123;

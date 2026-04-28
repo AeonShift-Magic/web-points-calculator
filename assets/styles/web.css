@@ -137,7 +137,7 @@
     background-color: var(--theme-red-dark) !important;
 }
 
-.admin-layout .header-highlight-table thead {
+.admin-layout .header-highlight-table > thead {
     box-shadow: 0 2px 5px var(--theme-neutral-dark);
     position: sticky;
     top: 45px;

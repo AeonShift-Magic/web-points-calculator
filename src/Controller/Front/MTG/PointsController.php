@@ -80,6 +80,40 @@ final class PointsController extends AbstractController
         return $this->render('front/mtg/points/index.html.twig');
     }
 
+    /**
+     * Comparison results - Display differences between two updates.
+     *
+     * @param MTGUpdateRepository $MTGUpdateRepository
+     *
+     * @return Response
+     */
+    #[Route('/updates/pointslist/compare', name: 'front_mtg_points_list_compare', methods: ['GET'])]
+    public function mtgPointsListCompareView(MTGUpdateRepository $MTGUpdateRepository): Response
+    {
+        /** @var MTGUpdate[] $updates */
+        $updates = $MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDateForForms();
+        $modelFilesToInclude = [];
+
+        foreach ($MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate() as $update) {
+            if (
+                $update->getPointsList() !== null
+                && ! empty($update->getPointsList()->getRulesModel())
+                && class_exists($update->getPointsList()->getRulesModel())
+                && defined($update->getPointsList()->getRulesModel() . '::CALCULATOR_JS_FILE')
+            ) {
+                $modelFilesToInclude[$update->getPointsList()->getRulesModel()] = constant($update->getPointsList()->getRulesModel() . '::CALCULATOR_JS_FILE');
+            }
+        }
+
+        return $this->render(
+            'front/mtg/points/compare.html.twig',
+            [
+                'updates'                => $updates,
+                'model_files_to_include' => $modelFilesToInclude,
+            ]
+        );
+    }
+
     #[Route('/updates/pointslist/{MTGUpdate}/download', name: 'front_mtg_updates_index_update', requirements: ['MTGUpdate' => '\d+'], methods: ['GET'])]
     public function mtgPointsListDownloadUpdate(
         #[MapEntity(MTGUpdate::class)]

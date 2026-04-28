@@ -46,6 +46,8 @@
     </source>
 
     <extensions>
-        <bootstrap class="DG\BypassFinals\PHPUnitExtension"/>
+        <bootstrap class="DG\BypassFinals\PHPUnitExtension">
+            <parameter name="bypassFinal" value="true"/>
+        </bootstrap>
     </extensions>
 </phpunit>

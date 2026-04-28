@@ -547,6 +547,9 @@ admin:
                 edit:
                     label: 'Magic The Gathering™ - Editar actualización/anuncio "{name}"'
                     title: 'Magic The Gathering™ - Editar actualización/anuncio "{name}"'
+                compare:
+                    title: 'Magic The Gathering™ - Comparar actualizaciones/anuncios'
+                    label: 'Magic The Gathering™ - Comparar actualizaciones/anuncios'
             dbupdate:
                 index:
                     title: 'Magic The Gathering™ - Actualizaciones de base de datos'
@@ -1054,6 +1057,13 @@ front:
                     label: 'Añadir una carta'
                 noresult:
                     label: 'No se encontraron resultados.'
+            compare:
+                update1:
+                    label: 'Actualización 1: '
+                update2:
+                    label: 'Actualización 2: '
+                choose:
+                    label: 'Elegir actualizaciones para comparar:'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'

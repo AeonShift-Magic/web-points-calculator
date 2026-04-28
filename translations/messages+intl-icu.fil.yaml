@@ -547,6 +547,9 @@ admin:
                 edit:
                     label: 'Magic The Gathering™ - I-edit ang update/anunsyo "{name}"'
                     title: 'Magic The Gathering™ - I-edit ang update/anunsyo "{name}"'
+                compare:
+                    title: 'Magic The Gathering™ - Ikumpara ang mga update/anunsyo'
+                    label: 'Magic The Gathering™ - Ikumpara ang mga update/anunsyo'
             dbupdate:
                 index:
                     title: 'Magic The Gathering™ - Database Updates'
@@ -1054,6 +1057,13 @@ front:
                     label: 'Magdagdag ng card'
                 noresult:
                     label: 'Walang nakitang resulta.'
+            compare:
+                update1:
+                    label: 'Update 1: '
+                update2:
+                    label: 'Update 2: '
+                choose:
+                    label: 'Pumili ng mga update na ikukumpara:'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'
