@@ -4,28 +4,28 @@ let unknownImageUrl = '{{ asset('images/unranked.jpg') }}';
 let PROPERTY_HEADERS = [
     'pointsBaseQuadruples',
     'pointsBaseSingleton',
-    'pointsCommander',
-    'pointsCommanderSpecial',
+    //'pointsCommander',
+    //'pointsCommanderSpecial',
     'pointsDuelCommander',
-    'pointsDuelCommanderSpecial',
-    'pointsHighlander',
-    'pointsModern',
-    'pointsPioneer',
-    'pointsStandard'
+    'pointsDuelCommanderSpecial'
+    //'pointsHighlander',
+    //'pointsModern',
+    //'pointsPioneer',
+    //'pointsStandard'
 ];
 
 // Property headers texts for sub-tables
 let PROPERTY_HEADER_TEXTS = {
     'pointsBaseQuadruples': 'Base 4x',
     'pointsBaseSingleton': 'Base 1x',
-    'pointsCommander': 'Commander',
-    'pointsCommanderSpecial': 'Commander Special',
+    //'pointsCommander': 'Commander',
+    //'pointsCommanderSpecial': 'Commander Special',
     'pointsDuelCommander': 'DC',
-    'pointsDuelCommanderSpecial': 'DC Special',
-    'pointsHighlander': 'Highlander',
-    'pointsModern': 'Modern',
-    'pointsPioneer': 'Pioneer',
-    'pointsStandard': 'Standard'
+    'pointsDuelCommanderSpecial': 'DC Special'
+    //'pointsHighlander': 'Highlander',
+    //'pointsModern': 'Modern',
+    //'pointsPioneer': 'Pioneer',
+    //'pointsStandard': 'Standard'
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Cell 1: Card name
                 const nameCell = document.createElement('td');
-                nameCell.className = 'px-0! py-0! font-semibold border-l border-gray-600';
+                nameCell.className = 'px-0! py-1! font-semibold border-l border-gray-600';
                 let imageUrl = null;
                 if (typeof window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.imageurl === 'string' && window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.imageurl !== '') {
                     imageUrl = window.updates?.updates?.[updateId1]?.pointsList?.ranked?.[cardName]?.imageurl;

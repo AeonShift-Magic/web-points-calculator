@@ -18,6 +18,7 @@ use App\Repository\MValueItemsRepositoryInterface;
 use App\Repository\SourceItemsRepositoryInterface;
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_UNICODE;
@@ -1031,54 +1032,96 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
     public function setMValuesForPointsList(MTGPointsList $pointsList): int
     {
         $updatedCount = 0;
+        $batchSize = 500;
 
-        // First, delete all existing M-Values for this Points List
+        // First, delete all existing M-Values for this Points List (single DQL DELETE).
         $this->entityManager->getRepository(MTGPointsListMValue::class)->eraseAllForMTGPointsList($pointsList);
-
-        // Then, for each currently present MTGSourceCard, create a new M-Value entry
-        $sourceCards = $this->entityManager->getRepository(MTGSourceCard::class)->findAll();
 
         /** @var User $currentUser */
         $currentUser = $this->security->getUser();
 
-        foreach ($sourceCards as $sourceCard) {
-            // Set basic info
-            $MTGPointsListMValue = MTGSourceCardToPointsListMValueTransformer::fromMTGSourceCard($sourceCard, $pointsList);
-            $MTGPointsListMValue->setCreatedBy($currentUser);
-            $MTGPointsListMValue->setUpdatedBy($currentUser);
+        // Cache pricing parameters once (avoid repeated method calls in the hot loop).
+        $multiplier = $pointsList->getMValueShippingMultiplier();
+        $floor = $pointsList->getMValueShippingFloor();
+        $ceiling = $pointsList->getMValueShippingCeiling();
+        $factor0 = $pointsList->getMValueFactor0();
+        $factor1 = $pointsList->getMValueFactor1();
+        $factor2 = $pointsList->getMValueFactor2();
 
-            // The final card value is its value + the factor modifier, modulated by floor and ceiling
-            // At best the ceiling value...
+        // Keep IDs so we can re-fetch managed references after each clear().
+        $pointsListId = $pointsList->id;
+        $currentUserId = $currentUser->id ?? null;
+
+        // Managed references reused across batches (no DB hit, just proxies).
+        $pointsListRef = $this->entityManager->getReference(MTGPointsList::class, $pointsListId);
+        $currentUserRef = $currentUserId !== null
+            ? $this->entityManager->getReference(User::class, $currentUserId)
+            : null;
+
+        // Stream only the scalar columns we need from MTGSourceCard.
+        $iterableSourceCards = $this->entityManager->createQueryBuilder()
+            ->select('c.nameEN AS nameEN', 'c.MTGOPrice AS MTGOPrice', 'c.MValueTrend AS MValueTrend')
+            ->from(MTGSourceCard::class, 'c')
+            ->getQuery()
+            ->toIterable([], AbstractQuery::HYDRATE_ARRAY);
+
+        foreach ($iterableSourceCards as $row) {
+            $baseMValue = (float)($row['MValueTrend'] ?? 0.0);
+
+            $MTGPointsListMValue = new MTGPointsListMValue();
+            $MTGPointsListMValue->setNameEN((string)$row['nameEN']);
+            $MTGPointsListMValue->setMTGOPrice((string)($row['MTGOPrice'] ?? '0.00'));
+            $MTGPointsListMValue->setPointsList($pointsListRef);
+            if ($currentUserRef !== null) {
+                $MTGPointsListMValue->setCreatedBy($currentUserRef);
+                $MTGPointsListMValue->setUpdatedBy($currentUserRef);
+            }
+
+            // Final card value = base + shipping (clamped between floor and ceiling).
             $shippingCostValue = min(
-            // At least the floor value...
                 max(
-                // Here, the multiplier is based on how much it applies to the base M-Value, i.e. 1.2 = 120% of the M-Value as a final price
-                // So we basically deduce the M-Value once applied, and apply 0 minimum value as a failsafe in case the form is filled with weird values
-                    max($pointsList->getMValueShippingMultiplier() * $sourceCard->getMValueAsFloat() - $sourceCard->getMValueAsFloat(), 0),
-                    $pointsList->getMValueShippingFloor()
+                    $multiplier * $baseMValue - $baseMValue,
+                    0,
+                    $floor
                 ),
-                $pointsList->getMValueShippingCeiling()
+                $ceiling
             );
+            $finalValue = $baseMValue + $shippingCostValue;
 
-            // Set the card final financial value
-            $finalValue = $sourceCard->getMValueAsFloat() + $shippingCostValue;
             $MTGPointsListMValue->setMValueTrend((string)$finalValue);
 
-            // Set the card points value, based on the financial value, modulated by a 2-degree (x^0, X^1 and X^2) polynomial function
+            // Polynomial points value.
             $pointsValue = floor(
-                $pointsList->getMValueFactor0() * ($finalValue ** 0)
-                + $pointsList->getMValueFactor1() * ($finalValue ** 1)
-                + $pointsList->getMValueFactor2() * ($finalValue ** 2)
+                $factor0
+                + $factor1 * $finalValue
+                + $factor2 * ($finalValue * $finalValue)
             );
             $MTGPointsListMValue->setValuePoints($pointsValue);
 
             $this->entityManager->persist($MTGPointsListMValue);
             ++$updatedCount;
+
+            // Periodic flush + clear to keep the UnitOfWork bounded.
+            if (($updatedCount % $batchSize) === 0) {
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+
+                // Re-acquire managed references after the clear.
+                $pointsListRef = $this->entityManager->getReference(MTGPointsList::class, $pointsListId);
+                $currentUserRef = $currentUserId !== null
+                    ? $this->entityManager->getReference(User::class, $currentUserId)
+                    : null;
+            }
         }
 
-        $pointsList->setMValuesSetAt(new DateTime());
-        $this->entityManager->persist($pointsList);
+        // Final flush for any remaining M-Values.
+        $this->entityManager->flush();
+        $this->entityManager->clear();
 
+        // Update mValuesSetAt on a freshly managed instance to avoid touching a detached entity.
+        /** @var MTGPointsList $managedPointsList */
+        $managedPointsList = $this->entityManager->find(MTGPointsList::class, $pointsListId);
+        $managedPointsList->setMValuesSetAt(new DateTime());
         $this->entityManager->flush();
 
         return $updatedCount;
