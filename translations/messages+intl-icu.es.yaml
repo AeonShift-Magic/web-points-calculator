@@ -613,7 +613,7 @@ admin:
                 fileremoved: 'El archivo de registro solicitado ya no existe.'
         pointslistcard:
             points:
-                label: 'Puntos BRUTOS (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'Puntos BRUTOS (Base Singleton/Quadruples - DC/S)'
         update:
             publish: 'Publicar'
             unpublish: 'Despublicar'

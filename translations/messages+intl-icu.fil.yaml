@@ -613,7 +613,7 @@ admin:
                 fileremoved: 'Wala na ang hinihinging log file.'
         pointslistcard:
             points:
-                label: 'RAW Points (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'RAW Points (Base Singleton/Quadruples - DC/S)'
         update:
             publish: 'I-publish'
             unpublish: 'I-unpublish'

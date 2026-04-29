@@ -90,14 +90,17 @@
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.basesingleton.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseSingletonStandardPlay }}</td>
                                                     </tr>
+                                                    {#
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.basequadruples.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseQuadruplesStandardPlay }}</td>
                                                     </tr>
+                                                    #}
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.duelcommander.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.duelCommanderStandardPlay }}</td>
                                                     </tr>
+                                                    {#
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.commander.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.commanderStandardPlay }}</td>
@@ -118,6 +121,7 @@
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.standardplay.standard.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.standardStandardPlay }}</td>
                                                     </tr>
+                                                    #}
                                                 </tbody>
                                             </table>
                                         </td>
@@ -134,14 +138,17 @@
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.basesingleton.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseSingletonLitePlay }}</td>
                                                     </tr>
+                                                    {#
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.basequadruples.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseQuadruplesLitePlay }}</td>
                                                     </tr>
+                                                    #}
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.duelcommander.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.duelCommanderLitePlay }}</td>
                                                     </tr>
+                                                    {#
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.commander.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.commanderLitePlay }}</td>
@@ -162,6 +169,7 @@
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.liteplay.standard.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.standardLitePlay }}</td>
                                                     </tr>
+                                                    #}
                                                 </tbody>
                                             </table>
                                         </td>
@@ -177,14 +185,17 @@
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.basesingleton.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseSingletonPowerPlay }}</td>
                                                     </tr>
+                                                    {#
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.basequadruples.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.baseQuadruplesPowerPlay }}</td>
                                                     </tr>
+                                                    #}
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.duelcommander.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.duelCommanderPowerPlay }}</td>
                                                     </tr>
+                                                    {#
                                                     <tr>
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.commander.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.commanderPowerPlay }}</td>
@@ -205,6 +216,7 @@
                                                         <td>{{ 'admin.form.mtg.pointslist.import.pvalues.powerplay.standard.text'|trans }}</td>
                                                         <td class="green-text font-bold">{{ update_data_array.updates[update_object.id].pointsList.pvalues.standardPowerPlay }}</td>
                                                     </tr>
+                                                    #}
                                                 </tbody>
                                             </table>
                                         </td>
@@ -228,7 +240,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>{{ 'admin.form.mtg.pointslistcard.create.nameen.label'|trans }}</th>
-                                                        <th colspan="8w">{{ 'admin.mtg.pointslistcard.points.label'|trans }}</th>
+                                                        <th colspan="3">{{ 'admin.mtg.pointslistcard.points.label'|trans }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -237,7 +249,7 @@
                                                             <td>
                                                                 <a href="https://scryfall.com/search?q={{ points_list_card.nameEN|e('url') }}" target="_blank" title="Scryfall Search">{{ points_list_card.nameEN }}</a>
                                                             </td>
-                                                            {# Points (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard) #}
+                                                            {# Points (Base Singleton/Quadruples - DC/S) #}
                                                             <td>
                                                                 <span class="text-blue-300">
                                                                     {% if points_list_card.pointsBaseSingleton > 0 %}<strong>{% endif %}{{ points_list_card.pointsBaseSingleton|default('-') }}{% if points_list_card.pointsBaseSingleton > 0 %}</strong>{% endif %}
@@ -252,6 +264,7 @@
                                                                     {% if points_list_card.pointsDuelCommanderSpecial > 0 %}<strong>{% endif %}{{ points_list_card.pointsDuelCommanderSpecial|default('-') }}{% if points_list_card.pointsDuelCommanderSpecial > 0 %}</strong>{% endif %}
                                                                 </span>
                                                             </td>
+                                                            {#
                                                             <td>
                                                                 <span class="text-amber-300">
                                                                     {% if points_list_card.pointsCommander > 0 %}<strong>{% endif %}{{ points_list_card.pointsCommander|default('-') }}{% if points_list_card.pointsCommander > 0 %}</strong>{% endif %}
@@ -286,6 +299,7 @@
                                                                     {% if points_list_card.pointsStandard > 0 %}<strong>{% endif %}{{ points_list_card.pointsStandard|default('-') }}{% if points_list_card.pointsStandard > 0 %}</strong>{% endif %}
                                                                 </span>
                                                             </td>
+                                                            #}
                                                         </tr>
                                                     {% endfor %}
                                                 </tbody>

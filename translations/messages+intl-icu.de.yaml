@@ -613,7 +613,7 @@ admin:
                 fileremoved: 'Die angeforderte Logdatei existiert nicht mehr.'
         pointslistcard:
             points:
-                label: 'ROH-Punkte (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'ROH-Punkte (Base Singleton/Quadruples - DC/S)'
         update:
             publish: 'Veröffentlichen'
             unpublish: 'Veröffentlichung aufheben'

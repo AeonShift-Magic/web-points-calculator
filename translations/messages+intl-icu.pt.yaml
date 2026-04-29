@@ -613,7 +613,7 @@ admin:
                 fileremoved: 'O ficheiro de log solicitado já não existe.'
         pointslistcard:
             points:
-                label: 'Pontos BRUTOS (Base Singleton/Quadruples - DC/S - Commander/S - 2HG/S - Highlander - Modern - Pioneer - Standard)'
+                label: 'Pontos BRUTOS (Base Singleton/Quadruples - DC/S)'
         update:
             publish: 'Publicar'
             unpublish: 'Anular publicação'
