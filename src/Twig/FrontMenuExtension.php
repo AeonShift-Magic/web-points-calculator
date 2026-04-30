@@ -39,7 +39,7 @@ final class FrontMenuExtension extends AbstractExtension
 
         /** @var array<Page> $globalPages */
         $globalPages = $this->pool->get(key: 'as_header_menu_global_pages_' . $zone . '_' . $locale, callback: function (ItemInterface $item) use ($zone): array {
-            $item->expiresAfter(3600);
+            $item->expiresAfter(10000);
 
             return $this->entityManager->getRepository(Page::class)->findBy(['zone' => $zone, 'language' => $this->requestStack->getCurrentRequest()?->getLocale()], ['weight' => 'DESC']);
         });
@@ -65,7 +65,7 @@ final class FrontMenuExtension extends AbstractExtension
     {
         return [
             // "is_safe" is used here, carefully!
-            new TwigFunction('front_menu', [$this, 'frontMenu'], ['is_safe' => ['html']]),
+            new TwigFunction('front_menu', $this->frontMenu(...), ['is_safe' => ['html']]),
         ];
     }
 }

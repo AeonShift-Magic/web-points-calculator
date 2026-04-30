@@ -1,7 +1,5 @@
 <?php
 
-/** @noinspection DynamicInvocationViaScopeResolutionInspection */
-
 declare(strict_types = 1);
 
 namespace App\Tests\Twig;

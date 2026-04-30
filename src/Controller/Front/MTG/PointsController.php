@@ -7,6 +7,7 @@ namespace App\Controller\Front\MTG;
 use App\Entity\MTG\MTGUpdate;
 use App\Model\AeonShift\PointsList\MTG\MTGPointsListManager;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
+use App\Repository\MTG\MTGPointsListMValueRepository;
 use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -120,10 +120,9 @@ final class PointsController extends AbstractController
         MTGUpdate $MTGUpdate,
         EntityManagerInterface $entityManager,
         MTGSourceCardRepository $MTGSourceCardRepository,
-        Security $security,
         TranslatorInterface $translator,
-        MTGUpdateRepository $MTGUpdateRepository,
-        CacheInterface $pool
+        MTGPointsListMValueRepository $MTGPointsListMValueRepository,
+        Security $security
     ): Response
     {
         if ($MTGUpdate->isPublic() === false || $MTGUpdate->getPointsList() === null) {
@@ -141,9 +140,8 @@ final class PointsController extends AbstractController
             $entityManager,
             $translator,
             $MTGSourceCardRepository,
-            $security,
-            $MTGUpdateRepository,
-            $pool
+            $MTGPointsListMValueRepository,
+            $security
         );
 
         return $pointsListModel->generateCSVResponseForList($MTGUpdate->getPointsList());

@@ -51,7 +51,7 @@ final class PointsListModelDetectorModel implements PointsListModelListerInterfa
         $models = $this->generatePointsListModelsForLicense($license);
 
         $cacheItem->set($models);
-        $cacheItem->expiresAfter(600);
+        $cacheItem->expiresAfter(10000);
         $this->cachePool->save($cacheItem);
 
         return $models;

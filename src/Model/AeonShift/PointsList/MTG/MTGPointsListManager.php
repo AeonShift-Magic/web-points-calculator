@@ -79,7 +79,7 @@ final class MTGPointsListManager implements MTGPointsListProviderInterface
              * }
              */
             function (ItemInterface $item): array {
-                $item->expiresAfter(3600);
+                $item->expiresAfter(10000);
 
                 $MTGUpdates = $this->MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
                 $outputArray = [];
@@ -121,7 +121,7 @@ final class MTGPointsListManager implements MTGPointsListProviderInterface
     public function getAllUpdatesAndCommanderPointsAsArray(): array
     {
         return $this->pool->get(key: self::LICENSE . '_point_lists', callback: function (ItemInterface $item): array {
-            $item->expiresAfter(3600);
+            $item->expiresAfter(10000);
 
             $MTGUpdates = $this->MTGUpdateRepository->getAllPublishedMTGUpdatesByStartingDate();
             $outputArray = [
@@ -212,7 +212,7 @@ final class MTGPointsListManager implements MTGPointsListProviderInterface
              * }
              */
             function (ItemInterface $item) use ($MTGUpdate): array {
-                $item->expiresAfter(3600);
+                $item->expiresAfter(10000);
                 $outputArray = [];
                 $this->processUpdatePointListAsArray($MTGUpdate, $outputArray); // @phpstan-ignore-line
                 // Also, add the list of potential Command Zones

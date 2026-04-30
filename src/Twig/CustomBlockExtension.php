@@ -45,7 +45,7 @@ final class CustomBlockExtension extends AbstractExtension
     {
         return [
             // "is_safe" is used here, carefully!
-            new TwigFunction('custom_blocks', [$this, 'getBlocks'], ['is_safe' => ['html']]),
+            new TwigFunction('custom_blocks', $this->getBlocks(...), ['is_safe' => ['html']]),
         ];
     }
 }

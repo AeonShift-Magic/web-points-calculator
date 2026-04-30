@@ -11,7 +11,7 @@ use App\Form\Admin\MTG\AdminMTGPointsListType;
 use App\Model\AeonShift\PointsList\PointsListModelInterface;
 use App\Repository\MTG\MTGPointsListMValueRepository;
 use App\Repository\MTG\MTGSourceCardRepository;
-use App\Repository\MTG\MTGUpdateRepository;
+use App\Repository\MValueItemsRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use RuntimeException;
@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/admin/mtg/points-list')]
@@ -93,9 +92,8 @@ final class MTGPointsListController extends AbstractController
      * @param TranslatorInterface $translator
      * @param EntityManagerInterface $entityManager
      * @param MTGSourceCardRepository $MTGSourceCardRepository
-     * @param MTGUpdateRepository $MTGUpdateRepository
+     * @param MValueItemsRepositoryInterface $MValueItemsRepository
      * @param Security $security
-     * @param CacheInterface $pool
      *
      * @return Response
      */
@@ -107,9 +105,8 @@ final class MTGPointsListController extends AbstractController
         TranslatorInterface $translator,
         EntityManagerInterface $entityManager,
         MTGSourceCardRepository $MTGSourceCardRepository,
-        MTGUpdateRepository $MTGUpdateRepository,
-        Security $security,
-        CacheInterface $pool
+        MValueItemsRepositoryInterface $MValueItemsRepository,
+        Security $security
     ): Response
     {
         $pointsListModelClass = $MTGPointsList->getRulesModel();
@@ -123,9 +120,8 @@ final class MTGPointsListController extends AbstractController
             $entityManager,
             $translator,
             $MTGSourceCardRepository,
-            $security,
-            $MTGUpdateRepository,
-            $pool
+            $MValueItemsRepository,
+            $security
         );
 
         $form = $this->createForm(AdminMTGPointsListImportType::class);
@@ -234,10 +230,9 @@ final class MTGPointsListController extends AbstractController
      * @param MTGPointsList $MTGPointsList
      * @param EntityManagerInterface $entityManager
      * @param MTGSourceCardRepository $MTGSourceCardRepository
-     * @param Security $security
      * @param TranslatorInterface $translator
-     * @param MTGUpdateRepository $MTGUpdateRepository
-     * @param CacheInterface $pool
+     * @param MTGPointsListMValueRepository $MTGPointsListMValueRepository
+     * @param Security $security
      *
      * @return Response
      */
@@ -247,10 +242,9 @@ final class MTGPointsListController extends AbstractController
         MTGPointsList $MTGPointsList,
         EntityManagerInterface $entityManager,
         MTGSourceCardRepository $MTGSourceCardRepository,
-        Security $security,
         TranslatorInterface $translator,
-        MTGUpdateRepository $MTGUpdateRepository,
-        CacheInterface $pool
+        MTGPointsListMValueRepository $MTGPointsListMValueRepository,
+        Security $security
     ): Response
     {
         $pointsListModelClass = $MTGPointsList->getRulesModel();
@@ -264,9 +258,8 @@ final class MTGPointsListController extends AbstractController
             $entityManager,
             $translator,
             $MTGSourceCardRepository,
-            $security,
-            $MTGUpdateRepository,
-            $pool
+            $MTGPointsListMValueRepository,
+            $security
         );
 
         return $pointsListModel->generateCSVResponseForList($MTGPointsList);

@@ -89,11 +89,11 @@ class MTGPointsList implements PointsListInterface, Stringable
 
     #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
-    private string $mValueShippingCeiling = '0.1';
+    private string $mValueShippingCeiling = '50.0';
 
     #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
-    private string $mValueShippingFloor = '50.0';
+    private string $mValueShippingFloor = '0.1';
 
     #[Assert\Type(type: 'numeric')]
     #[ORM\Column(type: Types::DECIMAL, precision: 12, scale: 8)]
