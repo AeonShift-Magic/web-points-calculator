@@ -404,7 +404,11 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             }
 
             $this->entityManager->flush();
-            $this->entityManager->clear();
+            // Detach only MTGSourceCard entities to free memory,
+            // keep $this->sourceActivityHistory managed to avoid duplicate inserts later.
+            foreach ($cards as $card) {
+                $this->entityManager->detach($card);
+            }
         }
 
         $this->getLogger()->debug(sprintf(
