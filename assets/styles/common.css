@@ -1127,7 +1127,7 @@ table .btn {
     z-index: 50;
 }
 
-.menu a, .menu a:visited {
+.menu a {
     color: var(--theme-white);
     display: inline-block;
     font-family: 'Outfit', sans-serif;
@@ -1141,6 +1141,10 @@ table .btn {
     transition: all 0.1s ease-out;
     vertical-align: middle;
     width: 100%;
+}
+
+.menu a:visited {
+    color: var(--theme-white);
 }
 
 @media screen and (max-width: 1500px) {
@@ -1295,15 +1299,13 @@ table .btn {
     width: 100%;
 }
 
-.menu nav > ul > li:hover > ul,
-.menu nav > ul > li:focus-within > ul {
+.menu nav > ul > li:hover > ul {
     display: flex;
     min-width: 20em;
     width: 100%;
 }
 
-.menu nav > ul > li:hover > ul > li:hover,
-.menu nav > ul > li:focus-within > ul > li:focus-within {
+.menu nav > ul > li:hover > ul > li:hover {
     transition: all 0.08s ease-out;
 }
 
