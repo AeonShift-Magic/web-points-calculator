@@ -1064,6 +1064,7 @@ front:
                     label: 'アップデート2: '
                 choose:
                     label: '比較するアップデートを選択:'
+                    different: '違いのみ'
         pointslist:
             choice:
                 label: '{name}（{datestart} → {dateend}）'

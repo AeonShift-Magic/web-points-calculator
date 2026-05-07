@@ -1064,6 +1064,7 @@ front:
                     label: '更新2: '
                 choose:
                     label: '选择要比较的更新:'
+                    different: '仅差异'
         pointslist:
             choice:
                 label: '{name}（{datestart} → {dateend}）'

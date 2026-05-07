@@ -1059,6 +1059,7 @@ front:
                     label: 'Mise à jour 2 : '
                 choose:
                     label: 'Choisir les mises à jour à comparer :'
+                    different: 'Différences seulement'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'

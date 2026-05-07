@@ -1064,6 +1064,7 @@ front:
                     label: 'Actualización 2: '
                 choose:
                     label: 'Elegir actualizaciones para comparar:'
+                    different: 'Solo diferencias'
         pointslist:
             choice:
                 label: '{name} ({datestart} → {dateend})'
