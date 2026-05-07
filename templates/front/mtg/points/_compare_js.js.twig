@@ -43,7 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cache DOM lookups once
     const update1 = root.querySelector('#update1');
     const update2 = root.querySelector('#update2');
-    if (!update1 || !update2) {
+    const diffOnly = root.querySelector('#diffonly');
+    if (!update1 || !update2 || !diffOnly) {
         return;
     }
 
@@ -107,6 +108,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         /**
+         * Determine if a card has any difference across PROPERTY_HEADERS between the two updates
+         */
+        function hasAnyDifference(cardData1, cardData2) {
+            for (const header of PROPERTY_HEADERS) {
+                const v1 = (cardData1 && cardData1[header] !== null && cardData1[header] !== undefined) ? cardData1[header] : null;
+                const v2 = (cardData2 && cardData2[header] !== null && cardData2[header] !== undefined) ? cardData2[header] : null;
+                if (areValuesDifferent(v1, v2)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
          * Create a sub-table for a card's properties
          */
         function createSubTable(cardData1, cardData2, isFirstColumn) {
@@ -154,25 +169,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (currentValue !== null) {
                     td.textContent = currentValue;
+                    td.style.fontWeight = 'bold';
 
                     // Apply color based on comparison
                     if (areValuesDifferent(currentValue, otherValue)) {
                         td.style.backgroundColor = '#005d1f';
                         td.style.color = '#00ff57';
-                        td.style.fontWeight = 'bold';
                     } else {
                         td.style.backgroundColor = 'transparent';
-                        td.style.color = '#919191';
+                        if(currentValue === 0) {
+                            td.style.color = '#919191';
+                        } else {
+                            td.style.color = '#c2ceff';
+                        }
                     }
                 } else {
                     // No value - apply gray if other is also null, green if other has value
                     if (otherValue !== null) {
                         td.style.backgroundColor = '#005d1f';
                         td.style.color = '#00ff57';
-                        td.style.fontWeight = 'bold';
                     } else {
                         td.style.backgroundColor = 'transparent';
-                        td.style.color = '#919191';
+                        if(currentValue === 0) {
+                            td.style.color = '#919191';
+                        } else {
+                            td.style.color = '#c2ceff';
+                        }
                     }
                 }
 
@@ -223,7 +245,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Create rows for each card
+            const showDiffOnly = diffOnly.checked;
             cardNames.forEach(cardName => {
+                // Get card data from both updates
+                const cardData1 = getCardData(updateId1, cardName);
+                const cardData2 = getCardData(updateId2, cardName);
+
+                // If diffOnly is checked, skip rows without any difference
+                if (showDiffOnly && !hasAnyDifference(cardData1, cardData2)) {
+                    return;
+                }
+
                 const row = document.createElement('tr');
 
                 // Cell 1: Card name
@@ -265,10 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 row.appendChild(nameCell);
 
-                // Get card data from both updates
-                const cardData1 = getCardData(updateId1, cardName);
-                const cardData2 = getCardData(updateId2, cardName);
-
                 // Cell 2: Update 1 data
                 const cell1 = document.createElement('td');
                 cell1.className = 'px-0! py-0! border-l border-r border-gray-600';
@@ -294,6 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add event listeners to both selects
         update1.addEventListener('change', updateComparisonTable);
         update2.addEventListener('change', updateComparisonTable);
+        diffOnly.addEventListener('change', updateComparisonTable);
 
         // Handle page load and back/forward cache
         window.addEventListener('pageshow', updateComparisonTable);

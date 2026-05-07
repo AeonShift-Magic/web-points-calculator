@@ -25,14 +25,18 @@
         <img src="{{ asset('images/aeonshift-logo-transparent-format.png') }}" alt="AeonShiftlogo" class="w-auto h-10 m-4">
     </div>
 
-    <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full" id="compare-container">
+    <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full overflow-x-scroll" id="compare-container">
         {% if updates is defined and updates is iterable and updates is not empty %}
             {# Points list update #}
-            <table class="table center header-highlight-table w-full block! lg:table overflow-x-auto! lg:overflow-x-visible!">
+            <table class="table center header-highlight-table w-full">
                 <thead>
                     <tr class="border border-gray-600">
                         <th class="md:w-[250px] lg:w-[350px]">
                             <h5 class="break-words!">{{ 'front.mtg.form.compare.choose.label'|trans }}</h5>
+                            <p class="text-sm">
+                                <input type="checkbox" name="diffonly" id="diffonly" value="0">
+                                <label for="diffonly">{{ 'front.mtg.form.compare.choose.different'|trans }}</label>
+                            </p>
                         </th>
                         <th>
                             <label for="update1">{{ 'front.mtg.form.compare.update1.label'|trans }}</label>
