@@ -374,7 +374,7 @@ final class MTGPointsListModelV1Test extends TestCase
     public function testProcessCSVStringReturnsErrorForEmptyContent(): void
     {
         // Arrange
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = self::createStub(MTGPointsList::class);
         $this->translator->method('trans')->willReturn('Error message');
 
         // Act

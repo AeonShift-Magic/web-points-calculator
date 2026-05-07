@@ -1,4 +1,6 @@
-<?php /** @noinspection ALL */
+<?php
+
+/** @noinspection ALL */
 
 declare(strict_types = 1);
 
@@ -10,7 +12,9 @@ use App\Model\AeonShift\PointsList\MTG\MTGPointsListManager;
 use App\Repository\MTG\MTGPointsListMValueRepository;
 use App\Repository\MTG\MTGSourceCardRepository;
 use App\Repository\MTG\MTGUpdateRepository;
+use DateInterval;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -40,13 +44,13 @@ final class MTGPointsListManagerTest extends TestCase
     public function testGetAllPointListAndUpdatesAsArrayHandlesMultipleUpdates(): void
     {
         // Arrange
-        $update1 = $this->createStub(MTGUpdate::class);
+        $update1 = self::createStub(MTGUpdate::class);
         $update1->id = 1;
 
-        $update2 = $this->createStub(MTGUpdate::class);
+        $update2 = self::createStub(MTGUpdate::class);
         $update2->id = 2;
 
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = self::createStub(MTGPointsList::class);
         $pointsList->method('getRulesModel')->willReturn('NonExistentClass');
 
         $update1->method('getPointsList')->willReturn($pointsList);
@@ -63,17 +67,25 @@ final class MTGPointsListManagerTest extends TestCase
         $update2->method('getStartingAt')->willReturn($startDate);
         $update2->method('getEndingAt')->willReturn($endDate);
 
-        $this->cache->method('get')->willReturnCallback(function ($key, $callback) {
-            $cacheItem = new class implements \Symfony\Contracts\Cache\ItemInterface {
+        $this->cache->method('get')->willReturnCallback(static function ($key, $callback) {
+            $cacheItem = new class() implements \Symfony\Contracts\Cache\ItemInterface {
                 public function get(): mixed { return null; }
+
                 public function set(mixed $value): static { return $this; }
-                public function expiresAt(?\DateTimeInterface $expiration): static { return $this; }
-                public function expiresAfter(\DateInterval|int|null $time): static { return $this; }
+
+                public function expiresAt(?DateTimeInterface $expiration): static { return $this; }
+
+                public function expiresAfter(DateInterval|int|null $time): static { return $this; }
+
                 public function tag(string|iterable $tags): static { return $this; }
+
                 public function getMetadata(): array { return []; }
+
                 public function getKey(): string { return 'test'; }
+
                 public function isHit(): bool { return false; }
             };
+
             return $callback($cacheItem);
         });
 
@@ -86,8 +98,8 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getAllPointListAndUpdatesAsArray();
 
         // Assert
-        self::assertIsArray($result);
-        self::assertArrayHasKey('commanders', $result);
+        static::assertIsArray($result);
+        static::assertArrayHasKey('commanders', $result);
     }
 
     public function testGetAllPointListAndUpdatesAsArrayIncludesCommanders(): void
@@ -98,17 +110,25 @@ final class MTGPointsListManagerTest extends TestCase
             'Atraxa, Praetors\' Voice' => ['types' => 'Legendary Creature — Phyrexian Angel Horror'],
         ];
 
-        $this->cache->method('get')->willReturnCallback(function ($key, $callback) {
-            $cacheItem = new class implements \Symfony\Contracts\Cache\ItemInterface {
+        $this->cache->method('get')->willReturnCallback(static function ($key, $callback) {
+            $cacheItem = new class() implements \Symfony\Contracts\Cache\ItemInterface {
                 public function get(): mixed { return null; }
+
                 public function set(mixed $value): static { return $this; }
-                public function expiresAt(?\DateTimeInterface $expiration): static { return $this; }
-                public function expiresAfter(\DateInterval|int|null $time): static { return $this; }
+
+                public function expiresAt(?DateTimeInterface $expiration): static { return $this; }
+
+                public function expiresAfter(DateInterval|int|null $time): static { return $this; }
+
                 public function tag(string|iterable $tags): static { return $this; }
+
                 public function getMetadata(): array { return []; }
+
                 public function getKey(): string { return 'test'; }
+
                 public function isHit(): bool { return false; }
             };
+
             return $callback($cacheItem);
         });
 
@@ -119,8 +139,8 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getAllPointListAndUpdatesAsArray();
 
         // Assert
-        self::assertArrayHasKey('commanders', $result);
-        self::assertSame($commanders, $result['commanders']);
+        static::assertArrayHasKey('commanders', $result);
+        static::assertSame($commanders, $result['commanders']);
     }
 
     public function testGetAllPointListAndUpdatesAsArrayUsesCacheKey(): void
@@ -128,7 +148,7 @@ final class MTGPointsListManagerTest extends TestCase
         // Arrange
         $cacheItem = $this->createMock(CacheItemInterface::class);
 
-        $this->cache->expects(self::once())
+        $this->cache->expects(static::once())
             ->method('get')
             ->with('MTG_points_lists')
             ->willReturnCallback(static function ($key, $callback) use ($cacheItem) {
@@ -142,24 +162,32 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getAllPointListAndUpdatesAsArray();
 
         // Assert
-        self::assertIsArray($result);
-        self::assertArrayHasKey('commanders', $result);
+        static::assertIsArray($result);
+        static::assertArrayHasKey('commanders', $result);
     }
 
     public function testGetAllPointsListsAndUpdatesAsJSONArrayReturnsValidJSON(): void
     {
         // Arrange
-        $this->cache->method('get')->willReturnCallback(function ($key, $callback) {
-            $cacheItem = new class implements \Symfony\Contracts\Cache\ItemInterface {
+        $this->cache->method('get')->willReturnCallback(static function ($key, $callback) {
+            $cacheItem = new class() implements \Symfony\Contracts\Cache\ItemInterface {
                 public function get(): mixed { return null; }
+
                 public function set(mixed $value): static { return $this; }
-                public function expiresAt(?\DateTimeInterface $expiration): static { return $this; }
-                public function expiresAfter(\DateInterval|int|null $time): static { return $this; }
+
+                public function expiresAt(?DateTimeInterface $expiration): static { return $this; }
+
+                public function expiresAfter(DateInterval|int|null $time): static { return $this; }
+
                 public function tag(string|iterable $tags): static { return $this; }
+
                 public function getMetadata(): array { return []; }
+
                 public function getKey(): string { return 'test'; }
+
                 public function isHit(): bool { return false; }
             };
+
             return $callback($cacheItem);
         });
 
@@ -170,10 +198,10 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getAllPointsListsAndUpdatesAsJSONArray();
 
         // Assert
-        self::assertJson($result);
+        static::assertJson($result);
         $decoded = json_decode($result, true, 512, \JSON_THROW_ON_ERROR);
-        self::assertIsArray($decoded);
-        self::assertArrayHasKey('commanders', $decoded);
+        static::assertIsArray($decoded);
+        static::assertArrayHasKey('commanders', $decoded);
     }
 
     public function testGetAllUpdatesAndCommanderPointsAsArrayUsesCacheKey(): void
@@ -181,7 +209,7 @@ final class MTGPointsListManagerTest extends TestCase
         // Arrange
         $cacheItem = $this->createMock(CacheItemInterface::class);
 
-        $this->cache->expects(self::once())
+        $this->cache->expects(static::once())
             ->method('get')
             ->with('MTG_point_lists')
             ->willReturnCallback(static function ($key, $callback) use ($cacheItem) {
@@ -194,24 +222,32 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getAllUpdatesAndCommanderPointsAsArray();
 
         // Assert
-        self::assertIsArray($result);
-        self::assertArrayHasKey('updates', $result);
+        static::assertIsArray($result);
+        static::assertArrayHasKey('updates', $result);
     }
 
     public function testGetAllUpdatesAndCommanderPointsAsJSONArrayReturnsValidJSON(): void
     {
         // Arrange
-        $this->cache->method('get')->willReturnCallback(function ($key, $callback) {
-            $cacheItem = new class implements \Symfony\Contracts\Cache\ItemInterface {
+        $this->cache->method('get')->willReturnCallback(static function ($key, $callback) {
+            $cacheItem = new class() implements \Symfony\Contracts\Cache\ItemInterface {
                 public function get(): mixed { return null; }
+
                 public function set(mixed $value): static { return $this; }
-                public function expiresAt(?\DateTimeInterface $expiration): static { return $this; }
-                public function expiresAfter(\DateInterval|int|null $time): static { return $this; }
+
+                public function expiresAt(?DateTimeInterface $expiration): static { return $this; }
+
+                public function expiresAfter(DateInterval|int|null $time): static { return $this; }
+
                 public function tag(string|iterable $tags): static { return $this; }
+
                 public function getMetadata(): array { return []; }
+
                 public function getKey(): string { return 'test'; }
+
                 public function isHit(): bool { return false; }
             };
+
             return $callback($cacheItem);
         });
 
@@ -221,10 +257,10 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getAllUpdatesAndCommanderPointsAsJSONArray();
 
         // Assert
-        self::assertJson($result);
+        static::assertJson($result);
         $decoded = json_decode($result, true, 512, \JSON_THROW_ON_ERROR);
-        self::assertIsArray($decoded);
-        self::assertArrayHasKey('updates', $decoded);
+        static::assertIsArray($decoded);
+        static::assertArrayHasKey('updates', $decoded);
     }
 
     public function testGetUpdatePointListsAsArrayUsesCacheKeyWithUpdateId(): void
@@ -233,14 +269,14 @@ final class MTGPointsListManagerTest extends TestCase
         $update = new MTGUpdate();
         $update->id = 42;
 
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = static::createStub(MTGPointsList::class);
         $pointsList->method('getRulesModel')->willReturn('NonExistentClass');
 
         $update->setPointsList($pointsList);
 
         $cacheItem = $this->createMock(CacheItemInterface::class);
 
-        $this->cache->expects(self::once())
+        $this->cache->expects(static::once())
             ->method('get')
             ->with('MTG_point_list_42_data')
             ->willReturnCallback(static function ($key, $callback) use ($cacheItem) {
@@ -253,8 +289,8 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getUpdatePointListsAsArray($update);
 
         // Assert
-        self::assertIsArray($result);
-        self::assertArrayHasKey('commanders', $result);
+        static::assertIsArray($result);
+        static::assertArrayHasKey('commanders', $result);
     }
 
     public function testJSONOutputsContainUnicodeCharactersUnescaped(): void
@@ -264,18 +300,26 @@ final class MTGPointsListManagerTest extends TestCase
             'Nicol Bolas' => ['types' => 'Legendary Creature — Elder Dragon'],
         ];
 
-        $this->cache->method('get')->willReturnCallback(function ($key, $callback) {
+        $this->cache->method('get')->willReturnCallback(static function ($key, $callback) {
             // Create a new anonymous class that properly implements Symfony's ItemInterface
-            $cacheItem = new class implements \Symfony\Contracts\Cache\ItemInterface {
+            $cacheItem = new class() implements \Symfony\Contracts\Cache\ItemInterface {
                 public function get(): mixed { return null; }
+
                 public function set(mixed $value): static { return $this; }
-                public function expiresAt(?\DateTimeInterface $expiration): static { return $this; }
-                public function expiresAfter(\DateInterval|int|null $time): static { return $this; }
+
+                public function expiresAt(?DateTimeInterface $expiration): static { return $this; }
+
+                public function expiresAfter(DateInterval|int|null $time): static { return $this; }
+
                 public function tag(string|iterable $tags): static { return $this; }
+
                 public function getMetadata(): array { return []; }
+
                 public function getKey(): string { return 'test'; }
+
                 public function isHit(): bool { return false; }
             };
+
             return $callback($cacheItem);
         });
 
@@ -286,23 +330,23 @@ final class MTGPointsListManagerTest extends TestCase
         $result = $this->manager->getAllPointsListsAndUpdatesAsJSONArray();
 
         // Assert
-        self::assertStringNotContainsString('\\u', $result); // Unicode should not be escaped
-        self::assertJson($result);
+        static::assertStringNotContainsString('\\u', $result); // Unicode should not be escaped
+        static::assertJson($result);
     }
 
     public function testLicenseConstant(): void
     {
         // Assert
-        self::assertSame('MTG', MTGPointsListManager::LICENSE);
+        static::assertSame('MTG', MTGPointsListManager::LICENSE);
     }
 
     public function testProcessUpdatePointListAsArrayFormatsLatestUpdate(): void
     {
         // Arrange
-        $update = $this->createStub(MTGUpdate::class);
+        $update = static::createStub(MTGUpdate::class);
         $update->id = 1;
 
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = static::createStub(MTGPointsList::class);
         $pointsList->method('getRulesModel')->willReturn('NonExistentClass');
 
         $update->method('getPointsList')->willReturn($pointsList);
@@ -316,16 +360,16 @@ final class MTGPointsListManagerTest extends TestCase
         $this->manager->processUpdatePointListAsArray($update, $dataArray, 1);
 
         // Assert - Even with count=1, should not process if class doesn't exist
-        self::assertEmpty($dataArray);
+        static::assertEmpty($dataArray);
     }
 
     public function testProcessUpdatePointListAsArrayFormatsNonLatestUpdate(): void
     {
         // Arrange
-        $update = $this->createStub(MTGUpdate::class);
+        $update = static::createStub(MTGUpdate::class);
         $update->id = 2;
 
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = static::createStub(MTGPointsList::class);
         $pointsList->method('getRulesModel')->willReturn('NonExistentClass');
 
         $update->method('getPointsList')->willReturn($pointsList);
@@ -339,16 +383,16 @@ final class MTGPointsListManagerTest extends TestCase
         $this->manager->processUpdatePointListAsArray($update, $dataArray, 2);
 
         // Assert - Should not add anything if class doesn't exist
-        self::assertEmpty($dataArray);
+        static::assertEmpty($dataArray);
     }
 
     public function testProcessUpdatePointListAsArrayInitializesUpdatesArray(): void
     {
         // Arrange
-        $update = $this->createStub(MTGUpdate::class);
+        $update = static::createStub(MTGUpdate::class);
         $update->id = 5;
 
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = static::createStub(MTGPointsList::class);
         $pointsList->method('getRulesModel')->willReturn('NonExistentClass');
 
         $update->method('getPointsList')->willReturn($pointsList);
@@ -364,16 +408,16 @@ final class MTGPointsListManagerTest extends TestCase
 
         // Assert - Even if class doesn't exist, we're testing the structure
         // The method should not crash when 'updates' key doesn't exist
-        self::assertTrue(true); // If we get here without error, test passes
+        static::assertTrue(true); // If we get here without error, test passes
     }
 
     public function testProcessUpdatePointListAsArrayWithNonExistentClass(): void
     {
         // Arrange
-        $update = $this->createStub(MTGUpdate::class);
+        $update = static::createStub(MTGUpdate::class);
         $update->id = 1;
 
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = static::createStub(MTGPointsList::class);
         $pointsList->method('getRulesModel')->willReturn('NonExistentClass');
 
         $update->method('getPointsList')->willReturn($pointsList);
@@ -387,16 +431,16 @@ final class MTGPointsListManagerTest extends TestCase
         $this->manager->processUpdatePointListAsArray($update, $dataArray, 1);
 
         // Assert - Should not add anything if class doesn't exist
-        self::assertEmpty($dataArray);
+        static::assertEmpty($dataArray);
     }
 
     public function testProcessUpdatePointListAsArrayWithZeroCount(): void
     {
         // Arrange
-        $update = $this->createStub(MTGUpdate::class);
+        $update = static::createStub(MTGUpdate::class);
         $update->id = 3;
 
-        $pointsList = $this->createStub(MTGPointsList::class);
+        $pointsList = static::createStub(MTGPointsList::class);
         $pointsList->method('getRulesModel')->willReturn('NonExistentClass');
 
         $update->method('getPointsList')->willReturn($pointsList);
@@ -410,18 +454,18 @@ final class MTGPointsListManagerTest extends TestCase
         $this->manager->processUpdatePointListAsArray($update, $dataArray, 0);
 
         // Assert
-        self::assertEmpty($dataArray);
+        static::assertEmpty($dataArray);
     }
 
     protected function setUp(): void
     {
-        $this->updateRepository = self::createStub(MTGUpdateRepository::class);
-        $this->sourceCardRepository = self::createStub(MTGSourceCardRepository::class);
-        $mValueRepository = self::createStub(MTGPointsListMValueRepository::class);
+        $this->updateRepository = static::createStub(MTGUpdateRepository::class);
+        $this->sourceCardRepository = static::createStub(MTGSourceCardRepository::class);
+        $mValueRepository = static::createStub(MTGPointsListMValueRepository::class);
         $this->cache = self::createMock(CacheInterface::class);
-        $this->translator = self::createStub(TranslatorInterface::class);
-        $entityManager = self::createStub(EntityManagerInterface::class);
-        $security = self::createStub(Security::class);
+        $this->translator = static::createStub(TranslatorInterface::class);
+        $entityManager = static::createStub(EntityManagerInterface::class);
+        $security = static::createStub(Security::class);
 
         $this->manager = new MTGPointsListManager(
             $this->updateRepository,

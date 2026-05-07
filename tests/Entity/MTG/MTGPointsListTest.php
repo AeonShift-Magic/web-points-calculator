@@ -8,7 +8,14 @@ use App\Entity\MTG\MTGPointsList;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
+use stdClass;
 
+/**
+ * @internal
+ *
+ * @small
+ */
 final class MTGPointsListTest extends TestCase
 {
     public function testConstructorInitializesDatesAndCollectionsAndDefaults(): void
@@ -33,58 +40,51 @@ final class MTGPointsListTest extends TestCase
         self::assertSame(100.0, $list->getPValueBaseQuadruplesStandardPlay());
     }
 
-    public function testToStringContainsTitleDateAndCardCount(): void
+    public function testGeneralSettersGettersAndFluentBehavior(): void
     {
         $list = new MTGPointsList();
+
+        $now = new DateTime('2026-05-01 10:00:00');
+
+        self::assertSame($list, $list->setFilename('file.csv'));
+        self::assertSame($list, $list->setLastUploadedAt($now));
+        self::assertSame($list, $list->setTitle('Title'));
+        self::assertSame($list, $list->setRulesModel('RulesClass'));
+        self::assertSame($list, $list->setRulesModelName('Rules Name'));
+        self::assertSame($list, $list->setValidityStartingAt(new DateTime('2026-06-01 12:00:00')));
+        self::assertSame($list, $list->setNumberOfUploadedCards(42));
+
+        self::assertSame('file.csv', $list->getFilename());
+        self::assertSame($now->getTimestamp(), $list->getLastUploadedAt()->getTimestamp());
+        self::assertSame('Title', $list->getTitle());
+        self::assertSame('RulesClass', $list->getRulesModel());
+        self::assertSame('Rules Name', $list->getRulesModelName());
+        self::assertSame(42, $list->getNumberOfUploadedCards());
+
+        // Set collections through setters and ensure they are set
+        $cards = new ArrayCollection([new stdClass()]);
+        $mvalues = new ArrayCollection([new stdClass()]);
+        $updates = new ArrayCollection([new stdClass()]);
         $list
-            ->setTitle('My List')
-            ->setValidityStartingAt(new DateTime('2026-01-02 03:04'));
+            ->setMTGPointListCards($cards)
+            ->setMTGPointListMValues($mvalues)
+            ->setMTGUpdates($updates);
 
-        // Simulate 3 cards in the list
-        $cards = new ArrayCollection([new \stdClass(), new \stdClass(), new \stdClass()]);
-        $list->setMTGPointListCards($cards);
-
-        $asString = (string)$list;
-
-        self::assertStringContainsString('My List', $asString);
-        self::assertStringContainsString('[2026-01-02 03:04]', $asString);
-        self::assertStringContainsString('[3 cards]', $asString);
+        self::assertSame(1, $list->getMTGPointListCards()->count());
+        self::assertSame(1, $list->getMTGPointListMValues()->count());
+        self::assertSame(1, $list->getMTGUpdates()->count());
     }
 
     public function testGetItemsReturnsUnderlyingCardsArray(): void
     {
         $list = new MTGPointsList();
 
-        $cards = new ArrayCollection([new \stdClass(), new \stdClass()]);
+        $cards = new ArrayCollection([new stdClass(), new stdClass()]);
         $list->setMTGPointListCards($cards);
 
         $items = $list->getItems();
         self::assertIsArray($items);
         self::assertCount(2, $items);
-    }
-
-    public function testPreventRemovalIfUpdatesExistThrows(): void
-    {
-        $list = new MTGPointsList();
-
-        $updates = new ArrayCollection([new \stdClass()]);
-        $list->setMTGUpdates($updates);
-
-        $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Cannot delete a points list that is referenced by one or more updates.');
-        $list->preventRemovalIfUpdatesExist();
-    }
-
-    public function testPreventRemovalIfNoUpdatesDoesNotThrow(): void
-    {
-        $list = new MTGPointsList();
-
-        $updates = new ArrayCollection([]);
-        $list->setMTGUpdates($updates);
-
-        // No exception expected
-        $list->preventRemovalIfUpdatesExist();
-        self::assertTrue(true);
     }
 
     public function testMValueSettersCastToStringAndGettersReturnFloats(): void
@@ -135,8 +135,7 @@ final class MTGPointsListTest extends TestCase
             ->setPValuePioneerPowerPlay(30.0)
             ->setPValueStandardStandardPlay(31.0)
             ->setPValueStandardLitePlay(32.0)
-            ->setPValueStandardPowerPlay(33.0)
-        ;
+            ->setPValueStandardPowerPlay(33.0);
 
         self::assertSame(10.0, $list->getPValueBaseSingletonStandardPlay());
         self::assertSame(11.0, $list->getPValueBaseSingletonLitePlay());
@@ -164,39 +163,28 @@ final class MTGPointsListTest extends TestCase
         self::assertSame(33.0, $list->getPValueStandardPowerPlay());
     }
 
-    public function testGeneralSettersGettersAndFluentBehavior(): void
+    public function testPreventRemovalIfNoUpdatesDoesNotThrow(): void
     {
         $list = new MTGPointsList();
 
-        $now = new DateTime('2026-05-01 10:00:00');
+        $updates = new ArrayCollection([]);
+        $list->setMTGUpdates($updates);
 
-        self::assertSame($list, $list->setFilename('file.csv'));
-        self::assertSame($list, $list->setLastUploadedAt($now));
-        self::assertSame($list, $list->setTitle('Title'));
-        self::assertSame($list, $list->setRulesModel('RulesClass'));
-        self::assertSame($list, $list->setRulesModelName('Rules Name'));
-        self::assertSame($list, $list->setValidityStartingAt(new DateTime('2026-06-01 12:00:00')));
-        self::assertSame($list, $list->setNumberOfUploadedCards(42));
+        // No exception expected
+        $list->preventRemovalIfUpdatesExist();
+        self::assertTrue(true);
+    }
 
-        self::assertSame('file.csv', $list->getFilename());
-        self::assertSame($now->getTimestamp(), $list->getLastUploadedAt()->getTimestamp());
-        self::assertSame('Title', $list->getTitle());
-        self::assertSame('RulesClass', $list->getRulesModel());
-        self::assertSame('Rules Name', $list->getRulesModelName());
-        self::assertSame(42, $list->getNumberOfUploadedCards());
+    public function testPreventRemovalIfUpdatesExistThrows(): void
+    {
+        $list = new MTGPointsList();
 
-        // Set collections through setters and ensure they are set
-        $cards = new ArrayCollection([new \stdClass()]);
-        $mvalues = new ArrayCollection([new \stdClass()]);
-        $updates = new ArrayCollection([new \stdClass()]);
-        $list
-            ->setMTGPointListCards($cards)
-            ->setMTGPointListMValues($mvalues)
-            ->setMTGUpdates($updates);
+        $updates = new ArrayCollection([new stdClass()]);
+        $list->setMTGUpdates($updates);
 
-        self::assertSame(1, $list->getMTGPointListCards()->count());
-        self::assertSame(1, $list->getMTGPointListMValues()->count());
-        self::assertSame(1, $list->getMTGUpdates()->count());
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Cannot delete a points list that is referenced by one or more updates.');
+        $list->preventRemovalIfUpdatesExist();
     }
 
     public function testSetAndGetMValuesSetAt(): void
@@ -209,5 +197,23 @@ final class MTGPointsListTest extends TestCase
         $list->setMValuesSetAt($when);
 
         self::assertSame($when->getTimestamp(), $list->getMValuesSetAt()?->getTimestamp());
+    }
+
+    public function testToStringContainsTitleDateAndCardCount(): void
+    {
+        $list = new MTGPointsList();
+        $list
+            ->setTitle('My List')
+            ->setValidityStartingAt(new DateTime('2026-01-02 03:04'));
+
+        // Simulate 3 cards in the list
+        $cards = new ArrayCollection([new stdClass(), new stdClass(), new stdClass()]);
+        $list->setMTGPointListCards($cards);
+
+        $asString = (string)$list;
+
+        self::assertStringContainsString('My List', $asString);
+        self::assertStringContainsString('[2026-01-02 03:04]', $asString);
+        self::assertStringContainsString('[3 cards]', $asString);
     }
 }

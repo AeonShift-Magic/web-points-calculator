@@ -20,14 +20,14 @@ use DateMalformedStringException;
 use DateTime;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
+use const JSON_THROW_ON_ERROR;
 use JsonException;
 use Override;
 use RuntimeException;
+use const SORT_NUMERIC;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use const JSON_THROW_ON_ERROR;
-use const SORT_NUMERIC;
 
 final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGPointsListModelInterface
 {
