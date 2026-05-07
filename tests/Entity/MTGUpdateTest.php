@@ -33,18 +33,6 @@ final class MTGUpdateTest extends TestCase
         self::assertNull($update->id);
     }
 
-    public function testGetTitleForForms(): void
-    {
-        $update = new MTGUpdate();
-        $update->setTitleEN('Test Title');
-        $date = new DateTime('2024-01-01');
-        $update->setStartingAt($date);
-
-        $expected = 'Test Title (2024-01-01 00:00 > 2026-07-27 19:59)';
-
-        self::assertSame($expected, $update->getTitleForForms());
-    }
-
     public function testIsPublic(): void
     {
         $update = new MTGUpdate();

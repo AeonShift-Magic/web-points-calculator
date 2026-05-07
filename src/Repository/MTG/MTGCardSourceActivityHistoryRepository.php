@@ -6,6 +6,7 @@ namespace App\Repository\MTG;
 
 use App\Entity\MTG\MTGCardSourceActivityHistory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,6 +31,7 @@ final class MTGCardSourceActivityHistoryRepository extends ServiceEntityReposito
             ->orderBy('c.createdAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
+            ->setHint(Query::HINT_READ_ONLY, true)
             ->getOneOrNullResult();
 
         return $result;
@@ -47,6 +49,7 @@ final class MTGCardSourceActivityHistoryRepository extends ServiceEntityReposito
             ->orderBy('c.createdAt', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
+            ->setHint(Query::HINT_READ_ONLY, true)
             ->getOneOrNullResult();
 
         return $result;

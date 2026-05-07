@@ -4,12 +4,10 @@ declare(strict_types = 1);
 
 namespace App\Repository;
 
-use App\Entity\ItemContractInterface;
-
 interface SourceItemsRepositoryInterface
 {
     /**
-     * @return array<int, ItemContractInterface>
+     * @return array<int, array<string, float|int|string|null>>
      */
     public function getAllItemsAsArray(): array;
 

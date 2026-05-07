@@ -16,19 +16,18 @@ use App\Model\AeonShift\PointsList\AbstractPointsListModel;
 use App\Model\AeonShift\PointsList\MTGPointsListModelInterface;
 use App\Repository\MValueItemsRepositoryInterface;
 use App\Repository\SourceItemsRepositoryInterface;
+use DateMalformedStringException;
 use DateTime;
-use DateTimeImmutable;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
-use const JSON_THROW_ON_ERROR;
-use const JSON_UNESCAPED_UNICODE;
 use JsonException;
 use Override;
 use RuntimeException;
-use const SORT_NUMERIC;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use const JSON_THROW_ON_ERROR;
+use const SORT_NUMERIC;
 
 final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGPointsListModelInterface
 {
@@ -256,86 +255,12 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
     }
 
     /**
-     * @param SourceItemsRepositoryInterface $entityRepository should be your Source repository
-     * @param PointsListInterface $pointsList should be your Points List entity
-     *
-     * @throws JsonException
-     *
-     * @return string
-     */
-    public function getPointsListAsJSONArray(SourceItemsRepositoryInterface $entityRepository, PointsListInterface $pointsList): string
-    {
-        $mergedCards = $this->mergeMTGSourceAndPointsList($entityRepository, $pointsList);
-
-        return json_encode($mergedCards, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-    }
-
-    /**
-     * @param SourceItemsRepositoryInterface $entityRepository
-     * @param PointsListInterface $pointsList
-     *
-     * @return array<int, MTGSourceCard>
-     */
-    public function mergeMTGSourceAndPointsList(SourceItemsRepositoryInterface $entityRepository, PointsListInterface $pointsList): array
-    {
-        /** @var array<int, MTGSourceCard> $sourceCards */
-        $sourceCards = $entityRepository->getAllItemsAsArray();
-        /** @var array<int, MTGPointsListCard> $pointListCards */
-        $pointListCards = $pointsList->getItems();
-
-        foreach ($pointListCards as $pointListCard) {
-
-            if (mb_strtolower($pointListCard->getNameEN()) === self::UNRANKED_CARD_NAME) {
-                $sourceCards[] = new MTGSourceCard()
-                    ->setNameEN($pointListCard->getNameEN())
-                    ->setFlavorOfNameEN($pointListCard->getFlavorOfNameEN())
-                    ->setAlternateNameEN($pointListCard->getAlternateNameEN())
-                    ->setIsLegalDuelCommander(true)
-                    ->setIsLegalDuelCommanderSpecial(true)
-                    ->setIsLegal2HG(true)
-                    ->setIsLegal2HGSpecial(true)
-                    ->setIsLegalCommander(true)
-                    ->setIsLegalCommanderSpecial(true)
-                    ->setFirstPrintedAt(new DateTimeImmutable('1993-08-05'))
-                    ->setFirstPrintedYear(1993)
-                    ->setMaximumTimelineLegality('printed')
-                    ->setManaValue(0)
-                    ->setIsWhite(false)
-                    ->setIsBlue(false)
-                    ->setIsBlack(false)
-                    ->setIsGreen(false)
-                    ->setIsColorless(false)
-                    ->setPointsDuelCommander($pointListCard->getPointsDuelCommander())
-                    ->setPointsDuelCommanderSpecial($pointListCard->getPointsDuelCommanderSpecial())
-                    ->setPoints2HG($pointListCard->getPoints2HG())
-                    ->setPoints2HGSpecial($pointListCard->getPoints2HGSpecial())
-                    ->setPointsCommander($pointListCard->getPointsCommander())
-                    ->setPointsCommanderSpecial($pointListCard->getPointsCommanderSpecial());
-            }
-
-            /** @var MTGSourceCard $sourceCard */
-            foreach ($sourceCards as $sourceCard) {
-                if ($sourceCard->getNameEN() === $pointListCard->getNameEN()) {
-                    $sourceCard->setPointsDuelCommander($pointListCard->getPointsDuelCommander());
-                    $sourceCard->setPointsDuelCommanderSpecial($pointListCard->getPointsDuelCommanderSpecial());
-                    $sourceCard->setPoints2HG($pointListCard->getPoints2HG());
-                    $sourceCard->setPoints2HGSpecial($pointListCard->getPoints2HGSpecial());
-                    $sourceCard->setPointsCommander($pointListCard->getPointsCommander());
-                    $sourceCard->setPointsCommanderSpecial($pointListCard->getPointsCommanderSpecial());
-
-                    continue 2;
-                }
-            }
-        }
-
-        return $sourceCards;
-    }
-
-    /**
      * Could use DTOs, but arrays are just as fast.
      *
      * @param SourceItemsRepositoryInterface $entityRepository
      * @param MTGPointsList $pointsList
+     *
+     * @throws DateMalformedStringException|JsonException
      *
      * @return array{
      *     cards: array{
@@ -451,10 +376,10 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
     #[Override]
     public function mergeMTGSourceAndPointsListAsArray(SourceItemsRepositoryInterface $entityRepository, PointsListInterface $pointsList): array
     {
-        /** @var array<int, MTGSourceCard> $sourceCards */
+        /** @var array<int, array<mixed<string, float|int|string|null>>> $sourceCards */
         $sourceCards = $entityRepository->getAllItemsAsArray();
-        /** @var array<int, MTGPointsListCard> $pointListCards */
-        $pointListCards = $pointsList->getItems();
+        /** @var array<int, MTGPointsListCard> $pointListRankedCards */
+        $pointListRankedCards = $pointsList->getItems();
         /** @var array<int, MTGPointsListMValue> $pointListMValues */
         $pointListMValues = $this->MValueItemsRepository->getAllItemsAsArray($pointsList);
 
@@ -494,61 +419,62 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
 
         // First, transform all source cards into an array for serialization
         foreach ($sourceCards as $sourceCard) {
-            $pointsListCardsArray['cards'][$sourceCard->getNameEN()] = [
-                'flavorofnameen'   => $sourceCard->getFlavorOfNameEN(),
-                'alternatenameen'  => $sourceCard->getAlternateNameEN(),
-                'imageurl'         => $sourceCard->getImageURL(),
-                'types'            => $sourceCard->getTypes(),
-                'mv'               => $sourceCard->getManaValue(),
-                'multicztype'      => $sourceCard->getMultiCZType(),
-                'ci'               => $sourceCard->getColorIdentity(),
-                'timeline'         => $sourceCard->getMaximumTimelineLegality(),
-                'mvalue'           => $sourceCard->getMValueAsFloat(),
-                'tix'              => $sourceCard->getMTGOPriceAsFloat(),
-                'firstprintedyear' => $sourceCard->getFirstPrintedYear(),
-                'firstprintedon'   => $sourceCard->getFirstPrintedAt()->getTimestamp(),
-                'legal2HG'         => $sourceCard->isLegal2HG(),
-                'legal2HGSpecial'  => $sourceCard->isLegal2HGSpecial(),
-                'legalDC'          => $sourceCard->isLegalDuelCommander(),
-                'legalDCSpecial'   => $sourceCard->isLegalDuelCommanderSpecial(),
-                'legalCEDH'        => $sourceCard->isLegalCommander(),
-                'legalCEDHSpecial' => $sourceCard->isLegalCommanderSpecial(),
-                'czeligible'       => $sourceCard->isCommandZoneEligible(),
-                'multiczeligible'  => $sourceCard->isMultipleCommandZoneEligible(),
-                'maxcopies'        => $sourceCard->getMaxCopies(),
-                'b'                => $sourceCard->isBlack(),
-                'u'                => $sourceCard->isBlue(),
-                'r'                => $sourceCard->isRed(),
-                'g'                => $sourceCard->isGreen(),
-                'w'                => $sourceCard->isWhite(),
-                'c'                => $sourceCard->isColorless(),
-                'mtgtop8rank'      => $sourceCard->getDuelRank(),
-                'ffarank'          => $sourceCard->getFFARank(),
-                'cedhrank'         => $sourceCard->getCEDHRank(),
+            $pointsListCardsArray['cards'][$sourceCard['name_en'] ?? ''] = [
+                'flavorofnameen'   => $sourceCard['flavor_of_name_en'] ?? null,
+                'alternatenameen'  => $sourceCard['alternate_name_en'] ?? null,
+                'imageurl'         => $sourceCard['image_url'] ?? null,
+                'types'            => $sourceCard['types'] ?? '',
+                'mv'               => $sourceCard['mana_value'] ?? 0.0,
+                'multicztype'      => $sourceCard['multi_cz_type'] ?? '',
+                'ci'               => ($sourceCard['color_identity'] && is_string($sourceCard['color_identity'])) ? json_decode($sourceCard['color_identity'], false, 512, JSON_THROW_ON_ERROR) : [],
+                'timeline'         => $sourceCard['maximum_timeline_legality'] ?? '',
+                'mvalue'           => isset($sourceCard['mvalue_trend']) ? (float)$sourceCard['mvalue_trend'] : 0.0,
+                'tix'              => isset($sourceCard['mtgoprice']) ? (float)$sourceCard['mtgoprice'] : 0.0,
+                'firstprintedyear' => $sourceCard['first_printed_year'] ?? 0,
+                'firstprintedon'   => $sourceCard['first_printed_at'] ? (int)(new DateTime($sourceCard['first_printed_at'])->format('U')) : 0,
+                'legal2HG'         => isset($sourceCard['is_legal_2hg']) && $sourceCard['is_legal_2hg'],
+                'legal2HGSpecial'  => isset($sourceCard['is_legal_2hg_special']) && $sourceCard['is_legal_2hg_special'],
+                'legalDC'          => isset($sourceCard['is_legal_duel_commander']) && $sourceCard['is_legal_duel_commander'],
+                'legalDCSpecial'   => isset($sourceCard['is_legal_duel_commander_special']) && $sourceCard['is_legal_duel_commander_special'],
+                'legalCEDH'        => isset($sourceCard['is_legal_commander']) && $sourceCard['is_legal_commander'],
+                'legalCEDHSpecial' => isset($sourceCard['is_legal_commander_special']) && $sourceCard['is_legal_commander_special'],
+                'czeligible'       => isset($sourceCard['is_command_zone_eligible']) && $sourceCard['is_command_zone_eligible'],
+                'multiczeligible'  => isset($sourceCard['is_multiple_command_zone_eligible']) && $sourceCard['is_multiple_command_zone_eligible'],
+                'maxcopies'        => $sourceCard['max_copies'] ?? 0,
+                'b'                => isset($sourceCard['is_black']) && $sourceCard['is_black'],
+                'u'                => isset($sourceCard['is_blue']) && $sourceCard['is_blue'],
+                'r'                => isset($sourceCard['is_red']) && $sourceCard['is_red'],
+                'g'                => isset($sourceCard['is_green']) && $sourceCard['is_green'],
+                'w'                => isset($sourceCard['is_white']) && $sourceCard['is_white'],
+                'c'                => isset($sourceCard['is_colorless']) && $sourceCard['is_colorless'],
+                'mtgtop8rank'      => $sourceCard['duel_rank'] ?? null,
+                'ffarank'          => $sourceCard['ffarank'] ?? null,
+                'cedhrank'         => $sourceCard['cedhrank'] ?? null,
             ];
 
-            if ($sourceCard->isABackground() === true) {
-                $pointsListCardsArray['cards'][$sourceCard->getNameEN()]['types'] = $sourceCard->getTypes();
-                $pointsListCardsArray['cards'][$sourceCard->getNameEN()]['isbg'] = true;
+            if ((MTGSourceCard::staticIsABackground($sourceCard['types'] ?? '') ?? false) === true) {
+                $pointsListCardsArray['cards'][$sourceCard['name_en'] ?? '']['types'] = $sourceCard['types'] ?? '';
+                $pointsListCardsArray['cards'][$sourceCard['name_en'] ?? '']['isbg'] = true;
             }
 
-            if ($sourceCard->hasChooseABackground() === true) {
-                $pointsListCardsArray['cards'][$sourceCard->getNameEN()]['hasbg'] = true;
+            if ((MTGSourceCard::staticHasChooseABackground($sourceCard['oracle_text'] ?? '') ?? false) === true) {
+                $pointsListCardsArray['cards'][$sourceCard['name_en'] ?? '']['hasbg'] = true;
             }
 
-            if ($sourceCard->isADoctor() === true) {
-                $pointsListCardsArray['cards'][$sourceCard->getNameEN()]['isdoctor'] = true;
+            if ((MTGSourceCard::staticIsADoctor($sourceCard['types'] ?? '') ?? false) === true) {
+                $pointsListCardsArray['cards'][$sourceCard['name_en'] ?? '']['isdoctor'] = true;
             }
 
-            if ($sourceCard->hasDoctorsCompanion() === true) {
-                $pointsListCardsArray['cards'][$sourceCard->getNameEN()]['hasdoctor'] = true;
+            if ((MTGSourceCard::staticHasDoctorsCompanion($sourceCard['oracle_text'] ?? '') ?? false) === true) {
+                $pointsListCardsArray['cards'][$sourceCard['name_en'] ?? '']['hasdoctor'] = true;
             }
         }
 
         // Then, add points list values to each identified card
-        foreach ($pointListCards as $pointListCard) {
+        foreach ($pointListRankedCards as $pointListRankedCard) {
 
-            if ($pointListCard->getNameEN() === self::UNRANKED_CARD_NAME) {
+            // Special line for the Unranked values
+            if ($pointListRankedCard->getNameEN() === self::UNRANKED_CARD_NAME) {
                 $pointsListCardsArray['unranked'] = [
                     'flavorofnameen'             => null,
                     'alternatenameen'            => '',
@@ -576,57 +502,55 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
                     'g'                          => false,
                     'w'                          => false,
                     'c'                          => false,
-                    'pointsBaseSingleton'        => $pointListCard->getPointsBaseSingleton(),
-                    'pointsBaseQuadruples'       => $pointListCard->getPointsBaseQuadruples(),
-                    'pointsDuelCommander'        => $pointListCard->getPointsDuelCommander(),
-                    'pointsDuelCommanderSpecial' => $pointListCard->getPointsDuelCommanderSpecial(),
+                    'pointsBaseSingleton'        => $pointListRankedCard->getPointsBaseSingleton(),
+                    'pointsBaseQuadruples'       => $pointListRankedCard->getPointsBaseQuadruples(),
+                    'pointsDuelCommander'        => $pointListRankedCard->getPointsDuelCommander(),
+                    'pointsDuelCommanderSpecial' => $pointListRankedCard->getPointsDuelCommanderSpecial(),
                     // 'points2HG' => $pointListCard->getPoints2HG(),
                     // 'points2HGSpecial' => $pointListCard->getPoints2HGSpecial(),
-                    'pointsCommander'            => $pointListCard->getPointsCommander(),
-                    'pointsCommanderSpecial'     => $pointListCard->getPointsCommanderSpecial(),
-                    'pointsHighlander'           => $pointListCard->getPointsHighlander(),
-                    'pointsModern'               => $pointListCard->getPointsModern(),
-                    'pointsPioneer'              => $pointListCard->getPointsPioneer(),
-                    'pointsStandard'             => $pointListCard->getPointsStandard(),
+                    'pointsCommander'            => $pointListRankedCard->getPointsCommander(),
+                    'pointsCommanderSpecial'     => $pointListRankedCard->getPointsCommanderSpecial(),
+                    'pointsHighlander'           => $pointListRankedCard->getPointsHighlander(),
+                    'pointsModern'               => $pointListRankedCard->getPointsModern(),
+                    'pointsPioneer'              => $pointListRankedCard->getPointsPioneer(),
+                    'pointsStandard'             => $pointListRankedCard->getPointsStandard(),
                 ];
 
                 continue;
             }
 
-            foreach (array_keys($pointsListCardsArray['cards']) as $sourceCardName) {
-                if ($sourceCardName === $pointListCard->getNameEN()) {
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsBaseSingleton'] = $pointListCard->getPointsBaseSingleton();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsBaseQuadruples'] = $pointListCard->getPointsBaseQuadruples();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsDuelCommander'] = $pointListCard->getPointsDuelCommander();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsDuelCommanderSpecial'] = $pointListCard->getPointsDuelCommanderSpecial();
-                    // $pointsListCardsArray['cards'][$sourceCardName]['points2HG'] = $pointListCard->getPoints2HG();
-                    // $pointsListCardsArray['cards'][$sourceCardName]['points2HGSpecial'] = $pointListCard->getPoints2HGSpecial();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsCommander'] = $pointListCard->getPointsCommander();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsCommanderSpecial'] = $pointListCard->getPointsCommanderSpecial();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsHighlander'] = $pointListCard->getPointsHighlander();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsModern'] = $pointListCard->getPointsModern();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsPioneer'] = $pointListCard->getPointsPioneer();
-                    $pointsListCardsArray['cards'][$sourceCardName]['pointsStandard'] = $pointListCard->getPointsStandard();
+            $pointListCardName = $pointListRankedCard->getNameEN();
 
-                    // Also add it to the list of ranked cards for this list
-                    $pointsListCardsArray['ranked'][$sourceCardName] = $pointsListCardsArray['cards'][$sourceCardName];
+            if (isset($pointsListCardsArray['cards'][$pointListCardName])) {
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsBaseSingleton'] = $pointListRankedCard->getPointsBaseSingleton();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsBaseQuadruples'] = $pointListRankedCard->getPointsBaseQuadruples();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsDuelCommander'] = $pointListRankedCard->getPointsDuelCommander();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsDuelCommanderSpecial'] = $pointListRankedCard->getPointsDuelCommanderSpecial();
+                // $pointsListCardsArray['cards'][$cardName]['points2HG'] = $pointListCard->getPoints2HG();
+                // $pointsListCardsArray['cards'][$cardName]['points2HGSpecial'] = $pointListCard->getPoints2HGSpecial();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsCommander'] = $pointListRankedCard->getPointsCommander();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsCommanderSpecial'] = $pointListRankedCard->getPointsCommanderSpecial();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsHighlander'] = $pointListRankedCard->getPointsHighlander();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsModern'] = $pointListRankedCard->getPointsModern();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsPioneer'] = $pointListRankedCard->getPointsPioneer();
+                $pointsListCardsArray['cards'][$pointListCardName]['pointsStandard'] = $pointListRankedCard->getPointsStandard();
 
-                    continue 2;
-                }
+                // Also add it to the list of ranked cards for this list
+                $pointsListCardsArray['ranked'][$pointListCardName] = $pointsListCardsArray['cards'][$pointListCardName];
             }
         }
 
         // Third, add M-Value points to each identified card
-        foreach (array_keys($pointsListCardsArray['cards']) as $sourceCardName) {
-            // Default 0.0 value if not found in the list of M-Value points
-            $pointsListCardsArray['cards'][$sourceCardName]['mvaluepoints'] = 0.0;
-            foreach ($pointListMValues as $pointListMValue) {
-                if ($sourceCardName === $pointListMValue->getNameEN()) {
-                    $pointsListCardsArray['cards'][$sourceCardName]['mvaluepoints'] = $pointListMValue->getValuePoints();
+        // First, create a lookup array for O(1) access
+        $mValueLookup = [];
+        foreach ($pointListMValues as $pointListMValue) {
+            $mValueLookup[$pointListMValue->getNameEN() ?? ''] = $pointListMValue->getValuePoints() ?? 0.0;
+        }
 
-                    continue 2;
-                }
-            }
+        // Then assign M-Value points to each card
+        foreach (array_keys($pointsListCardsArray['cards']) as $pointListCardName) {
+            // Default 0.0 value if not found in the lookup
+            $pointsListCardsArray['cards'][$pointListCardName]['mvaluepoints'] = $mValueLookup[$pointListCardName] ?? 0.0;
         }
 
         // Sort the cards by Color Identity value then Count ascending
@@ -708,6 +632,14 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         ++$processingLine;
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
+
+        if ($shiftedLineArray === null) {
+            return [
+                'status'  => 'error',
+                'message' => $this->translator->trans('admin.form.mtg.pointslist.import.error.filecontents'),
+            ];
+        }
+
         /** @var array<int, string> $CSVlineContentsAsArray */
         $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '');
 
@@ -751,7 +683,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '');
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -793,7 +725,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
         /** @var string $shiftedLineArray */
         $shiftedLineArray = array_shift($splitLines);
         /** @var array<int, string> $CSVlineContentsAsArray */
-        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray);
+        $CSVlineContentsAsArray = str_getcsv($shiftedLineArray, ',', '"', '');
 
         if (
             count($CSVlineContentsAsArray) < 11
@@ -841,7 +773,7 @@ final class MTGPointsListModelV1 extends AbstractPointsListModel implements MTGP
             ++$processingLine;
             $shiftedLineArray = array_shift($splitLines);
             /** @var array<int, string> $CSVlineContentsAsArray */
-            $CSVlineContentsAsArray = str_getcsv((string)$shiftedLineArray);
+            $CSVlineContentsAsArray = str_getcsv((string)$shiftedLineArray, ',', '"', '');
 
             // If we're on the first line, it MUST be the unranked cards line.
             if (($processingLine === 9) && isset($CSVlineContentsAsArray[0]) && $CSVlineContentsAsArray[0] !== self::UNRANKED_CARD_NAME) {

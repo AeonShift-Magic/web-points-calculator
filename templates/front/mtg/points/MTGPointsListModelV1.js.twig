@@ -129,9 +129,15 @@ function MTGPointsListModelV1ParseDecklist(deckListAsString, currentFormatChoice
      * @returns {boolean}
      */
     function MTGPointsListModelV1HasNoBlankLinesHasValidCommandZoneBlockAtTheBottom(deckListAsString) {
+        // Remove Windows line endings and split the decklist into an array of lines
         const lines = deckListAsString.replace(/\r\n?/g, '\n').split('\n');
 
         let i = lines.length - 1;
+
+        // 0. Skip trailing empty lines (common with textarea inputs)
+        while (i >= 0 && lines[i].trim() === '') {
+            i--;
+        }
 
         // 1. Collect matching command lines from the bottom
         const commandLines = [];

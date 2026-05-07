@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: MTGSourceCardRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Index(name: 'idx_oracle_name', columns: ['name_en'])]
+#[ORM\Table(name: 'mtgsource_card')]
 class MTGSourceCard extends MTGAbstractCard
 {
     /** The count of prices to retain for the average value calculation. */
@@ -150,6 +151,31 @@ class MTGSourceCard extends MTGAbstractCard
         $this->firstPrintedAt = new DateTimeImmutable();
     }
 
+    public static function staticHasChooseABackground(string $oracleText): bool
+    {
+        return mb_stristr($oracleText, 'choose a background') !== false;
+    }
+
+    public static function staticHasDoctorsCompanion(string $oracleText): bool
+    {
+        return mb_stristr(str_replace('’', "'", $oracleText), 'doctor\'s companion') !== false;
+    }
+
+    public static function staticHasPartnerType(string $multiCZType): bool
+    {
+        return mb_stristr($multiCZType, 'partner_type_') !== false;
+    }
+
+    public static function staticIsABackground(string $types): bool
+    {
+        return mb_stripos($types, 'background') !== false;
+    }
+
+    public static function staticIsADoctor(string $types): bool
+    {
+        return mb_stripos($types, 'time lord doctor') !== false;
+    }
+
     public function getCEDHRank(): int
     {
         return $this->CEDHRank;
@@ -264,27 +290,27 @@ class MTGSourceCard extends MTGAbstractCard
 
     public function hasChooseABackground(): bool
     {
-        return mb_stristr($this->oracleText, 'choose a background') !== false;
+        return self::staticHasChooseABackground($this->oracleText);
     }
 
     public function hasDoctorsCompanion(): bool
     {
-        return mb_stristr(str_replace('’', "'", $this->oracleText), 'doctor\'s companion') !== false;
+        return self::staticHasDoctorsCompanion($this->oracleText);
     }
 
     public function hasPartnerType(): bool
     {
-        return mb_stristr($this->getMultiCZType(), 'partner_type_') !== false;
+        return self::staticHasPartnerType($this->getMultiCZType());
     }
 
     public function isABackground(): bool
     {
-        return mb_stripos($this->types, 'background') !== false;
+        return self::staticIsABackground($this->types);
     }
 
     public function isADoctor(): bool
     {
-        return mb_stripos($this->types, 'time lord doctor') !== false;
+        return self::staticIsADoctor($this->types);
     }
 
     public function isBlack(): bool

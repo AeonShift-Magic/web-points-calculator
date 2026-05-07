@@ -1,4 +1,5 @@
-window.updates = {{ get_updates_and_points_lists_as_json()|raw }};
+window.updates = {% cache "mtg_points_lists" ttl(43200) %}{{ get_updates_and_points_lists_as_json()|raw }}{% endcache %};
+
 
 {% if model_files_to_include is defined and model_files_to_include is iterable %}
 {% for model_file_to_include in model_files_to_include %}
@@ -6,6 +7,8 @@ window.updates = {{ get_updates_and_points_lists_as_json()|raw }};
 {% endfor %}
 {% endif %}
 
+
 {% if card_names is defined %}
-window.CARD_NAMES = {{ card_names|raw }};
+window.CARD_NAMES = {% cache "mtg_card_names" ttl(43200) %}{{ card_names|raw }}{% endcache %};
 {% endif %}
+

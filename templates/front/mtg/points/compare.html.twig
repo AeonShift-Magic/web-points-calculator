@@ -26,7 +26,7 @@
     </div>
 
     <div class="flex flex-col lg:flex-row items-stretch justify-center flex-wrap gap-6 mb-4 w-full" id="compare-container">
-        {% if updates is defined and updates is iterable %}
+        {% if updates is defined and updates is iterable and updates is not empty %}
             {# Points list update #}
             <table class="table center header-highlight-table w-full">
                 <thead>

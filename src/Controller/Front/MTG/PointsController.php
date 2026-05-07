@@ -62,7 +62,7 @@ final class PointsController extends AbstractController
             [
                 'updates'                => $updates,
                 'ranking_totals'         => $MTGSourceCardRepository->getRankingTotals(),
-                'commanders'             => $MTGSourceCardRepository->getAllCommanders(),
+                'commanders'             => $MTGSourceCardRepository->getAllCommandersCached(),
                 'card_names'             => $this->MTGSourceCardRepository->getAllCardNamesCached(),
                 'model_files_to_include' => $modelFilesToInclude,
             ]
@@ -84,6 +84,8 @@ final class PointsController extends AbstractController
      * Comparison results - Display differences between two updates.
      *
      * @param MTGUpdateRepository $MTGUpdateRepository
+     *
+     * @throws InvalidArgumentException
      *
      * @return Response
      */

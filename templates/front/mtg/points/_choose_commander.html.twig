@@ -169,60 +169,65 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% if commanders is defined and commanders is iterable and ranking_totals is defined and ranking_totals is iterable %}
-                            {% for commander in commanders %}
-                                <tr
-                                    data-commander-id="{{ commander.id }}"
-                                    data-commander-name="{{ commander.nameEn }}"
-                                    data-ranking-duel-class="{{ ranking_class(commander.duelRank, ranking_totals.duel) }}"
-                                    data-ranking-cedh-class="{{ ranking_class(commander.cEDHRank, ranking_totals.cedh) }}"
-                                    data-ranking-ffa-class="{{ ranking_class(commander.fFARank, ranking_totals.ffa) }}"
-                                    data-color-identity="{{ commander.colorIdentity|join('') }}"
-                                    data-maximum-timeline="{{ commander.maximumTimelineLegality }}"
-                                    data-first-printed-at="{{ commander.firstPrintedAt|date('Y-m-d\TH:i:s\Z') }}"
-                                    data-budget=""
-                                    data-multicz-type="{{ commander.multiczType }}"
-                                    {% if commander.white is same as(true) %}data-color-w="true"{% endif %}
-                                    {% if commander.blue is same as(true) %}data-color-u="true"{% endif %}
-                                    {% if commander.black is same as(true) %}data-color-b="true"{% endif %}
-                                    {% if commander.red is same as(true) %}data-color-r="true"{% endif %}
-                                    {% if commander.green is same as(true) %}data-color-g="true"{% endif %}
-                                    {% if commander.colorless is same as(true) %}data-color-c="true"{% endif %}
-                                >
-                                    <td>
-                                        <a href="https://scryfall.com/search?q={{ commander.nameEn|e('url') }}" target="_blank" data-imageurl="{{ commander.imageUrl }}" title="Scryfall Search">
-                                            <span class="icon-search"></span>
-                                            <strong>{{ commander.nameEn }}</strong>
-                                        </a>
-                                    </td>
-                                    <td class="commander-budget font-bold text-lg" data-field="budget">0</td>
-                                    <td>
-                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="1" data-zone="commandzone" data-copies="1" class="btn btn-green text-sm addtodeck1 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 1"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 1</a>
-                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="2" data-zone="commandzone" data-copies="1" class="btn btn-blue text-sm addtodeck2 cursor-pointer py-0! mt-1! mb-1! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 2"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 2</a>
-                                        <a data-card="{{ commander.nameEn }}" data-addtodeck="3" data-zone="commandzone" data-copies="1" class="btn btn-yellow text-sm addtodeck3 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 3"><span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 3</a>
-                                    </td>
-                                    <td data-field="status"></td>
-                                    <td>{{ ranking_decorator(commander.duelRank, 750) }}</td>
-                                    <td>{{ ranking_decorator(commander.cEDHRank, 750) }}</td>
-                                    <td>{{ ranking_decorator(commander.fFARank, 50000) }}</td>
-                                    <td>
-                                        <span class="text-lg flex flex-row items-center justify-center w-full h-full">
-                                            {% if commander.colorIdentity is iterable %}
-                                                {{ color_identity_array_to_balls(commander.colorIdentity) }}
-                                            {% endif %}
-                                        </span>
-                                    </td>
-                                    <td>{{ commander.firstPrintedYear }}</td>
-                                    <td>
-                                        <span class="" data-mv>{{ commander.manaValue }}</span>
-                                    </td>
-                                    <td class="pr-1">
-                                        {{ partner_ability_format(commander.multiczType)|raw }}
-                                        <span data-multicztype></span>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
+                        {% cache "mtg_commanders" ttl(43200) %}
+                            {% if commanders is defined and commanders is iterable and ranking_totals is defined and ranking_totals is iterable %}
+                                {% for commander in commanders %}
+                                    <tr
+                                        data-commander-id="{{ commander.id }}"
+                                        data-commander-name="{{ commander.nameEn }}"
+                                        data-ranking-duel-class="{{ ranking_class(commander.duelRank, ranking_totals.duel) }}"
+                                        data-ranking-cedh-class="{{ ranking_class(commander.cEDHRank, ranking_totals.cedh) }}"
+                                        data-ranking-ffa-class="{{ ranking_class(commander.fFARank, ranking_totals.ffa) }}"
+                                        data-color-identity="{{ commander.colorIdentity|join('') }}"
+                                        data-maximum-timeline="{{ commander.maximumTimelineLegality }}"
+                                        data-first-printed-at="{{ commander.firstPrintedAt|date('Y-m-d\TH:i:s\Z') }}"
+                                        data-budget=""
+                                        data-multicz-type="{{ commander.multiczType }}"
+                                        {% if commander.white is same as(true) %}data-color-w="true"{% endif %}
+                                        {% if commander.blue is same as(true) %}data-color-u="true"{% endif %}
+                                        {% if commander.black is same as(true) %}data-color-b="true"{% endif %}
+                                        {% if commander.red is same as(true) %}data-color-r="true"{% endif %}
+                                        {% if commander.green is same as(true) %}data-color-g="true"{% endif %}
+                                        {% if commander.colorless is same as(true) %}data-color-c="true"{% endif %}
+                                    >
+                                        <td>
+                                            <a href="https://scryfall.com/search?q={{ commander.nameEn|e('url') }}" target="_blank" data-imageurl="{{ commander.imageUrl }}" title="Scryfall Search">
+                                                <span class="icon-search"></span>
+                                                <strong>{{ commander.nameEn }}</strong>
+                                            </a>
+                                        </td>
+                                        <td class="commander-budget font-bold text-lg" data-field="budget">0</td>
+                                        <td>
+                                            <a data-card="{{ commander.nameEn }}" data-addtodeck="1" data-zone="commandzone" data-copies="1" class="btn btn-green text-sm addtodeck1 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 1">
+                                                <span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 1</a>
+                                            <a data-card="{{ commander.nameEn }}" data-addtodeck="2" data-zone="commandzone" data-copies="1" class="btn btn-blue text-sm addtodeck2 cursor-pointer py-0! mt-1! mb-1! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 2">
+                                                <span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 2</a>
+                                            <a data-card="{{ commander.nameEn }}" data-addtodeck="3" data-zone="commandzone" data-copies="1" class="btn btn-yellow text-sm addtodeck3 cursor-pointer py-0! mt-0! mb-0! px-1!" title="{{ 'front.mtg.choose.links.choosecommander.table.addtodeck.title'|trans|e('html_attr') }} 3">
+                                                <span class="icon-plus-circled"></span> {{ 'front.mtg.choose.links.choosecommander.table.addtodeck.label'|trans|raw }} 3</a>
+                                        </td>
+                                        <td data-field="status"></td>
+                                        <td>{{ ranking_decorator(commander.duelRank, 750) }}</td>
+                                        <td>{{ ranking_decorator(commander.cEDHRank, 750) }}</td>
+                                        <td>{{ ranking_decorator(commander.fFARank, 50000) }}</td>
+                                        <td>
+                                            <span class="text-lg flex flex-row items-center justify-center w-full h-full">
+                                                {% if commander.colorIdentity is iterable %}
+                                                    {{ color_identity_array_to_balls(commander.colorIdentity) }}
+                                                {% endif %}
+                                            </span>
+                                        </td>
+                                        <td>{{ commander.firstPrintedYear }}</td>
+                                        <td>
+                                            <span class="" data-mv>{{ commander.manaValue }}</span>
+                                        </td>
+                                        <td class="pr-1">
+                                            {{ partner_ability_format(commander.multiczType)|raw }}
+                                            <span data-multicztype></span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        {% endcache %}
                     </tbody>
                 </table>
             </div>

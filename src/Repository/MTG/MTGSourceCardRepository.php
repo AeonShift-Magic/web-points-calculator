@@ -7,6 +7,8 @@ namespace App\Repository\MTG;
 use App\Entity\MTG\MTGSourceCard;
 use App\Repository\SourceItemsRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use const JSON_THROW_ON_ERROR;
 use const JSON_UNESCAPED_UNICODE;
@@ -20,7 +22,7 @@ use Symfony\Contracts\Cache\ItemInterface;
  */
 final class MTGSourceCardRepository extends ServiceEntityRepository implements SourceItemsRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry, private CacheInterface $pool)
+    public function __construct(ManagerRegistry $registry, private CacheInterface $pool, private readonly string $tablePrefix)
     {
         parent::__construct($registry, MTGSourceCard::class);
     }
@@ -39,37 +41,6 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
             $cards = $this->getAllSourceItemsNamesAsArray();
 
             return (string)json_encode($cards, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-        });
-    }
-
-    /**
-     * Returns all Commanders.
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return array<int, MTGSourceCard>
-     */
-    public function getAllCommanders(): array
-    {
-        return $this->pool->get(key: 'mtg_commanders', callback: function (ItemInterface $item): array {
-            $item->expiresAfter(10000);
-            /** @var array<int, MTGSourceCard> $sourceCommanderCards */
-            $sourceCommanderCards = $this
-                ->getEntityManager()
-                ->createQueryBuilder()
-                ->select('c')
-                ->from(MTGSourceCard::class, 'c')
-                ->andWhere('c.isCommandZoneEligible = :eligible')
-                ->andWhere('c.flavorOfNameEN = :empty')
-                ->andWhere('c.isDigitalOnly = :false')
-                ->setParameter('false', false)
-                ->setParameter('eligible', true)
-                ->setParameter('empty', '')
-                ->orderBy('c.nameEN', 'ASC')
-                ->getQuery()
-                ->getResult();
-
-            return $sourceCommanderCards;
         });
     }
 
@@ -106,7 +77,7 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
      */
     public function getAllCommandersAsArray(): array
     {
-        $sourceCommanderCards = $this->getAllCommanders();
+        $sourceCommanderCards = $this->getAllCommandersCached();
         $commandersArray = [];
 
         foreach ($sourceCommanderCards as $sourceCommanderCard) {
@@ -145,26 +116,53 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
     }
 
     /**
-     * @psalm-suppress PossiblyUnusedReturnValue
+     * Returns all Commanders.
+     *
+     * @throws InvalidArgumentException
      *
      * @return array<int, MTGSourceCard>
+     */
+    public function getAllCommandersCached(): array
+    {
+        return $this->pool->get(key: 'mtg_commanders', callback: function (ItemInterface $item): array {
+            $item->expiresAfter(10000);
+            /** @var array<int, MTGSourceCard> $sourceCommanderCards */
+            $sourceCommanderCards = $this
+                ->getEntityManager()
+                ->createQueryBuilder()
+                ->select('c')
+                ->from(MTGSourceCard::class, 'c')
+                ->andWhere('c.isCommandZoneEligible = :eligible')
+                ->andWhere('c.flavorOfNameEN = :empty')
+                ->andWhere('c.isDigitalOnly = :false')
+                ->setParameter('false', false)
+                ->setParameter('eligible', true)
+                ->setParameter('empty', '')
+                ->orderBy('c.nameEN', 'ASC')
+                ->getQuery()
+                ->setHint(Query::HINT_READ_ONLY, true)
+                ->getResult();
+
+            return $sourceCommanderCards;
+        });
+    }
+
+    /**
+     * @psalm-suppress PossiblyUnusedReturnValue
+     *
+     * @throws Exception
+     *
+     * @return array<int, array<string, float|int|string|null>>
      */
     #[Override]
     public function getAllItemsAsArray(): array
     {
-        /** @var array<int, MTGSourceCard> $sourceCards */
-        $sourceCards = $this
-            ->getEntityManager()
-            ->createQueryBuilder()
-            ->select('c')
-            ->from(MTGSourceCard::class, 'c')
-            ->andWhere('c.isDigitalOnly = :false')
-            ->setParameter('false', false)
-            ->orderBy('c.nameEN')
-            ->getQuery()
-            ->getResult();
+        /** @var array<int, array<string, float|int|string|null>> $items */
+        $items = $this->getEntityManager()->getConnection()->fetchAllAssociative(
+            'SELECT * FROM ' . $this->tablePrefix . 'mtgsource_card' . ' WHERE is_digital_only = 0 ORDER BY name_en'
+        );
 
-        return $sourceCards;
+        return $items;
     }
 
     /**
@@ -184,6 +182,7 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
                 ->setParameter('false', false)
                 ->orderBy('c.nameEN')
                 ->getQuery()
+                ->setHint(Query::HINT_READ_ONLY, true)
                 ->getResult(),
             'nameEN'
         );
@@ -217,7 +216,7 @@ final class MTGSourceCardRepository extends ServiceEntityRepository implements S
                 ->from(MTGSourceCard::class, 'c');
 
             /** @var array{ffa: string, duel: string, cedh: string} $rankings */
-            $rankings = $qb->getQuery()->getSingleResult();
+            $rankings = $qb->getQuery()->setHint(Query::HINT_READ_ONLY, true)->getSingleResult();
 
             return $rankings;
         });
