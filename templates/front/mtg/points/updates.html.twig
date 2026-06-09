@@ -39,9 +39,11 @@
                                         <td colspan="5" class="text-center bg-gray-400 h-2"></td>
                                     </tr>
                                 {% endif %}
-                                <tr>
+                                <tr id="update-{{ update.id }}">
                                     <td class="{% if loop.index == 1 %}green-text{% else %}gray-text{% endif %}">
-                                        <h2 class="text-base">{{ update.titleEN }}</h2>
+                                        <h2 class="text-base">
+                                            <a href="#update-{{ update.id }}">#</a> {{ update.titleEN }}
+                                        </h2>
                                         {% if loop.index == 1 %}
                                             <span class="flashy-tag">{{ 'front.nav.mtg.download.latest'|trans }}</span>
                                         {% endif %}

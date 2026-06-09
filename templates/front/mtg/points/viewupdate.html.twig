@@ -245,8 +245,10 @@
                                                 </thead>
                                                 <tbody>
                                                     {% for points_list_card in points_list.MTGPointListCards %}
-                                                        <tr>
+                                                        <tr id="{{ points_list_card.nameEN|e('url') ~ '-' ~ points_list_card.id }}">
                                                             <td>
+                                                                <a href="#{{ points_list_card.nameEN|e('url') ~ '-' ~ points_list_card.id }}">#</a>
+                                                                &nbsp;
                                                                 <a href="https://scryfall.com/search?q={{ points_list_card.nameEN|e('url') }}" target="_blank" title="Scryfall Search">{{ points_list_card.nameEN }}</a>
                                                             </td>
                                                             {# Points (Base Singleton/Quadruples - DC/S) #}
