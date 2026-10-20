@@ -17,8 +17,8 @@ interface MTGPointsListModelInterface extends PointsListModelInterface
      * @param MTGPointsList $pointsList
      *
      * @return array{
-     *     cards: array<string, array{ ... }>,
-     *     unranked: array<int, array{ ... }>,
+     *     cards: array<string, array<string, mixed>>,
+     *     unranked: array<int, array<string, mixed>>,
      *     pvalues: array{
      *         baseSingletonStandardPlay: float|null,
      *         baseQuadruplesStandardPlay: float|null,

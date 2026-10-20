@@ -50,9 +50,9 @@ final class MTGPointsListManager implements MTGPointsListProviderInterface
      *         endingAtDate: string,
      *         startingAtTimestamp: int,
      *         endingAtTimestamp: int|null,
-     *         pointsList: array{ ... }
+     *         pointsList: array<string, mixed>
      *     }>,
-     *     commanders: array{ ... }
+     *     commanders: array<string, mixed>
      * }
      */
     public function getAllPointListAndUpdatesAsArray(): array
@@ -72,9 +72,9 @@ final class MTGPointsListManager implements MTGPointsListProviderInterface
              *         endingAtDate: string,
              *         startingAtTimestamp: int,
              *         endingAtTimestamp: int|null,
-             *         pointsList: array{ ... }
+             *         pointsList: array<string, mixed>
              *     }>,
-             *     commanders: array{ ... }
+             *     commanders: array<string, mixed>
              * }
              */
             function (): array {
@@ -179,9 +179,9 @@ final class MTGPointsListManager implements MTGPointsListProviderInterface
      *         endingAtDate: string,
      *         startingAtTimestamp: int,
      *         endingAtTimestamp: int|null,
-     *         pointsList: array{ ... }
+     *         pointsList: array<string, mixed>
      *     }>,
-     *     commanders: array{ ... }
+     *     commanders: array<string, mixed>
      * }
      */
     public function getUpdatePointListsAsArray(MTGUpdate $MTGUpdate): array
@@ -201,9 +201,9 @@ final class MTGPointsListManager implements MTGPointsListProviderInterface
              *         endingAtDate: string,
              *         startingAtTimestamp: int,
              *         endingAtTimestamp: int|null,
-             *         pointsList: array{ ... }
+             *         pointsList: array<string, mixed>
              *     }>,
-             *     commanders: array{ ... }
+             *     commanders: array<string, mixed>
              * }
              */
             function () use ($MTGUpdate): array {
