@@ -29,8 +29,6 @@ use function is_array;
 use function is_string;
 use const JSON_THROW_ON_ERROR;
 use JsonException;
-use JsonMachine\Items;
-use JsonMachine\JsonDecoder\ExtJsonDecoder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
 use Monolog\Logger;
@@ -164,51 +162,66 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
                 $this->loadExistingCardsCache();
                 $this->getLogger()->info(sprintf('Loaded %d existing cards into cache', count($this->existingCardsCache)));
 
-                // Use JsonMachine to stream the JSON file
-                /** @var iterable<array<string, mixed>> $cards */
-                $cards = Items::fromFile($jsonFilePath, ['decoder' => new ExtJsonDecoder(true)]);
+                // Stream JSONL file line-by-line
+                $handle = fopen($jsonFilePath, 'rb');
+                if ($handle === false) {
+                    throw new RuntimeException(sprintf('Failed to open JSONL file: %s', $jsonFilePath));
+                }
 
-                foreach ($cards as $card) {
-                    try {
-                        // Skip tokens and non-card objects
-                        if (isset($card['layout']) && in_array($card['layout'], ['token', 'emblem', 'art_series'], true)) {
+                try {
+                    while (($line = fgets($handle)) !== false) {
+                        $line = mb_trim($line);
+
+                        if ($line === '') {
                             continue;
                         }
 
-                        $this->collectLowestAveragePriceByNameFromRawScryfallCard($lowestAveragePricesByName, $card);
+                        try {
+                            /** @var array<string, mixed> $card */
+                            $card = json_decode($line, true, 512, JSON_THROW_ON_ERROR);
 
-                        $transformedCard = $this->mapScryfallSourceCardDataToArray($card, $startTime);
-
-                        if ($transformedCard !== null) {
-                            $batchSliceOfCards[] = $transformedCard;
-
-                            if (count($batchSliceOfCards) >= self::BATCH_SIZE) {
-                                $result = $this->processCardsUpdateBatchSlice($batchSliceOfCards, $startTime);
-                                $insertedCardsCount += $result['inserted'];
-                                $updatedCardsCount += $result['updated'];
-                                $skippedCardsCount += $result['skipped'];
-                                $pricesCount += $result['prices'];
-                                $errorCount += $result['errors'];
-                                $updatedMTGTop8RanksCount += $result['duel_ranks'];
-                                $batchSliceOfCards = [];
+                            // Skip tokens and non-card objects
+                            if (isset($card['layout']) && in_array($card['layout'], ['token', 'emblem', 'art_series'], true)) {
+                                continue;
                             }
-                        }
 
-                        ++$processedCardsCount;
+                            $this->collectLowestAveragePriceByNameFromRawScryfallCard($lowestAveragePricesByName, $card);
 
-                        if ($progressCallback !== null && $processedCardsCount % 100 === 0) {
-                            $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount, $updatedMTGTop8RanksCount);
+                            $transformedCard = $this->mapScryfallSourceCardDataToArray($card, $startTime);
+
+                            if ($transformedCard !== null) {
+                                $batchSliceOfCards[] = $transformedCard;
+
+                                if (count($batchSliceOfCards) >= self::BATCH_SIZE) {
+                                    $result = $this->processCardsUpdateBatchSlice($batchSliceOfCards, $startTime);
+                                    $insertedCardsCount += $result['inserted'];
+                                    $updatedCardsCount += $result['updated'];
+                                    $skippedCardsCount += $result['skipped'];
+                                    $pricesCount += $result['prices'];
+                                    $errorCount += $result['errors'];
+                                    $updatedMTGTop8RanksCount += $result['duel_ranks'];
+                                    $batchSliceOfCards = [];
+                                }
+                            }
+
+                            ++$processedCardsCount;
+
+                            if ($progressCallback !== null && $processedCardsCount % 100 === 0) {
+                                $progressCallback($processedCardsCount, $insertedCardsCount, $updatedCardsCount, $skippedCardsCount, $pricesCount, $errorCount, $updatedMTGTop8RanksCount);
+                            }
+                        } catch (Throwable $e) {
+                            ++$errorCount;
+                            $this->getLogger()->error(
+                                sprintf(
+                                    'Error processing card: %s (Card: %s)',
+                                    $e->getMessage(),
+                                    isset($card['name']) && is_string($card['name']) ? $card['name'] : ''
+                                )
+                            );
                         }
-                    } catch (Throwable $e) {
-                        ++$errorCount;
-                        $this->getLogger()->error(
-                            sprintf(
-                                'Error processing card: %s (Card: %s)',
-                                $e->getMessage(),
-                                isset($card['name']) && is_string($card['name']) ? $card['name'] : ''
-                            )
-                        );
                     }
+                } finally {
+                    fclose($handle);
                 }
 
                 $this->getLogger()->debug(sprintf(
@@ -890,12 +903,12 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
     }
 
     /**
-     * Find the JSON file in the cards source directory.
-     * Returns the path to the JSON file.
+     * Find the JSONL file in the cards source directory.
+     * Returns the path to the JSONL file.
      *
      * @throws RuntimeException
      *
-     * @return string the path to the latest downloaded JSON file
+     * @return string the path to the latest downloaded JSONL file
      */
     private function getLatestScryfallSourceJsonFile(): string
     {
@@ -905,14 +918,14 @@ final class MTGScryfallDefaultCardsSourceDataTransformerModelV1
             throw new RuntimeException(sprintf('Cards source directory does not exist: %s', $cardsSourcePath));
         }
 
-        $files = glob($cardsSourcePath . DIRECTORY_SEPARATOR . '*.json');
+        $files = glob($cardsSourcePath . DIRECTORY_SEPARATOR . '*.jsonl');
 
         if ($files === false || count($files) === 0) {
-            throw new RuntimeException(sprintf('No JSON file found in: %s', $cardsSourcePath));
+            throw new RuntimeException(sprintf('No JSONL file found in: %s', $cardsSourcePath));
         }
 
         if (count($files) > 1) {
-            throw new RuntimeException(sprintf('Multiple JSON files found in: %s', $cardsSourcePath));
+            throw new RuntimeException(sprintf('Multiple JSONL files found in: %s', $cardsSourcePath));
         }
 
         return $files[0];

@@ -106,17 +106,20 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
 
             try {
                 /** @var string $downloadUri */
-                $downloadUri = $defaultCardsEntry['download_uri'] ?? '';
+                $downloadUri = $defaultCardsEntry['jsonl_download_uri'] ?? '';
                 $cardsSourcePath = $this->ensureCardsSourceDirectory();
-                $destinationPath = $this->buildDestinationPath($cardsSourcePath, $downloadUri);
+                $destinationPath = $this->buildDestinationPath($cardsSourcePath, $downloadUri); // expected *.jsonl.gz
+
+                // Determine final unzipped JSONL path (remove trailing .gz)
+                $unzippedPath = preg_replace('/\.gz$/i', '', $destinationPath) ?: ($destinationPath . '.jsonl');
 
                 // Initialize fileLogger with the destination file name
                 $logFileName = $this->initializeLogger($destinationPath);
 
                 $this->cleanCardsSourceDirectory($cardsSourcePath);
 
-                if (! isset($defaultCardsEntry['download_uri']) || ! is_string($defaultCardsEntry['download_uri'])) {
-                    throw new RuntimeException('The default cards entry is missing the download_uri field.');
+                if (! isset($defaultCardsEntry['jsonl_download_uri']) || ! is_string($defaultCardsEntry['jsonl_download_uri'])) {
+                    throw new RuntimeException('The default cards entry is missing the jsonl_download_uri field.');
                 }
 
                 // Initialize the table entry for this source activity history
@@ -128,26 +131,27 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
                 $this->getLogger()->info('Start time: {time}', ['time' => $startTime->format('Y-m-d H:i:s')]);
                 $this->getLogger()->info('Entry validation passed');
                 $this->getLogger()->info('Entry details', [
-                    'name'          => $defaultCardsEntry['name'] ?? 'N/A',
-                    'updated_at'    => $defaultCardsEntry['updated_at'] ?? 'N/A',
-                    'expected_size' => $defaultCardsEntry['size'] ?? 0,
-                    'download_uri'  => $defaultCardsEntry['download_uri'],
+                    'name'               => $defaultCardsEntry['name'] ?? 'N/A',
+                    'updated_at'         => $defaultCardsEntry['updated_at'] ?? 'N/A',
+                    'expected_size'      => $defaultCardsEntry['compressed_size'] ?? 0,
+                    'jsonl_download_uri' => $defaultCardsEntry['jsonl_download_uri'],
                 ]);
                 $this->getLogger()->info('Cards source directory: {path}', ['path' => $cardsSourcePath]);
-                $this->getLogger()->info('Destination path: {path}', ['path' => $destinationPath]);
+                $this->getLogger()->info('Destination path (gz): {path}', ['path' => $destinationPath]);
+                $this->getLogger()->info('Final JSONL path: {path}', ['path' => $unzippedPath]);
 
                 $lastLoggedBytes = 0;
-                $logInterval = (isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] / 20 : 1; // Log every 5%
+                $logInterval = (isset($defaultCardsEntry['compressed_size']) && is_numeric($defaultCardsEntry['compressed_size'])) ? (int)$defaultCardsEntry['compressed_size'] / 20 : 1; // Log every 5%
 
                 $this->performDownload(
                     $downloadUri,
                     $destinationPath,
                     function (int $downloadedBytes) use ($progressCallback, $defaultCardsEntry, &$lastLoggedBytes, $logInterval): void {
                         if ($downloadedBytes - $lastLoggedBytes >= $logInterval) {
-                            $percentage = (int)($downloadedBytes / ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100)) * 100;
+                            $percentage = ($downloadedBytes / ((isset($defaultCardsEntry['compressed_size']) && is_numeric($defaultCardsEntry['compressed_size'])) ? (int)$defaultCardsEntry['compressed_size'] : 100)) * 100;
                             $this->getLogger()->info('Download progress: {downloaded} / {total} bytes ({percentage}%)', [
                                 'downloaded' => $downloadedBytes,
-                                'total'      => ((isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size'])) ? (int)$defaultCardsEntry['size'] : 100),
+                                'total'      => ((isset($defaultCardsEntry['compressed_size']) && is_numeric($defaultCardsEntry['compressed_size'])) ? (int)$defaultCardsEntry['compressed_size'] : 100),
                                 'percentage' => round($percentage, 1),
                             ]);
                             $lastLoggedBytes = $downloadedBytes;
@@ -159,10 +163,20 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
                     }
                 );
 
-                $this->setFilePermissions($destinationPath);
+                // Decompress .gz to .jsonl
+                $this->decompressGzipFile($destinationPath, $unzippedPath);
+
+                // Optionally remove the .gz file after successful decompression
+                if (file_exists($destinationPath)) {
+                    @unlink($destinationPath);
+                    $this->getLogger()->info('Removed downloaded GZ file', ['path' => $destinationPath]);
+                }
+
+                // Apply permissions on the final JSONL file
+                $this->setFilePermissions($unzippedPath);
                 $this->getLogger()->info('File permissions set');
 
-                $finalSize = (int)filesize($destinationPath);
+                $finalSize = (int)filesize($unzippedPath);
                 $endTime = new DateTimeImmutable();
                 $duration = $endTime->getTimestamp() - $startTime->getTimestamp();
 
@@ -170,7 +184,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
                 $this->sourceActivityHistory->setEndedAt(new DateTime());
                 $this->sourceActivityHistory->setSuccessSummary(
                     json_encode([
-                        'file'     => $destinationPath,
+                        'file'     => $unzippedPath,
                         'size'     => $finalSize,
                         'end'      => $endTime->format('Y-m-d H:i:s'),
                         'duration' => $duration,
@@ -181,7 +195,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
 
                 $this->getLogger()->info('=== DOWNLOAD COMPLETED SUCCESSFULLY ===');
                 $this->getLogger()->info('Download summary', [
-                    'downloaded_file'                => $destinationPath,
+                    'downloaded_file'                => $unzippedPath,
                     'final_size'                     => $finalSize,
                     'end_time'                       => $endTime->format('Y-m-d H:i:s'),
                     'duration_seconds'               => $duration,
@@ -189,7 +203,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
                     'average_speed_bytes_per_second' => $finalSize / max($duration, 1),
                 ]);
 
-                return $destinationPath;
+                return $unzippedPath;
 
             } catch (Exception $e) {
                 if ($this->entityManager->isOpen()) {
@@ -362,6 +376,68 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
     }
 
     /**
+     * Decompress a GZ file into the specified output path (.jsonl).
+     *
+     * @param string $gzFilePath
+     * @param string $outputFilePath
+     *
+     * @return void
+     */
+    private function decompressGzipFile(string $gzFilePath, string $outputFilePath): void
+    {
+        $this->getLogger()->info('Decompressing downloaded file...', [
+            'source' => $gzFilePath,
+            'target' => $outputFilePath,
+        ]);
+
+        $gzHandle = gzopen($gzFilePath, 'rb');
+
+        if ($gzHandle === false) {
+            throw new RuntimeException(sprintf('Failed to open gzip file for reading: %s', $gzFilePath));
+        }
+
+        $outHandle = fopen($outputFilePath, 'wb');
+
+        if ($outHandle === false) {
+            gzclose($gzHandle);
+
+            throw new RuntimeException(sprintf('Failed to open output file for writing: %s', $outputFilePath));
+        }
+
+        try {
+            while (! gzeof($gzHandle)) {
+                $chunk = gzread($gzHandle, 8192);
+
+                if ($chunk === false) {
+                    throw new RuntimeException(sprintf('Failed reading from gzip file: %s', $gzFilePath));
+                }
+
+                if ($chunk === '') {
+                    continue;
+                }
+
+                if (fwrite($outHandle, $chunk) === false) {
+                    throw new RuntimeException(sprintf('Failed writing decompressed data to: %s', $outputFilePath));
+                }
+            }
+        } catch (Exception $e) {
+            fclose($outHandle);
+            gzclose($gzHandle);
+            @unlink($outputFilePath);
+
+            throw $e;
+        }
+
+        fclose($outHandle);
+        gzclose($gzHandle);
+
+        $this->getLogger()->info('Decompression completed', [
+            'target' => $outputFilePath,
+            'size'   => file_exists($outputFilePath) ? (int)filesize($outputFilePath) : 0,
+        ]);
+    }
+
+    /**
      * Creates the cards source download directory if it does not exist, based on service parameters.
      *
      * @return string The path to the cards source directory, created if needed
@@ -526,7 +602,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1
      */
     private function validateDefaultCardsEntry(array $entry): void
     {
-        $requiredFields = ['download_uri', 'size'];
+        $requiredFields = ['jsonl_download_uri', 'compressed_size'];
 
         foreach ($requiredFields as $field) {
             if (! isset($entry[$field])) {

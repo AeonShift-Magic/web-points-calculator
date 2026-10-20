@@ -15,7 +15,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 /**
  * @extends ServiceEntityRepository<MTGUpdate>
  */
-final class MTGUpdateRepository extends ServiceEntityRepository
+class MTGUpdateRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry, private CacheInterface $pool)
     {

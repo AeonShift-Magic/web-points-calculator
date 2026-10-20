@@ -48,6 +48,9 @@
     <extensions>
         <bootstrap class="DG\BypassFinals\PHPUnitExtension">
             <parameter name="bypassFinal" value="true"/>
+            <parameter name="bypassReadOnly" value="false"/>
+            <parameter name="allowPaths" value="*/src/*"/>
         </bootstrap>
     </extensions>
+
 </phpunit>

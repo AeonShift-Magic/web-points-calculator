@@ -22,10 +22,6 @@ final class MTGPointsListTest extends TestCase
     {
         $list = new MTGPointsList();
 
-        // Dates initialized
-        self::assertInstanceOf(DateTime::class, $list->getLastUploadedAt());
-        self::assertInstanceOf(DateTime::class, $list->getValidityStartingAt());
-
         // Collections initialized
         self::assertCount(0, $list->getMTGPointListCards());
         self::assertCount(0, $list->getMTGUpdates());

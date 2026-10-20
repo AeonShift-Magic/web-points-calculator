@@ -35,7 +35,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1Test extends TestCase
 
     private string $scryfallBulkApiUrl = 'https://api.scryfall.com/bulk-data';
 
-    private SourceActivityHistoryFactory&Stub $sourceActivityHistoryFactory;
+    private SourceActivityHistoryFactory $sourceActivityHistoryFactory;
 
     public function testDownloadLatestDefaultCardsThrowsWhenEntryNotFound(): void
     {
@@ -69,7 +69,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1Test extends TestCase
         $bulkData = [
             'data' => [
                 ['type' => 'other_type', 'name' => 'Other'],
-                ['type' => 'default_cards', 'name' => 'Default Cards', 'download_uri' => 'https://example.com/file.json'],
+                ['type' => 'default_cards', 'name' => 'Default Cards', 'jsonl_download_uri' => 'https://example.com/file.jsonl.gz'],
             ],
         ];
 
@@ -77,7 +77,7 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1Test extends TestCase
 
         self::assertIsArray($entry);
         self::assertSame('Default Cards', $entry['name'] ?? null);
-        self::assertSame('https://example.com/file.json', $entry['download_uri'] ?? null);
+        self::assertSame('https://example.com/file.jsonl.gz', $entry['jsonl_download_uri'] ?? null);
     }
 
     public function testFindDefaultCardsEntryReturnsNullWhenDataMissing(): void
@@ -128,14 +128,8 @@ final class MTGScryfallDefaultCardsSourceDownloadModelV1Test extends TestCase
     {
         $this->httpClient = self::createStub(HttpClientInterface::class);
         $this->entityManager = self::createStub(EntityManagerInterface::class);
-        $this->sourceActivityHistoryFactory = self::createStub(SourceActivityHistoryFactory::class);
+        $this->sourceActivityHistoryFactory = new SourceActivityHistoryFactory();
         $this->lockFactory = self::createStub(LockFactory::class);
-
-        // The factory will not be used by the methods under test; return a dummy interface stub to satisfy constructor.
-        $dummyHistory = self::createStub(\App\Entity\SourceActivityHistoryInterface::class);
-        $this->sourceActivityHistoryFactory
-            ->method('create')
-            ->willReturn($dummyHistory);
     }
 
     private function createModel(): MTGScryfallDefaultCardsSourceDownloadModelV1

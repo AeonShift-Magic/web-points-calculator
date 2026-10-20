@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 use Symfony\Component\Dotenv\Dotenv;
 
+require dirname(__DIR__) . '/vendor/dg/bypass-finals/src/BypassFinals.php';
+DG\BypassFinals::enable();
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 if (method_exists(Dotenv::class, 'bootEnv')) {

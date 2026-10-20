@@ -95,15 +95,15 @@ final class MTGScryfallDefaultCardsSourceDownloadCommandV1 extends Command
                 [
                     ['Name', $defaultCardsEntry['name'] ?? ''],
                     ['Updated At', $defaultCardsEntry['updated_at'] ?? ''],
-                    ['Size', number_format(isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size']) ? (int)$defaultCardsEntry['size'] : 0) . ' bytes'],
-                    ['Download URI', $defaultCardsEntry['download_uri'] ?? ''],
+                    ['Size', number_format(isset($defaultCardsEntry['compressed_size']) && is_numeric($defaultCardsEntry['compressed_size']) ? (int)$defaultCardsEntry['compressed_size'] : 0) . ' bytes'],
+                    ['Download URI', $defaultCardsEntry['jsonl_download_uri'] ?? ''],
                 ]
             );
 
             $io->section('Downloading default cards data...');
             $io->note('This may take several minutes due to the large file size...');
 
-            $progressBar = $io->createProgressBar(isset($defaultCardsEntry['size']) && is_numeric($defaultCardsEntry['size']) ? (int)$defaultCardsEntry['size'] : 0);
+            $progressBar = $io->createProgressBar(isset($defaultCardsEntry['compressed_size']) && is_numeric($defaultCardsEntry['compressed_size']) ? (int)$defaultCardsEntry['compressed_size'] : 0);
             $progressBar->start();
 
             if ($source === 'cron') {

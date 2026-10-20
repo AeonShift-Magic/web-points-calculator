@@ -20,7 +20,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 /**
  * @extends ServiceEntityRepository<MTGSourceCard>
  */
-final class MTGSourceCardRepository extends ServiceEntityRepository implements SourceItemsRepositoryInterface
+class MTGSourceCardRepository extends ServiceEntityRepository implements SourceItemsRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry, private CacheInterface $pool, private readonly string $tablePrefix)
     {
